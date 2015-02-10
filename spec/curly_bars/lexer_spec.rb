@@ -41,7 +41,7 @@ describe CurlyBars::Lexer, ".lex" do
   it "scans conditional block tags with the if syntax" do
     map_lex_type('foo {{#if bar?}} hello {{/if}}').should == [
       :OUT, :CURLYSTART, :IF, :IDENT, :CURLYEND,
-      :OUT, :CURLYSTART, :IFCLOSE, :CURLYEND, :EOS
+      :OUT, :CURLYSTART, :ENDIF, :CURLYEND, :EOS
     ]
   end
 
@@ -49,7 +49,7 @@ describe CurlyBars::Lexer, ".lex" do
     map_lex_type('foo {{#if bar?}} hello {{else}} bye {{/if}}').should == [
       :OUT, :CURLYSTART, :IF, :IDENT, :CURLYEND,
       :OUT, :CURLYSTART, :ELSE, :CURLYEND,
-      :OUT, :CURLYSTART, :IFCLOSE, :CURLYEND, :EOS
+      :OUT, :CURLYSTART, :ENDIF, :CURLYEND, :EOS
     ]
   end
 

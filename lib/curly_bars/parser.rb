@@ -1,15 +1,22 @@
 require 'rltk/parser'
+require 'curly_bars/node/root'
+require 'curly_bars/node/text'
+require 'curly_bars/node/if_block'
 
 module CurlyBars
   class Parser < RLTK::Parser
+
+    production(:root) do |root|
+      clause('template') { |template| Node::Root.new(template).compile }
+    end
 
     production(:template) do
       clause('template_items') { |i| i }
     end
 
     production(:template_items) do
-      clause('template_item') { |i| [i] }
       clause('template_items template_item') { |i0,i1| i0 << i1 }
+      clause('template_item') { |i| [i] }
     end
 
     production(:template_item) do
@@ -20,7 +27,7 @@ module CurlyBars
     end
 
     production(:output) do
-      clause('OUT') { |o| Text.new(o) }
+      clause('OUT') { |o| Node::Text.new(o).compile }
     end
 
     production(:comment) do
@@ -43,7 +50,10 @@ module CurlyBars
     end
 
     production(:block_expression) do
-      clause('cond_bl_start template cond_bl_end') { |e0, e1, _| Block.new(:conditional, e0, e1) }
+      clause('cond_bl_start template cond_bl_end') do |expression, template, _|
+        Node::IfBlock.new(expression, template).compile
+      end
+
       clause('cond_bl_start template else template cond_bl_end') { |e0, e1, _, e2, _| Block.new(:conditional, e0, e1, e2) }
 
       clause('inv_cond_bl_start template inv_cond_bl_end') { |e0, e1, _| Block.new(:inverse_conditional, e0, e1) }
@@ -60,7 +70,7 @@ module CurlyBars
     end
 
     production(:cond_bl_end) do
-      clause('CURLYSTART IFCLOSE CURLYEND') { |_,_,_| }
+      clause('CURLYSTART ENDIF CURLYEND') { |_,_,_| }
     end
 
     production(:inv_cond_bl_start) do
@@ -115,22 +125,6 @@ module CurlyBars
       end
     end
 
-    class Text
-      attr_reader :value
-
-      def initialize(value)
-        @value = value
-      end
-
-      def type
-        :text
-      end
-
-      def ==(other)
-        other.value == value
-      end
-    end
-
     class Comment
       attr_reader :value
 
@@ -144,26 +138,6 @@ module CurlyBars
 
       def ==(other)
         other.value == value
-      end
-    end
-
-    class Root
-      attr_reader :nodes
-
-      def initialize
-        @nodes = []
-      end
-
-      def <<(node)
-        @nodes << node
-      end
-
-      def to_s
-        "<root>"
-      end
-
-      def closed_by?(component)
-        false
       end
     end
 
