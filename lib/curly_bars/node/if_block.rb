@@ -10,7 +10,7 @@ module CurlyBars
 
       def compile
         t = template.join("\n")
-        "if #{expression}\n #{t} \nend\n"
+        "if #{expression}\n  #{t}\nend\n"
       end
     end
   end
