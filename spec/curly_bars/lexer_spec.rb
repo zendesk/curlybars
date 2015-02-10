@@ -1,4 +1,4 @@
-describe Curly::Lexer, ".lex" do
+describe CurlyBars::Lexer, ".lex" do
   it 'is an RLTK lexer' do
     subject.should be_a(RLTK::Lexer)
   end
@@ -84,7 +84,7 @@ describe Curly::Lexer, ".lex" do
   end
 
   def lex(source)
-    Curly::Lexer.lex(source)
+    CurlyBars::Lexer.lex(source)
   end
 
   def map_lex_type(source)

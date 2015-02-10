@@ -1,7 +1,7 @@
-require 'rltk'
+require 'rltk/parser'
 
-module Curly
-  class HbsParser < RLTK::Parser
+module CurlyBars
+  class Parser < RLTK::Parser
 
     production(:template) do
       clause('template_items') { |i| i }
@@ -32,7 +32,7 @@ module Curly
     end
 
     production(:object) do
-      clause('IDENT') do |e| 
+      clause('IDENT') do |e|
         if e.include? "."
           splitted = e.split(".")
           Component.new(splitted.first, splitted[1..-1].join("."))

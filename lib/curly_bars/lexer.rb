@@ -1,6 +1,6 @@
-require 'rltk'
+require 'rltk/lexer'
 
-module Curly
+module CurlyBars
   class Lexer < RLTK::Lexer
     rule /{{/, :default do
       push_state :expression
