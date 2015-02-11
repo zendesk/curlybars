@@ -7,13 +7,15 @@ module CurlyBars
       :CURLYSTART
     end
 
-    rule /#if\s+/, :expression do
-      :IF
+    rule /}}/, :expression do
+      pop_state
+      :CURLYEND
     end
 
-    rule /\/if/, :expression do
-      :IFCLOSE
-    end
+    rule(/#if(?=\s)/, :expression) { :IF }
+    rule(/\/\s*if/, :expression) { :ENDIF }
+
+    rule(/\s/, :expression)
 
     rule /(#[A-Za-z][\w\.]*\??)/, :expression do |name|
       :HELPER
@@ -49,11 +51,6 @@ module CurlyBars
 
     rule /([A-Za-z][\w\.]*\??)/, :expression do |name|
       [ :IDENT, name ]
-    end
-
-    rule /}}/, :expression do
-      pop_state
-      :CURLYEND
     end
 
     rule /\!/, :expression do
