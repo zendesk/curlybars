@@ -23,17 +23,12 @@ module CurlyBars
 
     production(:template_item) do
       clause('output') { |e| e }
-      clause('comment') { |e| e }
       clause('expression') { |e| e }
       clause('block_expression') { |e| e }
     end
 
     production(:output) do
       clause('OUT') { |o| Node::Text.new(o).compile }
-    end
-
-    production(:comment) do
-      clause('CURLYSTART BANG COMMENT CURLYEND') { |_,_,e,_| Comment.new(e) }
     end
 
     production(:expression) do

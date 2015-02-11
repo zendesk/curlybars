@@ -2,6 +2,15 @@ require 'rltk/lexer'
 
 module CurlyBars
   class Lexer < RLTK::Lexer
+
+    rule(/{{!--/) { push_state :comment_block }
+    rule(/.*?(?=--}})/m, :comment_block)
+    rule(/--}}/, :comment_block) { pop_state }
+
+    rule(/{{!/) { push_state :comment }
+    rule(/.*?(?=}})/m, :comment)
+    rule(/}}/, :comment) { pop_state }
+
     rule /{{/, :default do
       push_state :expression
       :CURLYSTART
@@ -50,16 +59,6 @@ module CurlyBars
     end
 
     rule(/[A-Za-z][\w\.]*\??/, :expression) { |name| [:IDENT, name] }
-
-    rule /\!/, :expression do
-      push_state :comment
-      :BANG
-    end
-
-    rule /([^}}]*)/, :comment do |comment|
-      pop_state
-      [ :COMMENT, comment ]
-    end
 
     rule /.*?(?={{|\z)/m, :default do |output|
       [ :OUT, output ]
