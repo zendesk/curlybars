@@ -1,6 +1,6 @@
-describe CurlyBars::Node::Accessor do
+describe CurlyBars::Node::Path do
   it "compiles correctly" do
-    node = CurlyBars::Node::Accessor.new("foo.bar")
+    node = CurlyBars::Node::Path.new("foo.bar")
 
     ruby_code =<<-RUBY.strip_heredoc
       begin
