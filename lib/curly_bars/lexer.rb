@@ -19,10 +19,10 @@ module CurlyBars
     rule(/#unless(?=\s)/, :expression) { :UNLESS }
     rule(/\/unless/, :expression) { :UNLESSCLOSE }
 
-    rule(/#each\s+/, :expression) { :EACH }
+    rule(/#each(?=\s)/, :expression) { :EACH }
     rule(/\/each/, :expression) { :EACHCLOSE }
 
-    rule(/#with\s+/, :expression) { :WITH }
+    rule(/#with(?=\s)/, :expression) { :WITH }
     rule(/\/with/, :expression) { :WITHCLOSE }
 
     rule(/else/, :expression) { :ELSE }
