@@ -13,22 +13,18 @@ module CurlyBars
     end
 
     production(:template) do
-      clause('template_items') { |i| i }
+      clause('items') { |items| items }
     end
 
-    production(:template_items) do
-      clause('template_items template_item') { |i0,i1| i0 << i1 }
-      clause('template_item') { |i| [i] }
+    production(:items) do
+      clause('items item') { |items, item| items << item }
+      clause('item') { |item| [item] }
     end
 
-    production(:template_item) do
-      clause('output') { |e| e }
-      clause('expression') { |e| e }
-      clause('block_expression') { |e| e }
-    end
-
-    production(:output) do
-      clause('OUT') { |o| Node::Text.new(o).compile }
+    production(:item) do
+      clause('TEXT') { |text| Node::Text.new(text).compile }
+      clause('expression') { |expression| expression }
+      clause('block_expression') { |block_expression| block_expression }
     end
 
     production(:expression) do
@@ -38,29 +34,43 @@ module CurlyBars
     end
 
     production(:object) do
-      clause('IDENT') do |e|
-        Node::Path.new(e).compile
+      clause('PATH') do |path|
+        Node::Path.new(path).compile
       end
     end
 
     production(:block_expression) do
-      clause('cond_bl_start template cond_bl_end') do |expression, template, _|
+      clause('.cond_bl_start .template cond_bl_end') do |expression, template|
         Node::IfBlock.new(expression, template).compile
       end
 
-      clause('cond_bl_start template else template cond_bl_end') { |e0, e1, _, e2, _| Block.new(:conditional, e0, e1, e2) }
+      clause('.cond_bl_start .template else .template cond_bl_end') do |object, template1, template2|
+        Block.new(:conditional, object, template1, template2)
+      end
 
-      clause('inv_cond_bl_start template inv_cond_bl_end') { |e0, e1, _| Block.new(:inverse_conditional, e0, e1) }
-      clause('inv_cond_bl_start template else template inv_cond_bl_end') { |e0, e1, _, e2, _| Block.new(:inverse_conditional, e0, e1, e2) }
+      clause('.inv_cond_bl_start .template inv_cond_bl_end') do |object, template|
+        Block.new(:inverse_conditional, object, template)
+      end
 
-      clause('col_bl_start template col_bl_end') { |e0, e1, _| Block.new(:collection, e0, e1) }
-      clause('col_bl_start template else template col_bl_end') { |e0, e1, _, e2, _| Block.new(:collection, e0, e1, e2) }
+      clause('.inv_cond_bl_start .template else .template inv_cond_bl_end') do |object, template1, template2|
+        Block.new(:inverse_conditional, object, template1, template2)
+      end
 
-      clause('context_bl_start template context_bl_end') { |e0, e1, _| Block.new(:context, e0, e1) }
+      clause('.col_bl_start .template col_bl_end') do |object, template|
+        Block.new(:collection, object, template)
+      end
+
+      clause('.col_bl_start .template else .template col_bl_end') do |object, template1, template2|
+        Block.new(:collection, object, template1, template2)
+      end
+
+      clause('.context_bl_start .template context_bl_end') do |object, template|
+        Block.new(:context, object, template)
+      end
     end
 
     production(:cond_bl_start) do
-      clause('CURLYSTART IF object CURLYEND') { |_,_,e,_| e }
+      clause('CURLYSTART IF .object CURLYEND') { |object| object }
     end
 
     production(:cond_bl_end) do
@@ -68,7 +78,7 @@ module CurlyBars
     end
 
     production(:inv_cond_bl_start) do
-      clause('CURLYSTART UNLESS object CURLYEND') { |_,_,e,_| e }
+      clause('CURLYSTART UNLESS .object CURLYEND') { |object| object }
     end
 
     production(:inv_cond_bl_end) do
@@ -76,7 +86,7 @@ module CurlyBars
     end
 
     production(:col_bl_start) do
-      clause('CURLYSTART EACH object CURLYEND') { |_,_,e,_| e }
+      clause('CURLYSTART EACH .object CURLYEND') { |object| object }
     end
 
     production(:col_bl_end) do
@@ -84,7 +94,7 @@ module CurlyBars
     end
 
     production(:context_bl_start) do
-      clause('CURLYSTART WITH object CURLYEND') { |_,_,e,_| e }
+      clause('CURLYSTART WITH .object CURLYEND') { |object| object }
     end
 
     production(:context_bl_end) do
@@ -96,44 +106,6 @@ module CurlyBars
     end
 
     finalize
-
-    class Component
-      attr_reader :name, :identifier, :attributes
-
-      def initialize(name, identifier = nil, attributes = {})
-        @name, @identifier, @attributes = name, identifier, attributes
-      end
-
-      def to_s
-        [name, identifier].compact.join(".")
-      end
-
-      def ==(other)
-        other.name == name &&
-          other.identifier == identifier &&
-          other.attributes == attributes
-      end
-
-      def type
-        :component
-      end
-    end
-
-    class Comment
-      attr_reader :value
-
-      def initialize(value)
-        @value = value
-      end
-
-      def type
-        :comment
-      end
-
-      def ==(other)
-        other.value == value
-      end
-    end
 
     class Block
       attr_reader :type, :component, :nodes, :inverse_nodes
