@@ -10,28 +10,28 @@ module CurlyBars
     rule(/.*?(?=}})/m, :comment)
     rule(/}}/, :comment) { pop_state }
 
-    rule(/{{/) { push_state :expression; :CURLYSTART }
-    rule(/}}/, :expression) { pop_state; :CURLYEND }
+    rule(/{{/) { push_state :curly; :CURLYSTART }
+    rule(/}}/, :curly) { pop_state; :CURLYEND }
 
-    rule(/#if(?=\s)/, :expression) { :IF }
-    rule(/\/\s*if/, :expression) { :ENDIF }
+    rule(/#if(?=\s)/, :curly) { :IF }
+    rule(/\/\s*if/, :curly) { :ENDIF }
 
-    rule(/#unless(?=\s)/, :expression) { :UNLESS }
-    rule(/\/unless/, :expression) { :UNLESSCLOSE }
+    rule(/#unless(?=\s)/, :curly) { :UNLESS }
+    rule(/\/unless/, :curly) { :UNLESSCLOSE }
 
-    rule(/#each(?=\s)/, :expression) { :EACH }
-    rule(/\/each/, :expression) { :EACHCLOSE }
+    rule(/#each(?=\s)/, :curly) { :EACH }
+    rule(/\/each/, :curly) { :EACHCLOSE }
 
-    rule(/#with(?=\s)/, :expression) { :WITH }
-    rule(/\/with/, :expression) { :WITHCLOSE }
+    rule(/#with(?=\s)/, :curly) { :WITH }
+    rule(/\/with/, :curly) { :WITHCLOSE }
 
-    rule(/else/, :expression) { :ELSE }
+    rule(/else/, :curly) { :ELSE }
 
-    rule(/(#[A-Za-z][\w\.]*\??)/, :expression) { |helper| [:HELPER, helper] }
+    rule(/(#[A-Za-z][\w\.]*\??)/, :curly) { |helper| [:HELPER, helper] }
 
-    rule(/[A-Za-z][\w\.]*\??/, :expression) { |name| [:PATH, name] }
+    rule(/[A-Za-z][\w\.]*\??/, :curly) { |name| [:PATH, name] }
 
-    rule(/\s/, :expression)
+    rule(/\s/, :curly)
 
     rule(/.*?(?={{|\z)/m) { |text| [:TEXT, text] }
   end
