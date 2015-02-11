@@ -3,8 +3,12 @@ require 'rltk/lexer'
 module CurlyBars
   class Lexer < RLTK::Lexer
 
+    rule(/{{!--/) { push_state :comment_block }
+    rule(/.*?(?=--}})/m, :comment_block)
+    rule(/--}}/, :comment_block) { pop_state }
+
     rule(/{{!/) { push_state :comment }
-    rule(/[^}]+/, :comment)
+    rule(/.*?(?=}})/m, :comment)
     rule(/}}/, :comment) { pop_state }
 
     rule /{{/, :default do

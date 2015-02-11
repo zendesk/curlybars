@@ -63,8 +63,12 @@ describe "integration" do
         And another one
         in
         3 lines
+        }
       }}
-      {{!-- And this is the other style --}}
+      {{!--
+        And this is the {{ test }} other style
+        }}
+      --}}
       Goodbye
     HBS
 
