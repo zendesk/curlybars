@@ -25,24 +25,25 @@ module CurlyBars
 
     production(:item) do
       clause('TEXT') { |text| Node::Text.new(text).compile }
+
       clause(
-        'CURLYSTART .HELPER .STRING CURLYEND
+        'CURLYSTART .HELPER .expression CURLYEND
           .template
         CURLYSTART .HELPERCLOSE CURLYEND') do |helper, string, template, helperclose|
-        if helper != helperclose
-          raise IncompleteBlockError,
-            "block `#{helper}` cannot be closed by `#{helperclose}`"
-        else
-          #TODO Implement the hook with the presenter.
-        end
+        Node::Helper.new(helper, string, template, helperclose).compile
       end
-      clause('expression') { |expression| expression }
+
+      clause('CURLYSTART .expression CURLYEND') do |expression|
+        Node::Output.new(expression).compile
+      end
+
       clause('block_expression') { |block_expression| block_expression }
     end
 
     production(:expression) do
-      clause('START .object END') do |object|
-        Node::Output.new(object).compile
+      clause('STRING') { |string| string }
+      clause('PATH') do |path|
+        Node::Path.new(path).compile
       end
     end
 
