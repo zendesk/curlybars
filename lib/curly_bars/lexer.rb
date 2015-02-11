@@ -61,9 +61,5 @@ module CurlyBars
     rule(/[A-Za-z][\w\.]*\??/, :expression) { |name| [:PATH, name] }
 
     rule(/.*?(?={{|\z)/m) { |text| [:TEXT, text] }
-
-    class << self
-      alias :scan :lex
-    end
   end
 end
