@@ -8,6 +8,7 @@ require 'curly_bars/node/with'
 
 module CurlyBars
   class Parser < RLTK::Parser
+    IncompleteBlockError = Class.new(StandardError)
 
     production(:root) do |root|
       clause('template') { |template| Node::Root.new(template).compile }
@@ -24,6 +25,17 @@ module CurlyBars
 
     production(:item) do
       clause('TEXT') { |text| Node::Text.new(text).compile }
+      clause(
+        'CURLYSTART .HELPER .STRING CURLYEND
+          .template
+        CURLYSTART .HELPERCLOSE CURLYEND') do |helper, string, template, helperclose|
+        if helper != helperclose
+          raise IncompleteBlockError,
+            "block `#{helper}` cannot be closed by `#{helperclose}`"
+        else
+          #TODO Implement the hook with the presenter.
+        end
+      end
       clause('expression') { |expression| expression }
       clause('block_expression') { |block_expression| block_expression }
     end

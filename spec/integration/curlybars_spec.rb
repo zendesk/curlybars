@@ -39,6 +39,10 @@ class PostShowPresenter
   def visible
     true
   end
+
+  def form(title, opt)
+    "ciao"
+  end
 end
 
 describe "integration" do
@@ -120,6 +124,25 @@ describe "integration" do
       rendered = eval(ruby_code)
 
       expect(rendered).to eq("Hello http://foobar")
+    end
+
+#class="red" foo="bar"
+    it "render a block helper" do
+      doc = <<-HBS.strip_heredoc
+        {{#  form "new_post" }}
+          lorem ipsum
+        {{/form}}
+      HBS
+
+      lex = CurlyBars::Lexer.lex(doc)
+
+puts lex.map(&:type).inspect
+
+      # ruby_code = CurlyBars::Parser.parse(lex)
+      # context = PostShowPresenter.new
+
+      # rendered = context.instance_eval(ruby_code)
+      # expect(rendered).to eq("hello")
     end
   end
 end
