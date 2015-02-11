@@ -1,0 +1,10 @@
+<p>Hi {{ user.first_name}}</p>
+
+<h1>Article: {{ title }}</h1>
+
+{{#with author}}
+<p>
+  author {{first_name}}
+  <img src="{{avatar.url}}" />
+</p>
+{{/with}}

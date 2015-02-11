@@ -43,12 +43,14 @@ end
 
 describe "integration" do
   let(:context) { PostShowPresenter.new }
+  let(:presenter) { PostShowPresenter.new }
 
   it "runs if statement" do
     doc = "step1{{#if valid}}{{#if visible }} out{{/if}}stepX{{/if}}step2"
     lex = CurlyBars::Lexer.lex(doc)
     ruby_code = CurlyBars::Parser.parse(lex)
-    rendered = context.instance_eval(ruby_code)
+
+    rendered = eval(ruby_code)
 
     expect(rendered).to eq("step1 outstepXstep2")
   end
@@ -74,7 +76,7 @@ describe "integration" do
 
     lex = CurlyBars::Lexer.lex(doc)
     ruby_code = CurlyBars::Parser.parse(lex)
-    rendered = context.instance_eval(ruby_code)
+    rendered = eval(ruby_code)
 
     expect(rendered).to eq("Ciao\n\n\n\n\nGoodbye\n")
   end
@@ -85,8 +87,8 @@ describe "integration" do
       lex = CurlyBars::Lexer.lex(doc)
 
       ruby_code = CurlyBars::Parser.parse(lex)
+      rendered = eval(ruby_code)
 
-      rendered = context.instance_eval(ruby_code)
       expect(rendered).to eq("http://foobar")
     end
 
@@ -94,6 +96,8 @@ describe "integration" do
       doc = "{{system}}"
       lex = CurlyBars::Lexer.lex(doc)
       ruby_code = CurlyBars::Parser.parse(lex)
+
+      presenter = context
 
       expect{context.instance_eval(ruby_code)}.to raise_error(RuntimeError)
     end
@@ -103,9 +107,8 @@ describe "integration" do
 
       lex = CurlyBars::Lexer.lex(doc)
       ruby_code = CurlyBars::Parser.parse(lex)
-      context = PostShowPresenter.new
+      rendered = eval(ruby_code)
 
-      rendered = context.instance_eval(ruby_code)
       expect(rendered).to eq("Hello http://foobar")
     end
 
@@ -114,9 +117,8 @@ describe "integration" do
 
       lex = CurlyBars::Lexer.lex(doc)
       ruby_code = CurlyBars::Parser.parse(lex)
-      context = PostShowPresenter.new
+      rendered = eval(ruby_code)
 
-      rendered = context.instance_eval(ruby_code)
       expect(rendered).to eq("Hello http://foobar")
     end
   end
