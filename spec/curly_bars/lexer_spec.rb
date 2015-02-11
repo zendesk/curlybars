@@ -17,13 +17,13 @@ describe CurlyBars::Lexer, ".lex" do
 
   it "scans comments in the source" do
     map_lex_type("foo {{!bar}} baz").should == [
-      :OUT, :CURLYSTART, :BANG, :COMMENT, :CURLYEND, :OUT, :EOS
+      :OUT, :OUT, :EOS
     ]
   end
 
   it "allows newlines in comments" do
     map_lex_type("{{!\nfoo\n}}").should == [
-      :CURLYSTART, :BANG, :COMMENT, :CURLYEND, :EOS
+      :EOS
     ]
   end
 
