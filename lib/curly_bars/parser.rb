@@ -2,7 +2,7 @@ require 'rltk/parser'
 require 'curly_bars/node/root'
 require 'curly_bars/node/text'
 require 'curly_bars/node/if_block'
-require 'curly_bars/node/accessor'
+require 'curly_bars/node/path'
 require 'curly_bars/node/output'
 
 module CurlyBars
@@ -44,7 +44,7 @@ module CurlyBars
 
     production(:object) do
       clause('IDENT') do |e|
-        Node::Accessor.new(e).compile
+        Node::Path.new(e).compile
       end
     end
 

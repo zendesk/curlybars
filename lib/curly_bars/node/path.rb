@@ -1,16 +1,16 @@
 module CurlyBars
   module Node
-    class Accessor
-      attr_reader :methods_chain
+    class Path
+      attr_reader :path
 
-      def initialize(methods_chain)
-        @methods_chain = methods_chain
+      def initialize(path)
+        @path = path
       end
 
       def compile
 <<-RUBY
 begin
-  "#{methods_chain}".split(/\\./).inject(contexts.last) do |memo, m|
+  "#{path}".split(/\\./).inject(contexts.last) do |memo, m|
     if memo.respond_to?(m.to_sym)
       memo.public_send(m.to_sym)
     else
