@@ -49,9 +49,7 @@ module CurlyBars
       :ELSE
     end
 
-    rule /([A-Za-z][\w\.]*\??)/, :expression do |name|
-      [ :IDENT, name ]
-    end
+    rule(/[A-Za-z][\w\.]*\??/, :expression) { |name| [:IDENT, name] }
 
     rule /\!/, :expression do
       push_state :comment

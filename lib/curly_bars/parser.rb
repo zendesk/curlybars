@@ -2,6 +2,8 @@ require 'rltk/parser'
 require 'curly_bars/node/root'
 require 'curly_bars/node/text'
 require 'curly_bars/node/if_block'
+require 'curly_bars/node/accessor'
+require 'curly_bars/node/output'
 
 module CurlyBars
   class Parser < RLTK::Parser
@@ -35,17 +37,14 @@ module CurlyBars
     end
 
     production(:expression) do
-      clause('CURLYSTART object CURLYEND') { |_,e,_| e }
+      clause('CURLYSTART .object CURLYEND') do |object|
+        Node::Output.new(object).compile
+      end
     end
 
     production(:object) do
       clause('IDENT') do |e|
-        if e.include? "."
-          splitted = e.split(".")
-          Component.new(splitted.first, splitted[1..-1].join("."))
-        else
-          Component.new(e)
-        end
+        Node::Accessor.new(e).compile
       end
     end
 

@@ -17,7 +17,7 @@ describe CurlyBars::Parser do
     lex = CurlyBars::Lexer.lex("{{#if a}}b{{/if}}")
 
     allow(CurlyBars::Node::IfBlock).
-      to receive(:new).with(component("a"), [text("b").compile]).
+      to receive(:new).with(accessor("a").compile, [text("b").compile]).
       and_return(node)
 
     expect(node).to receive(:compile)
@@ -81,6 +81,10 @@ describe CurlyBars::Parser do
 
   def parse(template)
     described_class.parse(CurlyBars::Lexer.lex(template))
+  end
+
+  def accessor(methods_chain)
+    CurlyBars::Node::Accessor.new(methods_chain)
   end
 
   def component(*args)
