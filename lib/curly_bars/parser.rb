@@ -4,6 +4,7 @@ require 'curly_bars/node/text'
 require 'curly_bars/node/if_block'
 require 'curly_bars/node/path'
 require 'curly_bars/node/output'
+require 'curly_bars/node/with'
 
 module CurlyBars
   class Parser < RLTK::Parser
@@ -64,8 +65,8 @@ module CurlyBars
         Block.new(:collection, object, template1, template2)
       end
 
-      clause('.context_bl_start .template context_bl_end') do |object, template|
-        Block.new(:context, object, template)
+      clause('.with_block_start .template with_block_end') do |path, template|
+        Node::With.new(path, template).compile
       end
     end
 
@@ -93,11 +94,11 @@ module CurlyBars
       clause('CURLYSTART EACHCLOSE CURLYEND') { |_,_,_| }
     end
 
-    production(:context_bl_start) do
+    production(:with_block_start) do
       clause('CURLYSTART WITH .object CURLYEND') { |object| object }
     end
 
-    production(:context_bl_end) do
+    production(:with_block_end) do
       clause('CURLYSTART WITHCLOSE CURLYEND') { |_,_,_| }
     end
 

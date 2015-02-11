@@ -89,5 +89,35 @@ describe "integration" do
       rendered = context.instance_eval(ruby_code)
       expect(rendered).to eq("http://foobar")
     end
+
+    it "raises when trying to call methods not implemented on context" do
+      doc = "{{system}}"
+      lex = CurlyBars::Lexer.lex(doc)
+      ruby_code = CurlyBars::Parser.parse(lex)
+
+      expect{context.instance_eval(ruby_code)}.to raise_error(RuntimeError)
+    end
+
+    it "works with {{#with block version b" do
+      doc = "{{#with user}}Hello {{avatar.url}}{{/with}}"
+
+      lex = CurlyBars::Lexer.lex(doc)
+      ruby_code = CurlyBars::Parser.parse(lex)
+      context = PostShowPresenter.new
+
+      rendered = context.instance_eval(ruby_code)
+      expect(rendered).to eq("Hello http://foobar")
+    end
+
+    it "works with 2 nested {{#with blocks" do
+      doc = "{{#with user}}Hello {{#with avatar}}{{url}}{{/with}}{{/with}}"
+
+      lex = CurlyBars::Lexer.lex(doc)
+      ruby_code = CurlyBars::Parser.parse(lex)
+      context = PostShowPresenter.new
+
+      rendered = context.instance_eval(ruby_code)
+      expect(rendered).to eq("Hello http://foobar")
+    end
   end
 end
