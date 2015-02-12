@@ -27,13 +27,13 @@ module CurlyBars
       clause('TEXT') { |text| Node::Text.new(text).compile }
 
       clause(
-        'CURLYSTART .HELPER .expression CURLYEND
+        'START .HELPER .expression END
           .template
-        CURLYSTART .HELPERCLOSE CURLYEND') do |helper, string, template, helperclose|
+        START .HELPERCLOSE END') do |helper, string, template, helperclose|
         Node::Helper.new(helper, string, template, helperclose).compile
       end
 
-      clause('CURLYSTART .expression CURLYEND') do |expression|
+      clause('START .expression END') do |expression|
         Node::Output.new(expression).compile
       end
 
