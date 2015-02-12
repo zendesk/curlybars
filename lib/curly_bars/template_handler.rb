@@ -64,12 +64,16 @@ class CurlyBars::TemplateHandler
       presenter = ::#{presenter_class}.new(self, options)
       presenter.setup!
 
+      @output_buffer = output_buffer || ActiveSupport::SafeBuffer.new
+
       Curly::TemplateHandler.cache_if_key_is_not_nil(self, presenter) do
-        #{source}
+        result = #{source}
+        safe_concat(result)
       end
 
+      @output_buffer
+
       RUBY
-puts code
 
       code
     end
