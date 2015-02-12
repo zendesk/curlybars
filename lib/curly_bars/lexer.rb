@@ -10,8 +10,8 @@ module CurlyBars
     rule(/.*?(?=}})/m, :comment)
     rule(/}}/, :comment) { pop_state }
 
-    rule(/{{/) { push_state :curly; :CURLYSTART }
-    rule(/}}/, :curly) { pop_state; :CURLYEND }
+    rule(/{{/) { push_state :curly; :START }
+    rule(/}}/, :curly) { pop_state; :END }
 
     rule(/#if(?=\s)/, :curly) { :IF }
     rule(/\/\s*if/, :curly) { :ENDIF }

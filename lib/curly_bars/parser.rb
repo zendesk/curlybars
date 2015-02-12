@@ -29,7 +29,7 @@ module CurlyBars
     end
 
     production(:expression) do
-      clause('CURLYSTART .object CURLYEND') do |object|
+      clause('START .object END') do |object|
         Node::Output.new(object).compile
       end
     end
@@ -71,39 +71,39 @@ module CurlyBars
     end
 
     production(:cond_bl_start) do
-      clause('CURLYSTART IF .object CURLYEND') { |object| object }
+      clause('START IF .object END') { |object| object }
     end
 
     production(:cond_bl_end) do
-      clause('CURLYSTART ENDIF CURLYEND') { |_,_,_| }
+      clause('START ENDIF END') { |_,_,_| }
     end
 
     production(:inv_cond_bl_start) do
-      clause('CURLYSTART UNLESS .object CURLYEND') { |object| object }
+      clause('START UNLESS .object END') { |object| object }
     end
 
     production(:inv_cond_bl_end) do
-      clause('CURLYSTART UNLESSCLOSE CURLYEND') { |_,_,_| }
+      clause('START UNLESSCLOSE END') { |_,_,_| }
     end
 
     production(:col_bl_start) do
-      clause('CURLYSTART EACH .object CURLYEND') { |object| object }
+      clause('START EACH .object END') { |object| object }
     end
 
     production(:col_bl_end) do
-      clause('CURLYSTART EACHCLOSE CURLYEND') { |_,_,_| }
+      clause('START EACHCLOSE END') { |_,_,_| }
     end
 
     production(:with_block_start) do
-      clause('CURLYSTART WITH .object CURLYEND') { |object| object }
+      clause('START WITH .object END') { |object| object }
     end
 
     production(:with_block_end) do
-      clause('CURLYSTART WITHCLOSE CURLYEND') { |_,_,_| }
+      clause('START WITHCLOSE END') { |_,_,_| }
     end
 
     production(:else) do
-      clause('CURLYSTART ELSE CURLYEND') { |_,_,_| }
+      clause('START ELSE END') { |_,_,_| }
     end
 
     finalize
