@@ -26,10 +26,10 @@ module CurlyBars
       clause('TEXT') { |text| Node::Text.new(text).compile }
 
       clause(
-        'START .HELPER .expression END
+        'START .HELPER .PATH .options? END
           .template
-        START .HELPERCLOSE END') do |helper, string, template, helperclose|
-        Node::Helper.new(helper, string, template, helperclose).compile
+        START .HELPERCLOSE END') do |helper, path, options, template, helperclose|
+        Node::Helper.new(helper, path, template, helperclose, options).compile
       end
 
       clause('START .expression END') do |expression|
@@ -37,6 +37,15 @@ module CurlyBars
       end
 
       clause('block_expression') { |block_expression| block_expression }
+    end
+
+    production(:options) do
+      clause('options option') { |options, option| options.merge(option) }
+      clause('option') { |option| option }
+    end
+
+    production(:option) do
+      clause('.KEY .expression') { |key, expression| { key => expression } }
     end
 
     production(:expression) do

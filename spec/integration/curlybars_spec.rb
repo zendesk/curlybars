@@ -2,6 +2,16 @@ require 'spec_helper'
 require 'curly_bars/lexer'
 require 'curly_bars/parser'
 
+module Helpers
+  def form(title, opts={})
+    "ciao: #{title}"
+  end
+
+  def beautify(title, opts)
+    "beauty #{title} class:#{opts['class']} foo:#{opts['foo']}"
+  end
+end
+
 class AvatarPresenter
   def initialize(avatar)
     @avatar = avatar
@@ -24,6 +34,8 @@ class UserPresenter
 end
 
 class PostShowPresenter
+  include Helpers
+
   def initialize
     @current_user = { avatar: { url: "http://foobar" } }
   end
@@ -38,10 +50,6 @@ class PostShowPresenter
 
   def visible
     true
-  end
-
-  def form(title)
-    "ciao: #{title}"
   end
 end
 
@@ -126,11 +134,10 @@ describe "integration" do
       expect(rendered).to eq("Hello http://foobar")
     end
 
-#class="red" foo="bar"
-    it "render a block helper" do
+    it "render a block helper without options" do
       doc = <<-HBS.strip_heredoc
-        {{#  form "new_post" }}
-          lorem ipsum
+        {{#form new_article class="red" }}
+          {{ submit_button }}
         {{/form}}
       HBS
 
@@ -138,7 +145,21 @@ describe "integration" do
       ruby_code = CurlyBars::Parser.parse(lex)
       rendered = eval(ruby_code)
 
-      expect(rendered).to eq("ciao: new_post\n")
+      expect(rendered).to eq("ciao: new_article\n")
+    end
+
+    it "render a block helper with one option" do
+      doc = <<-HBS.strip_heredoc
+        {{#beautify new_article class="red" foo="bar"}}
+          {{ submit_button }}
+        {{/beautify}}
+      HBS
+
+      lex = CurlyBars::Lexer.lex(doc)
+      ruby_code = CurlyBars::Parser.parse(lex)
+      rendered = eval(ruby_code)
+
+      expect(rendered).to eq("beauty new_article class:red foo:bar\n")
     end
   end
 end
