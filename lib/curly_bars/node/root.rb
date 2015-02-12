@@ -1,19 +1,13 @@
 module CurlyBars
   module Node
-    class Root
-      attr_reader :template
-
-      def initialize(template)
-        @template = template
-      end
-
+    Root = Struct.new(:template) do
       def compile
-<<-RUBY
-contexts = [presenter]
-buffer = ActiveSupport::SafeBuffer.new
-#{template.join("\n")}
-buffer
-RUBY
+        <<-RUBY
+          contexts = [presenter]
+          buffer = ActiveSupport::SafeBuffer.new
+          #{template.compile}
+          buffer
+        RUBY
       end
     end
   end

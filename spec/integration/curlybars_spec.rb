@@ -60,7 +60,10 @@ describe "integration" do
   it "runs if statement" do
     doc = "step1{{#if valid}}{{#if visible }} out{{/if}}stepX{{/if}}step2"
     lex = CurlyBars::Lexer.lex(doc)
-    ruby_code = CurlyBars::Parser.parse(lex)
+    puts '-' * 20
+    puts "COMPILED: '#{CurlyBars::Parser.parse(lex).compile}'"
+    puts '-' * 20
+    ruby_code = CurlyBars::Parser.parse(lex).compile
 
     rendered = eval(ruby_code)
 
@@ -87,7 +90,7 @@ describe "integration" do
     HBS
 
     lex = CurlyBars::Lexer.lex(doc)
-    ruby_code = CurlyBars::Parser.parse(lex)
+    ruby_code = CurlyBars::Parser.parse(lex).compile
     rendered = eval(ruby_code)
 
     expect(rendered).to eq("Ciao\n\n\n\n\nGoodbye\n")
@@ -98,7 +101,7 @@ describe "integration" do
       doc = "{{ user.avatar.url }}"
       lex = CurlyBars::Lexer.lex(doc)
 
-      ruby_code = CurlyBars::Parser.parse(lex)
+      ruby_code = CurlyBars::Parser.parse(lex).compile
       rendered = eval(ruby_code)
 
       expect(rendered).to eq("http://foobar")
@@ -107,7 +110,7 @@ describe "integration" do
     it "raises when trying to call methods not implemented on context" do
       doc = "{{system}}"
       lex = CurlyBars::Lexer.lex(doc)
-      ruby_code = CurlyBars::Parser.parse(lex)
+      ruby_code = CurlyBars::Parser.parse(lex).compile
 
       presenter = context
 
@@ -118,7 +121,7 @@ describe "integration" do
       doc = "{{#with user}}Hello {{avatar.url}}{{/with}}"
 
       lex = CurlyBars::Lexer.lex(doc)
-      ruby_code = CurlyBars::Parser.parse(lex)
+      ruby_code = CurlyBars::Parser.parse(lex).compile
       rendered = eval(ruby_code)
 
       expect(rendered).to eq("Hello http://foobar")
@@ -128,7 +131,7 @@ describe "integration" do
       doc = "{{#with user}}Hello {{#with avatar}}{{url}}{{/with}}{{/with}}"
 
       lex = CurlyBars::Lexer.lex(doc)
-      ruby_code = CurlyBars::Parser.parse(lex)
+      ruby_code = CurlyBars::Parser.parse(lex).compile
       rendered = eval(ruby_code)
 
       expect(rendered).to eq("Hello http://foobar")
@@ -142,7 +145,7 @@ describe "integration" do
       HBS
 
       lex = CurlyBars::Lexer.lex(doc)
-      ruby_code = CurlyBars::Parser.parse(lex)
+      ruby_code = CurlyBars::Parser.parse(lex).compile
 
 puts ruby_code
       rendered = eval(ruby_code)
@@ -160,7 +163,7 @@ puts rendered
       HBS
 
       lex = CurlyBars::Lexer.lex(doc)
-      ruby_code = CurlyBars::Parser.parse(lex)
+      ruby_code = CurlyBars::Parser.parse(lex).compile
       rendered = eval(ruby_code)
 
       expect(rendered).to eq("beauty new_article class:red foo:bar\n")

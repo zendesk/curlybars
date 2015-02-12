@@ -1,14 +1,10 @@
 module CurlyBars
   module Node
-    class Output
-      attr_reader :expression
-
-      def initialize(expression)
-        @expression = expression
-      end
-
+    Output = Struct.new(:expression) do
       def compile
-        "buffer << #{expression}"
+        <<-RUBY
+          buffer << #{expression.compile}
+        RUBY
       end
     end
   end

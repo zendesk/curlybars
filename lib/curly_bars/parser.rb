@@ -1,5 +1,6 @@
 require 'rltk/parser'
 require 'curly_bars/node/root'
+require 'curly_bars/node/template'
 require 'curly_bars/node/text'
 require 'curly_bars/node/if_block'
 require 'curly_bars/node/path'
@@ -9,13 +10,10 @@ require 'curly_bars/node/helper'
 
 module CurlyBars
   class Parser < RLTK::Parser
-    production(:root) do |root|
-      clause('template') { |template| Node::Root.new(template).compile }
-    end
+    start :root
 
-    production(:template) do
-      clause('items') { |items| items }
-    end
+    production(:root, 'template') { |template| Node::Root.new(template) }
+    production(:template, 'items') { |items| Node::Template.new(items) }
 
     production(:items) do
       clause('items item') { |items, item| items << item }
@@ -23,17 +21,17 @@ module CurlyBars
     end
 
     production(:item) do
-      clause('TEXT') { |text| Node::Text.new(text).compile }
+      clause('TEXT') { |text| Node::Text.new(text) }
 
       clause(
         'START .HELPER .PATH .options? END
           .template
         START .HELPERCLOSE END') do |helper, path, options, template, helperclose|
-        Node::Helper.new(helper, path, template, helperclose, options).compile
+        Node::Helper.new(helper, path, template, helperclose, options)
       end
 
       clause('START .expression END') do |expression|
-        Node::Output.new(expression).compile
+        Node::Output.new(expression)
       end
 
       clause('block_expression') { |block_expression| block_expression }
@@ -51,19 +49,19 @@ module CurlyBars
     production(:expression) do
       clause('STRING') { |string| string }
       clause('PATH') do |path|
-        Node::Path.new(path).compile
+        Node::Path.new(path)
       end
     end
 
     production(:object) do
       clause('PATH') do |path|
-        Node::Path.new(path).compile
+        Node::Path.new(path)
       end
     end
 
     production(:block_expression) do
       clause('.cond_bl_start .template cond_bl_end') do |expression, template|
-        Node::IfBlock.new(expression, template).compile
+        Node::IfBlock.new(expression, template)
       end
 
       clause('.cond_bl_start .template else .template cond_bl_end') do |object, template1, template2|
@@ -87,7 +85,7 @@ module CurlyBars
       end
 
       clause('.with_block_start .template with_block_end') do |path, template|
-        Node::With.new(path, template).compile
+        Node::With.new(path, template)
       end
     end
 
