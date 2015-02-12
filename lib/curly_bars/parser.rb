@@ -5,11 +5,10 @@ require 'curly_bars/node/if_block'
 require 'curly_bars/node/path'
 require 'curly_bars/node/output'
 require 'curly_bars/node/with'
+require 'curly_bars/node/helper'
 
 module CurlyBars
   class Parser < RLTK::Parser
-    IncompleteBlockError = Class.new(StandardError)
-
     production(:root) do |root|
       clause('template') { |template| Node::Root.new(template).compile }
     end

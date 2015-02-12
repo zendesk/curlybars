@@ -1,3 +1,5 @@
+require 'curly_bars/error/incorrect_ending_error'
+
 module CurlyBars
   module Node
     class Helper
@@ -5,14 +7,14 @@ module CurlyBars
 
       def initialize(helper, context, template, helperclose)
         if helper != helperclose
-          raise IncompleteBlockError,
+          raise CurlyBars::Error::IncorrectEndingError,
             "block `#{helper}` cannot be closed by `#{helperclose}`"
         end
 
         @helper = helper
         @context = context
         @template = template
-        @helperclose helperclose
+        @helperclose = helperclose
       end
 
       def compile
