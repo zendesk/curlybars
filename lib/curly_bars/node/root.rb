@@ -9,7 +9,7 @@ module CurlyBars
 
       def compile
 <<-RUBY
-contexts = [self]
+contexts = [presenter]
 buffer = ActiveSupport::SafeBuffer.new
 #{template.join("\n")}
 buffer
