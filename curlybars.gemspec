@@ -3,17 +3,17 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.rubygems_version = '1.3.5'
 
-  s.name              = 'curly-templates'
-  s.version           = '2.3.2'
-  s.date              = '2015-01-13'
+  s.name              = 'curlybars'
+  s.version           = '0.1.0'
+  s.date              = '2015-02-12'
 
-  s.summary     = "Free your views!"
-  s.description = "A view layer for your Rails apps that separates structure and logic."
+  s.summary     = "Create your views using Handlebars templates!"
+  s.description = "A view layer for your Rails apps that separates structure and logic, using Handlebars templates."
   s.license     = "apache2"
 
-  s.authors  = ["Daniel Schierbeck"]
-  s.email    = 'daniel.schierbeck@gmail.com'
-  s.homepage = 'https://github.com/zendesk/curly'
+  s.authors  = ["Libo Cannici", "Cristian Planas", "Ilkka Oksanen", "Mauro Codella"]
+  s.email    = 'libo@zendesk.com'
+  s.homepage = 'https://github.com/zendesk/curlybars'
 
   s.require_paths = %w[lib]
 
@@ -29,13 +29,11 @@ Gem::Specification.new do |s|
 
   # = MANIFEST =
   s.files = %w[
-    CHANGELOG.md
-    CONTRIBUTING.md
     Gemfile
     README.md
     Rakefile
     circle.yml
-    curly-templates.gemspec
+    curlybars.gemspec
     lib/curly-templates.rb
     lib/curly.rb
     lib/curly/attribute_scanner.rb
