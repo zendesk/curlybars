@@ -3,12 +3,12 @@ require 'curly_bars/lexer'
 require 'curly_bars/parser'
 
 module Helpers
-  def form(title, opts={})
-    "LEFT#{yield}RIGHT"
+  def beautify(path, opts={})
+    "bold#{yield}italic from: #{path}"
   end
 
-  def beautify(title, opts)
-    "beauty #{title} class:#{opts['class']} foo:#{opts['foo']}"
+  def form(path, opts={})
+    "beauty #{path} class:#{opts['class']} foo:#{opts['foo']} #{yield}"
   end
 end
 
@@ -50,6 +50,16 @@ class PostShowPresenter
 
   def visible
     true
+  end
+
+  def new_comment_form
+    NewCommentFormPresenter.new
+  end
+end
+
+class NewCommentFormPresenter
+  def button_label
+    "submit"
   end
 end
 
@@ -136,22 +146,8 @@ describe "integration" do
 
     it "render a block helper without options" do
       doc = <<-HBS.strip_heredoc
-        {{#form new_article class="red"}}
+        {{#beautify new_comment_form}}
           TEXT
-        {{/form}}
-      HBS
-
-      lex = CurlyBars::Lexer.lex(doc)
-      ruby_code = CurlyBars::Parser.parse(lex).compile
-      rendered = eval(ruby_code)
-
-      expect(rendered).to eq("LEFT\n  TEXT\nRIGHT\n")
-    end
-
-    it "render a block helper with one option" do
-      doc = <<-HBS.strip_heredoc
-        {{#beautify new_article class="red" foo="bar"}}
-          {{ submit_button }}
         {{/beautify}}
       HBS
 
@@ -159,7 +155,22 @@ describe "integration" do
       ruby_code = CurlyBars::Parser.parse(lex).compile
       rendered = eval(ruby_code)
 
-      expect(rendered).to eq("beauty new_article class:red foo:bar\n")
+      expect(rendered).to eq("bold\n  TEXT\nitalic from: new_comment_form\n")
+    end
+
+    it "render a block helper with options and presenter" do
+      doc = <<-HBS.strip_heredoc
+        {{#form new_comment_form class="red" foo="bar"}}
+          {{ button_label }}
+        {{/form}}
+      HBS
+
+      lex = CurlyBars::Lexer.lex(doc)
+
+      ruby_code = CurlyBars::Parser.parse(lex).compile
+      rendered = eval(ruby_code)
+
+      expect(rendered).to eq("beauty new_comment_form class:red foo:bar \n  submit\n\n")
     end
   end
 end

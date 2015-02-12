@@ -22,10 +22,12 @@ module CurlyBars
         <<-RUBY
           buffers << buffer
           buffer << contexts.last.public_send("#{helper}".to_sym, "#{path}", #{options}) do
+            contexts << contexts.last.public_send("#{path}".to_sym)
             buffer = ActiveSupport::SafeBuffer.new
             #{template.compile}
             buffer
           end
+          contexts.pop
           buffer = buffers.pop
         RUBY
       end
