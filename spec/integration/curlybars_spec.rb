@@ -40,8 +40,8 @@ class PostShowPresenter
     true
   end
 
-  def form(title, opt)
-    "ciao"
+  def form(title)
+    "ciao: #{title}"
   end
 end
 
@@ -135,14 +135,10 @@ describe "integration" do
       HBS
 
       lex = CurlyBars::Lexer.lex(doc)
+      ruby_code = CurlyBars::Parser.parse(lex)
+      rendered = eval(ruby_code)
 
-puts lex.map(&:type).inspect
-
-      # ruby_code = CurlyBars::Parser.parse(lex)
-      # context = PostShowPresenter.new
-
-      # rendered = context.instance_eval(ruby_code)
-      # expect(rendered).to eq("hello")
+      expect(rendered).to eq("ciao: new_post\n")
     end
   end
 end

@@ -18,7 +18,10 @@ module CurlyBars
       end
 
       def compile
-        #TODO Implement the hook with the presenter.
+        t = template.join("\n")
+<<-RUBY
+buffer << contexts.last.public_send("#{helper}".to_sym, "#{context}")
+RUBY
       end
     end
   end
