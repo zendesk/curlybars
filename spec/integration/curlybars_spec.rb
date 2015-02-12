@@ -8,7 +8,7 @@ module Helpers
   end
 
   def form(path, opts={})
-    "beauty #{path} class:#{opts['class']} foo:#{opts['foo']} #{yield}"
+    "beauty #{path} class:#{opts[:class]} foo:#{opts[:foo]} #{yield}"
   end
 end
 
