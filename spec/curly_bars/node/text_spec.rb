@@ -1,10 +1,10 @@
 describe CurlyBars::Node::Text do
   it "compiles correctly" do
-    ruby_code = "buffer.safe_concat(\"lorem ipsum\")"
+    ruby_code = "buffer << \"lorem ipsum\"\n"
 
-    value = "lorem ipsum"
-    node = CurlyBars::Node::Text.new(value)
+    text = "lorem ipsum"
+    node = CurlyBars::Node::Text.new(text)
 
-    expect(node.compile).to eq(ruby_code)
+    expect(node.compile.strip_heredoc).to eq(ruby_code)
   end
 end

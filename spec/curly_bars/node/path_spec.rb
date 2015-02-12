@@ -14,6 +14,6 @@ describe CurlyBars::Node::Path do
       end
     RUBY
 
-    expect(node.compile).to eq(ruby_code)
+    expect(node.compile.strip_heredoc).to eq(ruby_code)
   end
 end

@@ -7,9 +7,9 @@ describe CurlyBars::Node::Root do
       buffer
     RUBY
 
-    template = ["foo"]
+    template = double("template", compile: "foo")
     node = CurlyBars::Node::Root.new(template)
 
-    expect(node.compile).to eq(ruby_code)
+    expect(node.compile.strip_heredoc).to eq(ruby_code)
   end
 end

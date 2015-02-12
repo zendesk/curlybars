@@ -8,8 +8,6 @@ describe CurlyBars::Parser do
     allow(CurlyBars::Node::Text).
       to receive(:new).with("a") {node}
 
-    expect(node).to receive(:compile)
-
     subject.parse(lex)
   end
 
@@ -17,10 +15,8 @@ describe CurlyBars::Parser do
     lex = CurlyBars::Lexer.lex("{{#if a}}b{{/if}}")
 
     allow(CurlyBars::Node::IfBlock).
-      to receive(:new).with(path("a").compile, [text("b").compile]).
+      to receive(:new).with(path("a"), template([text("b")])).
       and_return(node)
-
-    expect(node).to receive(:compile)
 
     subject.parse(lex)
   end
@@ -81,6 +77,10 @@ describe CurlyBars::Parser do
 
   def parse(template)
     described_class.parse(CurlyBars::Lexer.lex(template))
+  end
+
+  def template(items)
+    CurlyBars::Node::Template.new(items)
   end
 
   def path(methods_chain)

@@ -1,9 +1,10 @@
 describe CurlyBars::Node::Output do
   it "compiles correctly" do
-    node = CurlyBars::Node::Output.new("foo")
+    expression = double("expression", compile: 'foo')
+    node = CurlyBars::Node::Output.new(expression)
 
-    ruby_code = "buffer << foo"
+    ruby_code = "buffer << foo\n"
 
-    expect(node.compile).to eq(ruby_code)
+    expect(node.compile.strip_heredoc).to eq(ruby_code)
   end
 end
