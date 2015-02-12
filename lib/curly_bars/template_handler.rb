@@ -52,7 +52,7 @@ class CurlyBars::TemplateHandler
       raise Curly::PresenterNotFound.new(path) if presenter_class.nil?
 
       lex = CurlyBars::Lexer.lex(template.source)
-      source = CurlyBars::Parser.parse(lex)
+      source = CurlyBars::Parser.parse(lex).compile
 
       code = <<-RUBY
       if local_assigns.empty?
@@ -69,6 +69,7 @@ class CurlyBars::TemplateHandler
       end
 
       RUBY
+puts code
 
       code
     end
