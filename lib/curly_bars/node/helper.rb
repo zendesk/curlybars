@@ -19,9 +19,11 @@ module CurlyBars
       end
 
       def compile
-        t = template.join("\n")
 <<-RUBY
-buffer << contexts.last.public_send("#{helper}".to_sym, "#{context}", #{opts})
+t = #{template.join("\n")}
+buffer << contexts.last.public_send("#{helper}".to_sym, "#{context}", #{opts}) do
+  t
+end
 RUBY
       end
     end
