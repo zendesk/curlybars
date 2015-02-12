@@ -4,7 +4,7 @@ require 'curly_bars/parser'
 
 module Helpers
   def form(title, opts={})
-    "form#{yield}form"
+    "LEFT#{yield}RIGHT"
   end
 
   def beautify(title, opts)
@@ -60,9 +60,6 @@ describe "integration" do
   it "runs if statement" do
     doc = "step1{{#if valid}}{{#if visible }} out{{/if}}stepX{{/if}}step2"
     lex = CurlyBars::Lexer.lex(doc)
-    puts '-' * 20
-    puts "COMPILED: '#{CurlyBars::Parser.parse(lex).compile}'"
-    puts '-' * 20
     ruby_code = CurlyBars::Parser.parse(lex).compile
 
     rendered = eval(ruby_code)
@@ -146,13 +143,9 @@ describe "integration" do
 
       lex = CurlyBars::Lexer.lex(doc)
       ruby_code = CurlyBars::Parser.parse(lex).compile
-
-puts ruby_code
       rendered = eval(ruby_code)
-puts "--------------------------------"
-puts rendered
 
-      #expect(rendered).to eq("form\nTEXT\nform")
+      expect(rendered).to eq("LEFT\n  TEXT\nRIGHT\n")
     end
 
     it "render a block helper with one option" do

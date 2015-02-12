@@ -2,6 +2,7 @@ describe CurlyBars::Node::Root do
   it "compiles correctly" do
     ruby_code =<<-RUBY.strip_heredoc
       buffer = ActiveSupport::SafeBuffer.new
+      buffers = []
       contexts = [presenter]
       foo
       buffer

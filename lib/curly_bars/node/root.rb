@@ -4,6 +4,7 @@ module CurlyBars
       def compile
         <<-RUBY
           buffer = ActiveSupport::SafeBuffer.new
+          buffers = []
           contexts = [presenter]
           #{template.compile}
           buffer
