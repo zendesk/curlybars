@@ -5,7 +5,7 @@ module CurlyBars
     class Helper
       attr_reader :helper, :path, :template, :helperclose, :options
 
-      def initialize(helper, context, template, helperclose, options = {})
+      def initialize(helper, path, template, helperclose, options = {})
         if helper != helperclose
           raise CurlyBars::Error::IncorrectEndingError,
             "block `#{helper}` cannot be closed by `#{helperclose}`"
