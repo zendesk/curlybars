@@ -2,7 +2,7 @@ require 'rltk/parser'
 require 'curly_bars/node/root'
 require 'curly_bars/node/template'
 require 'curly_bars/node/text'
-require 'curly_bars/node/if_block'
+require 'curly_bars/node/if'
 require 'curly_bars/node/path'
 require 'curly_bars/node/output'
 require 'curly_bars/node/with'
@@ -38,7 +38,7 @@ module CurlyBars
         'START IF .expression END
           .template
         START ENDIF END') do |expression, template|
-        Node::IfBlock.new(expression, template)
+        Node::If.new(expression, template)
       end
 
       clause(
