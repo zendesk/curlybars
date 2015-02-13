@@ -2,48 +2,50 @@ require 'rltk/lexer'
 
 module CurlyBars
   class Lexer < RLTK::Lexer
-    rule(/{{!--/) { push_state :comment_block }
-    rule(/.*?(?=--}})/m, :comment_block)
-    rule(/--}}/, :comment_block) { pop_state }
+    match_first
 
-    rule(/{{!/) { push_state :comment }
-    rule(/.*?(?=}})/m, :comment)
-    rule(/}}/, :comment) { pop_state }
+    r(/{{!--/) { push_state :comment_block }
+    r(/--}}/, :comment_block) { pop_state }
+    r(/./m, :comment_block)
 
-    rule(/{{/) { push_state :curly; :START }
-    rule(/}}/, :curly) { pop_state; :END }
+    r(/{{!/) { push_state :comment }
+    r(/}}/, :comment) { pop_state }
+    r(/./m, :comment)
 
-    rule(/#\s*if(?=\s)/, :curly) { :IF }
-    rule(/\/\s*if/, :curly) { :ENDIF }
+    r(/{{/) { push_state :curly; :START }
+    r(/}}/, :curly) { pop_state; :END }
 
-    rule(/#\s*unless(?=\s)/, :curly) { :UNLESS }
-    rule(/\/unless/, :curly) { :UNLESSCLOSE }
+    r(/#\s*if(?=\s)/, :curly) { :IF }
+    r(/\/\s*if/, :curly) { :ENDIF }
 
-    rule(/#\s*each(?=\s)/, :curly) { :EACH }
-    rule(/\/each/, :curly) { :EACHCLOSE }
+    r(/#\s*unless(?=\s)/, :curly) { :UNLESS }
+    r(/\/unless/, :curly) { :UNLESSCLOSE }
 
-    rule(/#\s*with(?=\s)/, :curly) { :WITH }
-    rule(/\/with/, :curly) { :WITHCLOSE }
+    r(/#\s*each(?=\s)/, :curly) { :EACH }
+    r(/\/each/, :curly) { :EACHCLOSE }
 
-    rule(/#\s*([A-Za-z_]\w*)/, :curly) { |helper| set_flag(:helper); [:HELPER, match[1]] }
-    rule(/\/\s*([A-Za-z_]\w*)/, :curly) { |helper| unset_flag(:helper); [:HELPERCLOSE, match[1]] }
+    r(/#\s*with(?=\s)/, :curly) { :WITH }
+    r(/\/with/, :curly) { :WITHCLOSE }
 
-    rule(/([A-Za-z_]\w*)\s*=/, :curly, [:helper]) { |key| [:KEY, match[1]] }
+    r(/#\s*([A-Za-z_]\w*)/, :curly) { |helper| set_flag(:helper); [:HELPER, match[1]] }
+    r(/\/\s*([A-Za-z_]\w*)/, :curly) { |helper| unset_flag(:helper); [:HELPERCLOSE, match[1]] }
 
-    rule(/else/, :curly) { :ELSE }
+    r(/([A-Za-z_]\w*)\s*=/, :curly, [:helper]) { |key| [:KEY, match[1]] }
 
-    rule(/[A-Za-z][\w\.]*\??/, :curly) { |name| [:PATH, name] }
+    r(/else/, :curly) { :ELSE }
 
-    rule(/"/, :curly) { push_state :dq_string }
-    rule(/(\\"|[^"])*/, :dq_string) { |string| [:STRING, string]}
-    rule(/"/, :dq_string) { pop_state }
+    r(/[A-Za-z][\w\.]*\??/, :curly) { |name| [:PATH, name] }
 
-    rule(/'/, :curly) { push_state :sq_string }
-    rule(/(\\'|[^'])*/, :sq_string) { |string| [:STRING, string]}
-    rule(/'/, :sq_string) { pop_state }
+    r(/"/, :curly) { push_state :dq_string }
+    r(/"/, :dq_string) { pop_state }
+    r(/(\\"|[^"])*/, :dq_string) { |string| [:STRING, string]}
 
-    rule(/\s/, :curly)
+    r(/'/, :curly) { push_state :sq_string }
+    r(/'/, :sq_string) { pop_state }
+    r(/(\\'|[^'])*/, :sq_string) { |string| [:STRING, string]}
 
-    rule(/.*?(?={{|\z)/m) { |text| [:TEXT, text] }
+    r(/\s/, :curly)
+
+    r(/.*?(?={{|\z)/m) { |text| [:TEXT, text] }
   end
 end
