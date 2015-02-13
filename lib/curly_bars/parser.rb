@@ -3,6 +3,7 @@ require 'curly_bars/node/root'
 require 'curly_bars/node/template'
 require 'curly_bars/node/text'
 require 'curly_bars/node/if'
+require 'curly_bars/node/if_else'
 require 'curly_bars/node/path'
 require 'curly_bars/node/output'
 require 'curly_bars/node/with'
@@ -47,7 +48,7 @@ module CurlyBars
         START ELSE END
           .template
         START ENDIF END') do |expression, if_template, else_template|
-        Block.new(:conditional, expression, if_template, else_template)
+        Node::IfElse.new(expression, if_template, else_template)
       end
 
       clause(

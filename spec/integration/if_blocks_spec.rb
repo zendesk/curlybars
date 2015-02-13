@@ -56,4 +56,28 @@ describe "if blocks" do
 
     expect(rendered).to eq("StartValidEnd")
   end
+
+  describe "runs if-else statement" do
+    it "renders the if_template" do
+      presenter.stub(:return_true) { true }
+
+      doc = "{{#if return_true}}if_template{{else}}else_template{{/if}}"
+      lex = CurlyBars::Lexer.lex(doc)
+      ruby_code = CurlyBars::Parser.parse(lex).compile
+      rendered = eval(ruby_code)
+
+      expect(rendered).to eq("if_template")
+    end
+
+    it "renders the else_template" do
+      presenter.stub(:return_false) { false }
+
+      doc = "{{#if return_false}}if_template{{else}}else_template{{/if}}"
+      lex = CurlyBars::Lexer.lex(doc)
+      ruby_code = CurlyBars::Parser.parse(lex).compile
+      rendered = eval(ruby_code)
+
+      expect(rendered).to eq("else_template")
+    end
+  end
 end

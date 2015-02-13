@@ -4,9 +4,9 @@ module CurlyBars
       def compile
         <<-RUBY
           if #{expression.compile}
-            #{if_template.compile}
+            buffer.safe_concat(#{if_template.compile})
           else
-            #{else_template.compile}
+            buffer.safe_concat(#{else_template.compile})
           end
         RUBY
       end
