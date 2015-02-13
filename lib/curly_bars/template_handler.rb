@@ -67,8 +67,9 @@ class CurlyBars::TemplateHandler
       @output_buffer = output_buffer || ActiveSupport::SafeBuffer.new
 
       Curly::TemplateHandler.cache_if_key_is_not_nil(self, presenter) do
-        result = #{source}
-        safe_concat(result)
+        safe_concat begin
+          #{source}
+        end
       end
 
       @output_buffer
