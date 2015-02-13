@@ -1,4 +1,4 @@
-class Articles::AvatarPresenter
+class Shared::AvatarPresenter
   attr_reader :avatar
 
   def initialize(avatar)
