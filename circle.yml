@@ -1,9 +1,0 @@
-machine:
-  ruby:
-    version: 2.1.5
-dependencies:
-  post:
-    - bundle install
-test:
-  override:
-    - bundle exec rspec
