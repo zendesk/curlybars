@@ -2,7 +2,7 @@ describe CurlyBars::Node::IfBlock do
   it "compiles correctly" do
     ruby_code =<<-RUBY.strip_heredoc
       if true
-        foo
+        buffer.safe_concat(foo)
       end
     RUBY
 

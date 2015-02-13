@@ -3,11 +3,8 @@ module CurlyBars
     Root = Struct.new(:template) do
       def compile
         <<-RUBY
-          buffer = ActiveSupport::SafeBuffer.new
-          buffers = []
           contexts = [presenter]
-          #{template.compile}
-          buffer
+          ActiveSupport::SafeBuffer.new.safe_concat(#{template.compile})
         RUBY
       end
     end
