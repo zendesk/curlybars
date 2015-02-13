@@ -1,20 +1,12 @@
 module CurlyBars
   module Node
-    class With
-      attr_reader :path, :template
-
-      def initialize(path, template)
-        @path = path
-        @template = template
-      end
-
+    With = Struct.new(:path, :template) do
       def compile
-        t = template.join("\n")
-<<-RUBY
-contexts << #{path}
-#{t}
-contexts.pop
-RUBY
+        <<-RUBY
+          contexts << #{path.compile}
+          #{template.compile}
+          contexts.pop
+        RUBY
       end
     end
   end

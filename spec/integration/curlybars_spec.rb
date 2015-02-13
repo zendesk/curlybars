@@ -2,6 +2,16 @@ require 'spec_helper'
 require 'curly_bars/lexer'
 require 'curly_bars/parser'
 
+module Helpers
+  def beautify(path, opts={})
+    "bold#{yield}italic from: #{path}"
+  end
+
+  def form(path, opts={})
+    "beauty #{path} class:#{opts[:class]} foo:#{opts[:foo]} #{yield}"
+  end
+end
+
 class AvatarPresenter
   def initialize(avatar)
     @avatar = avatar
@@ -24,6 +34,8 @@ class UserPresenter
 end
 
 class PostShowPresenter
+  include Helpers
+
   def initialize
     @current_user = { avatar: { url: "http://foobar" } }
   end
@@ -39,6 +51,16 @@ class PostShowPresenter
   def visible
     true
   end
+
+  def new_comment_form
+    NewCommentFormPresenter.new
+  end
+end
+
+class NewCommentFormPresenter
+  def button_label
+    "submit"
+  end
 end
 
 describe "integration" do
@@ -48,7 +70,7 @@ describe "integration" do
   it "runs if statement" do
     doc = "step1{{#if valid}}{{#if visible }} out{{/if}}stepX{{/if}}step2"
     lex = CurlyBars::Lexer.lex(doc)
-    ruby_code = CurlyBars::Parser.parse(lex)
+    ruby_code = CurlyBars::Parser.parse(lex).compile
 
     rendered = eval(ruby_code)
 
@@ -75,7 +97,7 @@ describe "integration" do
     HBS
 
     lex = CurlyBars::Lexer.lex(doc)
-    ruby_code = CurlyBars::Parser.parse(lex)
+    ruby_code = CurlyBars::Parser.parse(lex).compile
     rendered = eval(ruby_code)
 
     expect(rendered).to eq("Ciao\n\n\n\n\nGoodbye\n")
@@ -86,7 +108,7 @@ describe "integration" do
       doc = "{{ user.avatar.url }}"
       lex = CurlyBars::Lexer.lex(doc)
 
-      ruby_code = CurlyBars::Parser.parse(lex)
+      ruby_code = CurlyBars::Parser.parse(lex).compile
       rendered = eval(ruby_code)
 
       expect(rendered).to eq("http://foobar")
@@ -95,7 +117,7 @@ describe "integration" do
     it "raises when trying to call methods not implemented on context" do
       doc = "{{system}}"
       lex = CurlyBars::Lexer.lex(doc)
-      ruby_code = CurlyBars::Parser.parse(lex)
+      ruby_code = CurlyBars::Parser.parse(lex).compile
 
       presenter = context
 
@@ -106,7 +128,7 @@ describe "integration" do
       doc = "{{#with user}}Hello {{avatar.url}}{{/with}}"
 
       lex = CurlyBars::Lexer.lex(doc)
-      ruby_code = CurlyBars::Parser.parse(lex)
+      ruby_code = CurlyBars::Parser.parse(lex).compile
       rendered = eval(ruby_code)
 
       expect(rendered).to eq("Hello http://foobar")
@@ -116,10 +138,39 @@ describe "integration" do
       doc = "{{#with user}}Hello {{#with avatar}}{{url}}{{/with}}{{/with}}"
 
       lex = CurlyBars::Lexer.lex(doc)
-      ruby_code = CurlyBars::Parser.parse(lex)
+      ruby_code = CurlyBars::Parser.parse(lex).compile
       rendered = eval(ruby_code)
 
       expect(rendered).to eq("Hello http://foobar")
+    end
+
+    it "render a block helper without options" do
+      doc = <<-HBS.strip_heredoc
+        {{#beautify new_comment_form}}
+          TEXT
+        {{/beautify}}
+      HBS
+
+      lex = CurlyBars::Lexer.lex(doc)
+      ruby_code = CurlyBars::Parser.parse(lex).compile
+      rendered = eval(ruby_code)
+
+      expect(rendered).to eq("bold\n  TEXT\nitalic from: new_comment_form\n")
+    end
+
+    it "render a block helper with options and presenter" do
+      doc = <<-HBS.strip_heredoc
+        {{#form new_comment_form class="red" foo="bar"}}
+          {{ button_label }}
+        {{/form}}
+      HBS
+
+      lex = CurlyBars::Lexer.lex(doc)
+
+      ruby_code = CurlyBars::Parser.parse(lex).compile
+      rendered = eval(ruby_code)
+
+      expect(rendered).to eq("beauty new_comment_form class:red foo:bar \n  submit\n\n")
     end
   end
 end

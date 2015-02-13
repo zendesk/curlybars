@@ -25,11 +25,22 @@ module CurlyBars
     rule(/#with(?=\s)/, :curly) { :WITH }
     rule(/\/with/, :curly) { :WITHCLOSE }
 
+    rule(/#\s*([A-Za-z_]\w*)/, :curly) { |helper| set_flag(:helper); [:HELPER, match[1]] }
+    rule(/\/\s*([A-Za-z_]\w*)/, :curly) { |helper| unset_flag(:helper); [:HELPERCLOSE, match[1]] }
+
+    rule(/([A-Za-z_]\w*)\s*=/, :curly, [:helper]) { |key| [:KEY, match[1]] }
+
     rule(/else/, :curly) { :ELSE }
 
-    rule(/(#[A-Za-z][\w\.]*\??)/, :curly) { |helper| [:HELPER, helper] }
-
     rule(/[A-Za-z][\w\.]*\??/, :curly) { |name| [:PATH, name] }
+
+    rule(/"/, :curly) { push_state :dq_string }
+    rule(/(\\"|[^"])*/, :dq_string) { |string| [:STRING, string]}
+    rule(/"/, :dq_string) { pop_state }
+
+    rule(/'/, :curly) { push_state :sq_string }
+    rule(/(\\'|[^'])*/, :sq_string) { |string| [:STRING, string]}
+    rule(/'/, :sq_string) { pop_state }
 
     rule(/\s/, :curly)
 

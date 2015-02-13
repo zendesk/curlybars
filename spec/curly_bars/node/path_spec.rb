@@ -8,12 +8,12 @@ describe CurlyBars::Node::Path do
           if memo.respond_to?(m.to_sym)
             memo.public_send(m.to_sym)
           else
-            raise "Template error: context doesn't implement: " << m
+            raise "Template error: context " + memo.class.to_s + " doesn't implement: " << m
           end
         end
       end
     RUBY
 
-    expect(node.compile).to eq(ruby_code)
+    expect(node.compile.strip_heredoc).to eq(ruby_code)
   end
 end

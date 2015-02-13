@@ -1,14 +1,10 @@
 module CurlyBars
   module Node
-    class Text
-      attr_reader :value
-
-      def initialize(value)
-        @value = value
-      end
-
+    Text = Struct.new(:text) do
       def compile
-        "buffer.safe_concat(#{value.inspect})"
+        <<-RUBY
+          buffer.safe_concat(#{text.inspect})
+        RUBY
       end
     end
   end

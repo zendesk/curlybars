@@ -1,9 +1,9 @@
 module CurlyBars
   module Node
-    Output = Struct.new(:expression) do
+    Ident = Struct.new(:ident) do
       def compile
         <<-RUBY
-          buffer << #{expression.compile}
+          #{ident.to_s}
         RUBY
       end
     end

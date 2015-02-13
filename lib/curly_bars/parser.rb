@@ -1,21 +1,19 @@
 require 'rltk/parser'
 require 'curly_bars/node/root'
+require 'curly_bars/node/template'
 require 'curly_bars/node/text'
 require 'curly_bars/node/if_block'
 require 'curly_bars/node/path'
 require 'curly_bars/node/output'
 require 'curly_bars/node/with'
+require 'curly_bars/node/helper'
 
 module CurlyBars
   class Parser < RLTK::Parser
+    start :root
 
-    production(:root) do |root|
-      clause('template') { |template| Node::Root.new(template).compile }
-    end
-
-    production(:template) do
-      clause('items') { |items| items }
-    end
+    production(:root, 'template') { |template| Node::Root.new(template) }
+    production(:template, 'items') { |items| Node::Template.new(items) }
 
     production(:items) do
       clause('items item') { |items, item| items << item }
@@ -23,91 +21,101 @@ module CurlyBars
     end
 
     production(:item) do
-      clause('TEXT') { |text| Node::Text.new(text).compile }
-      clause('expression') { |expression| expression }
-      clause('block_expression') { |block_expression| block_expression }
+      clause('TEXT') { |text| Node::Text.new(text) }
+
+      clause(
+        'START .HELPER .PATH .options? END
+          .template
+        START .HELPERCLOSE END') do |helper, path, options, template, helperclose|
+        Node::Helper.new(helper, path, template, helperclose, options)
+      end
+
+      clause('START .expression END') do |expression|
+        Node::Output.new(expression)
+      end
+
+      clause(
+        'START IF .expression END
+          .template
+        START ENDIF END') do |expression, template|
+        Node::IfBlock.new(expression, template)
+      end
+
+      clause(
+        'START IF .expression END
+          .template
+        START ELSE END
+          .template
+        START ENDIF END') do |expression, if_template, else_template|
+        Block.new(:conditional, expression, if_template, else_template)
+      end
+
+      clause(
+        'START UNLESS .expression END
+          .template
+        START UNLESSCLOSE END') do |expression, template|
+        Block.new(:inverse_conditional, expression, template)
+      end
+
+      clause(
+        'START UNLESS .object END
+          .template
+        START ELSE END
+          .template
+        START UNLESSCLOSE END') do |expression, unless_template, else_template|
+        Block.new(:inverse_conditional, expression, unless_template, else_template)
+      end
+
+      clause(
+        'START EACH .object END
+          .template
+        START EACHCLOSE END') do |object, template|
+        Block.new(:collection, object, template)
+      end
+
+      clause(
+        'START EACH .object END
+          .template
+        START ELSE END
+          .template
+        START EACHCLOSE END') do |object, template1, template2|
+        Block.new(:collection, object, template1, template2)
+      end
+
+      clause(
+        'START WITH .object END
+          .template
+        START WITHCLOSE END') do |path, template|
+        Node::With.new(path, template)
+      end
+
+    end
+
+    production(:options) do
+      clause('options option') { |options, option| options.merge(option) }
+      clause('option') { |option| option }
+    end
+
+    production(:option) do
+      clause('.KEY .expression') { |key, expression| { key => expression } }
     end
 
     production(:expression) do
-      clause('START .object END') do |object|
-        Node::Output.new(object).compile
+      clause('STRING') { |string| string }
+      clause('PATH') do |path|
+        Node::Path.new(path)
       end
     end
 
     production(:object) do
       clause('PATH') do |path|
-        Node::Path.new(path).compile
+        Node::Path.new(path)
       end
-    end
-
-    production(:block_expression) do
-      clause('.cond_bl_start .template cond_bl_end') do |expression, template|
-        Node::IfBlock.new(expression, template).compile
-      end
-
-      clause('.cond_bl_start .template else .template cond_bl_end') do |object, template1, template2|
-        Block.new(:conditional, object, template1, template2)
-      end
-
-      clause('.inv_cond_bl_start .template inv_cond_bl_end') do |object, template|
-        Block.new(:inverse_conditional, object, template)
-      end
-
-      clause('.inv_cond_bl_start .template else .template inv_cond_bl_end') do |object, template1, template2|
-        Block.new(:inverse_conditional, object, template1, template2)
-      end
-
-      clause('.col_bl_start .template col_bl_end') do |object, template|
-        Block.new(:collection, object, template)
-      end
-
-      clause('.col_bl_start .template else .template col_bl_end') do |object, template1, template2|
-        Block.new(:collection, object, template1, template2)
-      end
-
-      clause('.with_block_start .template with_block_end') do |path, template|
-        Node::With.new(path, template).compile
-      end
-    end
-
-    production(:cond_bl_start) do
-      clause('START IF .object END') { |object| object }
-    end
-
-    production(:cond_bl_end) do
-      clause('START ENDIF END') { |_,_,_| }
-    end
-
-    production(:inv_cond_bl_start) do
-      clause('START UNLESS .object END') { |object| object }
-    end
-
-    production(:inv_cond_bl_end) do
-      clause('START UNLESSCLOSE END') { |_,_,_| }
-    end
-
-    production(:col_bl_start) do
-      clause('START EACH .object END') { |object| object }
-    end
-
-    production(:col_bl_end) do
-      clause('START EACHCLOSE END') { |_,_,_| }
-    end
-
-    production(:with_block_start) do
-      clause('START WITH .object END') { |object| object }
-    end
-
-    production(:with_block_end) do
-      clause('START WITHCLOSE END') { |_,_,_| }
-    end
-
-    production(:else) do
-      clause('START ELSE END') { |_,_,_| }
     end
 
     finalize
 
+    # TODO: change me with nodes
     class Block
       attr_reader :type, :component, :nodes, :inverse_nodes
 

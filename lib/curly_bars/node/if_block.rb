@@ -1,16 +1,12 @@
 module CurlyBars
   module Node
-    class IfBlock
-      attr_reader :expression, :template
-
-      def initialize(expression, template)
-        @expression = expression
-        @template = template
-      end
-
+    IfBlock = Struct.new(:expression, :template) do
       def compile
-        t = template.join("\n")
-        "if #{expression}\n  #{t}\nend\n"
+        <<-RUBY
+          if #{expression.compile}
+            #{template.compile}
+          end
+        RUBY
       end
     end
   end
