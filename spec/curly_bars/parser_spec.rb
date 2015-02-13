@@ -15,7 +15,7 @@ describe CurlyBars::Parser do
     lex = CurlyBars::Lexer.lex("{{#if a}}b{{/if}}")
 
     expect(CurlyBars::Node::If).
-      to receive(:new).with(path("a"), template([text("b")]))
+      to receive(:new).with(path("a"), template(item(text("b"))))
 
     subject.parse(lex)
   end
@@ -115,11 +115,15 @@ describe CurlyBars::Parser do
     CurlyBars::Node::Template.new(items)
   end
 
-  def path(methods_chain)
-    CurlyBars::Node::Path.new(methods_chain)
+  def item(item)
+    CurlyBars::Node::Item.new(item)
   end
 
   def text(content)
     CurlyBars::Node::Text.new(content)
+  end
+
+  def path(path)
+    CurlyBars::Node::Path.new(path)
   end
 end

@@ -5,7 +5,7 @@ module CurlyBars
     class Helper
       attr_reader :helper, :path, :template, :helperclose, :options
 
-      def initialize(helper, path, template, helperclose, options = {})
+      def initialize(helper, path, template, helperclose, options = nil)
         if helper != helperclose
           raise CurlyBars::Error::IncorrectEndingError,
             "block `#{helper}` cannot be closed by `#{helperclose}`"
@@ -15,20 +15,31 @@ module CurlyBars
         @path = path
         @template = template
         @helperclose = helperclose
-        @options = options
+        @options = options || {}
       end
 
       def compile
+        compiled_options = <<-RUBY
+          options = ActiveSupport::HashWithIndifferentAccess.new
+        RUBY
+
+        compiled_options << options.map do |option|
+          "options.merge!(#{option.compile})"
+        end.join("\n")
+
         <<-RUBY
-          options = ActiveSupport::HashWithIndifferentAccess.new(#{options})
-          buffer.safe_concat(contexts.last.public_send("#{helper}".to_sym, "#{path}", options) do
-            contexts << contexts.last.public_send("#{path}".to_sym)
-            begin
-              #{template.compile}
-            ensure
-              contexts.pop
+          #{compiled_options}
+          ActiveSupport::SafeBuffer.new.safe_concat begin
+              context = #{path.compile}
+              contexts.last.public_send(#{helper.inspect}.to_sym, context, options) do
+                contexts << context
+                begin
+                  #{template.compile}
+                ensure
+                  contexts.pop
+                end
+              end
             end
-          end)
         RUBY
       end
     end

@@ -26,6 +26,7 @@ describe "if blocks" do
 
     lex = CurlyBars::Lexer.lex(doc)
     ruby_code = CurlyBars::Parser.parse(lex).compile
+    puts ruby_code
     rendered = eval(ruby_code)
 
     expect(rendered).to eq("StartEnd")

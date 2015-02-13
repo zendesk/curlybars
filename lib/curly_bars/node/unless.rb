@@ -3,9 +3,15 @@ module CurlyBars
     Unless = Struct.new(:expression, :template) do
       def compile
         <<-RUBY
-          unless #{expression.compile}
-            buffer.safe_concat(#{template.compile})
+          buffer = ActiveSupport::SafeBuffer.new
+          unless begin
+            #{expression.compile}
           end
+            buffer.safe_concat begin
+              #{template.compile}
+            end
+          end
+          buffer
         RUBY
       end
     end
