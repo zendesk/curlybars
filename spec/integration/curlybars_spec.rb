@@ -71,7 +71,6 @@ describe "integration" do
     doc = "step1{{#if valid}}{{#if visible }} out{{/if}}stepX{{/if}}step2"
     lex = CurlyBars::Lexer.lex(doc)
     ruby_code = CurlyBars::Parser.parse(lex).compile
-
     rendered = eval(ruby_code)
 
     expect(rendered).to eq("step1 outstepXstep2")

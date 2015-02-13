@@ -1,11 +1,8 @@
 describe CurlyBars::Node::Root do
   it "compiles correctly" do
     ruby_code =<<-RUBY.strip_heredoc
-      buffer = ActiveSupport::SafeBuffer.new
-      buffers = []
       contexts = [presenter]
-      foo
-      buffer
+      ActiveSupport::SafeBuffer.new.safe_concat(foo)
     RUBY
 
     template = double("template", compile: "foo")

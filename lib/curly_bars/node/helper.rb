@@ -20,16 +20,15 @@ module CurlyBars
 
       def compile
         <<-RUBY
-          buffers << buffer
           options = ActiveSupport::HashWithIndifferentAccess.new(#{options})
-          buffer << contexts.last.public_send("#{helper}".to_sym, "#{path}", options) do
+          buffer.safe_concat(contexts.last.public_send("#{helper}".to_sym, "#{path}", options) do
             contexts << contexts.last.public_send("#{path}".to_sym)
-            buffer = ActiveSupport::SafeBuffer.new
-            #{template.compile}
-            contexts.pop
-            buffer
-          end
-          buffer = buffers.pop
+            begin
+              #{template.compile}
+            ensure
+              contexts.pop
+            end
+          end)
         RUBY
       end
     end
