@@ -55,7 +55,7 @@ module CurlyBars
         'START UNLESS .expression END
           .template
         START UNLESSCLOSE END') do |expression, template|
-        Block.new(:inverse_conditional, expression, template)
+        Node::Unless.new(expression, template)
       end
 
       clause(
@@ -64,7 +64,7 @@ module CurlyBars
         START ELSE END
           .template
         START UNLESSCLOSE END') do |expression, unless_template, else_template|
-        Block.new(:inverse_conditional, expression, unless_template, else_template)
+        Node::UnlessElse.new(expression, unless_template, else_template)
       end
 
       clause(
