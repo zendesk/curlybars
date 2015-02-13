@@ -13,16 +13,16 @@ module CurlyBars
     rule(/{{/) { push_state :curly; :START }
     rule(/}}/, :curly) { pop_state; :END }
 
-    rule(/#if(?=\s)/, :curly) { :IF }
+    rule(/#\s*if(?=\s)/, :curly) { :IF }
     rule(/\/\s*if/, :curly) { :ENDIF }
 
-    rule(/#unless(?=\s)/, :curly) { :UNLESS }
+    rule(/#\s*unless(?=\s)/, :curly) { :UNLESS }
     rule(/\/unless/, :curly) { :UNLESSCLOSE }
 
-    rule(/#each(?=\s)/, :curly) { :EACH }
+    rule(/#\s*each(?=\s)/, :curly) { :EACH }
     rule(/\/each/, :curly) { :EACHCLOSE }
 
-    rule(/#with(?=\s)/, :curly) { :WITH }
+    rule(/#\s*with(?=\s)/, :curly) { :WITH }
     rule(/\/with/, :curly) { :WITHCLOSE }
 
     rule(/#\s*([A-Za-z_]\w*)/, :curly) { |helper| set_flag(:helper); [:HELPER, match[1]] }
