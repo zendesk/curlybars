@@ -1,6 +1,4 @@
-require 'articles/avatar_presenter'
-
-class Articles::UserPresenter
+class Shared::UserPresenter
   attr_reader :user
 
   def initialize(user)
@@ -12,6 +10,7 @@ class Articles::UserPresenter
   end
 
   def avatar
-    Articles::AvatarPresenter.new(@user.avatar)
+    avatar = @user.avatar
+    Shared::AvatarPresenter.new(avatar)
   end
 end

@@ -1,5 +1,3 @@
-require 'articles/user_presenter'
-
 class Articles::ShowPresenter < Curly::Presenter
   presents :article
 
@@ -8,10 +6,10 @@ class Articles::ShowPresenter < Curly::Presenter
   end
 
   def author
-    Articles::UserPresenter.new(@article.author)
+    Shared::UserPresenter.new(@article.author)
   end
 
   def user
-    Articles::UserPresenter.new(current_user)
+    Shared::UserPresenter.new(current_user)
   end
 end
