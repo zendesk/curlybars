@@ -202,7 +202,7 @@ describe CurlyBars::TemplateHandler do
   end
 
   def output
-    code = Curly::TemplateHandler.call(template)
+    code = CurlyBars::TemplateHandler.call(template)
     context.reset!
     context.instance_eval(code)
   end
