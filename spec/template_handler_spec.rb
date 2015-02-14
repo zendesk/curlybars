@@ -1,4 +1,4 @@
-describe Curly::TemplateHandler do
+describe CurlyBars::TemplateHandler do
   let :presenter_class do
     Class.new do
       def initialize(context, options = {})

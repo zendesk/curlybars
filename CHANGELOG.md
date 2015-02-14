@@ -1,6 +1,6 @@
 ### Unreleased
 
-### Curlybars 0.0.1 (February 13, 2015)
+### Curlybars 0.1.0 (February 13, 2015)
 
 * First working stub
 
