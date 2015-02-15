@@ -15,7 +15,7 @@ describe CurlyBars::Parser do
     lex = CurlyBars::Lexer.lex("{{#if a}}b{{/if}}")
 
     expect(CurlyBars::Node::If).
-      to receive(:new).with(path("a"), template(item(text("b"))))
+      to receive(:new).with(path("a"), template([item(text("b"))]))
 
     subject.parse(lex)
   end

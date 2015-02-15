@@ -26,7 +26,6 @@ describe "if blocks" do
 
     lex = CurlyBars::Lexer.lex(doc)
     ruby_code = CurlyBars::Parser.parse(lex).compile
-    puts ruby_code
     rendered = eval(ruby_code)
 
     expect(rendered).to eq("StartEnd")
@@ -65,6 +64,7 @@ describe "if blocks" do
       doc = "{{#if return_true}}if_template{{else}}else_template{{/if}}"
       lex = CurlyBars::Lexer.lex(doc)
       ruby_code = CurlyBars::Parser.parse(lex).compile
+
       rendered = eval(ruby_code)
 
       expect(rendered).to eq("if_template")

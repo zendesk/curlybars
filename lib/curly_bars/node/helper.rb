@@ -29,7 +29,7 @@ module CurlyBars
 
         <<-RUBY
           #{compiled_options}
-          ActiveSupport::SafeBuffer.new.safe_concat begin
+          ActiveSupport::SafeBuffer.new begin
               context = #{path.compile}
               contexts.last.public_send(#{helper.inspect}.to_sym, context, options) do
                 contexts << context

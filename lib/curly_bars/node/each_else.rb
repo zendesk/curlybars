@@ -1,15 +1,18 @@
 module CurlyBars
   module Node
-    EachElse = Struct.new(:expression, :template) do
+    EachElse = Struct.new(:path, :each_template, :else_template) do
       def compile
         <<-RUBY
-          buffer = ActiveSupport::SafeBuffer.new
-          #{expression.compile}.each do
-            buffer.safe_concat begin
-              #{template.compile}
+          collection = #{path.compile}
+          if collection.any?
+            buffer = ActiveSupport::SafeBuffer.new
+            collection.each do
+              buffer.safe_concat(#{each_template.compile})
             end
+            buffer
+          else
+            #{else_template.compile}
           end
-          buffer
         RUBY
       end
     end

@@ -10,10 +10,6 @@ module CurlyBars
           end.exec(contexts)
         RUBY
       end
-
-      def <<(other)
-        [self] << other
-      end
     end
   end
 end

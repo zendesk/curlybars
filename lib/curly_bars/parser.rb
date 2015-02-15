@@ -26,7 +26,7 @@ module CurlyBars
 
     production(:items) do
       clause('items item') { |items, item| items << Node::Item.new(item) }
-      clause('item') { |item| Node::Item.new(item) }
+      clause('item') { |item| [Node::Item.new(item)] }
     end
 
     production(:item) do
@@ -101,9 +101,11 @@ module CurlyBars
 
     production(:options) do
       clause('options option') { |options, option| options << option }
-      clause('option') { |option| option }
+      clause('option') { |option| [option] }
     end
-    production(:option, '.KEY .expression') { |key, expression| Node::Option.new(key, expression) }
+    production(:option, '.KEY .expression') do |key, expression|
+      Node::Option.new(key, expression)
+    end
 
     production(:expression) do
       clause('STRING') { |string| Node::String.new(string) }

@@ -4,12 +4,8 @@ module CurlyBars
       def compile
         <<-RUBY
           buffer = ActiveSupport::SafeBuffer.new
-          unless begin
-            #{expression.compile}
-          end
-            buffer.safe_concat begin
-              #{template.compile}
-            end
+          unless #{expression.compile}
+            buffer.safe_concat(#{template.compile})
           end
           buffer
         RUBY

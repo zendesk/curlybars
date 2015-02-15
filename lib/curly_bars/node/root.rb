@@ -4,7 +4,7 @@ module CurlyBars
       def compile
         <<-RUBY
           contexts = [presenter]
-          ActiveSupport::SafeBuffer.new.safe_concat(#{template.compile})
+          ActiveSupport::SafeBuffer.new(#{template.compile})
         RUBY
       end
     end

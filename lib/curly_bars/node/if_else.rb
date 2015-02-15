@@ -3,17 +3,11 @@ module CurlyBars
     IfElse = Struct.new(:expression, :if_template, :else_template) do
       def compile
         <<-RUBY
-          buffer = ActiveSupport::SafeBuffer.new
           if #{expression.compile}
-            buffer.safe_concat begin
-              #{if_template.compile}
-            end
+            #{if_template.compile}
           else
-            buffer.safe_concat begin
-              #{else_template.compile}
-            end
+            #{else_template.compile}
           end
-          buffer
         RUBY
       end
     end

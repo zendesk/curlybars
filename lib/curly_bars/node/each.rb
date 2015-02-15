@@ -5,9 +5,7 @@ module CurlyBars
         <<-RUBY
           buffer = ActiveSupport::SafeBuffer.new
           #{expression.compile}.each do
-            buffer.safe_concat begin
-              #{template.compile}
-            end
+            buffer.safe_concat(#{template.compile})
           end
           buffer
         RUBY
