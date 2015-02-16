@@ -1,5 +1,8 @@
 class Posts::NewPostFormPresenter
+  include Curlybars::MethodsWhitelisting
   include CurlybarsHelper
+
+  allow_methods :button_label, :title, :body, :asset, :input
 
   def button_label
     "submit"

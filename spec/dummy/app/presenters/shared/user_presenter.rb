@@ -1,5 +1,8 @@
 class Shared::UserPresenter
+  include Curlybars::MethodsWhitelisting
   attr_reader :user
+
+  allow_methods :first_name, :created_at, :avatar
 
   def initialize(user)
     @user = user
