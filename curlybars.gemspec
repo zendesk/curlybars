@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
 
   s.name              = 'curlybars'
   s.version           = '0.1.0'
-  s.date              = '2015-02-14'
+  s.date              = '2015-02-16'
 
   s.summary     = "Create your views using Handlebars templates!"
   s.description = "A view layer for your Rails apps that separates
@@ -46,30 +46,41 @@ Gem::Specification.new do |s|
     README.md
     Rakefile
     curlybars.gemspec
+    lib/curlybars.rb
     lib/curlybars/error/incorrect_ending_error.rb
     lib/curlybars/lexer.rb
+    lib/curlybars/node/each.rb
+    lib/curlybars/node/each_else.rb
     lib/curlybars/node/helper.rb
-    lib/curlybars/node/ident.rb
-    lib/curlybars/node/if_block.rb
+    lib/curlybars/node/if.rb
     lib/curlybars/node/if_else.rb
+    lib/curlybars/node/item.rb
+    lib/curlybars/node/option.rb
     lib/curlybars/node/output.rb
     lib/curlybars/node/path.rb
     lib/curlybars/node/root.rb
+    lib/curlybars/node/string.rb
     lib/curlybars/node/template.rb
     lib/curlybars/node/text.rb
+    lib/curlybars/node/unless.rb
+    lib/curlybars/node/unless_else.rb
     lib/curlybars/node/with.rb
     lib/curlybars/parser.rb
     lib/curlybars/railtie.rb
     lib/curlybars/template_handler.rb
-    lib/curlybars.rb
     lib/rails/projections.json
     spec/curlybars/lexer_spec.rb
+    spec/curlybars/node/each_else_spec.rb
+    spec/curlybars/node/each_spec.rb
     spec/curlybars/node/helper_spec.rb
-    spec/curlybars/node/if_block_spec.rb
+    spec/curlybars/node/if_else_spec.rb
+    spec/curlybars/node/if_spec.rb
     spec/curlybars/node/output_spec.rb
     spec/curlybars/node/path_spec.rb
     spec/curlybars/node/root_spec.rb
     spec/curlybars/node/text_spec.rb
+    spec/curlybars/node/unless_else_spec.rb
+    spec/curlybars/node/unless_spec.rb
     spec/curlybars/parser_spec.rb
     spec/dummy/.gitignore
     spec/dummy/app/controllers/application_controller.rb
