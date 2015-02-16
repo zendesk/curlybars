@@ -12,11 +12,11 @@ Bundler.setup
 #############################################################################
 
 def name
-  "curly"
+  "curlybars"
 end
 
 def gem_name
-  "#{name}-templates"
+  "curlybars"
 end
 
 def version
