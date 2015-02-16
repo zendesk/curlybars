@@ -12,8 +12,8 @@ require 'curlybars/node/each'
 require 'curlybars/node/each_else'
 require 'curlybars/node/path'
 require 'curlybars/node/string'
-require 'curlybars/node/output'
 require 'curlybars/node/with'
+require 'curlybars/node/helper'
 require 'curlybars/node/block_helper'
 require 'curlybars/node/option'
 
@@ -33,68 +33,68 @@ module Curlybars
       clause('TEXT') { |text| Node::Text.new(text) }
 
       clause(
-        'START .HELPER .path .options? END
+        'START HASH .path .path .options? END
           .template
-        START .HELPERCLOSE END') do |helper, path, options, template, helperclose|
+        START SLASH .path END') do |helper, path, options, template, helperclose|
         Node::BlockHelper.new(helper, path, template, helperclose, options)
       end
 
-      clause('START .expression END') do |expression|
-        Node::Output.new(expression)
+      clause('START .path .expression? .options? END') do |path, context, options|
+        Node::Helper.new(path, context, options)
       end
 
       clause(
-        'START IF .expression END
+        'START HASH IF .expression END
           .template
-        START ENDIF END') do |expression, template|
+        START SLASH IF END') do |expression, template|
         Node::If.new(expression, template)
       end
 
       clause(
-        'START IF .expression END
+        'START HASH IF .expression END
           .template
         START ELSE END
           .template
-        START ENDIF END') do |expression, if_template, else_template|
+        START SLASH IF END') do |expression, if_template, else_template|
         Node::IfElse.new(expression, if_template, else_template)
       end
 
       clause(
-        'START UNLESS .expression END
+        'START HASH UNLESS .expression END
           .template
-        START UNLESSCLOSE END') do |expression, template|
+        START SLASH UNLESS END') do |expression, template|
         Node::Unless.new(expression, template)
       end
 
       clause(
-        'START UNLESS .expression END
+        'START HASH UNLESS .expression END
           .template
         START ELSE END
           .template
-        START UNLESSCLOSE END') do |expression, unless_template, else_template|
+        START SLASH UNLESS END') do |expression, unless_template, else_template|
         Node::UnlessElse.new(expression, unless_template, else_template)
       end
 
       clause(
-        'START EACH .path END
+        'START HASH EACH .path END
           .template
-        START EACHCLOSE END') do |path, template|
+        START SLASH EACH END') do |path, template|
         Node::Each.new(path, template)
       end
 
       clause(
-        'START EACH .path END
+        'START HASH EACH .path END
           .template
         START ELSE END
           .template
-        START EACHCLOSE END') do |path, each_template, else_template|
+        START SLASH EACH END') do |path, each_template, else_template|
         Node::EachElse.new(path, each_template, else_template)
       end
 
       clause(
-        'START WITH .path END
+        'START HASH WITH .path END
           .template
-        START WITHCLOSE END') do |path, template|
+        START SLASH WITH END') do |path, template|
         Node::With.new(path, template)
       end
     end

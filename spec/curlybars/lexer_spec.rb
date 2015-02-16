@@ -5,26 +5,22 @@ describe Curlybars::Lexer, ".lex" do
 
   it "returns the tokens in the source" do
     map_lex_type("foo {{bar}} baz").should == [
-      :TEXT, :START, :PATH, :END, :TEXT, :EOS
+      :TEXT,
+      :START, :PATH, :END,
+      :TEXT, :EOS
     ]
   end
 
   it "scans components with identifiers" do
-    map_lex_type("{{foo.bar}}").should == [
-      :START, :PATH, :END, :EOS
-    ]
+    map_lex_type("{{foo.bar}}").should == [:START, :PATH, :END, :EOS]
   end
 
   it "scans comments in the source" do
-    map_lex_type("foo {{!bar}} baz").should == [
-      :TEXT, :TEXT, :EOS
-    ]
+    map_lex_type("foo {{!bar}} baz").should == [:TEXT, :TEXT, :EOS]
   end
 
   it "allows newlines in comments" do
-    map_lex_type("{{!\nfoo\n}}").should == [
-      :EOS
-    ]
+    map_lex_type("{{!\nfoo\n}}").should == [:EOS]
   end
 
   it "scans to the end of the source" do
@@ -33,45 +29,46 @@ describe Curlybars::Lexer, ".lex" do
 
   it "scans context block tags with the with syntax" do
     map_lex_type('{{#with bar}} hello {{/with}}').should == [
-      :START, :WITH, :PATH, :END,
-      :TEXT, :START, :WITHCLOSE, :END, :EOS
+      :START, :HASH, :WITH, :PATH, :END,
+      :TEXT,
+      :START, :SLASH, :WITH, :END, :EOS
     ]
   end
 
   it "scans conditional block tags with the if syntax" do
     map_lex_type('foo {{#if bar?}} hello {{/if}}').should == [
-      :TEXT, :START, :IF, :PATH, :END,
-      :TEXT, :START, :ENDIF, :END, :EOS
+      :TEXT, :START, :HASH, :IF, :PATH, :END,
+      :TEXT, :START, :SLASH, :IF, :END, :EOS
     ]
   end
 
   it "scans conditional block tags with the else token" do
     map_lex_type('foo {{#if bar?}} hello {{else}} bye {{/if}}').should == [
-      :TEXT, :START, :IF, :PATH, :END,
+      :TEXT, :START, :HASH, :IF, :PATH, :END,
       :TEXT, :START, :ELSE, :END,
-      :TEXT, :START, :ENDIF, :END, :EOS
+      :TEXT, :START, :SLASH, :IF, :END, :EOS
     ]
   end
 
   it "scans inverse block tags using the unless syntax" do
     map_lex_type('foo {{#unless bar?}} hello {{/unless}}').should == [
-      :TEXT, :START, :UNLESS, :PATH, :END,
-      :TEXT, :START, :UNLESSCLOSE, :END, :EOS
+      :TEXT, :START, :HASH, :UNLESS, :PATH, :END,
+      :TEXT, :START, :SLASH, :UNLESS, :END, :EOS
     ]
   end
 
   it "scans inverse conditional block tags with the else token" do
     map_lex_type('foo {{#unless bar?}} hello {{else}} bye {{/unless}}').should == [
-      :TEXT, :START, :UNLESS, :PATH, :END,
+      :TEXT, :START, :HASH, :UNLESS, :PATH, :END,
       :TEXT, :START, :ELSE, :END,
-      :TEXT, :START, :UNLESSCLOSE, :END, :EOS
+      :TEXT, :START, :SLASH, :UNLESS, :END, :EOS
     ]
   end
 
   it "scans collection block tags with the each syntax" do
     map_lex_type('foo {{#each bar}} hello {{/each}}').should == [
-      :TEXT, :START, :EACH, :PATH, :END,
-      :TEXT, :START, :EACHCLOSE, :END, :EOS
+      :TEXT, :START, :HASH, :EACH, :PATH, :END,
+      :TEXT, :START, :SLASH, :EACH, :END, :EOS
     ]
   end
 

@@ -30,6 +30,7 @@ describe "block helper" do
     HBS
 
     lex = Curlybars::Lexer.lex(doc)
+
     ruby_code = Curlybars::Parser.parse(lex).compile
     rendered = eval(ruby_code)
 

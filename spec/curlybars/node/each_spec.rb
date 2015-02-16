@@ -2,7 +2,7 @@ describe Curlybars::Node::Each do
   it "compiles correctly" do
     ruby_code =<<-RUBY.strip_heredoc
       buffer = ActiveSupport::SafeBuffer.new
-      path.each do
+      path.call.each do
         buffer.safe_concat(template)
       end
       buffer

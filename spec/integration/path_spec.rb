@@ -8,7 +8,7 @@ describe "path expansion on presenters" do
   let(:presenter) { Posts::ShowPresenter.new }
 
   it "evaluates the methods chain call" do
-    doc = "{{ user.avatar.url }}"
+    doc = "{{user.avatar.url}}"
     lex = Curlybars::Lexer.lex(doc)
 
     ruby_code = Curlybars::Parser.parse(lex).compile
