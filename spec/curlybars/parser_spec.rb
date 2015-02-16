@@ -23,8 +23,8 @@ describe Curlybars::Parser do
   it "parses component tokens" do
     lex = Curlybars::Lexer.lex("{{a}}")
 
-    expect(Curlybars::Node::Output).
-      to receive(:new).with(path("a"))
+    expect(Curlybars::Node::Helper).
+      to receive(:new).with(path("a"), nil, nil)
 
     subject.parse(lex)
   end
@@ -116,6 +116,10 @@ describe Curlybars::Parser do
 
   def text(content)
     Curlybars::Node::Text.new(content)
+  end
+
+  def helper(path)
+    Curlybars::Node::Helper.new(path)
   end
 
   def path(path)

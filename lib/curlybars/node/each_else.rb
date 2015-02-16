@@ -3,7 +3,7 @@ module Curlybars
     EachElse = Struct.new(:path, :each_template, :else_template) do
       def compile
         <<-RUBY
-          collection = #{path.compile}
+          collection = #{path.compile}.call
           if collection.any?
             buffer = ActiveSupport::SafeBuffer.new
             collection.each do

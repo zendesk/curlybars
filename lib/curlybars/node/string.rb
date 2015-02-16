@@ -2,7 +2,9 @@ module Curlybars
   module Node
     String = Struct.new(:string) do
       def compile
-        ActiveSupport::SafeBuffer.new(string.inspect)
+        <<-RUBY
+          ->() { ActiveSupport::SafeBuffer.new(#{string.inspect}) }
+        RUBY
       end
     end
   end

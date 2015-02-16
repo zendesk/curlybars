@@ -30,8 +30,9 @@ module Curlybars
         <<-RUBY
           #{compiled_options}
           ActiveSupport::SafeBuffer.new begin
-              context = #{path.compile}
-              contexts.last.public_send(#{helper.inspect}.to_sym, context, options) do
+              context = #{path.compile}.call
+              helper = #{helper.compile}
+              helper.call(*([context, options].first(helper.arity))) do
                 contexts << context
                 begin
                   #{template.compile}

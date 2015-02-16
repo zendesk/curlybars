@@ -1,7 +1,7 @@
 describe Curlybars::Node::IfElse do
   it "compiles correctly" do
     ruby_code =<<-RUBY.strip_heredoc
-      collection = path
+      collection = path.call
       if collection.any?
         buffer = ActiveSupport::SafeBuffer.new
         collection.each do

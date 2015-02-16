@@ -3,7 +3,7 @@ module Curlybars
     With = Struct.new(:path, :template) do
       def compile
         <<-RUBY
-          contexts << #{path.compile}
+          contexts << #{path.compile}.call
           begin
             #{template.compile}
           ensure

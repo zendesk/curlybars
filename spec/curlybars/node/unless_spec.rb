@@ -1,8 +1,8 @@
-describe Curlybars::Node::If do
+describe Curlybars::Node::Unless do
   it "compiles correctly" do
     ruby_code =<<-RUBY.strip_heredoc
       buffer = ActiveSupport::SafeBuffer.new
-      unless expression
+      unless expression.call
         buffer.safe_concat(template)
       end
       buffer

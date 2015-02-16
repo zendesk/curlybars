@@ -4,7 +4,7 @@ module Curlybars
       def compile
         <<-RUBY
           buffer = ActiveSupport::SafeBuffer.new
-          unless #{expression.compile}
+          unless #{expression.compile}.call
             buffer.safe_concat(#{template.compile})
           end
           buffer

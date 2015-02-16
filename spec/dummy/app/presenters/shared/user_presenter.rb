@@ -9,6 +9,10 @@ class Shared::UserPresenter
     user.first_name
   end
 
+  def created_at
+    user.created_at
+  end
+
   def avatar
     avatar = @user.avatar
     Shared::AvatarPresenter.new(avatar)
