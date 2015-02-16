@@ -1,4 +1,4 @@
-describe Curlybars::Node::Helper do
+describe Curlybars::Node::BlockHelper do
   it "raises an IncorrectEndingError when closing is not matching opening" do
     helper = 'form'
     context = 'context'
@@ -6,7 +6,7 @@ describe Curlybars::Node::Helper do
     helperclose = 'other'
 
     expect{
-      Curlybars::Node::Helper.new(helper, context, template, helperclose)
+      Curlybars::Node::BlockHelper.new(helper, context, template, helperclose)
     }.to raise_error(Curlybars::Error::IncorrectEndingError)
   end
 end
