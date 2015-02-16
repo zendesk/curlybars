@@ -2,7 +2,7 @@ require 'curlybars/error/incorrect_ending_error'
 
 module Curlybars
   module Node
-    class Helper
+    class BlockHelper
       attr_reader :helper, :path, :template, :helperclose, :options
 
       def initialize(helper, path, template, helperclose, options = nil)

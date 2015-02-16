@@ -14,7 +14,7 @@ require 'curlybars/node/path'
 require 'curlybars/node/string'
 require 'curlybars/node/output'
 require 'curlybars/node/with'
-require 'curlybars/node/helper'
+require 'curlybars/node/block_helper'
 require 'curlybars/node/option'
 
 module Curlybars
@@ -36,7 +36,7 @@ module Curlybars
         'START .HELPER .path .options? END
           .template
         START .HELPERCLOSE END') do |helper, path, options, template, helperclose|
-        Node::Helper.new(helper, path, template, helperclose, options)
+        Node::BlockHelper.new(helper, path, template, helperclose, options)
       end
 
       clause('START .expression END') do |expression|
