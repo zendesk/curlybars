@@ -1,6 +1,6 @@
 require 'spec_helper'
-require 'curly_bars/lexer'
-require 'curly_bars/parser'
+require 'curlybars/lexer'
+require 'curlybars/parser'
 
 require 'dummy/app/presenters/posts/show_presenter.rb'
 
@@ -12,8 +12,8 @@ describe "comments" do
       Start {{! This is a comment }} End
     HBS
 
-    lex = CurlyBars::Lexer.lex(doc)
-    ruby_code = CurlyBars::Parser.parse(lex).compile
+    lex = Curlybars::Lexer.lex(doc)
+    ruby_code = Curlybars::Parser.parse(lex).compile
     rendered = eval(ruby_code)
 
     expect(rendered).to eq("Start  End\n")
@@ -27,8 +27,8 @@ describe "comments" do
       End
     HBS
 
-    lex = CurlyBars::Lexer.lex(doc)
-    ruby_code = CurlyBars::Parser.parse(lex).compile
+    lex = Curlybars::Lexer.lex(doc)
+    ruby_code = Curlybars::Parser.parse(lex).compile
     rendered = eval(ruby_code)
 
     expect(rendered).to eq("Start\n\nEnd\n")
@@ -46,8 +46,8 @@ describe "comments" do
       End
     HBS
 
-    lex = CurlyBars::Lexer.lex(doc)
-    ruby_code = CurlyBars::Parser.parse(lex).compile
+    lex = Curlybars::Lexer.lex(doc)
+    ruby_code = Curlybars::Parser.parse(lex).compile
     rendered = eval(ruby_code)
 
     expect(rendered).to eq("Start\n\nEnd\n")
@@ -63,8 +63,8 @@ describe "comments" do
       End
     HBS
 
-    lex = CurlyBars::Lexer.lex(doc)
-    ruby_code = CurlyBars::Parser.parse(lex).compile
+    lex = Curlybars::Lexer.lex(doc)
+    ruby_code = Curlybars::Parser.parse(lex).compile
     rendered = eval(ruby_code)
 
     expect(rendered).to eq("Start\n\nEnd\n")

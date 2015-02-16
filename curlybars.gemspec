@@ -46,37 +46,37 @@ Gem::Specification.new do |s|
     README.md
     Rakefile
     curlybars.gemspec
-    lib/curly_bars/error/incorrect_ending_error.rb
-    lib/curly_bars/lexer.rb
-    lib/curly_bars/node/helper.rb
-    lib/curly_bars/node/ident.rb
-    lib/curly_bars/node/if_block.rb
-    lib/curly_bars/node/if_else.rb
-    lib/curly_bars/node/output.rb
-    lib/curly_bars/node/path.rb
-    lib/curly_bars/node/root.rb
-    lib/curly_bars/node/template.rb
-    lib/curly_bars/node/text.rb
-    lib/curly_bars/node/with.rb
-    lib/curly_bars/parser.rb
-    lib/curly_bars/railtie.rb
-    lib/curly_bars/template_handler.rb
+    lib/curlybars/error/incorrect_ending_error.rb
+    lib/curlybars/lexer.rb
+    lib/curlybars/node/helper.rb
+    lib/curlybars/node/ident.rb
+    lib/curlybars/node/if_block.rb
+    lib/curlybars/node/if_else.rb
+    lib/curlybars/node/output.rb
+    lib/curlybars/node/path.rb
+    lib/curlybars/node/root.rb
+    lib/curlybars/node/template.rb
+    lib/curlybars/node/text.rb
+    lib/curlybars/node/with.rb
+    lib/curlybars/parser.rb
+    lib/curlybars/railtie.rb
+    lib/curlybars/template_handler.rb
     lib/curlybars.rb
     lib/rails/projections.json
-    spec/curly_bars/lexer_spec.rb
-    spec/curly_bars/node/helper_spec.rb
-    spec/curly_bars/node/if_block_spec.rb
-    spec/curly_bars/node/output_spec.rb
-    spec/curly_bars/node/path_spec.rb
-    spec/curly_bars/node/root_spec.rb
-    spec/curly_bars/node/text_spec.rb
-    spec/curly_bars/parser_spec.rb
+    spec/curlybars/lexer_spec.rb
+    spec/curlybars/node/helper_spec.rb
+    spec/curlybars/node/if_block_spec.rb
+    spec/curlybars/node/output_spec.rb
+    spec/curlybars/node/path_spec.rb
+    spec/curlybars/node/root_spec.rb
+    spec/curlybars/node/text_spec.rb
+    spec/curlybars/parser_spec.rb
     spec/dummy/.gitignore
     spec/dummy/app/controllers/application_controller.rb
     spec/dummy/app/controllers/articles_controller.rb
     spec/dummy/app/controllers/dashboards_controller.rb
     spec/dummy/app/helpers/application_helper.rb
-    spec/dummy/app/helpers/curly_bars_helper.rb
+    spec/dummy/app/helpers/curlybars_helper.rb
     spec/dummy/app/models/article.rb
     spec/dummy/app/models/user.rb
     spec/dummy/app/presenters/articles/show_presenter.rb
