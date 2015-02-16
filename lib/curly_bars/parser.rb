@@ -78,8 +78,8 @@ module CurlyBars
       clause(
         'START EACH .path END
           .template
-        START EACHCLOSE END') do |expression, template|
-        Node::Each.new(expression, template)
+        START EACHCLOSE END') do |path, template|
+        Node::Each.new(path, template)
       end
 
       clause(
@@ -88,7 +88,7 @@ module CurlyBars
         START ELSE END
           .template
         START EACHCLOSE END') do |path, each_template, else_template|
-        Node::EachElse.new(expression, each_tempalte, else_template)
+        Node::EachElse.new(path, each_template, else_template)
       end
 
       clause(
