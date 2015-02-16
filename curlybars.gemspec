@@ -36,6 +36,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency("rake")
   s.add_development_dependency("rspec", "~> 2.12")
   s.add_development_dependency("genspec")
+  s.add_development_dependency("byebug", "~> 3.5")
 
   # = MANIFEST =
   s.files = %w[

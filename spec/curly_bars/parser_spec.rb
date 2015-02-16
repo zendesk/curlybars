@@ -14,8 +14,8 @@ describe CurlyBars::Parser do
   it "parses conditionals blocks" do
     lex = CurlyBars::Lexer.lex("{{#if a}}b{{/if}}")
 
-    expect(CurlyBars::Node::IfBlock).
-      to receive(:new).with(path("a"), template([text("b")]))
+    expect(CurlyBars::Node::If).
+      to receive(:new).with(path("a"), template([item(text("b"))]))
 
     subject.parse(lex)
   end
@@ -32,12 +32,11 @@ describe CurlyBars::Parser do
   it "parses conditionals blocks with elses" do
     lex = CurlyBars::Lexer.lex("{{#if a}}b{{else}}c{{/if}}")
 
-    expect(CurlyBars::Parser::Block).
+    expect(CurlyBars::Node::IfElse).
       to receive(:new).with(
-        :conditional,
         path("a"),
-        template([text("b")]),
-        template([text("c")])
+        template([item(text("b"))]),
+        template([item(text("c"))])
       )
 
     subject.parse(lex)
@@ -46,11 +45,10 @@ describe CurlyBars::Parser do
   it "parses reverse conditional blocks" do
     lex = CurlyBars::Lexer.lex("{{#unless a}}b{{/unless}}")
 
-    expect(CurlyBars::Parser::Block).
+    expect(CurlyBars::Node::Unless).
       to receive(:new).with(
-        :inverse_conditional,
         path("a"),
-        template([text("b")])
+        template([item(text("b"))])
       )
 
     subject.parse(lex)
@@ -59,12 +57,11 @@ describe CurlyBars::Parser do
   it "parses reverse conditional blocks with elses" do
     lex = CurlyBars::Lexer.lex("{{#unless a}}b{{else}}c{{/unless}}")
 
-    expect(CurlyBars::Parser::Block).
+    expect(CurlyBars::Node::UnlessElse).
       to receive(:new).with(
-        :inverse_conditional,
         path("a"),
-        template([text("b")]),
-        template([text("c")])
+        template([item(text("b"))]),
+        template([item(text("c"))])
       )
 
     subject.parse(lex)
@@ -73,11 +70,10 @@ describe CurlyBars::Parser do
   it "parses collection blocks" do
     lex = CurlyBars::Lexer.lex("{{#each a}}b{{/each}}")
 
-    expect(CurlyBars::Parser::Block).
+    expect(CurlyBars::Node::Each).
       to receive(:new).with(
-        :collection,
         path("a"),
-        template([text("b")])
+        template([item(text("b"))])
       )
 
     subject.parse(lex)
@@ -86,12 +82,11 @@ describe CurlyBars::Parser do
   it "parses collection blocks with elses" do
     lex = CurlyBars::Lexer.lex("{{#each a}}b{{else}}c{{/each}}")
 
-    expect(CurlyBars::Parser::Block).
+    expect(CurlyBars::Node::EachElse).
       to receive(:new).with(
-        :collection,
         path("a"),
-        template([text("b")]),
-        template([text("c")])
+        template([item(text("b"))]),
+        template([item(text("c"))])
       )
 
     subject.parse(lex)
@@ -103,7 +98,7 @@ describe CurlyBars::Parser do
     expect(CurlyBars::Node::With).
       to receive(:new).with(
         path("a.b.c"),
-        template([text("b")])
+        template([item(text("b"))])
       )
 
     subject.parse(lex)
@@ -115,11 +110,15 @@ describe CurlyBars::Parser do
     CurlyBars::Node::Template.new(items)
   end
 
-  def path(methods_chain)
-    CurlyBars::Node::Path.new(methods_chain)
+  def item(item)
+    CurlyBars::Node::Item.new(item)
   end
 
   def text(content)
     CurlyBars::Node::Text.new(content)
+  end
+
+  def path(path)
+    CurlyBars::Node::Path.new(path)
   end
 end

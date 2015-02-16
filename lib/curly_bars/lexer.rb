@@ -27,8 +27,12 @@ module CurlyBars
     r(/#\s*with(?=\s)/, :curly) { :WITH }
     r(/\/with/, :curly) { :WITHCLOSE }
 
-    r(/#\s*([A-Za-z_]\w*)/, :curly) { |helper| set_flag(:helper); [:HELPER, match[1]] }
-    r(/\/\s*([A-Za-z_]\w*)/, :curly) { |helper| unset_flag(:helper); [:HELPERCLOSE, match[1]] }
+    r(/#\s*([A-Za-z_]\w*)/, :curly) do |helper|
+      set_flag(:helper); [:HELPER, match[1]]
+    end
+    r(/\/\s*([A-Za-z_]\w*)/, :curly) do |helper|
+      unset_flag(:helper); [:HELPERCLOSE, match[1]]
+    end
 
     r(/([A-Za-z_]\w*)\s*=/, :curly, [:helper]) { |key| [:KEY, match[1]] }
 

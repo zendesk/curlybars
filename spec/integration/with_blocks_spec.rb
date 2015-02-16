@@ -19,7 +19,6 @@ describe "with blocks" do
 
   it "works with 2 nested {{#with blocks" do
     doc = "{{#with user}}Hello {{#with avatar}}{{url}}{{/with}}{{/with}}"
-
     lex = CurlyBars::Lexer.lex(doc)
     ruby_code = CurlyBars::Parser.parse(lex).compile
     rendered = eval(ruby_code)

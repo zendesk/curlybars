@@ -19,7 +19,7 @@ describe "helper blocks" do
     ruby_code = CurlyBars::Parser.parse(lex).compile
     rendered = eval(ruby_code)
 
-    expect(rendered).to eq("bold\n  TEXT\nitalic from: new_comment_form\n")
+    expect(rendered).to eq("bold\n  TEXT\nitalic\n")
   end
 
   it "render a block helper with options and presenter" do
@@ -30,10 +30,9 @@ describe "helper blocks" do
     HBS
 
     lex = CurlyBars::Lexer.lex(doc)
-
     ruby_code = CurlyBars::Parser.parse(lex).compile
     rendered = eval(ruby_code)
 
-    expect(rendered).to eq("beauty new_comment_form class:red foo:bar \n  submit\n\n")
+    expect(rendered).to eq("beauty class:red foo:bar \n  submit\n\n")
   end
 end

@@ -4,8 +4,11 @@ module CurlyBars
       def compile
         <<-RUBY
           contexts << #{path.compile}
-          buffer.safe_concat(#{template.compile})
-          contexts.pop
+          begin
+            #{template.compile}
+          ensure
+            contexts.pop
+          end
         RUBY
       end
     end

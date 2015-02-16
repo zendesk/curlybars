@@ -3,7 +3,7 @@ module CurlyBars
     Output = Struct.new(:expression) do
       def compile
         <<-RUBY
-          buffer << #{expression.compile}
+          ActiveSupport::SafeBuffer.new(#{expression.compile})
         RUBY
       end
     end
