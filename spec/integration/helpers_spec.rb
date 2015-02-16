@@ -51,7 +51,7 @@ describe "block helper" do
     rendered = eval(ruby_code)
 
     expect(rendered).to eq(
-      %Q{\n  <input name="community_post[title]" type="text" class="form-control" value="some value persisted in the DB">\n\n}
+      %Q{\n  <input name="community_post[title]" id="community_post_title" type="text" class="form-control" value="some value persisted in the DB">\n\n}
     )
   end
 end

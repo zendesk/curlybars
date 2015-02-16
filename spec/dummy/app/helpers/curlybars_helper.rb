@@ -23,7 +23,7 @@ module CurlybarsHelper
   def input(field, opts)
     type = opts.fetch(:title, 'text')
     <<-HTML.strip_heredoc
-      <input name="#{field.name}" type="#{type}" class="#{opts['class']}" value="#{field.value}">
+      <input name="#{field.name}" id="#{field.id}" type="#{type}" class="#{opts['class']}" value="#{field.value}">
     HTML
   end
 end

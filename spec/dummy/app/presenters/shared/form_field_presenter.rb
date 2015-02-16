@@ -11,4 +11,8 @@ class Shared::FormFieldPresenter
   def name
     "#{@resource_name}[#{@name}]"
   end
+
+  def id
+    "#{@resource_name}_#{@name}"
+  end
 end
