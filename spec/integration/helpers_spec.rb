@@ -1,9 +1,9 @@
 require 'spec_helper'
-require 'curly_bars/lexer'
-require 'curly_bars/parser'
+require 'curlybars/lexer'
+require 'curlybars/parser'
 
 require 'dummy/app/presenters/posts/show_presenter.rb'
-require 'dummy/app/helpers/curly_bars_helper.rb'
+require 'dummy/app/helpers/curlybars_helper.rb'
 
 describe "helper blocks" do
   let(:presenter) { Posts::ShowPresenter.new }
@@ -15,8 +15,8 @@ describe "helper blocks" do
       {{/beautify}}
     HBS
 
-    lex = CurlyBars::Lexer.lex(doc)
-    ruby_code = CurlyBars::Parser.parse(lex).compile
+    lex = Curlybars::Lexer.lex(doc)
+    ruby_code = Curlybars::Parser.parse(lex).compile
     rendered = eval(ruby_code)
 
     expect(rendered).to eq("bold\n  TEXT\nitalic\n")
@@ -29,8 +29,8 @@ describe "helper blocks" do
       {{/form}}
     HBS
 
-    lex = CurlyBars::Lexer.lex(doc)
-    ruby_code = CurlyBars::Parser.parse(lex).compile
+    lex = Curlybars::Lexer.lex(doc)
+    ruby_code = Curlybars::Parser.parse(lex).compile
     rendered = eval(ruby_code)
 
     expect(rendered).to eq("beauty class:red foo:bar \n  submit\n\n")

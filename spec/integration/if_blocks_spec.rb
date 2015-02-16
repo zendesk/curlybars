@@ -1,6 +1,6 @@
 require 'spec_helper'
-require 'curly_bars/lexer'
-require 'curly_bars/parser'
+require 'curlybars/lexer'
+require 'curlybars/parser'
 
 require 'dummy/app/presenters/posts/show_presenter.rb'
 
@@ -12,8 +12,8 @@ describe "if blocks" do
 
     doc = "Start{{#if valid}}Valid{{/if}}End"
 
-    lex = CurlyBars::Lexer.lex(doc)
-    ruby_code = CurlyBars::Parser.parse(lex).compile
+    lex = Curlybars::Lexer.lex(doc)
+    ruby_code = Curlybars::Parser.parse(lex).compile
     rendered = eval(ruby_code)
 
     expect(rendered).to eq("StartValidEnd")
@@ -24,8 +24,8 @@ describe "if blocks" do
 
     doc = "Start{{#if valid}}Valid{{/if}}End"
 
-    lex = CurlyBars::Lexer.lex(doc)
-    ruby_code = CurlyBars::Parser.parse(lex).compile
+    lex = Curlybars::Lexer.lex(doc)
+    ruby_code = Curlybars::Parser.parse(lex).compile
     rendered = eval(ruby_code)
 
     expect(rendered).to eq("StartEnd")
@@ -36,8 +36,8 @@ describe "if blocks" do
     presenter.stub(:visible) { true }
 
     doc = "Start{{#if valid}}{{#if visible}}Visible{{/if}}Valid{{/if}}End"
-    lex = CurlyBars::Lexer.lex(doc)
-    ruby_code = CurlyBars::Parser.parse(lex).compile
+    lex = Curlybars::Lexer.lex(doc)
+    ruby_code = Curlybars::Parser.parse(lex).compile
 
     rendered = eval(ruby_code)
 
@@ -49,8 +49,8 @@ describe "if blocks" do
     presenter.stub(:visible) { false }
 
     doc = "Start{{#if valid}}{{#if visible}}Visible{{/if}}Valid{{/if}}End"
-    lex = CurlyBars::Lexer.lex(doc)
-    ruby_code = CurlyBars::Parser.parse(lex).compile
+    lex = Curlybars::Lexer.lex(doc)
+    ruby_code = Curlybars::Parser.parse(lex).compile
 
     rendered = eval(ruby_code)
 
@@ -62,8 +62,8 @@ describe "if blocks" do
       presenter.stub(:return_true) { true }
 
       doc = "{{#if return_true}}if_template{{else}}else_template{{/if}}"
-      lex = CurlyBars::Lexer.lex(doc)
-      ruby_code = CurlyBars::Parser.parse(lex).compile
+      lex = Curlybars::Lexer.lex(doc)
+      ruby_code = Curlybars::Parser.parse(lex).compile
 
       rendered = eval(ruby_code)
 
@@ -74,8 +74,8 @@ describe "if blocks" do
       presenter.stub(:return_false) { false }
 
       doc = "{{#if return_false}}if_template{{else}}else_template{{/if}}"
-      lex = CurlyBars::Lexer.lex(doc)
-      ruby_code = CurlyBars::Parser.parse(lex).compile
+      lex = Curlybars::Lexer.lex(doc)
+      ruby_code = Curlybars::Parser.parse(lex).compile
       rendered = eval(ruby_code)
 
       expect(rendered).to eq("else_template")

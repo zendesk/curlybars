@@ -68,8 +68,8 @@ module Curlybars
   end
 end
 
-require 'curly_bars/parser'
-require 'curly_bars/lexer'
-require 'curly_bars/template_handler'
-require 'curly_bars/railtie' if defined?(Rails)
+require 'curlybars/parser'
+require 'curlybars/lexer'
+require 'curlybars/template_handler'
+require 'curlybars/railtie' if defined?(Rails)
 require 'curly/presenter'

@@ -1,5 +1,5 @@
 class Posts::ShowPresenter
-  include CurlyBarsHelper
+  include CurlybarsHelper
 
   def initialize
     @current_user = User.new('Libo')

@@ -1,4 +1,4 @@
-describe CurlyBars::TemplateHandler do
+describe Curlybars::TemplateHandler do
   let :presenter_class do
     Class.new do
       def initialize(context, options = {})
@@ -202,7 +202,7 @@ describe CurlyBars::TemplateHandler do
   end
 
   def output
-    code = CurlyBars::TemplateHandler.call(template)
+    code = Curlybars::TemplateHandler.call(template)
     context.reset!
     context.instance_eval(code)
   end
