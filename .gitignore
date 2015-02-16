@@ -19,3 +19,4 @@ doc/
 Gemfile.lock
 /bin
 .ruby-version
+.DS_Store
