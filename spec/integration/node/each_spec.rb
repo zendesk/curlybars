@@ -32,13 +32,13 @@ describe "{{#each collection}}...{{/each}}" do
   end
 
   it "uses each_template when collection is not empty" do
-    ElementPresenter = Class.new(Curlybars::Presenter) do
+    element_presenter_class = Class.new(Curlybars::Presenter) do
       allow_methods :path
       def path
         'path'
       end
     end
-    element_presenter = ElementPresenter.new(double(:this), {})
+    element_presenter = element_presenter_class.new(double(:this), {})
 
     IntegrationTest::Presenter.stub(:allows_method?).with(:non_empty_collection) { true }
     presenter.stub(:non_empty_collection) { [element_presenter, element_presenter] }
@@ -52,20 +52,6 @@ describe "{{#each collection}}...{{/each}}" do
     expect(eval(template)).to resemble(<<-HTML.strip_heredoc)
       path
       path
-    HTML
-  end
-
-  it "doesn't use each_tempalte to render the collection" do
-    IntegrationTest::Presenter.stub(:allows_method?).with(:empty_collection) { true }
-    presenter.stub(:empty_collection) { [] }
-
-    template = compile(<<-HBS.strip_heredoc)
-      {{#each empty_collection}}
-        {{path}}
-      {{/each}}
-    HBS
-
-    expect(eval(template)).to resemble(<<-HTML.strip_heredoc)
     HTML
   end
 end
