@@ -23,7 +23,12 @@ There are 2 kinds of presenter in Curlybars:
 *MainPresenters* are like Curly Presenter (with some additions), they are associated to views and automatically looked up using the filename and the extension of the view file.
 Furthermore they are responsible for the dynamic and static caching mechanism of Curly.
 These are the methods available from Curly:
-- ``
+- `#setup!`
+- `#cache_key`
+- `#cache_options`
+- `#cache_duration`
+- `.version`
+- `.depends_on`
 
 *PORO presenters* are just Plain Old Ruby Object you expose in your hbs templates.
 We are just asking you to include `Curlybars::MethodsWhitelisting` module. This will
