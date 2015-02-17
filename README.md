@@ -20,7 +20,8 @@ There are 2 kinds of presenter in Curlybars:
 - `Curlybars::Presenter`
 - PORO presenter
 
-*MainPresenters* are like Curly Presenter (with some additions), they are associated to views and automatically looked up using the filename and the extension of the view file.
+#### Curlybars::Presenter
+They are like Curly Presenter (with some additions), they are associated to views and automatically looked up using the filename and the extension of the view file.
 Furthermore they are responsible for the dynamic and static caching mechanism of Curly.
 These are the methods available from Curly:
 - `#setup!`
@@ -30,7 +31,8 @@ These are the methods available from Curly:
 - `.version`
 - `.depends_on`
 
-*PORO presenters* are just Plain Old Ruby Object you expose in your hbs templates.
+#### PORO presenters
+They are just Plain Old Ruby Object you expose in your hbs templates.
 We are just asking you to include `Curlybars::MethodsWhitelisting` module. This will
 implement a mechanism to declare which methods you want to expose into the view.
 It's for your convenience only, you can also do it yourself as long as your class
