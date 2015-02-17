@@ -1,4 +1,4 @@
-describe "path expansion on presenters" do
+describe "{{path}}" do
   let(:post) { double("post") }
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 

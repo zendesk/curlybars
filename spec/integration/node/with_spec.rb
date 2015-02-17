@@ -1,8 +1,8 @@
-describe "with blocks" do
+describe "{{#with presenter}}...{{/with}}" do
   let(:post) { double("post") }
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
-  it "works with {{#with block version b" do
+  it "works scopes one level" do
     template = compile(<<-HBS.strip_heredoc)
       {{#with user}}
         {{avatar.url}}
@@ -14,7 +14,7 @@ describe "with blocks" do
     HTML
   end
 
-  it "works with 2 nested {{#with blocks" do
+  it "scopes two levels" do
     template = compile(<<-HBS.strip_heredoc)
       {{#with user}}
         {{#with avatar}}

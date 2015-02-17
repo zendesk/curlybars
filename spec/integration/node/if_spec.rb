@@ -1,4 +1,4 @@
-describe "if blocks" do
+describe "{{#if}}...{{/if}}" do
   let(:post) { double("post") }
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 

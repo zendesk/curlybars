@@ -1,4 +1,4 @@
-describe "block helper" do
+describe "{{#helper context key=value}}...{{/helper}}" do
   let(:post) { double("post") }
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 

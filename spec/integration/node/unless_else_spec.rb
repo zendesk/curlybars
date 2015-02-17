@@ -1,4 +1,4 @@
-describe "unless-else block" do
+describe "{{#unless}}...{{else}}...{{/unless}}" do
   let(:post) { double("post") }
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
