@@ -2,10 +2,8 @@ module Curlybars
   module Node
     Template = Struct.new(:items) do
       def compile
-        compiled_items = items.map do |item|
-          <<-RUBY
-            buffer.safe_concat(#{item.compile})
-          RUBY
+        compiled_items = (items || []).map do |item|
+          "buffer.safe_concat(#{item.compile})"
         end.join("\n")
 
         <<-RUBY
