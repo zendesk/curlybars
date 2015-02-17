@@ -3,7 +3,7 @@
 Curlybars
 =========
 
-A fork of Curly that speaks Handlebars.
+A fork of [Curly](https://github.com/zendesk/curly) that speaks Handlebars.
 
 How to use Curlybars
 --------------------
