@@ -1,3 +1,10 @@
+require 'integration/support/compile'
+require 'integration/support/matcher'
+
+RSpec.configure do |config|
+  config.include IntegrationTest::Compile
+end
+
 module IntegrationTest
   module Helpers
     def beautify

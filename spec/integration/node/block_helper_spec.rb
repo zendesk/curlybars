@@ -3,31 +3,22 @@ describe "block helper" do
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
   it "render a block helper without options" do
-    doc = <<-HBS.strip_heredoc
+    template = compile(<<-HBS.strip_heredoc)
       {{#beautify new_comment_form}}
-        TEXT
+        template
       {{/beautify}}
     HBS
 
-    lex = Curlybars::Lexer.lex(doc)
-    ruby_code = Curlybars::Parser.parse(lex).compile
-    rendered = eval(ruby_code)
-
-    expect(rendered).to eq("bold\n  TEXT\nitalic\n")
+    expect(eval(template)).to resemble("bold\n  template\nitalic\n")
   end
 
   it "render a block helper with options and presenter" do
-    doc = <<-HBS.strip_heredoc
+    template = compile(<<-HBS.strip_heredoc)
       {{#form new_comment_form class="red" foo="bar"}}
-        {{ button_label }}
+        {{button_label}}
       {{/form}}
     HBS
 
-    lex = Curlybars::Lexer.lex(doc)
-
-    ruby_code = Curlybars::Parser.parse(lex).compile
-    rendered = eval(ruby_code)
-
-    expect(rendered).to eq("beauty class:red foo:bar \n  submit\n\n")
+    expect(eval(template)).to resemble("beauty class:red foo:bar \n  submit\n\n")
   end
 end

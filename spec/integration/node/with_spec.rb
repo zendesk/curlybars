@@ -3,21 +3,28 @@ describe "with blocks" do
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
   it "works with {{#with block version b" do
-    doc = "{{#with user}}Hello {{avatar.url}}{{/with}}"
+    template = compile(<<-HBS.strip_heredoc)
+      {{#with user}}
+        {{avatar.url}}
+      {{/with}}
+    HBS
 
-    lex = Curlybars::Lexer.lex(doc)
-    ruby_code = Curlybars::Parser.parse(lex).compile
-    rendered = eval(ruby_code)
-
-    expect(rendered).to eq("Hello http://example.com/foo.png")
+    expect(eval(template)).to resemble(<<-HTML.strip_heredoc)
+      http://example.com/foo.png
+    HTML
   end
 
   it "works with 2 nested {{#with blocks" do
-    doc = "{{#with user}}Hello {{#with avatar}}{{url}}{{/with}}{{/with}}"
-    lex = Curlybars::Lexer.lex(doc)
-    ruby_code = Curlybars::Parser.parse(lex).compile
-    rendered = eval(ruby_code)
+    template = compile(<<-HBS.strip_heredoc)
+      {{#with user}}
+        {{#with avatar}}
+          {{url}}
+        {{/with}}
+      {{/with}}
+    HBS
 
-    expect(rendered).to eq("Hello http://example.com/foo.png")
+    expect(eval(template)).to resemble(<<-HTML.strip_heredoc)
+      http://example.com/foo.png
+    HTML
   end
 end

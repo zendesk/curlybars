@@ -3,20 +3,22 @@ describe "path expansion on presenters" do
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
   it "evaluates the methods chain call" do
-    doc = "{{user.avatar.url}}"
-    lex = Curlybars::Lexer.lex(doc)
+    template = compile(<<-HBS.strip_heredoc)
+      {{user.avatar.url}}
+    HBS
 
-    ruby_code = Curlybars::Parser.parse(lex).compile
-    rendered = eval(ruby_code)
-
-    expect(rendered).to eq("http://example.com/foo.png")
+    expect(eval(template)).to resemble(<<-HTML.strip_heredoc)
+      http://example.com/foo.png
+    HTML
   end
 
   it "raises when trying to call methods not implemented on context" do
-      doc = "{{system}}"
-      lex = Curlybars::Lexer.lex(doc)
-      ruby_code = Curlybars::Parser.parse(lex).compile
+    template = compile(<<-HBS.strip_heredoc)
+      {{not_in_whitelist}}
+    HBS
 
-      expect{eval(ruby_code)}.to raise_error(RuntimeError)
-    end
+    expect do
+      eval(eval(template))
+    end.to raise_error(RuntimeError)
+  end
 end

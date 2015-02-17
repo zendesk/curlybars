@@ -3,49 +3,35 @@ describe "block helper" do
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
   it "renders a helper with expression and options" do
-    doc = "{{date user.created_at class='metadata'}}"
+    template = compile(<<-HBS.strip_heredoc)
+      {{date user.created_at class='metadata'}}
+    HBS
 
-    lex = Curlybars::Lexer.lex(doc)
-    ruby_code = Curlybars::Parser.parse(lex).compile
-    rendered = eval(ruby_code)
-
-    expect(rendered).to eq(
-      <<-HTML.strip_heredoc
-        <time datetime="2015-02-03T13:25:06Z" class="metadata">
-          February 3, 2015 13:25
-        </time>
-      HTML
-    )
+    expect(eval(template)).to resemble(<<-HTML.strip_heredoc)
+      <time datetime="2015-02-03T13:25:06Z" class="metadata">
+        February 3, 2015 13:25
+      </time>
+    HTML
   end
 
   it "renders a helper with only expression" do
-    doc = <<-HTML.strip_heredoc
+    template = compile(<<-HBS.strip_heredoc)
       <script src="{{asset "jquery_plugin.js"}}"></script>
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML.strip_heredoc)
+      <script src="http://cdn.example.com/jquery_plugin.js"></script>
     HTML
-
-    lex = Curlybars::Lexer.lex(doc)
-    ruby_code = Curlybars::Parser.parse(lex).compile
-    rendered = eval(ruby_code)
-
-    expect(rendered).to eq(
-      <<-HTML.strip_heredoc
-        <script src="http://cdn.example.com/jquery_plugin.js"></script>
-      HTML
-    )
   end
 
   it "renders a helper with only options" do
-    doc = <<-HTML.strip_heredoc.strip
+    template = compile(<<-HBS.strip_heredoc)
       {{#with new_comment_form}}
         {{input title class="form-control"}}
       {{/with}}
-    HTML
+    HBS
 
-    lex = Curlybars::Lexer.lex(doc)
-    ruby_code = Curlybars::Parser.parse(lex).compile
-    rendered = eval(ruby_code)
-
-    expect(rendered).to eq(
+    expect(eval(template)).to resemble(
       %Q{\n  <input name="community_post[title]" id="community_post_title" type="text" class="form-control" value="some value persisted in the DB">\n\n}
     )
   end

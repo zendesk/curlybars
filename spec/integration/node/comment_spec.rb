@@ -3,65 +3,49 @@ describe "comments" do
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
   it "ignores one line comment" do
-    doc = <<-HBS.strip_heredoc
-      Start {{! This is a comment }} End
+    template = compile(<<-HBS.strip_heredoc)
+      before{{! This is a comment }}after
     HBS
 
-    lex = Curlybars::Lexer.lex(doc)
-    ruby_code = Curlybars::Parser.parse(lex).compile
-    rendered = eval(ruby_code)
-
-    expect(rendered).to eq("Start  End\n")
+    expect(eval(template)).to resemble("beforeafter\n")
   end
 
   it "ignores multi line comment" do
-    doc = <<-HBS.strip_heredoc
-      Start
+    template = compile(<<-HBS.strip_heredoc)
+      before
       {{! 2 lines
         lines }}
-      End
+      after
     HBS
 
-    lex = Curlybars::Lexer.lex(doc)
-    ruby_code = Curlybars::Parser.parse(lex).compile
-    rendered = eval(ruby_code)
-
-    expect(rendered).to eq("Start\n\nEnd\n")
+    expect(eval(template)).to resemble("before\n\nafter\n")
   end
 
   it "ignores multi lines with curly inside comment" do
-    doc = <<-HBS.strip_heredoc
-      Start
+    template = compile(<<-HBS.strip_heredoc)
+      before
       {{!
         And another one
         in
         3 lines
         }
       }}
-      End
+      after
     HBS
 
-    lex = Curlybars::Lexer.lex(doc)
-    ruby_code = Curlybars::Parser.parse(lex).compile
-    rendered = eval(ruby_code)
-
-    expect(rendered).to eq("Start\n\nEnd\n")
+    expect(eval(template)).to resemble("before\n\nafter\n")
   end
 
   it "ignores multi line comment with {{!-- --}}" do
-    doc = <<-HBS.strip_heredoc
-      Start
+    template = compile(<<-HBS.strip_heredoc)
+      before
       {{!--
         And this is the {{ test }} other style
         }}
       --}}
-      End
+      after
     HBS
 
-    lex = Curlybars::Lexer.lex(doc)
-    ruby_code = Curlybars::Parser.parse(lex).compile
-    rendered = eval(ruby_code)
-
-    expect(rendered).to eq("Start\n\nEnd\n")
+    expect(eval(template)).to resemble("before\n\nafter\n")
   end
 end

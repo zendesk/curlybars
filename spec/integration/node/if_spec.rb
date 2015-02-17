@@ -3,85 +3,108 @@ describe "if blocks" do
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
   it "returns positive branch when condition is true" do
-    Posts::ShowPresenter.stub(:allows_method?).with(:valid) { true }
+    IntegrationTest::Presenter.stub(:allows_method?).with(:valid) { true }
     presenter.stub(:valid) { true }
 
-    doc = "Start{{#if valid}}Valid{{/if}}End"
+    template = compile(<<-HBS.strip_heredoc)
+      {{#if valid}}
+        if_template
+      {{/if}}
+    HBS
 
-    lex = Curlybars::Lexer.lex(doc)
-    ruby_code = Curlybars::Parser.parse(lex).compile
-    rendered = eval(ruby_code)
-
-    expect(rendered).to eq("StartValidEnd")
+    expect(eval(template)).to resemble(<<-HTML.strip_heredoc)
+      if_template
+    HTML
   end
 
   it "doesn't return positive branch when condition is false" do
-    Posts::ShowPresenter.stub(:allows_method?).with(:valid) { true }
+    IntegrationTest::Presenter.stub(:allows_method?).with(:valid) { true }
     presenter.stub(:valid) { false }
 
-    doc = "Start{{#if valid}}Valid{{/if}}End"
+    template = compile(<<-HBS.strip_heredoc)
+      {{#if valid}}
+        if_template
+      {{/if}}
+    HBS
 
-    lex = Curlybars::Lexer.lex(doc)
-    ruby_code = Curlybars::Parser.parse(lex).compile
-    rendered = eval(ruby_code)
-
-    expect(rendered).to eq("StartEnd")
+    expect(eval(template)).to resemble(<<-HTML.strip_heredoc)
+    HTML
   end
 
   it "works with nested `if blocks` (double positive)" do
-    Posts::ShowPresenter.stub(:allows_method?).with(:valid) { true }
-    Posts::ShowPresenter.stub(:allows_method?).with(:visible) { true }
+    IntegrationTest::Presenter.stub(:allows_method?).with(:valid) { true }
+    IntegrationTest::Presenter.stub(:allows_method?).with(:visible) { true }
     presenter.stub(:valid) { true }
     presenter.stub(:visible) { true }
 
-    doc = "Start{{#if valid}}{{#if visible}}Visible{{/if}}Valid{{/if}}End"
-    lex = Curlybars::Lexer.lex(doc)
-    ruby_code = Curlybars::Parser.parse(lex).compile
+    template = compile(<<-HBS.strip_heredoc)
+      {{#if valid}}
+        {{#if visible}}
+          visible_template
+        {{/if}}
+        valid_template
+      {{/if}}
+    HBS
 
-    rendered = eval(ruby_code)
-
-    expect(rendered).to eq("StartVisibleValidEnd")
+    expect(eval(template)).to resemble(<<-HTML.strip_heredoc)
+      visible_template
+      valid_template
+    HTML
   end
 
   it "works with nested `if blocks` (positive and negative)" do
-    Posts::ShowPresenter.stub(:allows_method?).with(:valid) { true }
-    Posts::ShowPresenter.stub(:allows_method?).with(:visible) { true }
+    IntegrationTest::Presenter.stub(:allows_method?).with(:valid) { true }
+    IntegrationTest::Presenter.stub(:allows_method?).with(:visible) { true }
     presenter.stub(:valid) { true }
     presenter.stub(:visible) { false }
 
-    doc = "Start{{#if valid}}{{#if visible}}Visible{{/if}}Valid{{/if}}End"
-    lex = Curlybars::Lexer.lex(doc)
-    ruby_code = Curlybars::Parser.parse(lex).compile
+    template = compile(<<-HBS.strip_heredoc)
+      {{#if valid}}
+        {{#if visible}}
+          visible_template
+        {{/if}}
+        valid_template
+      {{/if}}
+    HBS
 
-    rendered = eval(ruby_code)
-
-    expect(rendered).to eq("StartValidEnd")
+    expect(eval(template)).to resemble(<<-HTML.strip_heredoc)
+      valid_template
+    HTML
   end
 
   describe "runs if-else statement" do
     it "renders the if_template" do
-      Posts::ShowPresenter.stub(:allows_method?).with(:return_true) { true }
+      IntegrationTest::Presenter.stub(:allows_method?).with(:return_true) { true }
       presenter.stub(:return_true) { true }
 
-      doc = "{{#if return_true}}if_template{{else}}else_template{{/if}}"
-      lex = Curlybars::Lexer.lex(doc)
-      ruby_code = Curlybars::Parser.parse(lex).compile
+      template = compile(<<-HBS.strip_heredoc)
+        {{#if return_true}}
+          if_template
+        {{else}}
+          else_template
+        {{/if}}
+      HBS
 
-      rendered = eval(ruby_code)
-
-      expect(rendered).to eq("if_template")
+      expect(eval(template)).to resemble(<<-HTML.strip_heredoc)
+        if_template
+      HTML
     end
 
     it "renders the else_template" do
-      Posts::ShowPresenter.stub(:allows_method?).with(:return_false) { true }
+      IntegrationTest::Presenter.stub(:allows_method?).with(:return_false) { true }
       presenter.stub(:return_false) { false }
 
-      doc = "{{#if return_false}}if_template{{else}}else_template{{/if}}"
-      lex = Curlybars::Lexer.lex(doc)
-      ruby_code = Curlybars::Parser.parse(lex).compile
-      rendered = eval(ruby_code)
+      template = compile(<<-HBS.strip_heredoc)
+        {{#if return_false}}
+          if_template
+        {{else}}
+          else_template
+        {{/if}}
+      HBS
 
-      expect(rendered).to eq("else_template")
+      expect(eval(template)).to resemble(<<-HTML.strip_heredoc)
+        else_template
+      HTML
     end
   end
 end
