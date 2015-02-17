@@ -1,8 +1,6 @@
-require 'dummy/app/presenters/posts/show_presenter.rb'
-
 describe "if blocks" do
   let(:post) { double("post") }
-  let(:presenter) { Posts::ShowPresenter.new(double("view_context"), post: post) }
+  let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
   it "returns positive branch when condition is true" do
     Posts::ShowPresenter.stub(:allows_method?).with(:valid) { true }

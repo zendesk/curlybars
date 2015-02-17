@@ -1,8 +1,6 @@
-require 'dummy/app/presenters/posts/show_presenter.rb'
-
 describe "with blocks" do
   let(:post) { double("post") }
-  let(:presenter) { Posts::ShowPresenter.new(double("view_context"), post: post) }
+  let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
   it "works with {{#with block version b" do
     doc = "{{#with user}}Hello {{avatar.url}}{{/with}}"
