@@ -1,6 +1,6 @@
 describe Curlybars::Node::If do
   it "compiles correctly" do
-    ruby_code =<<-RUBY.strip_heredoc
+    ruby_code = <<-RUBY.strip_heredoc
       buffer = ActiveSupport::SafeBuffer.new
       if expression.call
         buffer.safe_concat(template)

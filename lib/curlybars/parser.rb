@@ -35,8 +35,8 @@ module Curlybars
       clause(
         'START HASH .path .path .options? END
           .template
-        START SLASH .path END') do |helper, path, options, template, helperclose|
-        Node::BlockHelper.new(helper, path, template, helperclose, options)
+        START SLASH .path END') do |helper, context, options, template, helperclose|
+        Node::BlockHelper.new(helper, context, options, template, helperclose)
       end
 
       clause('START .path .expression? .options? END') do |path, context, options|
