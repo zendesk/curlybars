@@ -3,17 +3,17 @@ describe "{{path}}" do
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
   it "evaluates the methods chain call" do
-    template = compile(<<-HBS.strip_heredoc)
+    template = compile(<<-HBS)
       {{user.avatar.url}}
     HBS
 
-    expect(eval(template)).to resemble(<<-HTML.strip_heredoc)
+    expect(eval(template)).to resemble(<<-HTML)
       http://example.com/foo.png
     HTML
   end
 
   it "raises when trying to call methods not implemented on context" do
-    template = compile(<<-HBS.strip_heredoc)
+    template = compile(<<-HBS)
       {{not_in_whitelist}}
     HBS
 

@@ -6,7 +6,7 @@ describe "{{#if}}...{{else}}...{{/if}}" do
     IntegrationTest::Presenter.stub(:allows_method?).with(:return_true) { true }
     presenter.stub(:return_true) { true }
 
-    template = compile(<<-HBS.strip_heredoc)
+    template = compile(<<-HBS)
       {{#if return_true}}
         if_template
       {{else}}
@@ -14,7 +14,7 @@ describe "{{#if}}...{{else}}...{{/if}}" do
       {{/if}}
     HBS
 
-    expect(eval(template)).to resemble(<<-HTML.strip_heredoc)
+    expect(eval(template)).to resemble(<<-HTML)
       if_template
     HTML
   end
@@ -23,7 +23,7 @@ describe "{{#if}}...{{else}}...{{/if}}" do
     IntegrationTest::Presenter.stub(:allows_method?).with(:return_false) { true }
     presenter.stub(:return_false) { false }
 
-    template = compile(<<-HBS.strip_heredoc)
+    template = compile(<<-HBS)
       {{#if return_false}}
         if_template
       {{else}}
@@ -31,7 +31,7 @@ describe "{{#if}}...{{else}}...{{/if}}" do
       {{/if}}
     HBS
 
-    expect(eval(template)).to resemble(<<-HTML.strip_heredoc)
+    expect(eval(template)).to resemble(<<-HTML)
       else_template
     HTML
   end

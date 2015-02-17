@@ -3,19 +3,19 @@ describe "{{#with presenter}}...{{/with}}" do
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
   it "works scopes one level" do
-    template = compile(<<-HBS.strip_heredoc)
+    template = compile(<<-HBS)
       {{#with user}}
         {{avatar.url}}
       {{/with}}
     HBS
 
-    expect(eval(template)).to resemble(<<-HTML.strip_heredoc)
+    expect(eval(template)).to resemble(<<-HTML)
       http://example.com/foo.png
     HTML
   end
 
   it "scopes two levels" do
-    template = compile(<<-HBS.strip_heredoc)
+    template = compile(<<-HBS)
       {{#with user}}
         {{#with avatar}}
           {{url}}
@@ -23,7 +23,7 @@ describe "{{#with presenter}}...{{/with}}" do
       {{/with}}
     HBS
 
-    expect(eval(template)).to resemble(<<-HTML.strip_heredoc)
+    expect(eval(template)).to resemble(<<-HTML)
       http://example.com/foo.png
     HTML
   end

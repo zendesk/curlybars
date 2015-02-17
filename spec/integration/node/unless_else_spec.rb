@@ -6,7 +6,7 @@ describe "{{#unless}}...{{else}}...{{/unless}}" do
     IntegrationTest::Presenter.stub(:allows_method?).with(:condition) { true }
     presenter.stub(:condition) { false }
 
-    template = compile(<<-HBS.strip_heredoc)
+    template = compile(<<-HBS)
       {{#unless condition}}
         unless_template
       {{else}}
@@ -14,7 +14,7 @@ describe "{{#unless}}...{{else}}...{{/unless}}" do
       {{/unless}}
     HBS
 
-    expect(eval(template)).to resemble(<<-HTML.strip_heredoc)
+    expect(eval(template)).to resemble(<<-HTML)
       unless_template
     HTML
   end
@@ -23,7 +23,7 @@ describe "{{#unless}}...{{else}}...{{/unless}}" do
     IntegrationTest::Presenter.stub(:allows_method?).with(:condition) { true }
     presenter.stub(:condition) { true }
 
-    template = compile(<<-HBS.strip_heredoc)
+    template = compile(<<-HBS)
       {{#unless condition}}
         unless_template
       {{else}}
@@ -31,7 +31,7 @@ describe "{{#unless}}...{{else}}...{{/unless}}" do
       {{/unless}}
     HBS
 
-    expect(eval(template)).to resemble(<<-HTML.strip_heredoc)
+    expect(eval(template)).to resemble(<<-HTML)
       else_template
     HTML
   end

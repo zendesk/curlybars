@@ -6,13 +6,13 @@ describe "{{#unless}}...{{/unless}}" do
     IntegrationTest::Presenter.stub(:allows_method?).with(:condition) { true }
     presenter.stub(:condition) { false }
 
-    template = compile(<<-HBS.strip_heredoc)
+    template = compile(<<-HBS)
       {{#unless condition}}
         unless_template
       {{/unless}}
     HBS
 
-    expect(eval(template)).to resemble(<<-HTML.strip_heredoc)
+    expect(eval(template)).to resemble(<<-HTML)
       unless_template
     HTML
   end
@@ -21,13 +21,13 @@ describe "{{#unless}}...{{/unless}}" do
     IntegrationTest::Presenter.stub(:allows_method?).with(:condition) { true }
     presenter.stub(:condition) { true }
 
-    template = compile(<<-HBS.strip_heredoc)
+    template = compile(<<-HBS)
       {{#unless condition}}
         unless_template
       {{/unless}}
     HBS
 
-    expect(eval(template)).to resemble(<<-HTML.strip_heredoc)
+    expect(eval(template)).to resemble(<<-HTML)
     HTML
   end
 
@@ -37,7 +37,7 @@ describe "{{#unless}}...{{/unless}}" do
     presenter.stub(:first_condition) { false }
     presenter.stub(:second_condition) { false }
 
-    template = compile(<<-HBS.strip_heredoc)
+    template = compile(<<-HBS)
       {{#unless first_condition}}
         {{#unless second_condition}}
           inner_unless_template
@@ -46,7 +46,7 @@ describe "{{#unless}}...{{/unless}}" do
       {{/unless}}
     HBS
 
-    expect(eval(template)).to resemble(<<-HTML.strip_heredoc)
+    expect(eval(template)).to resemble(<<-HTML)
       inner_unless_template
       outer_unless_template
     HTML
@@ -58,7 +58,7 @@ describe "{{#unless}}...{{/unless}}" do
     presenter.stub(:first_condition) { false }
     presenter.stub(:second_condition) { true }
 
-    template = compile(<<-HBS.strip_heredoc)
+    template = compile(<<-HBS)
       {{#unless first_condition}}
         {{#unless second_condition}}
           inner_unless_template
@@ -67,7 +67,7 @@ describe "{{#unless}}...{{/unless}}" do
       {{/unless}}
     HBS
 
-    expect(eval(template)).to resemble(<<-HTML.strip_heredoc)
+    expect(eval(template)).to resemble(<<-HTML)
       outer_unless_template
     HTML
   end

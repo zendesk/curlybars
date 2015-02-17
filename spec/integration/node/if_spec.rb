@@ -6,13 +6,13 @@ describe "{{#if}}...{{/if}}" do
     IntegrationTest::Presenter.stub(:allows_method?).with(:valid) { true }
     presenter.stub(:valid) { true }
 
-    template = compile(<<-HBS.strip_heredoc)
+    template = compile(<<-HBS)
       {{#if valid}}
         if_template
       {{/if}}
     HBS
 
-    expect(eval(template)).to resemble(<<-HTML.strip_heredoc)
+    expect(eval(template)).to resemble(<<-HTML)
       if_template
     HTML
   end
@@ -21,13 +21,13 @@ describe "{{#if}}...{{/if}}" do
     IntegrationTest::Presenter.stub(:allows_method?).with(:valid) { true }
     presenter.stub(:valid) { false }
 
-    template = compile(<<-HBS.strip_heredoc)
+    template = compile(<<-HBS)
       {{#if valid}}
         if_template
       {{/if}}
     HBS
 
-    expect(eval(template)).to resemble(<<-HTML.strip_heredoc)
+    expect(eval(template)).to resemble(<<-HTML)
     HTML
   end
 
@@ -37,18 +37,18 @@ describe "{{#if}}...{{/if}}" do
     presenter.stub(:valid) { true }
     presenter.stub(:visible) { true }
 
-    template = compile(<<-HBS.strip_heredoc)
+    template = compile(<<-HBS)
       {{#if valid}}
         {{#if visible}}
-          visible_template
+          inner_if_template
         {{/if}}
-        valid_template
+        outer_if_template
       {{/if}}
     HBS
 
-    expect(eval(template)).to resemble(<<-HTML.strip_heredoc)
-      visible_template
-      valid_template
+    expect(eval(template)).to resemble(<<-HTML)
+      inner_if_template
+      outer_if_template
     HTML
   end
 
@@ -58,17 +58,17 @@ describe "{{#if}}...{{/if}}" do
     presenter.stub(:valid) { true }
     presenter.stub(:visible) { false }
 
-    template = compile(<<-HBS.strip_heredoc)
+    template = compile(<<-HBS)
       {{#if valid}}
         {{#if visible}}
-          visible_template
+          inner_if_template
         {{/if}}
-        valid_template
+        outer_if_template
       {{/if}}
     HBS
 
-    expect(eval(template)).to resemble(<<-HTML.strip_heredoc)
-      valid_template
+    expect(eval(template)).to resemble(<<-HTML)
+      outer_if_template
     HTML
   end
 end
