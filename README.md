@@ -68,14 +68,16 @@ end
 
 This will allow to use in the view:
 ```hbs
-{{title}}
+{{post.title}}
 ```
 
 But not stuff like this:
 ```hbs
-{{initialize 'foobar'}}
+<!-- Call to #initialize on Post -->
+{{post.initialize 'foobar'}}
 
-{{post}}
+<!-- Call to attribute reader post on Post hence caling directive the ActiveRecord -->
+{{post.post.destroy}} 
 ```
 
 In the example above we might have inadvertently exposed `post` since it was
