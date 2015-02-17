@@ -6,8 +6,13 @@ module Curlybars
           collection = #{path.compile}.call
           if collection.any?
             buffer = ActiveSupport::SafeBuffer.new
-            collection.each do
-              buffer.safe_concat(#{each_template.compile})
+            collection.each do |presenter|
+              contexts << presenter
+              begin
+                buffer.safe_concat(#{each_template.compile})
+              ensure
+                contexts.pop
+              end
             end
             buffer
           else
