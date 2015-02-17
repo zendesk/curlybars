@@ -15,6 +15,10 @@ describe Curlybars::Lexer, ".lex" do
     map_lex_type("{{foo.bar}}").should == [:START, :PATH, :END, :EOS]
   end
 
+  it "scans components as partial" do
+    map_lex_type("{{> foo}}").should == [:START, :GT, :PATH, :END, :EOS]
+  end
+
   it "scans comments in the source" do
     map_lex_type("foo {{!bar}} baz").should == [:TEXT, :TEXT, :EOS]
   end
