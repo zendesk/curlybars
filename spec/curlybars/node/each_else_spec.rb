@@ -1,11 +1,16 @@
 describe Curlybars::Node::IfElse do
   it "compiles correctly" do
-    ruby_code =<<-RUBY.strip_heredoc
+    ruby_code = <<-RUBY.strip_heredoc
       collection = path.call
       if collection.any?
         buffer = ActiveSupport::SafeBuffer.new
-        collection.each do
-          buffer.safe_concat(each_template)
+        collection.each do |presenter|
+          contexts << presenter
+          begin
+            buffer.safe_concat(each_template)
+          ensure
+            contexts.pop
+          end
         end
         buffer
       else
