@@ -17,6 +17,7 @@ module Curlybars
 
     r(/#/, :curly) { :HASH }
     r(/\//, :curly) { :SLASH }
+    r(/>/, :curly) { :GT }
 
     r(/if(?![A-Za-z_])/, :curly) { :IF }
     r(/unless(?![A-Za-z_])/, :curly) { :UNLESS }
