@@ -29,6 +29,15 @@ describe Curlybars::Parser do
     subject.parse(lex)
   end
 
+  it "parses partials" do
+    lex = Curlybars::Lexer.lex("{{> partial}}")
+
+    expect(Curlybars::Node::Partial).
+      to receive(:new).with(path("partial"))
+
+    subject.parse(lex)
+  end
+
   it "parses conditionals blocks with elses" do
     lex = Curlybars::Lexer.lex("{{#if a}}b{{else}}c{{/if}}")
 

@@ -16,6 +16,7 @@ require 'curlybars/node/with'
 require 'curlybars/node/helper'
 require 'curlybars/node/block_helper'
 require 'curlybars/node/option'
+require 'curlybars/node/partial'
 
 module Curlybars
   class Parser < RLTK::Parser
@@ -96,6 +97,10 @@ module Curlybars
           .template
         START SLASH WITH END') do |path, template|
         Node::With.new(path, template)
+      end
+
+      clause('START GT .path END') do |path|
+        Node::Partial.new(path)
       end
     end
 
