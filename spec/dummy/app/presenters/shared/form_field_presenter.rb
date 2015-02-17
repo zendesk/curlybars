@@ -1,5 +1,8 @@
 class Shared::FormFieldPresenter
+  include Curlybars::MethodsWhitelisting
   attr_accessor :label, :value
+
+  allow_methods :label, :value, :name, :id
 
   def initialize(params)
     @resource_name = params[:resource_name]

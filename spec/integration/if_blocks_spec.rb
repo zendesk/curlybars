@@ -5,9 +5,11 @@ require 'curlybars/parser'
 require 'dummy/app/presenters/posts/show_presenter.rb'
 
 describe "if blocks" do
-  let(:presenter) { Posts::ShowPresenter.new }
+  let(:post) { double("post") }
+  let(:presenter) { Posts::ShowPresenter.new(double("view_context"), post: post) }
 
   it "returns positive branch when condition is true" do
+    Posts::ShowPresenter.stub(:allows_method?).with(:valid) { true }
     presenter.stub(:valid) { true }
 
     doc = "Start{{#if valid}}Valid{{/if}}End"
@@ -20,6 +22,7 @@ describe "if blocks" do
   end
 
   it "doesn't return positive branch when condition is false" do
+    Posts::ShowPresenter.stub(:allows_method?).with(:valid) { true }
     presenter.stub(:valid) { false }
 
     doc = "Start{{#if valid}}Valid{{/if}}End"
@@ -32,6 +35,8 @@ describe "if blocks" do
   end
 
   it "works with nested `if blocks` (double positive)" do
+    Posts::ShowPresenter.stub(:allows_method?).with(:valid) { true }
+    Posts::ShowPresenter.stub(:allows_method?).with(:visible) { true }
     presenter.stub(:valid) { true }
     presenter.stub(:visible) { true }
 
@@ -45,6 +50,8 @@ describe "if blocks" do
   end
 
   it "works with nested `if blocks` (positive and negative)" do
+    Posts::ShowPresenter.stub(:allows_method?).with(:valid) { true }
+    Posts::ShowPresenter.stub(:allows_method?).with(:visible) { true }
     presenter.stub(:valid) { true }
     presenter.stub(:visible) { false }
 
@@ -59,6 +66,7 @@ describe "if blocks" do
 
   describe "runs if-else statement" do
     it "renders the if_template" do
+      Posts::ShowPresenter.stub(:allows_method?).with(:return_true) { true }
       presenter.stub(:return_true) { true }
 
       doc = "{{#if return_true}}if_template{{else}}else_template{{/if}}"
@@ -71,6 +79,7 @@ describe "if blocks" do
     end
 
     it "renders the else_template" do
+      Posts::ShowPresenter.stub(:allows_method?).with(:return_false) { true }
       presenter.stub(:return_false) { false }
 
       doc = "{{#if return_false}}if_template{{else}}else_template{{/if}}"

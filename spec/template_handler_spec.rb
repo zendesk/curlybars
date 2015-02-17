@@ -32,7 +32,7 @@ describe Curlybars::TemplateHandler do
         @cache_options
       end
 
-      def self.component_available?(method)
+      def self.allows_method?(method)
         true
       end
     end

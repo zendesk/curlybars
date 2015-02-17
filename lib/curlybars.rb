@@ -72,4 +72,5 @@ require 'curlybars/parser'
 require 'curlybars/lexer'
 require 'curlybars/template_handler'
 require 'curlybars/railtie' if defined?(Rails)
-require 'curly/presenter'
+require 'curlybars/presenter'
+require 'curlybars/methods_whitelisting'

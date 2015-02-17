@@ -6,7 +6,8 @@ require 'dummy/app/presenters/posts/show_presenter.rb'
 require 'dummy/app/helpers/curlybars_helper.rb'
 
 describe "block helper" do
-  let(:presenter) { Posts::ShowPresenter.new }
+  let(:post) { double("post") }
+  let(:presenter) { Posts::ShowPresenter.new(double("view_context"), post: post) }
 
   it "render a block helper without options" do
     doc = <<-HBS.strip_heredoc

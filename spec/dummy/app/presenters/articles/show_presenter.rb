@@ -1,5 +1,6 @@
-class Articles::ShowPresenter < Curly::Presenter
+class Articles::ShowPresenter < Curlybars::Presenter
   presents :article
+  allow_methods :author, :user, :title
 
   def title
     @article.title

@@ -5,7 +5,8 @@ require 'curlybars/parser'
 require 'dummy/app/presenters/posts/show_presenter.rb'
 
 describe "path expansion on presenters" do
-  let(:presenter) { Posts::ShowPresenter.new }
+  let(:post) { double("post") }
+  let(:presenter) { Posts::ShowPresenter.new(double("view_context"), post: post) }
 
   it "evaluates the methods chain call" do
     doc = "{{user.avatar.url}}"
