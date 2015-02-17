@@ -31,8 +31,12 @@ describe "block helper" do
       {{/with}}
     HBS
 
-    expect(eval(template)).to resemble(
-      %Q{\n  <input name="community_post[title]" id="community_post_title" type="text" class="form-control" value="some value persisted in the DB">\n\n}
-    )
+    expect(eval(template)).to resemble(<<-HTML.strip_heredoc)
+      <input name="community_post[title]"
+        id="community_post_title"
+        type="text"
+        class="form-control"
+        value="some value persisted in the DB">
+    HTML
   end
 end
