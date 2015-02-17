@@ -1,6 +1,3 @@
-require 'curlybars/lexer'
-require 'curlybars/parser'
-
 require 'dummy/app/presenters/posts/show_presenter.rb'
 require 'dummy/app/helpers/curlybars_helper.rb'
 

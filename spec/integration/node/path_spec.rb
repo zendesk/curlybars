@@ -1,7 +1,3 @@
-require 'spec_helper'
-require 'curlybars/lexer'
-require 'curlybars/parser'
-
 require 'dummy/app/presenters/posts/show_presenter.rb'
 
 describe "path expansion on presenters" do
