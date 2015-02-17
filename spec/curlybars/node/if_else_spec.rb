@@ -1,6 +1,6 @@
 describe Curlybars::Node::IfElse do
   it "compiles correctly" do
-    ruby_code =<<-RUBY.strip_heredoc
+    ruby_code = <<-RUBY.strip_heredoc
       if expression.call
         if_template
       else
