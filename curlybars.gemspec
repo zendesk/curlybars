@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
 
   s.name              = 'curlybars'
   s.version           = '0.1.0'
-  s.date              = '2015-02-16'
+  s.date              = '2015-02-17'
 
   s.summary     = "Create your views using Handlebars templates!"
   s.description = "A view layer for your Rails apps that separates
@@ -49,6 +49,7 @@ Gem::Specification.new do |s|
     lib/curlybars.rb
     lib/curlybars/error/incorrect_ending_error.rb
     lib/curlybars/lexer.rb
+    lib/curlybars/node/block_helper.rb
     lib/curlybars/node/each.rb
     lib/curlybars/node/each_else.rb
     lib/curlybars/node/helper.rb
@@ -56,7 +57,7 @@ Gem::Specification.new do |s|
     lib/curlybars/node/if_else.rb
     lib/curlybars/node/item.rb
     lib/curlybars/node/option.rb
-    lib/curlybars/node/output.rb
+    lib/curlybars/node/partial.rb
     lib/curlybars/node/path.rb
     lib/curlybars/node/root.rb
     lib/curlybars/node/string.rb
@@ -70,12 +71,12 @@ Gem::Specification.new do |s|
     lib/curlybars/template_handler.rb
     lib/rails/projections.json
     spec/curlybars/lexer_spec.rb
+    spec/curlybars/node/block_helper_spec.rb
     spec/curlybars/node/each_else_spec.rb
     spec/curlybars/node/each_spec.rb
-    spec/curlybars/node/helper_spec.rb
     spec/curlybars/node/if_else_spec.rb
     spec/curlybars/node/if_spec.rb
-    spec/curlybars/node/output_spec.rb
+    spec/curlybars/node/partial_spec.rb
     spec/curlybars/node/path_spec.rb
     spec/curlybars/node/root_spec.rb
     spec/curlybars/node/text_spec.rb
@@ -115,6 +116,7 @@ Gem::Specification.new do |s|
     spec/dummy/config/environments/test.rb
     spec/dummy/config/routes.rb
     spec/integration/application_layout_spec.rb
+    spec/integration/block_helpers_spec.rb
     spec/integration/collection_blocks_spec.rb
     spec/integration/comments_spec.rb
     spec/integration/context_blocks_spec.rb
