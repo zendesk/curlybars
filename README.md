@@ -1,5 +1,9 @@
 [![Build Status](https://magnum.travis-ci.com/zendesk/curlybars.svg?token=Fh9oDUV4oikq9kNCExpq&branch=master)](https://magnum.travis-ci.com/zendesk/curlybars)
 
+[![Code Climate](https://codeclimate.com/repos/54e48dda6956806595003bad/badges/eb0b90136be013596c9d/gpa.svg)](https://codeclimate.com/repos/54e48dda6956806595003bad/feed)
+
+[![Test Coverage](https://codeclimate.com/repos/54e48dda6956806595003bad/badges/eb0b90136be013596c9d/coverage.svg)](https://codeclimate.com/repos/54e48dda6956806595003bad/feed)
+
 Curlybars
 =========
 
