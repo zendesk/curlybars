@@ -4,6 +4,8 @@ module Curlybars
   class Lexer < RLTK::Lexer
     match_first
 
+    r(/\\{/) { |text| [:TEXT, '{'] }
+
     r(/{{!--/) { push_state :comment_block }
     r(/--}}/, :comment_block) { pop_state }
     r(/./m, :comment_block)
@@ -27,16 +29,11 @@ module Curlybars
     r(/([A-Za-z_]\w*)\s*=/, :curly) { |key| [:KEY, match[1]] }
     r(/[A-Za-z_][\w\.]*\??/, :curly) { |name| [:PATH, name] }
 
-    r(/"/, :curly) { push_state :double_quote_string }
-    r(/"/, :double_quote_string) { pop_state }
-    r(/(\\"|[^"])*/, :double_quote_string) { |string| [:STRING, string]}
-
-    r(/'/, :curly) { push_state :single_quote_string }
-    r(/'/, :single_quote_string) { pop_state }
-    r(/(\\'|[^'])*/, :single_quote_string) { |string| [:STRING, string]}
+    r(/'(.*?)'/m, :curly) { |string| [:STRING, match[1]] }
+    r(/"(.*?)"/m, :curly) { |string| [:STRING, match[1]] }
 
     r(/\s/, :curly)
 
-    r(/.*?(?={{|\z)/m) { |text| [:TEXT, text] }
+    r(/.*?(?=\\|{{|\z)/m) { |text| [:TEXT, text] }
   end
 end
