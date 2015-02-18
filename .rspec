@@ -1,2 +1,3 @@
 -r spec_helper
 -r integration/spec_helper
+-r curlybars/spec_helper
