@@ -4,10 +4,10 @@ module Curlybars
       def compile
         <<-RUBY
           Module.new do
-            def self.exec(contexts)
+            def self.exec(contexts, hbs)
               #{item.compile}
             end
-          end.exec(contexts)
+          end.exec(contexts, hbs)
         RUBY
       end
     end

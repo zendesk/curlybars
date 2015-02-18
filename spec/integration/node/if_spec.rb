@@ -31,6 +31,20 @@ describe "{{#if}}...{{/if}}" do
     HTML
   end
 
+  it "doesn't return positive branch when condition is empty array" do
+    IntegrationTest::Presenter.stub(:allows_method?).with(:collection) { true }
+    presenter.stub(:collection) { [] }
+
+    template = compile(<<-HBS)
+      {{#if collection}}
+        if_template
+      {{/if}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+    HTML
+  end
+
   it "works with nested `if blocks` (double positive)" do
     IntegrationTest::Presenter.stub(:allows_method?).with(:valid) { true }
     IntegrationTest::Presenter.stub(:allows_method?).with(:visible) { true }

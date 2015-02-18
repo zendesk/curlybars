@@ -1,13 +1,8 @@
 describe Curlybars::Node::Root do
-  it "compiles correctly" do
-    ruby_code =<<-RUBY.strip_heredoc
-      contexts = [presenter]
-      ActiveSupport::SafeBuffer.new(template)
-    RUBY
+  it "compiles the template" do
+    template = double(:template)
+    expect(template).to receive(:compile)
 
-    template = double("template", compile: "template")
-    node = Curlybars::Node::Root.new(template)
-
-    expect(node.compile.strip_heredoc).to eq(ruby_code)
+    Curlybars::Node::Root.new(template).compile
   end
 end

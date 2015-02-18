@@ -8,12 +8,12 @@ module Curlybars
 
         <<-RUBY
           Module.new do
-            def self.exec(contexts)
+            def self.exec(contexts, hbs)
               buffer = ActiveSupport::SafeBuffer.new
               #{compiled_items}
               buffer
             end
-          end.exec(contexts)
+          end.exec(contexts, hbs)
         RUBY
       end
     end
