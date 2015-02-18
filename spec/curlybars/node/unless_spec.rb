@@ -2,7 +2,7 @@ describe Curlybars::Node::Unless do
   it "compiles correctly" do
     ruby_code =<<-RUBY.strip_heredoc
       buffer = ActiveSupport::SafeBuffer.new
-      unless expression.call
+      unless hbs.to_bool(expression.call)
         buffer.safe_concat(template)
       end
       buffer

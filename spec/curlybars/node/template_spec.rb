@@ -2,12 +2,12 @@ describe Curlybars::Node::Template do
   it "compiles correctly with items = nil" do
     ruby_code = <<-RUBY.strip_heredoc
       Module.new do
-        def self.exec(contexts)
+        def self.exec(contexts, hbs)
           buffer = ActiveSupport::SafeBuffer.new
 
           buffer
         end
-      end.exec(contexts)
+      end.exec(contexts, hbs)
     RUBY
 
     items = nil
@@ -19,12 +19,12 @@ describe Curlybars::Node::Template do
   it "compiles correctly with items = []" do
     ruby_code = <<-RUBY.strip_heredoc
       Module.new do
-        def self.exec(contexts)
+        def self.exec(contexts, hbs)
           buffer = ActiveSupport::SafeBuffer.new
 
           buffer
         end
-      end.exec(contexts)
+      end.exec(contexts, hbs)
     RUBY
 
     items = []
@@ -36,12 +36,12 @@ describe Curlybars::Node::Template do
   it "compiles correctly with non-empty items" do
     ruby_code = <<-RUBY.strip_heredoc
       Module.new do
-        def self.exec(contexts)
+        def self.exec(contexts, hbs)
           buffer = ActiveSupport::SafeBuffer.new
           buffer.safe_concat(item)
           buffer
         end
-      end.exec(contexts)
+      end.exec(contexts, hbs)
     RUBY
 
     items = [double('item', compile: 'item')]

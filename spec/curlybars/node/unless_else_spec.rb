@@ -1,7 +1,7 @@
 describe Curlybars::Node::UnlessElse do
   it "compiles correctly" do
     ruby_code =<<-RUBY.strip_heredoc
-      unless expression.call
+      unless hbs.to_bool(expression.call)
         unless_template
       else
         else_template

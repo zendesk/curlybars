@@ -2,10 +2,10 @@ describe Curlybars::Node::Item do
   it "compiles correctly" do
     ruby_code = <<-RUBY.strip_heredoc
       Module.new do
-        def self.exec(contexts)
+        def self.exec(contexts, hbs)
           item
         end
-      end.exec(contexts)
+      end.exec(contexts, hbs)
     RUBY
 
     item = double('item', compile: 'item')
