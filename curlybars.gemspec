@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
 
   s.name              = 'curlybars'
   s.version           = '0.1.0'
-  s.date              = '2015-02-17'
+  s.date              = '2015-02-19'
 
   s.summary     = "Create your views using Handlebars templates!"
   s.description = "A view layer for your Rails apps that separates
@@ -49,6 +49,7 @@ Gem::Specification.new do |s|
     lib/curlybars.rb
     lib/curlybars/error/incorrect_ending_error.rb
     lib/curlybars/lexer.rb
+    lib/curlybars/methods_whitelisting.rb
     lib/curlybars/node/block_helper.rb
     lib/curlybars/node/each.rb
     lib/curlybars/node/each_else.rb
@@ -67,22 +68,35 @@ Gem::Specification.new do |s|
     lib/curlybars/node/unless_else.rb
     lib/curlybars/node/with.rb
     lib/curlybars/parser.rb
+    lib/curlybars/presenter.rb
     lib/curlybars/railtie.rb
     lib/curlybars/template_handler.rb
-    lib/rails/projections.json
+    spec/acceptance/application_layout_spec.rb
+    spec/acceptance/collection_blocks_spec.rb
+    spec/acceptance/context_blocks_spec.rb
+    spec/acceptance/partials_spec.rb
     spec/curlybars/lexer_spec.rb
     spec/curlybars/node/block_helper_spec.rb
     spec/curlybars/node/each_else_spec.rb
     spec/curlybars/node/each_spec.rb
+    spec/curlybars/node/helper_spec.rb
     spec/curlybars/node/if_else_spec.rb
     spec/curlybars/node/if_spec.rb
+    spec/curlybars/node/item_spec.rb
+    spec/curlybars/node/option_spec.rb
     spec/curlybars/node/partial_spec.rb
     spec/curlybars/node/path_spec.rb
     spec/curlybars/node/root_spec.rb
+    spec/curlybars/node/string_spec.rb
+    spec/curlybars/node/template_spec.rb
     spec/curlybars/node/text_spec.rb
     spec/curlybars/node/unless_else_spec.rb
     spec/curlybars/node/unless_spec.rb
+    spec/curlybars/node/with_spec.rb
     spec/curlybars/parser_spec.rb
+    spec/curlybars/spec_helper.rb
+    spec/curlybars/support/lexer.rb
+    spec/curlybars/support/matcher.rb
     spec/dummy/.gitignore
     spec/dummy/app/controllers/application_controller.rb
     spec/dummy/app/controllers/articles_controller.rb
@@ -101,6 +115,7 @@ Gem::Specification.new do |s|
     spec/dummy/app/presenters/posts/new_post_form_presenter.rb
     spec/dummy/app/presenters/posts/show_presenter.rb
     spec/dummy/app/presenters/shared/avatar_presenter.rb
+    spec/dummy/app/presenters/shared/form_field_presenter.rb
     spec/dummy/app/presenters/shared/user_presenter.rb
     spec/dummy/app/views/articles/show.html.hbs
     spec/dummy/app/views/dashboards/_item.html.curly
@@ -115,16 +130,21 @@ Gem::Specification.new do |s|
     spec/dummy/config/environment.rb
     spec/dummy/config/environments/test.rb
     spec/dummy/config/routes.rb
-    spec/integration/application_layout_spec.rb
-    spec/integration/block_helpers_spec.rb
-    spec/integration/collection_blocks_spec.rb
-    spec/integration/comments_spec.rb
-    spec/integration/context_blocks_spec.rb
-    spec/integration/helpers_spec.rb
-    spec/integration/if_blocks_spec.rb
-    spec/integration/partials_spec.rb
-    spec/integration/path_spec.rb
-    spec/integration/with_blocks_spec.rb
+    spec/integration/node/block_helper_spec.rb
+    spec/integration/node/comment_spec.rb
+    spec/integration/node/each_else_spec.rb
+    spec/integration/node/each_spec.rb
+    spec/integration/node/escape_spec.rb
+    spec/integration/node/helper_spec.rb
+    spec/integration/node/if_else_spec.rb
+    spec/integration/node/if_spec.rb
+    spec/integration/node/path_spec.rb
+    spec/integration/node/unless_else_spec.rb
+    spec/integration/node/unless_spec.rb
+    spec/integration/node/with_spec.rb
+    spec/integration/spec_helper.rb
+    spec/integration/support/compile.rb
+    spec/integration/support/matcher.rb
     spec/matchers/have_structure.rb
     spec/spec_helper.rb
     spec/template_handler_spec.rb
