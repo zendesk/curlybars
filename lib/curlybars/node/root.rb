@@ -15,7 +15,11 @@ module Curlybars
         <<-RUBY
           Struct.new(:contexts) do
             def to_bool(condition)
-              condition != false && condition != [] && condition != 0 && condition != ''
+              condition != false &&
+              condition != [] &&
+              condition != 0 &&
+              condition != '' &&
+              condition != nil
             end
 
             def path(path)
