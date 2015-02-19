@@ -1,17 +1,19 @@
 describe Curlybars::Node::Unless do
-  it "compiles correctly" do
-    ruby_code =<<-RUBY.strip_heredoc
-      buffer = ActiveSupport::SafeBuffer.new
-      unless hbs.to_bool(expression.call)
-        buffer.safe_concat(template)
-      end
-      buffer
-    RUBY
+  it "compiles path correctly" do
+    path = double(:path)
+    unless_template = double(:unless_template, compile: 'each_template')
 
-    expression = double('expression', compile: 'expression')
-    template = double('template', compile: 'template')
-    node = Curlybars::Node::Unless.new(expression, template)
+    expect(path).to receive(:compile)
 
-    expect(node.compile.strip_heredoc).to eq(ruby_code)
+    Curlybars::Node::Unless.new(path, unless_template).compile
+  end
+
+  it "compiles each_template correctly" do
+    path = double(:path, compile: 'path')
+    unless_template = double(:unless_template)
+
+    expect(unless_template).to receive(:compile)
+
+    Curlybars::Node::Unless.new(path, unless_template).compile
   end
 end

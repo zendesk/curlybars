@@ -1,22 +1,19 @@
 describe Curlybars::Node::Each do
-  it "compiles correctly" do
-    ruby_code =<<-RUBY.strip_heredoc
-      buffer = ActiveSupport::SafeBuffer.new
-      path.call.each do |presenter|
-        contexts << presenter
-        begin
-          buffer.safe_concat(template)
-        ensure
-          contexts.pop
-        end
-      end
-      buffer
-    RUBY
+  it "compiles path correctly" do
+    path = double(:path)
+    each_template = double(:each_template, compile: 'each_template')
 
-    path = double('path', compile: 'path')
-    template = double('template', compile: 'template')
-    node = Curlybars::Node::Each.new(path, template)
+    expect(path).to receive(:compile)
 
-    expect(node.compile.strip_heredoc).to eq(ruby_code)
+    Curlybars::Node::Each.new(path, each_template).compile
+  end
+
+  it "compiles each_template correctly" do
+    path = double(:path, compile: 'path')
+    each_template = double(:each_template)
+
+    expect(each_template).to receive(:compile)
+
+    Curlybars::Node::Each.new(path, each_template).compile
   end
 end

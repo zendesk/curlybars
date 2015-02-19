@@ -1,64 +1,40 @@
 describe Curlybars::Node::Helper do
-  it "compiles with options = nil" do
-    ruby_code = <<-RUBY.strip_heredoc
-      options = ActiveSupport::HashWithIndifferentAccess.new
-
-      ActiveSupport::SafeBuffer.new begin
-        context = context.call
-        helper = helper
-        helper.call(*([context, options].compact.first(helper.arity))) do
-          raise "You cannot yield a block from within a helper. Use a block helper instead."
-        end
-      end
-    RUBY
-
-    helper = double('helper', compile: 'helper')
-    context = double('context', compile: 'context')
+  it "compiles the helper" do
+    helper = double(:helper)
+    context = double(:context, compile: 'context')
     options = nil
-    node = Curlybars::Node::Helper.new(helper, context, options)
-
-    expect(node.compile.strip_heredoc).to eq(ruby_code)
+    expect(helper).to receive(:compile)
+    Curlybars::Node::Helper.new(helper, context, options).compile
   end
 
-  it "compiles with options = []" do
-    ruby_code = <<-RUBY.strip_heredoc
-      options = ActiveSupport::HashWithIndifferentAccess.new
+  it "compiles the context" do
+    helper = double(:helper, compile: 'context')
+    context = double(:context)
+    options = nil
+    expect(context).to receive(:compile)
+    Curlybars::Node::Helper.new(helper, context, options).compile
+  end
 
-      ActiveSupport::SafeBuffer.new begin
-        context = context.call
-        helper = helper
-        helper.call(*([context, options].compact.first(helper.arity))) do
-          raise "You cannot yield a block from within a helper. Use a block helper instead."
-        end
-      end
-    RUBY
+  it "compiles non-empty options" do
+    helper = double(:helper, compile: 'helper')
+    context = double(:context, compile: 'context')
+    option = double(:option)
+    options = [option]
+    expect(option).to receive(:compile)
+    Curlybars::Node::Helper.new(helper, context, options).compile
+  end
 
-    helper = double('helper', compile: 'helper')
-    context = double('context', compile: 'context')
+  it "accepts options = []" do
+    helper = double(:helper, compile: 'helper')
+    context = double(:context, compile: 'context')
     options = []
-    node = Curlybars::Node::Helper.new(helper, context, options)
-
-    expect(node.compile.strip_heredoc).to eq(ruby_code)
+    Curlybars::Node::Helper.new(helper, context, options).compile
   end
 
-  it "compiles with non-empty options" do
-    ruby_code = <<-RUBY.strip_heredoc
-      options = ActiveSupport::HashWithIndifferentAccess.new
-      options.merge!(option)
-      ActiveSupport::SafeBuffer.new begin
-        context = context.call
-        helper = helper
-        helper.call(*([context, options].compact.first(helper.arity))) do
-          raise "You cannot yield a block from within a helper. Use a block helper instead."
-        end
-      end
-    RUBY
-
-    helper = double('helper', compile: 'helper')
-    context = double('context', compile: 'context')
-    options = [double('options', compile: 'option')]
-    node = Curlybars::Node::Helper.new(helper, context, options)
-
-    expect(node.compile.strip_heredoc).to eq(ruby_code)
+  it "accepts options = nil" do
+    helper = double(:helper, compile: 'helper')
+    context = double(:context, compile: 'context')
+    options = nil
+    Curlybars::Node::Helper.new(helper, context, options).compile
   end
 end

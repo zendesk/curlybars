@@ -1,11 +1,9 @@
 describe Curlybars::Node::String do
-  it "compiles correctly" do
-    ruby_code = <<-RUBY.strip_heredoc
-      ->() { ActiveSupport::SafeBuffer.new("string") }
-    RUBY
+  it "inspects string correctly" do
+    string = double(:string)
 
-    node = Curlybars::Node::String.new('string')
+    expect(string).to receive(:inspect)
 
-    expect(node.compile.strip_heredoc).to eq(ruby_code)
+    Curlybars::Node::String.new(string).compile
   end
 end

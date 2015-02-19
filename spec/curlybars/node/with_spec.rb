@@ -1,18 +1,19 @@
 describe Curlybars::Node::With do
-  it "compiles correctly" do
-    ruby_code = <<-RUBY.strip_heredoc
-      contexts << path.call
-      begin
-        template
-      ensure
-        contexts.pop
-      end
-    RUBY
+  it "compiles path correctly" do
+    path = double(:path)
+    template = double(:template, compile: 'template')
 
-    path = double('path', compile: 'path')
-    template = double('template', compile: 'template')
-    node = Curlybars::Node::With.new(path, template)
+    expect(path).to receive(:compile)
 
-    expect(node.compile.strip_heredoc).to eq(ruby_code)
+    Curlybars::Node::With.new(path, template).compile
+  end
+
+  it "compiles template correctly" do
+    path = double(:path, compile: 'path')
+    template = double(:template)
+
+    expect(template).to receive(:compile)
+
+    Curlybars::Node::With.new(path, template).compile
   end
 end

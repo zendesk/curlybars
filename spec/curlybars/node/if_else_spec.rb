@@ -1,18 +1,31 @@
 describe Curlybars::Node::IfElse do
-  it "compiles correctly" do
-    ruby_code = <<-RUBY.strip_heredoc
-      if hbs.to_bool(expression.call)
-        if_template
-      else
-        else_template
-      end
-    RUBY
+  it "compiles path correctly" do
+    path = double(:path)
+    if_template = double(:if_template, compile: 'if_template')
+    else_template = double(:else_template, compile: 'else_template')
 
-    expression = double('expression', compile: 'expression')
-    if_template = double('if_template', compile: 'if_template')
-    else_template = double('else_template', compile: 'else_template')
-    node = Curlybars::Node::IfElse.new(expression, if_template, else_template)
+    expect(path).to receive(:compile)
 
-    expect(node.compile.strip_heredoc).to eq(ruby_code)
+    Curlybars::Node::IfElse.new(path, if_template, else_template).compile
+  end
+
+  it "compiles if_template correctly" do
+    path = double(:path, compile: 'path')
+    if_template = double(:if_template)
+    else_template = double(:else_template, compile: 'else_template')
+
+    expect(if_template).to receive(:compile)
+
+    Curlybars::Node::IfElse.new(path, if_template, else_template).compile
+  end
+
+  it "compiles else_template correctly" do
+    path = double(:path, compile: 'path')
+    if_template = double(:if_template, compile: 'if_template')
+    else_template = double(:else_template)
+
+    expect(else_template).to receive(:compile)
+
+    Curlybars::Node::IfElse.new(path, if_template, else_template).compile
   end
 end

@@ -1,11 +1,9 @@
 describe Curlybars::Node::Path do
-  it "compiles correctly" do
-    node = Curlybars::Node::Path.new("path")
+  it "inspects path correctly" do
+    path = double(:path)
 
-    ruby_code = <<-RUBY.strip_heredoc
-      hbs.path("path")
-    RUBY
+    expect(path).to receive(:inspect)
 
-    expect(node.compile.strip_heredoc).to eq(ruby_code)
+    Curlybars::Node::Path.new(path).compile
   end
 end
