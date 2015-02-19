@@ -5,7 +5,7 @@ module Curlybars
         <<-RUBY
           contexts << #{path.compile}.call
           begin
-            #{template.compile}
+            buffer.safe_concat(#{template.compile})
           ensure
             contexts.pop
           end

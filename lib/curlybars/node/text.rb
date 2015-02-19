@@ -2,7 +2,9 @@ module Curlybars
   module Node
     Text = Struct.new(:text) do
       def compile
-        ActiveSupport::SafeBuffer.new(text.inspect)
+        <<-RUBY
+          buffer.safe_concat(#{text.inspect})
+        RUBY
       end
     end
   end
