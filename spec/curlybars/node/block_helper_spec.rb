@@ -1,94 +1,71 @@
 describe Curlybars::Node::BlockHelper do
-  it "compiles with options = nil" do
-    ruby_code = <<-RUBY.strip_heredoc
-      options = ActiveSupport::HashWithIndifferentAccess.new
+  it "compiles the helper" do
+    helper = double(:helper)
+    context = double(:context, compile: 'context')
+    options = nil
+    template = double(:template, compile: 'template')
+    helperclose = helper
+    expect(helper).to receive(:compile)
+    Curlybars::Node::BlockHelper.new(helper, context, options, template, helper).compile
+  end
 
-      ActiveSupport::SafeBuffer.new begin
-          context = context.call
-          helper = helper
-          helper.call(*([context, options].first(helper.arity))) do
-            contexts << context
-            begin
-              template
-            ensure
-              contexts.pop
-            end
-          end
-        end
-    RUBY
-
-    helper = double('helper', compile: 'helper')
-    context = double('context', compile: 'context')
+  it "compiles the context" do
+    helper = double(:helper, compile: 'context')
+    context = double(:context)
     options = nil
     template = double('template', compile: 'template')
     helperclose = helper
-    node = Curlybars::Node::BlockHelper.new(helper, context, options, template, helperclose)
-
-    expect(node.compile.strip_heredoc).to eq(ruby_code)
+    expect(context).to receive(:compile)
+    Curlybars::Node::BlockHelper.new(helper, context, options, template, helper).compile
   end
 
-  it "compiles with options = []" do
-    ruby_code = <<-RUBY.strip_heredoc
-      options = ActiveSupport::HashWithIndifferentAccess.new
+  it "compiles the template" do
+    helper = double(:helper, compile: 'helper')
+    context = double(:context, compile: 'context')
+    options = nil
+    template = double(:template)
+    helperclose = helper
+    expect(template).to receive(:compile)
+    Curlybars::Node::BlockHelper.new(helper, context, options, template, helper).compile
+  end
 
-      ActiveSupport::SafeBuffer.new begin
-          context = context.call
-          helper = helper
-          helper.call(*([context, options].first(helper.arity))) do
-            contexts << context
-            begin
-              template
-            ensure
-              contexts.pop
-            end
-          end
-        end
-    RUBY
+  it "compiles non-empty options" do
+    helper = double(:helper, compile: 'helper')
+    context = double(:context, compile: 'context')
+    option = double(:option)
+    options = [option]
+    template = double(:template, compile: 'template')
+    helperclose = helper
+    expect(option).to receive(:compile)
+    Curlybars::Node::BlockHelper.new(helper, context, options, template, helper).compile
+  end
 
-    helper = double('helper', compile: 'helper')
-    context = double('context', compile: 'context')
+  it "accepts options = []" do
+    helper = double(:helper, compile: 'helper')
+    context = double(:context, compile: 'context')
     options = []
-    template = double('template', compile: 'template')
+    template = double(:template, compile: 'template')
     helperclose = helper
-    node = Curlybars::Node::BlockHelper.new(helper, context, options, template, helperclose)
-
-    expect(node.compile.strip_heredoc).to eq(ruby_code)
+    expect(template).to receive(:compile)
+    Curlybars::Node::BlockHelper.new(helper, context, options, template, helper).compile
   end
 
-  it "compiles with non-empty options" do
-    ruby_code = <<-RUBY.strip_heredoc
-      options = ActiveSupport::HashWithIndifferentAccess.new
-      options.merge!(option)
-      ActiveSupport::SafeBuffer.new begin
-          context = context.call
-          helper = helper
-          helper.call(*([context, options].first(helper.arity))) do
-            contexts << context
-            begin
-              template
-            ensure
-              contexts.pop
-            end
-          end
-        end
-    RUBY
-
-    helper = double('helper', compile: 'helper')
-    context = double('context', compile: 'context')
-    options = [double('options', compile: 'option')]
-    template = double('template', compile: 'template')
+  it "accepts options = nil" do
+    helper = double(:helper, compile: 'helper')
+    context = double(:context, compile: 'context')
+    options = nil
+    template = double(:template, compile: 'template')
     helperclose = helper
-    node = Curlybars::Node::BlockHelper.new(helper, context, options, template, helperclose)
-
-    expect(node.compile.strip_heredoc).to eq(ruby_code)
+    expect(template).to receive(:compile)
+    Curlybars::Node::BlockHelper.new(helper, context, options, template, helper).compile
   end
 
   it "raises an IncorrectEndingError when closing is not matching opening" do
     helper = 'helper'
     helperclose = 'another_helper'
 
-    expect{
+    expect do
       Curlybars::Node::BlockHelper.new(helper, nil, nil, nil, helperclose)
-    }.to raise_error(Curlybars::Error::IncorrectEndingError)
+    end.to raise_error(Curlybars::Error::IncorrectEndingError)
   end
 end

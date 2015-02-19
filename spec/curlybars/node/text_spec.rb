@@ -1,10 +1,9 @@
 describe Curlybars::Node::Text do
-  it "compiles correctly" do
-    ruby_code = "\"<img src=\\\\\\\"foo.jpg\\\\\\\"/>øåæ漢字\""
+  it "inspects text correctly" do
+    text = double(:text, inspect: '"text"')
 
-    text = '<img src=\"foo.jpg\"/>øåæ漢字'
-    node = Curlybars::Node::Text.new(text)
+    expect(text).to receive(:inspect)
 
-    expect(node.compile.strip_heredoc).to eq(ruby_code)
+    Curlybars::Node::Text.new(text).compile
   end
 end
