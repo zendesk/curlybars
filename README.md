@@ -11,7 +11,7 @@ How to use Curlybars
 --------------------
 
 In order to use Curlybars for a view or partial, use the suffix `.hbs` instead of
-`.erb`, e.g. `app/views/posts/comment.html.hbs`.
+`.erb`, e.g. `app/views/posts/_comment.html.hbs`.
 
 Curlybars will look for a corresponding presenter class named `Posts::CommentPresenter`.
 
