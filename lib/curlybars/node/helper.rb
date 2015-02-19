@@ -9,13 +9,14 @@ module Curlybars
         <<-RUBY
           options = ActiveSupport::HashWithIndifferentAccess.new
           #{compiled_options}
-          buffer.safe_concat begin
+          result = begin
             context = #{(context || DefaultContext.new).compile}.call
             helper = #{helper.compile}
             helper.call(*([context, options].compact.first(helper.arity))) do
               raise "You cannot yield a block from within a helper. Use a block helper instead."
             end
           end
+          buffer.safe_concat(result.to_s)
         RUBY
       end
 

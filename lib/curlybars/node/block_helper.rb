@@ -19,7 +19,7 @@ module Curlybars
         <<-RUBY
           options = ActiveSupport::HashWithIndifferentAccess.new
           #{compiled_options}
-          buffer.safe_concat begin
+          result = begin
               context = #{context.compile}.call
               helper = #{helper.compile}
               helper.call(*([context, options].first(helper.arity))) do
@@ -31,6 +31,7 @@ module Curlybars
                 end
               end
             end
+          buffer.safe_concat(result.to_s)
         RUBY
       end
     end

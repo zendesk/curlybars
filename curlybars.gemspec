@@ -13,13 +13,7 @@ Gem::Specification.new do |s|
     Strongly inspired by Curly Template gem by Daniel Schierbeck"
   s.license     = "apache2"
 
-  s.authors  = [
-    "Libo Cannici",
-    "Cristian Planas",
-    "Ilkka Oksanen",
-    "Mauro Codella",
-    "Luís Almeida"
-  ]
+  s.authors  = []
 
   s.email    = 'libo@zendesk.com'
   s.homepage = 'https://github.com/zendesk/curlybars'
