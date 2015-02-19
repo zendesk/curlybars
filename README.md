@@ -17,13 +17,13 @@ Curlybars will look for a corresponding presenter class named `Posts::CommentPre
 
 By convention, these are placed in `app/presenters/`, so in this case the presenter would reside in `app/presenters/posts/comment_presenter.rb`. Note that presenters for partials are not prepended with an underscore.
 
-There are 2 kinds of presenter in Curlybars:
+There are 2 kinds of presenters in Curlybars:
 
-- `Curlybars::Presenter`
-- PORO presenter
+- `Curlybars::Presenter`s
+- P.O.R.O. presenters
 
 #### Curlybars::Presenter
-They are like Curly Presenter (with some additions), they are associated to views and automatically looked up using the filename and the extension of the view file.
+They are like `Curly::Presenter`s with some additions, and they are associated to views that are automatically looked up using the filename and the extension of the view file.
 Furthermore they are responsible for the dynamic and static caching mechanism of Curly.
 These are the methods available from Curly:
 - `#setup!`
@@ -33,10 +33,8 @@ These are the methods available from Curly:
 - `.version`
 - `.depends_on`
 
-#### PORO presenters
-They are just Plain Old Ruby Object you expose in your hbs templates.
-We are just asking you to include `Curlybars::MethodsWhitelisting` module. This will
-implement a mechanism to declare which methods you want to expose into the view.
+#### P.O.R.O. presenters
+They are just Plain Old Ruby Object you expose in your `hbs` templates. All you need is to include `Curlybars::MethodsWhitelisting` module. This inclusion will implement a mechanism to declare which methods you want to expose into the view, integratind seamlessly with existing Object hierarchies.
 It's for your convenience only, you can also do it yourself as long as your class
 defines a `.allows_method?` it should work.
 
@@ -52,7 +50,7 @@ That's why Curlybars implements a paranoid declarative filter that defines which
 methods are available in the presenters you are going to expose in the view.
 
 ```ruby
-class PostPresenter < Object
+class PostPresenter
   include Curlybars::MethodsWhitelisting
   allow_methods :title
 
@@ -88,7 +86,7 @@ Same could happen if you include a module and forget that was defining a method.
 
 Curlybars is paranoid about method leaking!
 
-Both MainPresenter and SubPresenter implement the method whitelisting mechanism
+`Curlybars::Presenter` already includes `Curlybars::MethodsWhitelisting`.
 
 Copyright and License
 ---------------------
