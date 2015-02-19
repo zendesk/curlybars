@@ -3,7 +3,6 @@ module Curlybars
     Each = Struct.new(:path, :template) do
       def compile
         <<-RUBY
-          buffer = ActiveSupport::SafeBuffer.new
           #{path.compile}.call.each do |presenter|
             contexts << presenter
             begin
@@ -12,7 +11,6 @@ module Curlybars
               contexts.pop
             end
           end
-          buffer
         RUBY
       end
     end

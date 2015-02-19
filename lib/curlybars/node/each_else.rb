@@ -5,7 +5,6 @@ module Curlybars
         <<-RUBY
           collection = #{path.compile}.call
           if collection.any?
-            buffer = ActiveSupport::SafeBuffer.new
             collection.each do |presenter|
               contexts << presenter
               begin
@@ -14,9 +13,8 @@ module Curlybars
                 contexts.pop
               end
             end
-            buffer
           else
-            #{else_template.compile}
+            buffer.safe_concat(#{else_template.compile})
           end
         RUBY
       end

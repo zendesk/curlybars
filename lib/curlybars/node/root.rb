@@ -5,7 +5,7 @@ module Curlybars
         <<-RUBY
           contexts = [presenter]
           hbs = #{hbs}.new(contexts)
-          ActiveSupport::SafeBuffer.new(#{template.compile})
+          #{template.compile}
         RUBY
       end
 
