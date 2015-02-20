@@ -27,4 +27,15 @@ describe "{{#with presenter}}...{{/with}}" do
       http://example.com/foo.png
     HTML
   end
+  it "allows empty with_template" do
+    IntegrationTest::Presenter.stub(:allows_method?).with(:user) { true }
+    presenter.stub(:user) { true }
+
+    template = compile(<<-HBS)
+      {{#with user}}{{/with}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+    HTML
+  end
 end

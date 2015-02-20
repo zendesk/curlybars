@@ -35,4 +35,46 @@ describe "{{#if}}...{{else}}...{{/if}}" do
       else_template
     HTML
   end
+
+  it "allows empty if_template" do
+    IntegrationTest::Presenter.stub(:allows_method?).with(:valid) { true }
+    presenter.stub(:valid) { false }
+
+    template = compile(<<-HBS)
+    {{#if valid}}{{else}}
+      else_template
+    {{/if}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+      else_template
+    HTML
+  end
+
+  it "allows empty else_template" do
+    IntegrationTest::Presenter.stub(:allows_method?).with(:valid) { true }
+    presenter.stub(:valid) { true }
+
+    template = compile(<<-HBS)
+      {{#if valid}}
+        if_template
+      {{else}}{{/if}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+      if_template
+    HTML
+  end
+
+  it "allows empty if_template and else_template" do
+    IntegrationTest::Presenter.stub(:allows_method?).with(:valid) { true }
+    presenter.stub(:valid) { true }
+
+    template = compile(<<-HBS)
+      {{#if valid}}{{else}}{{/if}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+    HTML
+  end
 end

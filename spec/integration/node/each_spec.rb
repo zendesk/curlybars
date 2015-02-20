@@ -31,6 +31,18 @@ describe "{{#each collection}}...{{/each}}" do
     HTML
   end
 
+  it "allows empty each_template" do
+    IntegrationTest::Presenter.stub(:allows_method?).with(:non_empty_collection) { true }
+    presenter.stub(:non_empty_collection) { [:an_element] }
+
+    template = compile(<<-HBS)
+      {{#each non_empty_collection}}{{/each}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+    HTML
+  end
+
   it "uses each_template when collection is not empty" do
     path_presenter_class = Class.new(Curlybars::Presenter) do
       presents :path

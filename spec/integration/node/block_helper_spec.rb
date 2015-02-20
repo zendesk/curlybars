@@ -25,4 +25,14 @@ describe "{{#helper context key=value}}...{{/helper}}" do
       beauty class:red foo:bar submit
     HTML
   end
+
+  it "allow empty template" do
+    template = compile(<<-HBS)
+      {{#form new_comment_form class="red" foo="bar"}}{{/form}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+      beauty class:red foo:bar
+    HTML
+  end
 end
