@@ -17,9 +17,12 @@ require 'curlybars/node/helper'
 require 'curlybars/node/block_helper'
 require 'curlybars/node/option'
 require 'curlybars/node/partial'
+require 'curlybars/node/empty'
 
 module Curlybars
   class Parser < RLTK::Parser
+    EMPTY = Curlybars::Node::Empty.new
+
     start :root
 
     production(:root, 'template') { |template| Node::Root.new(template) }
@@ -37,7 +40,7 @@ module Curlybars
         'START HASH .path .path .options? END
           .template?
         START SLASH .path END') do |helper, context, options, template, helperclose|
-        Node::BlockHelper.new(helper, context, options, template, helperclose)
+        Node::BlockHelper.new(helper, context, options, template || EMPTY, helperclose)
       end
 
       clause('START .path .expression? .options? END') do |path, context, options|
@@ -48,7 +51,7 @@ module Curlybars
         'START HASH IF .expression END
           .template?
         START SLASH IF END') do |expression, template|
-        Node::If.new(expression, template)
+        Node::If.new(expression, template || EMPTY)
       end
 
       clause(
@@ -57,14 +60,14 @@ module Curlybars
         START ELSE END
           .template?
         START SLASH IF END') do |expression, if_template, else_template|
-        Node::IfElse.new(expression, if_template, else_template)
+        Node::IfElse.new(expression, if_template || EMPTY, else_template || EMPTY)
       end
 
       clause(
         'START HASH UNLESS .expression END
           .template?
         START SLASH UNLESS END') do |expression, template|
-        Node::Unless.new(expression, template)
+        Node::Unless.new(expression, template || EMPTY)
       end
 
       clause(
@@ -73,14 +76,14 @@ module Curlybars
         START ELSE END
           .template?
         START SLASH UNLESS END') do |expression, unless_template, else_template|
-        Node::UnlessElse.new(expression, unless_template, else_template)
+        Node::UnlessElse.new(expression, unless_template || EMPTY, else_template || EMPTY)
       end
 
       clause(
         'START HASH EACH .path END
           .template?
         START SLASH EACH END') do |path, template|
-        Node::Each.new(path, template)
+        Node::Each.new(path, template || EMPTY)
       end
 
       clause(
@@ -89,14 +92,14 @@ module Curlybars
         START ELSE END
           .template?
         START SLASH EACH END') do |path, each_template, else_template|
-        Node::EachElse.new(path, each_template, else_template)
+        Node::EachElse.new(path, each_template || EMPTY, else_template || EMPTY)
       end
 
       clause(
         'START HASH WITH .path END
           .template?
         START SLASH WITH END') do |path, template|
-        Node::With.new(path, template)
+        Node::With.new(path, template || EMPTY)
       end
 
       clause('START GT .path END') do |path|
