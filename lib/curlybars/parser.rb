@@ -35,7 +35,7 @@ module Curlybars
 
       clause(
         'START HASH .path .path .options? END
-          .template
+          .template?
         START SLASH .path END') do |helper, context, options, template, helperclose|
         Node::BlockHelper.new(helper, context, options, template, helperclose)
       end
@@ -46,55 +46,55 @@ module Curlybars
 
       clause(
         'START HASH IF .expression END
-          .template
+          .template?
         START SLASH IF END') do |expression, template|
         Node::If.new(expression, template)
       end
 
       clause(
         'START HASH IF .expression END
-          .template
+          .template?
         START ELSE END
-          .template
+          .template?
         START SLASH IF END') do |expression, if_template, else_template|
         Node::IfElse.new(expression, if_template, else_template)
       end
 
       clause(
         'START HASH UNLESS .expression END
-          .template
+          .template?
         START SLASH UNLESS END') do |expression, template|
         Node::Unless.new(expression, template)
       end
 
       clause(
         'START HASH UNLESS .expression END
-          .template
+          .template?
         START ELSE END
-          .template
+          .template?
         START SLASH UNLESS END') do |expression, unless_template, else_template|
         Node::UnlessElse.new(expression, unless_template, else_template)
       end
 
       clause(
         'START HASH EACH .path END
-          .template
+          .template?
         START SLASH EACH END') do |path, template|
         Node::Each.new(path, template)
       end
 
       clause(
         'START HASH EACH .path END
-          .template
+          .template?
         START ELSE END
-          .template
+          .template?
         START SLASH EACH END') do |path, each_template, else_template|
         Node::EachElse.new(path, each_template, else_template)
       end
 
       clause(
         'START HASH WITH .path END
-          .template
+          .template?
         START SLASH WITH END') do |path, template|
         Node::With.new(path, template)
       end

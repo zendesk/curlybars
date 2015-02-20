@@ -52,6 +52,18 @@ describe "{{#unless}}...{{/unless}}" do
     HTML
   end
 
+  it "allows empty unless_template" do
+    IntegrationTest::Presenter.stub(:allows_method?).with(:valid) { true }
+    presenter.stub(:valid) { true }
+
+    template = compile(<<-HBS)
+      {{#unless valid}}{{/unless}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+    HTML
+  end
+
   it "works with nested unless blocks (negative and positive)" do
     IntegrationTest::Presenter.stub(:allows_method?).with(:first_condition) { true }
     IntegrationTest::Presenter.stub(:allows_method?).with(:second_condition) { true }

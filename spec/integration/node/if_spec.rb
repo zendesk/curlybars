@@ -85,4 +85,16 @@ describe "{{#if}}...{{/if}}" do
       outer_if_template
     HTML
   end
+
+  it "allows empty if_template" do
+    IntegrationTest::Presenter.stub(:allows_method?).with(:valid) { true }
+    presenter.stub(:valid) { true }
+
+    template = compile(<<-HBS)
+      {{#if valid}}{{/if}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+    HTML
+  end
 end
