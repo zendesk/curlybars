@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+
+require 'curlybars'
+require 'ruby-beautify'
+
+tokens = Curlybars::Lexer.lex(ARGF.read)
+ast = Curlybars::Parser.parse(tokens)
+
+rendered = ast.compile
+
+prettified = RubyBeautify.pretty_string(
+  rendered,
+  indent_token: ' ',
+  indent_count: 2
+)
+
+prettified.split("\n").each_with_index do |line, index|
+  puts "#{index}\t#{line}"
+end
