@@ -1,5 +1,11 @@
 ### Unreleased
 
+### Curlybars 0.1.3 (February 20, 2015)
+
+* Bugfixes
+
+  Mauro Codella
+
 ### Curlybars 0.1.2 (February 20, 2015)
 
 * Bugfixes
