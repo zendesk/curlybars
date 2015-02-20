@@ -1,5 +1,11 @@
 ### Unreleased
 
+### Curlybars 0.1.2 (February 20, 2015)
+
+* Bugfixes
+
+  Mauro Codella
+
 ### Curlybars 0.1.1 (February 19, 2015)
 
 * Bugfixes
@@ -16,4 +22,3 @@
   *Mauro Codella*
   *Ilkka Oksanen*
   *Cristian Planas*
-
