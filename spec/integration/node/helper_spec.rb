@@ -39,4 +39,24 @@ describe "{{helper context key=value}}" do
         value="some value persisted in the DB">
     HTML
   end
+
+  it "renders correctly a return type of integer" do
+    template = compile(<<-HBS)
+      {{integer 'ignored'}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+      0
+    HTML
+  end
+
+  it "renders correctly a return type of boolean" do
+    template = compile(<<-HBS)
+      {{boolean 'ignored'}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+      true
+    HTML
+  end
 end

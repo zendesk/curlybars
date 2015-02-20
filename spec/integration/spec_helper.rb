@@ -43,8 +43,8 @@ module IntegrationTest
   class Presenter < Curlybars::Presenter
     include Helpers
 
-    allow_methods :partial, :user, :new_comment_form, :valid, :visible,
-      :return_true, :return_false, :beautify, :form, :date, :asset
+    allow_methods :partial, :user, :new_comment_form, :valid, :visible, :return_true,
+      :return_false, :beautify, :form, :date, :asset, :integer, :boolean
 
     def user
       Shared::UserPresenter.new(current_user)
@@ -67,6 +67,14 @@ module IntegrationTest
     end
 
     def visible
+      true
+    end
+
+    def integer
+      0
+    end
+
+    def boolean
       true
     end
 
