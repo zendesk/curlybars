@@ -34,12 +34,17 @@ module IntegrationTest
         <input name="#{field.name}" id="#{field.id}" type="#{type}" class="#{opts['class']}" value="#{field.value}">
       HTML
     end
+
+    def partial
+      'partial'
+    end
   end
 
   class Presenter < Curlybars::Presenter
     include Helpers
 
-    allow_methods :user, :new_comment_form, :valid, :visible, :return_true, :return_false, :beautify, :form, :date, :asset
+    allow_methods :partial, :user, :new_comment_form, :valid, :visible,
+      :return_true, :return_false, :beautify, :form, :date, :asset
 
     def user
       Shared::UserPresenter.new(current_user)
