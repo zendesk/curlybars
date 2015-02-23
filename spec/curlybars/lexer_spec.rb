@@ -46,6 +46,32 @@ describe Curlybars::Lexer do
     end
   end
 
+  describe "{{<integer>}}" do
+    it "is lexed as an integer" do
+      lex("{{7}}").should produce [:START, :INTEGER, :END]
+    end
+
+    it "returns the expressed boolean" do
+      integer_token = lex("{{7}}").detect {|token| token.type == :INTEGER}
+      integer_token.value.should eq 7
+    end
+  end
+
+  describe "{{<boolean>}}" do
+    it "{{true}} is lexed as boolean" do
+      lex("{{true}}").should produce [:START, :BOOLEAN, :END]
+    end
+
+    it "{{false}} is lexed as boolean" do
+      lex("{{false}}").should produce [:START, :BOOLEAN, :END]
+    end
+
+    it "returns the expressed boolean" do
+      boolean_token = lex("{{true}}").detect {|token| token.type == :BOOLEAN}
+      boolean_token.value.should be_truthy
+    end
+  end
+
   describe "{{''}}" do
     it "is lexed as a string" do
       lex("{{''}}").should produce [:START, :STRING, :END]
