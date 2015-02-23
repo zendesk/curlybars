@@ -7,6 +7,7 @@ module Curlybars
         <<-RUBY
           Module.new do
             def self.exec(contexts, hbs)
+              raise "Nesting too deep" unless contexts.length < 10
               buffer = ActiveSupport::SafeBuffer.new
               #{compiled_items}
               buffer
