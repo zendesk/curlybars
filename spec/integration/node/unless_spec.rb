@@ -3,8 +3,8 @@ describe "{{#unless}}...{{/unless}}" do
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
   it "returns unless_template when condition is false" do
-    IntegrationTest::Presenter.stub(:allows_method?).with(:condition) { true }
-    presenter.stub(:condition) { false }
+    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:condition) { true }
+    allow(presenter).to receive(:condition) { false }
 
     template = compile(<<-HBS)
       {{#unless condition}}
@@ -18,8 +18,8 @@ describe "{{#unless}}...{{/unless}}" do
   end
 
   it "doesn't return unless_template when condition is true" do
-    IntegrationTest::Presenter.stub(:allows_method?).with(:condition) { true }
-    presenter.stub(:condition) { true }
+    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:condition) { true }
+    allow(presenter).to receive(:condition) { true }
 
     template = compile(<<-HBS)
       {{#unless condition}}
@@ -32,10 +32,10 @@ describe "{{#unless}}...{{/unless}}" do
   end
 
   it "works with nested unless blocks (double negative)" do
-    IntegrationTest::Presenter.stub(:allows_method?).with(:first_condition) { true }
-    IntegrationTest::Presenter.stub(:allows_method?).with(:second_condition) { true }
-    presenter.stub(:first_condition) { false }
-    presenter.stub(:second_condition) { false }
+    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:first_condition) { true }
+    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:second_condition) { true }
+    allow(presenter).to receive(:first_condition) { false }
+    allow(presenter).to receive(:second_condition) { false }
 
     template = compile(<<-HBS)
       {{#unless first_condition}}
@@ -53,8 +53,8 @@ describe "{{#unless}}...{{/unless}}" do
   end
 
   it "allows empty unless_template" do
-    IntegrationTest::Presenter.stub(:allows_method?).with(:valid) { true }
-    presenter.stub(:valid) { true }
+    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid) { true }
+    allow(presenter).to receive(:valid) { true }
 
     template = compile(<<-HBS)
       {{#unless valid}}{{/unless}}
@@ -65,10 +65,10 @@ describe "{{#unless}}...{{/unless}}" do
   end
 
   it "works with nested unless blocks (negative and positive)" do
-    IntegrationTest::Presenter.stub(:allows_method?).with(:first_condition) { true }
-    IntegrationTest::Presenter.stub(:allows_method?).with(:second_condition) { true }
-    presenter.stub(:first_condition) { false }
-    presenter.stub(:second_condition) { true }
+    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:first_condition) { true }
+    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:second_condition) { true }
+    allow(presenter).to receive(:first_condition) { false }
+    allow(presenter).to receive(:second_condition) { true }
 
     template = compile(<<-HBS)
       {{#unless first_condition}}

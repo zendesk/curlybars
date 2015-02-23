@@ -3,8 +3,8 @@ describe "{{#if}}...{{else}}...{{/if}}" do
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
   it "renders the if_template" do
-    IntegrationTest::Presenter.stub(:allows_method?).with(:return_true) { true }
-    presenter.stub(:return_true) { true }
+    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:return_true) { true }
+    allow(presenter).to receive(:return_true) { true }
 
     template = compile(<<-HBS)
       {{#if return_true}}
@@ -20,8 +20,8 @@ describe "{{#if}}...{{else}}...{{/if}}" do
   end
 
   it "renders the else_template" do
-    IntegrationTest::Presenter.stub(:allows_method?).with(:return_false) { true }
-    presenter.stub(:return_false) { false }
+    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:return_false) { true }
+    allow(presenter).to receive(:return_false) { false }
 
     template = compile(<<-HBS)
       {{#if return_false}}
@@ -37,8 +37,8 @@ describe "{{#if}}...{{else}}...{{/if}}" do
   end
 
   it "allows empty if_template" do
-    IntegrationTest::Presenter.stub(:allows_method?).with(:valid) { true }
-    presenter.stub(:valid) { false }
+    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid) { true }
+    allow(presenter).to receive(:valid) { false }
 
     template = compile(<<-HBS)
     {{#if valid}}{{else}}
@@ -52,8 +52,8 @@ describe "{{#if}}...{{else}}...{{/if}}" do
   end
 
   it "allows empty else_template" do
-    IntegrationTest::Presenter.stub(:allows_method?).with(:valid) { true }
-    presenter.stub(:valid) { true }
+    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid) { true }
+    allow(presenter).to receive(:valid) { true }
 
     template = compile(<<-HBS)
       {{#if valid}}
@@ -67,8 +67,8 @@ describe "{{#if}}...{{else}}...{{/if}}" do
   end
 
   it "allows empty if_template and else_template" do
-    IntegrationTest::Presenter.stub(:allows_method?).with(:valid) { true }
-    presenter.stub(:valid) { true }
+    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid) { true }
+    allow(presenter).to receive(:valid) { true }
 
     template = compile(<<-HBS)
       {{#if valid}}{{else}}{{/if}}

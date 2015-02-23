@@ -2,7 +2,7 @@ describe "Using Curly(bars) for the application layout", type: :request do
   example "A simple layout view in Curly" do
     get '/'
 
-    response.body.should == <<-HTML.strip_heredoc
+    expect(body).to eq(<<-HTML.strip_heredoc)
       <html>
       <head>
         <title>Dummy app</title>
@@ -20,7 +20,7 @@ describe "Using Curly(bars) for the application layout", type: :request do
   example "A simple layout view in Curlybars" do
     get '/articles/1'
 
-    response.body.should == <<-HTML.strip_heredoc
+    expect(body).to eq(<<-HTML.strip_heredoc)
       <html>
       <head>
         <title>Dummy app</title>

@@ -2,7 +2,7 @@ require 'rspec/expectations'
 
 RSpec::Matchers.define(:produce) do |expected|
   match do |actual|
-    normalize(actual.map(&:type)).should eq normalize(expected)
+    expect(normalize(actual.map(&:type))).to eq normalize(expected)
   end
 
   def normalize(tokens)
@@ -13,7 +13,7 @@ RSpec::Matchers.define(:produce) do |expected|
     end
   end
 
-  failure_message_for_should do |actual|
+  failure_message do |actual|
     <<-MESSAGE.strip_heredoc
       Expected
 
@@ -25,7 +25,7 @@ RSpec::Matchers.define(:produce) do |expected|
     MESSAGE
   end
 
-  failure_message_for_should_not do |actual|
+  failure_message_when_negated do |actual|
     <<-MESSAGE.strip_heredoc
       Expected
 
