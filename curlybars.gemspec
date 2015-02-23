@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.rubygems_version = '1.3.5'
 
   s.name              = 'curlybars'
-  s.version           = '0.1.4'
+  s.version           = '0.1.0'
   s.date              = '2015-02-23'
 
   s.summary     = "Create your views using Handlebars templates!"
@@ -45,6 +45,7 @@ Gem::Specification.new do |s|
     Gemfile
     README.md
     Rakefile
+    bin/curlybars
     curlybars.gemspec
     lib/curlybars.rb
     lib/curlybars/error/incorrect_ending_error.rb
@@ -53,6 +54,7 @@ Gem::Specification.new do |s|
     lib/curlybars/node/block_helper.rb
     lib/curlybars/node/each.rb
     lib/curlybars/node/each_else.rb
+    lib/curlybars/node/empty.rb
     lib/curlybars/node/helper.rb
     lib/curlybars/node/if.rb
     lib/curlybars/node/if_else.rb
@@ -67,7 +69,6 @@ Gem::Specification.new do |s|
     lib/curlybars/node/unless.rb
     lib/curlybars/node/unless_else.rb
     lib/curlybars/node/with.rb
-    lib/curlybars/node/empty.rb
     lib/curlybars/parser.rb
     lib/curlybars/presenter.rb
     lib/curlybars/railtie.rb
@@ -139,7 +140,9 @@ Gem::Specification.new do |s|
     spec/integration/node/helper_spec.rb
     spec/integration/node/if_else_spec.rb
     spec/integration/node/if_spec.rb
+    spec/integration/node/partial_spec.rb
     spec/integration/node/path_spec.rb
+    spec/integration/node/template_spec.rb
     spec/integration/node/unless_else_spec.rb
     spec/integration/node/unless_spec.rb
     spec/integration/node/with_spec.rb
