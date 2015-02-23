@@ -9,17 +9,19 @@ describe "template" do
     HTML
   end
 
-  # it "can contain a single curly" do
-  #   template = compile('{')
-  #
-  #   expect(eval(template)).to resemble(<<-HTML)
-  #   HTML
-  # end
-  #
-  # it "can contain a single backslash" do
-  #   template = compile('\\')
-  #
-  #   expect(eval(template)).to resemble(<<-HTML)
-  #   HTML
-  # end
+  it "can contain a single curly" do
+    template = compile('{')
+
+    expect(eval(template)).to resemble(<<-HTML)
+      {
+    HTML
+  end
+
+  it "can contain a single backslash" do
+   template = compile('\\')
+
+   expect(eval(template)).to resemble(<<-HTML)
+     \\
+   HTML
+  end
 end

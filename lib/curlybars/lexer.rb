@@ -4,6 +4,7 @@ module Curlybars
   class Lexer < RLTK::Lexer
     match_first
 
+    r(/\\\z/) { |text| [:TEXT, '\\'] }
     r(/\\{/) { |text| [:TEXT, '{'] }
 
     r(/{{!--/) { push_state :comment_block }
