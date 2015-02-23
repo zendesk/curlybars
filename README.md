@@ -88,6 +88,27 @@ Curlybars is paranoid about method leaking!
 
 `Curlybars::Presenter` already includes `Curlybars::MethodsWhitelisting`.
 
+Presenter namespacing
+---------------------
+
+By default Curlybars will follow the Curly's standard template name resolution.
+Furthermore in Curlybars you can define a global namespace for all your
+presenters associated with Handlebars `.hbs` views.
+
+You just need to initialize Curlybars like this:
+
+```ruby
+# config/initializers/curlybars.rb
+Curlybars.configure do |config|
+  config.presenters_namespace = 'Experimental'
+end
+```
+
+This will make the lookup system to search for presenters like:
+```
+Experimental::Articles::ShowPresenter
+```
+
 Copyright and License
 ---------------------
 
