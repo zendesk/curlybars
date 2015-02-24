@@ -1,5 +1,11 @@
 ### Unreleased
 
+### Curlybars 0.1.5 (February 24, 2015)
+
+* Configurable namespace for presenter
+
+  Libo Cannici
+
 ### Curlybars 0.1.4 (February 23, 2015)
 
 * Bugfixes

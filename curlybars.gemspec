@@ -4,8 +4,8 @@ Gem::Specification.new do |s|
   s.rubygems_version = '1.3.5'
 
   s.name              = 'curlybars'
-  s.version           = '0.1.4'
-  s.date              = '2015-02-23'
+  s.version           = '0.1.5'
+  s.date              = '2015-02-24'
 
   s.summary     = "Create your views using Handlebars templates!"
   s.description = "A view layer for your Rails apps that separates
@@ -48,6 +48,7 @@ Gem::Specification.new do |s|
     bin/curlybars
     curlybars.gemspec
     lib/curlybars.rb
+    lib/curlybars/configuration.rb
     lib/curlybars/error/incorrect_ending_error.rb
     lib/curlybars/lexer.rb
     lib/curlybars/methods_whitelisting.rb
@@ -79,6 +80,7 @@ Gem::Specification.new do |s|
     spec/acceptance/collection_blocks_spec.rb
     spec/acceptance/context_blocks_spec.rb
     spec/acceptance/partials_spec.rb
+    spec/curlybars/configuration_spec.rb
     spec/curlybars/lexer_spec.rb
     spec/curlybars/node/block_helper_spec.rb
     spec/curlybars/node/each_else_spec.rb
@@ -109,7 +111,7 @@ Gem::Specification.new do |s|
     spec/dummy/app/helpers/curlybars_helper.rb
     spec/dummy/app/models/article.rb
     spec/dummy/app/models/user.rb
-    spec/dummy/app/presenters/articles/show_presenter.rb
+    spec/dummy/app/presenters/curlybars_presenters/articles/show_presenter.rb
     spec/dummy/app/presenters/dashboards/collection_presenter.rb
     spec/dummy/app/presenters/dashboards/item_presenter.rb
     spec/dummy/app/presenters/dashboards/new_presenter.rb
