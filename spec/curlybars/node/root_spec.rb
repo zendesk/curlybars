@@ -1,6 +1,8 @@
 describe Curlybars::Node::Root do
+  let(:file_name) { '/app/views/template.hbs' }
+
   it "compiles the template" do
-    position = double(:position, file_name: 'file_name', line_number: 1, line_offset: 0)
+    position = double(:position, file_name: file_name, line_number: 1, line_offset: 0)
     template = double(:template)
     expect(template).to receive(:compile)
 
@@ -73,6 +75,23 @@ describe Curlybars::Node::Root do
           hbs.path('forbidden_method', hbs.position(0, 1))
         end.to raise_error(Curlybars::Error::Render)
       end
+    end
+  end
+
+  describe "#position" do
+    it "returns a position with file_name" do
+      position = hbs.position(0, 0)
+      expect(position.file_name).to eq file_name
+    end
+
+    it "returns a position with line_number" do
+      position = hbs.position(1, 0)
+      expect(position.line_number).to eq 1
+    end
+
+    it "returns a position with line_offset" do
+      position = hbs.position(0, 1)
+      expect(position.line_offset).to eq 1
     end
   end
 
