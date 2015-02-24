@@ -1,9 +1,10 @@
 describe Curlybars::Node::Root do
   it "compiles the template" do
+    position = double(:position, file_name: 'file_name', line_number: 1, line_offset: 0)
     template = double(:template)
     expect(template).to receive(:compile)
 
-    Curlybars::Node::Root.new(template).compile
+    Curlybars::Node::Root.new(template, position).compile
   end
 
   describe "hbs helper class" do
@@ -50,7 +51,7 @@ describe Curlybars::Node::Root do
         allow_all_methods(presenter)
         allow(presenter).to receive(:method) { :method }
 
-        expect(hbs.path('method')).to eq :method
+        expect(hbs.path('method', hbs.position(0, 1))).to eq :method
       end
 
       it "returns the method in the current context" do
@@ -61,7 +62,7 @@ describe Curlybars::Node::Root do
         allow_all_methods(presenter)
         allow(presenter).to receive(:sub) { sub }
 
-        expect(hbs.path('sub.method')).to eq :method
+        expect(hbs.path('sub.method', hbs.position(0, 1))).to eq :method
       end
 
       it "raises an exception when the method is not allowed" do
@@ -69,8 +70,8 @@ describe Curlybars::Node::Root do
         allow(presenter).to receive(:forbidden_method) { :forbidden_method }
 
         expect do
-          hbs.path('forbidden_method')
-        end.to raise_error(RuntimeError)
+          hbs.path('forbidden_method', hbs.position(0, 1))
+        end.to raise_error(Curlybars::Error::Render)
       end
     end
   end
