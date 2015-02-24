@@ -3,8 +3,8 @@ describe "{{#if}}...{{/if}}" do
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
   it "returns positive branch when condition is true" do
-    IntegrationTest::Presenter.stub(:allows_method?).with(:valid) { true }
-    presenter.stub(:valid) { true }
+    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid) { true }
+    allow(presenter).to receive(:valid) { true }
 
     template = compile(<<-HBS)
       {{#if valid}}
@@ -18,8 +18,8 @@ describe "{{#if}}...{{/if}}" do
   end
 
   it "doesn't return positive branch when condition is false" do
-    IntegrationTest::Presenter.stub(:allows_method?).with(:valid) { true }
-    presenter.stub(:valid) { false }
+    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid) { true }
+    allow(presenter).to receive(:valid) { false }
 
     template = compile(<<-HBS)
       {{#if valid}}
@@ -32,8 +32,8 @@ describe "{{#if}}...{{/if}}" do
   end
 
   it "doesn't return positive branch when condition is empty array" do
-    IntegrationTest::Presenter.stub(:allows_method?).with(:collection) { true }
-    presenter.stub(:collection) { [] }
+    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:collection) { true }
+    allow(presenter).to receive(:collection) { [] }
 
     template = compile(<<-HBS)
       {{#if collection}}
@@ -46,10 +46,10 @@ describe "{{#if}}...{{/if}}" do
   end
 
   it "works with nested `if blocks` (double positive)" do
-    IntegrationTest::Presenter.stub(:allows_method?).with(:valid) { true }
-    IntegrationTest::Presenter.stub(:allows_method?).with(:visible) { true }
-    presenter.stub(:valid) { true }
-    presenter.stub(:visible) { true }
+    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid) { true }
+    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:visible) { true }
+    allow(presenter).to receive(:valid) { true }
+    allow(presenter).to receive(:visible) { true }
 
     template = compile(<<-HBS)
       {{#if valid}}
@@ -67,10 +67,10 @@ describe "{{#if}}...{{/if}}" do
   end
 
   it "works with nested `if blocks` (positive and negative)" do
-    IntegrationTest::Presenter.stub(:allows_method?).with(:valid) { true }
-    IntegrationTest::Presenter.stub(:allows_method?).with(:visible) { true }
-    presenter.stub(:valid) { true }
-    presenter.stub(:visible) { false }
+    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid) { true }
+    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:visible) { true }
+    allow(presenter).to receive(:valid) { true }
+    allow(presenter).to receive(:visible) { false }
 
     template = compile(<<-HBS)
       {{#if valid}}
@@ -87,8 +87,8 @@ describe "{{#if}}...{{/if}}" do
   end
 
   it "allows empty if_template" do
-    IntegrationTest::Presenter.stub(:allows_method?).with(:valid) { true }
-    presenter.stub(:valid) { true }
+    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid) { true }
+    allow(presenter).to receive(:valid) { true }
 
     template = compile(<<-HBS)
       {{#if valid}}{{/if}}

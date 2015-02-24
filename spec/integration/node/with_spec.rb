@@ -28,8 +28,8 @@ describe "{{#with presenter}}...{{/with}}" do
     HTML
   end
   it "allows empty with_template" do
-    IntegrationTest::Presenter.stub(:allows_method?).with(:user) { true }
-    presenter.stub(:user) { true }
+    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:user) { true }
+    allow(presenter).to receive(:user) { true }
 
     template = compile(<<-HBS)
       {{#with user}}{{/with}}

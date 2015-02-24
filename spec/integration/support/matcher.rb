@@ -2,14 +2,14 @@ require 'rspec/expectations'
 
 RSpec::Matchers.define(:resemble) do |expected|
   match do |actual|
-    normalize(actual).should eq normalize(expected)
+    expect(normalize(actual)).to eq normalize(expected)
   end
 
   def normalize(text)
     text.gsub(/\s/m, '')
   end
 
-  failure_message_for_should do |actual|
+  failure_message do |actual|
     <<-MESSAGE.strip_heredoc
       Expected
 
@@ -21,7 +21,7 @@ RSpec::Matchers.define(:resemble) do |expected|
     MESSAGE
   end
 
-  failure_message_for_should_not do |actual|
+  failure_message_when_negated do |actual|
     <<-MESSAGE.strip_heredoc
       Expected
 

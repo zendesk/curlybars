@@ -48,7 +48,7 @@ describe Curlybars::Node::Root do
     describe "#path" do
       it "returns the method in the current context" do
         allow_all_methods(presenter)
-        presenter.stub(:method) { :method }
+        allow(presenter).to receive(:method) { :method }
 
         expect(hbs.path('method')).to eq :method
       end
@@ -56,17 +56,17 @@ describe Curlybars::Node::Root do
       it "returns the method in the current context" do
         sub = double(:sub_presenter)
         allow_all_methods(sub)
-        sub.stub(:method) { :method }
+        allow(sub).to receive(:method) { :method }
 
         allow_all_methods(presenter)
-        presenter.stub(:sub) { sub }
+        allow(presenter).to receive(:sub) { sub }
 
         expect(hbs.path('sub.method')).to eq :method
       end
 
       it "raises an exception when the method is not allowed" do
         disallow_all_methods(presenter)
-        presenter.stub(:forbidden_method) { :forbidden_method }
+        allow(presenter).to receive(:forbidden_method) { :forbidden_method }
 
         expect do
           hbs.path('forbidden_method')
