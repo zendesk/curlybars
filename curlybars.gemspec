@@ -45,17 +45,21 @@ Gem::Specification.new do |s|
     Gemfile
     README.md
     Rakefile
+    bin/curlybars
     curlybars.gemspec
     lib/curlybars.rb
     lib/curlybars/error/incorrect_ending_error.rb
     lib/curlybars/lexer.rb
     lib/curlybars/methods_whitelisting.rb
     lib/curlybars/node/block_helper.rb
+    lib/curlybars/node/boolean.rb
     lib/curlybars/node/each.rb
     lib/curlybars/node/each_else.rb
+    lib/curlybars/node/empty.rb
     lib/curlybars/node/helper.rb
     lib/curlybars/node/if.rb
     lib/curlybars/node/if_else.rb
+    lib/curlybars/node/integer.rb
     lib/curlybars/node/item.rb
     lib/curlybars/node/option.rb
     lib/curlybars/node/partial.rb
@@ -67,7 +71,6 @@ Gem::Specification.new do |s|
     lib/curlybars/node/unless.rb
     lib/curlybars/node/unless_else.rb
     lib/curlybars/node/with.rb
-    lib/curlybars/node/empty.rb
     lib/curlybars/parser.rb
     lib/curlybars/presenter.rb
     lib/curlybars/railtie.rb
@@ -132,6 +135,7 @@ Gem::Specification.new do |s|
     spec/dummy/config/environments/test.rb
     spec/dummy/config/routes.rb
     spec/integration/node/block_helper_spec.rb
+    spec/integration/node/boolean_spec.rb
     spec/integration/node/comment_spec.rb
     spec/integration/node/each_else_spec.rb
     spec/integration/node/each_spec.rb
@@ -139,7 +143,10 @@ Gem::Specification.new do |s|
     spec/integration/node/helper_spec.rb
     spec/integration/node/if_else_spec.rb
     spec/integration/node/if_spec.rb
+    spec/integration/node/integer_spec.rb
+    spec/integration/node/partial_spec.rb
     spec/integration/node/path_spec.rb
+    spec/integration/node/template_spec.rb
     spec/integration/node/unless_else_spec.rb
     spec/integration/node/unless_spec.rb
     spec/integration/node/with_spec.rb
