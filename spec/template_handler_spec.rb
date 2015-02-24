@@ -92,7 +92,7 @@ describe Curlybars::TemplateHandler do
     end
   end
 
-  let(:template) { double("template", virtual_path: "test") }
+  let(:template) { double("template", virtual_path: "test", identifier: "test.hbs") }
   let(:context) { context_class.new }
 
   before do

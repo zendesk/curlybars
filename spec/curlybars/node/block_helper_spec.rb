@@ -66,6 +66,6 @@ describe Curlybars::Node::BlockHelper do
 
     expect do
       Curlybars::Node::BlockHelper.new(helper, nil, nil, nil, helperclose)
-    end.to raise_error(Curlybars::Error::IncorrectEndingError)
+    end.to raise_error(Curlybars::Error::Compile)
   end
 end

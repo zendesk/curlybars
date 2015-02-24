@@ -1,21 +1,21 @@
+require 'curlybars/position'
 require 'curlybars/lexer'
 require 'curlybars/parser'
-require 'curlybars/error/compile_error'
+require 'curlybars/error/lex'
+require 'curlybars/error/parse'
+require 'curlybars/error/compile'
+require 'curlybars/error/render'
 
 module Curlybars
   class Compiler
-    def self.compile(template)
-      lex = Curlybars::Lexer.lex(template.source)
-      Curlybars::Parser.parse(lex).compile
-    rescue RLTK::LexingError => e
-      source = template.source[e.stream_offset..-1]
-      message = "Invalid token: `%s` in `%s`" % [source.first, source.split("\n").first]
-      raise Curlybars::Error::CompileError.new(Rails.root, message, e, template)
-    rescue RLTK::NotInLanguage => e
-      position = e.current.position
-      source = template.source[position.stream_offset..-1]
-      message = "Parsing error: `%s` in `%s`" % [source.first(position.length), source.split("\n").first]
-      raise Curlybars::Error::CompileError.new(Rails.root, message, position, template)
+    def self.compile(source, file_name)
+      tokens = Curlybars::Lexer.lex(source, file_name)
+      ast = Curlybars::Parser.parse(tokens)
+      ast.compile
+    rescue RLTK::LexingError => lexing_error
+      raise Curlybars::Error::Lex.new(source, file_name, lexing_error)
+    rescue RLTK::NotInLanguage => not_in_language_error
+      raise Curlybars::Error::Parse.new(source, not_in_language_error)
     end
   end
 end

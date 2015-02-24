@@ -27,7 +27,7 @@ module Curlybars
 
     start :root
 
-    production(:root, 'template?') { |template| Node::Root.new(template || EMPTY) }
+    production(:root, 'template?') { |template| Node::Root.new(template || EMPTY, pos(0)) }
     production(:template, 'items') { |items| Node::Template.new(items) }
 
     production(:items) do
@@ -124,7 +124,7 @@ module Curlybars
       clause('path')  { |path| path }
     end
 
-    production(:path, 'PATH') { |path| Node::Path.new(path) }
+    production(:path, 'PATH') { |path| Node::Path.new(path, pos(0)) }
 
     finalize
   end
