@@ -12,7 +12,7 @@ describe Curlybars::Node::Root do
   describe "hbs helper class" do
     let(:presenter) { double(:presenter) }
     let(:contexts) { [presenter] }
-    let(:hbs) { eval(Curlybars::Node::Root.hbs).new(contexts) }
+    let(:hbs) { eval(Curlybars::Node::Root.hbs).new(contexts, file_name) }
 
     describe "#to_bool" do
       describe "returns true" do
@@ -76,22 +76,22 @@ describe Curlybars::Node::Root do
         end.to raise_error(Curlybars::Error::Render)
       end
     end
-  end
 
-  describe "#position" do
-    it "returns a position with file_name" do
-      position = hbs.position(0, 0)
-      expect(position.file_name).to eq file_name
-    end
+    describe "#position" do
+      it "returns a position with file_name" do
+        position = hbs.position(0, 0)
+        expect(position.file_name).to eq file_name
+      end
 
-    it "returns a position with line_number" do
-      position = hbs.position(1, 0)
-      expect(position.line_number).to eq 1
-    end
+      it "returns a position with line_number" do
+        position = hbs.position(1, 0)
+        expect(position.line_number).to eq 1
+      end
 
-    it "returns a position with line_offset" do
-      position = hbs.position(0, 1)
-      expect(position.line_offset).to eq 1
+      it "returns a position with line_offset" do
+        position = hbs.position(0, 1)
+        expect(position.line_offset).to eq 1
+      end
     end
   end
 
