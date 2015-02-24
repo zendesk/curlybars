@@ -68,6 +68,7 @@ module Curlybars
   end
 end
 
+require 'curlybars/configuration'
 require 'curlybars/parser'
 require 'curlybars/lexer'
 require 'curlybars/template_handler'
