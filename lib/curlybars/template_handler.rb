@@ -21,7 +21,7 @@ class Curlybars::TemplateHandler < Curly::TemplateHandler
 
       raise Curly::PresenterNotFound.new(path) if presenter_class.nil?
 
-      source = Curlybars::Compiler.compile(template.source, template.identifier)
+      source = Curlybars.compile(template.source, template.identifier)
 
       code = <<-RUBY
       if local_assigns.empty?
