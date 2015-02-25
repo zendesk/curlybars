@@ -3,7 +3,6 @@ require 'action_view'
 require 'curlybars'
 require 'curly/template_handler'
 require 'curly/presenter_not_found'
-require 'curlybars/compiler'
 
 class Curlybars::TemplateHandler < Curly::TemplateHandler
   class << self
