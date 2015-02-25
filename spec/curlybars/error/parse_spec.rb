@@ -17,7 +17,7 @@ describe Curlybars::Error::Parse do
   end
 
   it "creates an exception with a meaningful message" do
-    message = "Parsing error: `345` in `3456789` is not allowed"
+    message = ".. 012 `345` 6789 .. is not permitted in this context"
 
     lex_exception = Curlybars::Error::Parse.new(source, exception)
 

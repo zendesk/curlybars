@@ -3,21 +3,18 @@ require 'curlybars/error/base'
 module Curlybars::Error
   class Lex < Curlybars::Error::Base
     def initialize(source, file_name, exception)
-      not_consumed_source = source[exception.stream_offset..-1]
-      invalid_token = not_consumed_source.first
-      rest_of_the_line = not_consumed_source.split("\n").first
-      details = [invalid_token, rest_of_the_line]
-      message = "Invalid token: `%s` in `%s`" % details
-      position = TemplatePosition.new(
-        exception.line_number,
-        exception.line_offset,
-        file_name
-      )
+      line_number = exception.line_number
+      line_offset = exception.line_offset
+
+      error_line = source.split("\n")[line_number-1]
+      before_error = error_line.first(line_offset).last(10)
+      after_error = error_line[line_offset+1..-1].first(10)
+      error = error_line[line_offset]
+
+      details = [before_error, error, after_error]
+      message = ".. %s `%s` %s .. is not permitted symbol in this context" % details
+      position = Curlybars::Position.new(file_name, line_number, line_offset)
       super(message, position)
     end
-
-    private
-
-    TemplatePosition = Struct.new(:line_number, :line_offset, :file_name)
   end
 end
