@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.rubygems_version = '1.3.5'
 
   s.name              = 'curlybars'
-  s.version           = '0.1.6'
+  s.version           = '0.1.7'
   s.date              = '2015-02-25'
 
   s.summary     = "Create your views using Handlebars templates!"
@@ -86,6 +86,11 @@ Gem::Specification.new do |s|
     spec/acceptance/context_blocks_spec.rb
     spec/acceptance/partials_spec.rb
     spec/curlybars/configuration_spec.rb
+    spec/curlybars/error/base_spec.rb
+    spec/curlybars/error/compile_spec.rb
+    spec/curlybars/error/lex_spec.rb
+    spec/curlybars/error/parse_spec.rb
+    spec/curlybars/error/render_spec.rb
     spec/curlybars/lexer_spec.rb
     spec/curlybars/node/block_helper_spec.rb
     spec/curlybars/node/each_else_spec.rb
@@ -141,9 +146,10 @@ Gem::Specification.new do |s|
     spec/dummy/config/environment.rb
     spec/dummy/config/environments/test.rb
     spec/dummy/config/routes.rb
+    spec/integration/comment_spec.rb
+    spec/integration/exception_spec.rb
     spec/integration/node/block_helper_spec.rb
     spec/integration/node/boolean_spec.rb
-    spec/integration/node/comment_spec.rb
     spec/integration/node/each_else_spec.rb
     spec/integration/node/each_spec.rb
     spec/integration/node/escape_spec.rb
@@ -158,7 +164,6 @@ Gem::Specification.new do |s|
     spec/integration/node/unless_spec.rb
     spec/integration/node/with_spec.rb
     spec/integration/spec_helper.rb
-    spec/integration/support/compile.rb
     spec/integration/support/matcher.rb
     spec/matchers/have_structure.rb
     spec/spec_helper.rb

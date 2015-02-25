@@ -1,5 +1,11 @@
 ### Unreleased
 
+### Curlybars 0.1.7 (February 25, 2015)
+
+* Better error messages
+
+  Mauro Codella
+
 ### Curlybars 0.1.6 (February 25, 2015)
 
 * Error handling and reporting
