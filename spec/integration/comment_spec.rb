@@ -3,7 +3,7 @@ describe "{{!-- --}} and {{! }}" do
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
   it "ignores one line comment" do
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       before{{! This is a comment }}after
     HBS
 
@@ -13,7 +13,7 @@ describe "{{!-- --}} and {{! }}" do
   end
 
   it "ignores multi line comment" do
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       before
       {{! 2 lines
         lines }}
@@ -26,7 +26,7 @@ describe "{{!-- --}} and {{! }}" do
   end
 
   it "ignores multi lines with curly inside comment" do
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       before
       {{!
         And another one
@@ -43,7 +43,7 @@ describe "{{!-- --}} and {{! }}" do
   end
 
   it "ignores multi line comment with {{!-- --}}" do
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       before
       {{!--
         And this is the {{ test }} other style

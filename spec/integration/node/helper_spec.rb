@@ -3,7 +3,7 @@ describe "{{helper context key=value}}" do
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
   it "renders a helper with expression and options" do
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       {{date user.created_at class='metadata'}}
     HBS
 
@@ -15,7 +15,7 @@ describe "{{helper context key=value}}" do
   end
 
   it "renders a helper with only expression" do
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       <script src="{{asset "jquery_plugin.js"}}"></script>
     HBS
 
@@ -25,7 +25,7 @@ describe "{{helper context key=value}}" do
   end
 
   it "renders a helper with only options" do
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       {{#with new_comment_form}}
         {{input title class="form-control"}}
       {{/with}}
@@ -41,7 +41,7 @@ describe "{{helper context key=value}}" do
   end
 
   it "renders correctly a return type of integer" do
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       {{integer 'ignored'}}
     HBS
 
@@ -51,7 +51,7 @@ describe "{{helper context key=value}}" do
   end
 
   it "renders correctly a return type of boolean" do
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       {{boolean 'ignored'}}
     HBS
 

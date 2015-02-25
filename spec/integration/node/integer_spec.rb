@@ -3,7 +3,7 @@ describe "{{<integer>}}" do
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
   it "{{#if}} returns positive branch when condition is 1" do
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       {{#if 1}}
         if_template
       {{/if}}
@@ -15,7 +15,7 @@ describe "{{<integer>}}" do
   end
 
   it "{{#if}} doesn't return anything when condition is 0" do
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       {{#if 0}}
         if_template
       {{/if}}
@@ -26,7 +26,7 @@ describe "{{<integer>}}" do
   end
 
   it "can be passes as argument to a helper" do
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       {{echo 0 param=1}}
     HBS
 

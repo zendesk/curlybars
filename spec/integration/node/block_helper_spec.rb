@@ -3,7 +3,7 @@ describe "{{#helper context key=value}}...{{/helper}}" do
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
   it "renders a block helper without options" do
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       {{#beautify new_comment_form}}
         template
       {{/beautify}}
@@ -15,7 +15,7 @@ describe "{{#helper context key=value}}...{{/helper}}" do
   end
 
   it "renders a block helper with options and presenter" do
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       {{#form new_comment_form class="red" foo="bar"}}
         {{button_label}}
       {{/form}}
@@ -27,7 +27,7 @@ describe "{{#helper context key=value}}...{{/helper}}" do
   end
 
   it "allow empty template" do
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       {{#form new_comment_form class="red" foo="bar"}}{{/form}}
     HBS
 
@@ -37,7 +37,7 @@ describe "{{#helper context key=value}}...{{/helper}}" do
   end
 
   it "renders correctly a return type of integer" do
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       {{#integer new_comment_form}} text {{/integer}}
     HBS
 
@@ -47,7 +47,7 @@ describe "{{#helper context key=value}}...{{/helper}}" do
   end
 
   it "renders correctly a return type of boolean" do
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       {{#boolean new_comment_form}} text {{/boolean}}
     HBS
 

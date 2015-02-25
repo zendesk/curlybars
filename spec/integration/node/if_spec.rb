@@ -6,7 +6,7 @@ describe "{{#if}}...{{/if}}" do
     allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid) { true }
     allow(presenter).to receive(:valid) { true }
 
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       {{#if valid}}
         if_template
       {{/if}}
@@ -21,7 +21,7 @@ describe "{{#if}}...{{/if}}" do
     allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid) { true }
     allow(presenter).to receive(:valid) { false }
 
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       {{#if valid}}
         if_template
       {{/if}}
@@ -35,7 +35,7 @@ describe "{{#if}}...{{/if}}" do
     allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:collection) { true }
     allow(presenter).to receive(:collection) { [] }
 
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       {{#if collection}}
         if_template
       {{/if}}
@@ -51,7 +51,7 @@ describe "{{#if}}...{{/if}}" do
     allow(presenter).to receive(:valid) { true }
     allow(presenter).to receive(:visible) { true }
 
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       {{#if valid}}
         {{#if visible}}
           inner_if_template
@@ -72,7 +72,7 @@ describe "{{#if}}...{{/if}}" do
     allow(presenter).to receive(:valid) { true }
     allow(presenter).to receive(:visible) { false }
 
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       {{#if valid}}
         {{#if visible}}
           inner_if_template
@@ -90,7 +90,7 @@ describe "{{#if}}...{{/if}}" do
     allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid) { true }
     allow(presenter).to receive(:valid) { true }
 
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       {{#if valid}}{{/if}}
     HBS
 

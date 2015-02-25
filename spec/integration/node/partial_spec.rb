@@ -3,7 +3,7 @@ describe "{{> partial}}" do
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
   it "evaluates the methods chain call" do
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       {{> partial}}
     HBS
 
