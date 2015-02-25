@@ -4,8 +4,8 @@ Gem::Specification.new do |s|
   s.rubygems_version = '1.3.5'
 
   s.name              = 'curlybars'
-  s.version           = '0.1.5'
-  s.date              = '2015-02-24'
+  s.version           = '0.1.6'
+  s.date              = '2015-02-25'
 
   s.summary     = "Create your views using Handlebars templates!"
   s.description = "A view layer for your Rails apps that separates
@@ -49,8 +49,6 @@ Gem::Specification.new do |s|
     curlybars.gemspec
     lib/curlybars.rb
     lib/curlybars/configuration.rb
-    lib/curlybars/error/incorrect_ending_error.rb
-    lib/curlybars/compiler.rb
     lib/curlybars/error/base.rb
     lib/curlybars/error/compile.rb
     lib/curlybars/error/lex.rb

@@ -1,5 +1,11 @@
 ### Unreleased
 
+### Curlybars 0.1.6 (February 25, 2015)
+
+* Error handling and reporting
+
+  Mauro Codella
+
 ### Curlybars 0.1.5 (February 24, 2015)
 
 * Configurable namespace for presenter
