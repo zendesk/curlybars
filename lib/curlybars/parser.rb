@@ -101,7 +101,7 @@ module Curlybars
         'START HASH WITH .path END
           .template?
         START SLASH WITH END') do |path, template|
-        Node::With.new(path, template || EMPTY)
+        Node::With.new(path, template || EMPTY, pos(0))
       end
 
       clause('START GT .path END') do |path|

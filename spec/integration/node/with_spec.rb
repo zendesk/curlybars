@@ -27,9 +27,8 @@ describe "{{#with presenter}}...{{/with}}" do
       http://example.com/foo.png
     HTML
   end
+
   it "allows empty with_template" do
-    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:user) { true }
-    allow(presenter).to receive(:user) { true }
 
     template = Curlybars.compile(<<-HBS)
       {{#with user}}{{/with}}
@@ -37,5 +36,15 @@ describe "{{#with presenter}}...{{/with}}" do
 
     expect(eval(template)).to resemble(<<-HTML)
     HTML
+  end
+
+  it "raises an exception if the parameter is not a context type object" do
+    template = Curlybars.compile(<<-HBS)
+      {{#with return_true}}{{/with}}
+    HBS
+
+    expect do 
+      eval(template)
+    end.to raise_error(Curlybars::Error::Render)
   end
 end
