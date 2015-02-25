@@ -7,7 +7,7 @@ describe "template" do
 
     expect do
       eval(template)
-    end.to raise_error(RuntimeError)
+    end.to raise_error(Curlybars::Error::Render)
   end
 
   it "raises an exception when contexts stack is not too deep (< 10)" do
