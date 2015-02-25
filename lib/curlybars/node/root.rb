@@ -46,7 +46,8 @@ module Curlybars
               context_responds_to_method = context.respond_to?(accessor)
 
               unless context_allows_method && context_responds_to_method
-                message = context.class.to_s + " doesn't allow `" + meth + "`"
+                message = "`" +  meth + "` is not available. "
+                message += "Add `allow_methods :" + meth + "` to " + context.class.to_s + " to allow this path."
                 raise Curlybars::Error::Render.new('path_not_allowed', message, position)
               end
             end
