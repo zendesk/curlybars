@@ -6,7 +6,7 @@ describe "{{#if}}...{{else}}...{{/if}}" do
     allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:return_true) { true }
     allow(presenter).to receive(:return_true) { true }
 
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       {{#if return_true}}
         if_template
       {{else}}
@@ -23,7 +23,7 @@ describe "{{#if}}...{{else}}...{{/if}}" do
     allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:return_false) { true }
     allow(presenter).to receive(:return_false) { false }
 
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       {{#if return_false}}
         if_template
       {{else}}
@@ -40,7 +40,7 @@ describe "{{#if}}...{{else}}...{{/if}}" do
     allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid) { true }
     allow(presenter).to receive(:valid) { false }
 
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
     {{#if valid}}{{else}}
       else_template
     {{/if}}
@@ -55,7 +55,7 @@ describe "{{#if}}...{{else}}...{{/if}}" do
     allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid) { true }
     allow(presenter).to receive(:valid) { true }
 
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       {{#if valid}}
         if_template
       {{else}}{{/if}}
@@ -70,7 +70,7 @@ describe "{{#if}}...{{else}}...{{/if}}" do
     allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid) { true }
     allow(presenter).to receive(:valid) { true }
 
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       {{#if valid}}{{else}}{{/if}}
     HBS
 

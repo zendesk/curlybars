@@ -21,7 +21,7 @@ module Curlybars
   # file_name - The the file name of the template being compiled.
   #
   # Returns a String containing the Ruby code.
-  def self.compile(source, file_name)
+  def self.compile(source, file_name = nil)
     tokens = Curlybars::Lexer.lex(source, file_name)
     ast = Curlybars::Parser.parse(tokens)
     ast.compile

@@ -3,7 +3,7 @@ describe "template" do
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
   it "raises an exception when contexts stack is too deep (>= 10)" do
-    template = compile(hbs_with_depth(10))
+    template = Curlybars.compile(hbs_with_depth(10))
 
     expect do
       eval(template)
@@ -11,7 +11,7 @@ describe "template" do
   end
 
   it "raises an exception when contexts stack is not too deep (< 10)" do
-    template = compile(hbs_with_depth(9))
+    template = Curlybars.compile(hbs_with_depth(9))
 
     expect do
       eval(template)
@@ -19,14 +19,14 @@ describe "template" do
   end
 
   it "can be empty" do
-    template = compile('')
+    template = Curlybars.compile('')
 
     expect(eval(template)).to resemble(<<-HTML)
     HTML
   end
 
   it "can contain a single curly" do
-    template = compile('{')
+    template = Curlybars.compile('{')
 
     expect(eval(template)).to resemble(<<-HTML)
       {
@@ -34,7 +34,7 @@ describe "template" do
   end
 
   it "can contain a single backslash" do
-   template = compile('\\')
+   template = Curlybars.compile('\\')
 
    expect(eval(template)).to resemble(<<-HTML)
      \\

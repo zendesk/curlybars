@@ -3,7 +3,7 @@ describe "{{path}}" do
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
   it "evaluates the methods chain call" do
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       {{user.avatar.url}}
     HBS
 
@@ -13,7 +13,7 @@ describe "{{path}}" do
   end
 
   it "raises when trying to call methods not implemented on context" do
-    template = compile(<<-HBS)
+    template = Curlybars.compile(<<-HBS)
       {{not_in_whitelist}}
     HBS
 
