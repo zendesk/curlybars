@@ -19,6 +19,6 @@ describe "{{path}}" do
 
     expect do
       eval(eval(template))
-    end.to raise_error(RuntimeError)
+    end.to raise_error(Curlybars::Error::Render)
   end
 end

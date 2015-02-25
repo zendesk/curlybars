@@ -3,8 +3,7 @@ require 'action_view'
 require 'curlybars'
 require 'curly/template_handler'
 require 'curly/presenter_not_found'
-require 'curlybars/lexer'
-require 'curlybars/parser'
+require 'curlybars/compiler'
 
 class Curlybars::TemplateHandler < Curly::TemplateHandler
   class << self
@@ -22,8 +21,7 @@ class Curlybars::TemplateHandler < Curly::TemplateHandler
 
       raise Curly::PresenterNotFound.new(path) if presenter_class.nil?
 
-      lex = Curlybars::Lexer.lex(template.source)
-      source = Curlybars::Parser.parse(lex).compile
+      source = Curlybars.compile(template.source, template.identifier)
 
       code = <<-RUBY
       if local_assigns.empty?

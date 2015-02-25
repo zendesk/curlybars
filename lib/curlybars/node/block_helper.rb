@@ -1,12 +1,12 @@
-require 'curlybars/error/incorrect_ending_error'
+require 'curlybars/error/compile'
 
 module Curlybars
   module Node
     BlockHelper = Struct.new(:helper, :context, :options, :template, :helperclose) do
       def initialize(helper, context, options, template, helperclose)
-        if helper != helperclose
-          raise Curlybars::Error::IncorrectEndingError,
-            "block `#{helper}` cannot be closed by `#{helperclose}`"
+        if helper.path != helperclose.path
+          message = "block `#{helper.path}` cannot be closed by `#{helperclose.path}`"
+          raise Curlybars::Error::Compile.new(message, helperclose.position)
         end
         super
       end

@@ -11,66 +11,46 @@
 # In the example above `recipient.first_name` is a path
 # `local_currency amount` is an helper
 #
-# The path and helper will be converted into messages that are sent to the
-# presenter, which is any Ruby object. Only public methods can be referenced.
-# To continue the earlier example, here's the matching presenter:
-#
-#   class BankPresenter
-#     def initialize(account)
-#       @account = account
-#     end
-#
-#     def invoice
-#       InvoicePresenter.new(@account.owner.last_unpaid_invoice)
-#     end
-#
-#     def recipient
-#       UserPresenter.new(@account.owner)
-#     end
-#   end
-#
-#   class UserPresenter
-#     def initialize(user)
-#       @user = user
-#     end
-#
-#     def first_name
-#       @user.first_name
-#     end
-#   end
-#
-#   class InvoicePresenter
-#     ...
-#   end
-#
-# See Curly::Presenter for more information on presenters.
+# See Curlybars::Presenter for more information on presenters.
 module Curlybars
   VERSION = "0.1.5"
 
   # Compiles a Curlybars template to Ruby code.
   #
-  # template - The template String that should be compiled.
+  # source - The source HBS String that should be compiled.
+  # file_name - The the file name of the template being compiled.
   #
   # Returns a String containing the Ruby code.
-  def self.compile(template, presenter_class)
-    # TODO
+  def self.compile(source, file_name)
+    tokens = Curlybars::Lexer.lex(source, file_name)
+    ast = Curlybars::Parser.parse(tokens)
+    ast.compile
+  rescue RLTK::LexingError => lexing_error
+    raise Curlybars::Error::Lex.new(source, file_name, lexing_error)
+  rescue RLTK::NotInLanguage => not_in_language_error
+    raise Curlybars::Error::Parse.new(source, not_in_language_error)
   end
 
-  # Whether the Curly template is valid. This includes whether all
-  # components are available on the presenter class.
+  # Whether the Curlybars template is valid.
   #
-  # template        - The template String that should be validated.
-  # presenter_class - The presenter Class.
+  # source - The source HBS String that should be verified.
+  # file_name - The the file name of the template being verified.
   #
   # Returns true if the template is valid, false otherwise.
-  def self.valid?(template, presenter_class)
-    # TODO
+  def self.valid?(source, file_name)
+    compile(source, filename)
   end
 end
 
 require 'curlybars/configuration'
 require 'curlybars/parser'
+require 'curlybars/position'
 require 'curlybars/lexer'
+require 'curlybars/parser'
+require 'curlybars/error/lex'
+require 'curlybars/error/parse'
+require 'curlybars/error/compile'
+require 'curlybars/error/render'
 require 'curlybars/template_handler'
 require 'curlybars/railtie' if defined?(Rails)
 require 'curlybars/presenter'

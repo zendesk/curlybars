@@ -50,6 +50,12 @@ Gem::Specification.new do |s|
     lib/curlybars.rb
     lib/curlybars/configuration.rb
     lib/curlybars/error/incorrect_ending_error.rb
+    lib/curlybars/compiler.rb
+    lib/curlybars/error/base.rb
+    lib/curlybars/error/compile.rb
+    lib/curlybars/error/lex.rb
+    lib/curlybars/error/parse.rb
+    lib/curlybars/error/render.rb
     lib/curlybars/lexer.rb
     lib/curlybars/methods_whitelisting.rb
     lib/curlybars/node/block_helper.rb
@@ -73,6 +79,7 @@ Gem::Specification.new do |s|
     lib/curlybars/node/unless_else.rb
     lib/curlybars/node/with.rb
     lib/curlybars/parser.rb
+    lib/curlybars/position.rb
     lib/curlybars/presenter.rb
     lib/curlybars/railtie.rb
     lib/curlybars/template_handler.rb
