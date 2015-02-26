@@ -22,6 +22,35 @@ There are 2 kinds of presenters in Curlybars:
 - `Curlybars::Presenter`s
 - P.O.R.O. presenters
 
+#### The Compiler
+- Uses RTLK in order to implement the lexer and the parser;
+- AST nodes know how to compile themselves, and their children;
+- Semantic checks at compile time:
+ - check that opening and closing elements of helpers match.
+- The target template embeds all the necessary presenter checks - runtime checking;
+- Runtime checking is based on a whitelisting mechanism.
+- Uses of scope gates to implements namespacing, e.g.:
+ - {{#with context}} … {{/with}}
+ - {{#each collection}} … {{/each}}
+ - {{#block_helper context}} … {{/block_helper}}
+
+#### The Language
+- A path is an allowed and traversable chain of methods like movie.director
+- An expression is either a path, or a literal like a string, integer or boolean.
+- Curlybars understands this Handlebars language subset:
+ - {{helper [expression] [key=expression …]}}
+ - {{#helper path [key=expression …]}} … {{/helper}}
+ - {{#with path}} … {{/with}}
+ - {{#each path}} … {{/each}}
+ - {{#each path}} … {{else}} … {{/each}}
+ - {{#if expression}} … {{/if}}
+ - {{#if expression}} … {{else}} … {{/if}}
+ - {{#unless expression}} … {{/unless}}
+ - {{#unless expression}} … {{else}} … {{/unless}}
+ - {{> partial}}
+ - {{! … }}
+ - {{!-- … --}}
+
 #### Curlybars::Presenter
 They are like `Curly::Presenter`s with some additions, and they are associated to views that are automatically looked up using the filename and the extension of the view file.
 Furthermore they are responsible for the dynamic and static caching mechanism of Curly.
@@ -77,7 +106,7 @@ But not stuff like this:
 {{post.initialize 'foobar'}}
 
 <!-- Call to attribute reader post on Post hence caling directive the ActiveRecord -->
-{{post.post.destroy}} 
+{{post.post.destroy}}
 ```
 
 In the example above we might have inadvertently exposed `post` since it was
