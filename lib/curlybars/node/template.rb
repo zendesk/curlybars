@@ -9,7 +9,7 @@ module Curlybars
             def self.exec(contexts, hbs)
               unless contexts.length < 10
                 message = "Nesting too deep"
-                raise Curlybars::Error::Render.new(message, hbs.position(#{position.line_number}, #{position.line_offset}))
+                raise Curlybars::Error::Render.new('nesting_too_deep', message, hbs.position(#{position.line_number}, #{position.line_offset}))
               end
               buffer = ActiveSupport::SafeBuffer.new
               #{compiled_items}
