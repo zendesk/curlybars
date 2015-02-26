@@ -55,4 +55,14 @@ describe "{{#helper context key=value}}...{{/helper}}" do
       true
     HTML
   end
+
+  it "raises an exception if the context is not a presenter-like object" do
+    template = Curlybars.compile(<<-HBS)
+      {{#boolean post}} text {{/boolean}}
+    HBS
+
+    expect do
+      eval(template)
+    end.to raise_error(Curlybars::Error::Render)
+  end
 end
