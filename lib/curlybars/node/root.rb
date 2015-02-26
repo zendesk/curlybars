@@ -12,6 +12,22 @@ module Curlybars
       def self.hbs
         <<-RUBY
           Struct.new(:contexts, :file_name) do
+            def check_context_is_presenter(context, path, position)
+              unless context.class.respond_to? :allows_method?
+                message = "`" + path + "` is not a context type object"
+                raise Curlybars::Error::Render.new('context_is_not_a_presenter', message, position)
+              end
+            end
+
+            def check_context_is_array_of_presenters(collection, path, position)
+              array_of_presenters = collection.respond_to?(:each) && 
+                collection.all? { |presenter| presenter.class.respond_to? :allows_method? }
+              unless array_of_presenters
+                message = "`" + path + "` is not an array of presenters"
+                raise Curlybars::Error::Render.new('context_is_not_an_array_of_presenters', message, position)
+              end
+            end
+
             def to_bool(condition)
               condition != false &&
               condition != [] &&

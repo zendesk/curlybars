@@ -22,7 +22,8 @@ module Curlybars
           result = begin
               context = #{context.compile}.call
 
-              #{check_context_is_presenter}
+              position = hbs.position(#{position.line_number}, #{position.line_offset})
+              hbs.check_context_is_presenter(context, #{context.path.inspect}, position)
               
               helper = #{helper.compile}
               helper.call(*([context, options].first(helper.arity))) do
@@ -35,18 +36,6 @@ module Curlybars
               end
             end
           buffer.safe_concat(result.to_s)
-        RUBY
-      end
-
-      private
-
-      def check_context_is_presenter
-        <<-RUBY
-          unless context.class.respond_to? :allows_method?
-            position = hbs.position(#{position.line_number}, #{position.line_offset})
-            message = "`#{context.path}` is not a context type object"
-            raise Curlybars::Error::Render.new('context_is_not_a_presenter', message, position)
-          end
         RUBY
       end
     end
