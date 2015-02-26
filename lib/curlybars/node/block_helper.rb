@@ -6,7 +6,7 @@ module Curlybars
       def initialize(helper, context, options, template, helperclose)
         if helper.path != helperclose.path
           message = "block `#{helper.path}` cannot be closed by `#{helperclose.path}`"
-          raise Curlybars::Error::Compile.new(message, helperclose.position)
+          raise Curlybars::Error::Compile.new('closing_tag_mismatch', message, helperclose.position)
         end
         super
       end
