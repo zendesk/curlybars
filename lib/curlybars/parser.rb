@@ -28,7 +28,7 @@ module Curlybars
     start :root
 
     production(:root, 'template?') { |template| Node::Root.new(template || EMPTY, pos(0)) }
-    production(:template, 'items') { |items| Node::Template.new(items) }
+    production(:template, 'items') { |items| Node::Template.new(items, pos(0)) }
 
     production(:items) do
       clause('items item') { |items, item| items << Node::Item.new(item) }
@@ -42,7 +42,7 @@ module Curlybars
         'START HASH .path .path .options? END
           .template?
         START SLASH .path END') do |helper, context, options, template, helperclose|
-        Node::BlockHelper.new(helper, context, options, template || EMPTY, helperclose)
+        Node::BlockHelper.new(helper, context, options, template || EMPTY, helperclose, pos(0))
       end
 
       clause('START .path .expression? .options? END') do |path, context, options|
@@ -85,7 +85,7 @@ module Curlybars
         'START HASH EACH .path END
           .template?
         START SLASH EACH END') do |path, template|
-        Node::Each.new(path, template || EMPTY)
+        Node::Each.new(path, template || EMPTY, pos(0))
       end
 
       clause(
@@ -94,14 +94,14 @@ module Curlybars
         START ELSE END
           .template?
         START SLASH EACH END') do |path, each_template, else_template|
-        Node::EachElse.new(path, each_template || EMPTY, else_template || EMPTY)
+        Node::EachElse.new(path, each_template || EMPTY, else_template || EMPTY, pos(0))
       end
 
       clause(
         'START HASH WITH .path END
           .template?
         START SLASH WITH END') do |path, template|
-        Node::With.new(path, template || EMPTY)
+        Node::With.new(path, template || EMPTY, pos(0))
       end
 
       clause('START GT .path END') do |path|

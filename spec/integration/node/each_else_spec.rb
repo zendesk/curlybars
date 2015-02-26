@@ -4,7 +4,7 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
 
   it "uses each_template when collection is not empty" do
     allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:non_empty_collection) { true }
-    allow(presenter).to receive(:non_empty_collection) { [:an_element] }
+    allow(presenter).to receive(:non_empty_collection) { [presenter] }
 
     template = Curlybars.compile(<<-HBS)
       {{#each non_empty_collection}}
@@ -82,7 +82,7 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
 
   it "allows empty else_template" do
     allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:non_empty_collection) { true }
-    allow(presenter).to receive(:non_empty_collection) { [:an_element] }
+    allow(presenter).to receive(:non_empty_collection) { [presenter] }
 
     template = Curlybars.compile(<<-HBS)
       {{#each non_empty_collection}}
@@ -97,7 +97,7 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
 
   it "allows empty each_template and else_template" do
     allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:non_empty_collection) { true }
-    allow(presenter).to receive(:non_empty_collection) { [:an_element] }
+    allow(presenter).to receive(:non_empty_collection) { [presenter] }
 
     template = Curlybars.compile(<<-HBS)
       {{#each non_empty_collection}}{{else}}{{/each}}
@@ -105,5 +105,31 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
 
     expect(eval(template)).to resemble(<<-HTML)
     HTML
+  end
+
+  it "raises an error if the context is not an array-like object" do
+    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:not_a_collection) { true }
+    allow(presenter).to receive(:not_a_collection) { "string" }
+
+    template = Curlybars.compile(<<-HBS)
+      {{#each not_a_collection}}{{else}}{{/each}}
+    HBS
+
+    expect do 
+      eval(template)
+    end.to raise_error(Curlybars::Error::Render)
+  end
+
+  it "raises an error if the objects inside of the context array are not presenters" do
+    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:not_a_presenter_collection) { true }
+    allow(presenter).to receive(:not_a_presenter_collection) { [:an_element] }
+
+    template = Curlybars.compile(<<-HBS)
+      {{#each not_a_presenter_collection}}{{else}}{{/each}}
+    HBS
+
+    expect do 
+      eval(template)
+    end.to raise_error(Curlybars::Error::Render)
   end
 end
