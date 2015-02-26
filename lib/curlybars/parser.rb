@@ -85,7 +85,7 @@ module Curlybars
         'START HASH EACH .path END
           .template?
         START SLASH EACH END') do |path, template|
-        Node::Each.new(path, template || EMPTY)
+        Node::Each.new(path, template || EMPTY, pos(0))
       end
 
       clause(
