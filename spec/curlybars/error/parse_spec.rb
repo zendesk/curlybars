@@ -5,7 +5,6 @@ describe Curlybars::Error::Parse do
     OpenStruct.new(
       line_number: 2,
       line_offset: 3,
-      stream_offset: 14,
       length: 3,
       file_name: 'template.hbs'
     )
