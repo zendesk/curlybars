@@ -75,6 +75,15 @@ describe Curlybars::Node::Root do
           hbs.path('forbidden_method', hbs.position(0, 1))
         end.to raise_error(Curlybars::Error::Render)
       end
+
+      it "raises an exception when the context is not a presenter" do
+        sub = double(:not_presenter)
+        allow(presenter).to receive(:sub) { sub }
+
+        expect do
+          hbs.path('sub.method', hbs.position(0, 1))
+        end.to raise_error(Curlybars::Error::Render)
+      end
     end
 
     describe "#position" do

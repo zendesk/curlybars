@@ -56,6 +56,7 @@ module Curlybars
             private
 
             def raise_if_not_traversable(context, meth, position)
+              check_context_is_presenter(context, meth, position)
               check_context_allows_method(context, meth, position)
               check_context_has_method(context, meth, position)
             end
