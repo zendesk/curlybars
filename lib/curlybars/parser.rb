@@ -94,7 +94,7 @@ module Curlybars
         START ELSE END
           .template?
         START SLASH EACH END') do |path, each_template, else_template|
-        Node::EachElse.new(path, each_template || EMPTY, else_template || EMPTY)
+        Node::EachElse.new(path, each_template || EMPTY, else_template || EMPTY, pos(0))
       end
 
       clause(
