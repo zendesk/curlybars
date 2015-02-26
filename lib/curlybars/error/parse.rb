@@ -14,7 +14,7 @@ module Curlybars::Error
 
       details = [before_error, error, after_error]
       message = ".. %s `%s` %s .. is not permitted in this context" % details
-      super(message, exception.current.position)
+      super('parse', message, exception.current.position)
     end
   end
 end

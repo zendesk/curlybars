@@ -14,7 +14,7 @@ module Curlybars::Error
       details = [before_error, error, after_error]
       message = ".. %s `%s` %s .. is not permitted symbol in this context" % details
       position = Curlybars::Position.new(file_name, line_number, line_offset)
-      super(message, position)
+      super('lex', message, position)
     end
   end
 end
