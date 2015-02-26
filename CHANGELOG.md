@@ -1,5 +1,12 @@
 ### Unreleased
 
+### Curlybars 0.1.8 (February 26, 2015)
+
+* More error messages
+
+  Mauro Codella
+  Cristian Planas
+
 ### Curlybars 0.1.7 (February 25, 2015)
 
 * Better error messages
