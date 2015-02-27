@@ -39,7 +39,8 @@ module IntegrationTest
     include Helpers
 
     allow_methods :partial, :user, :new_comment_form, :valid, :visible, :return_true,
-      :return_false, :beautify, :form, :date, :asset, :integer, :boolean, :me, :echo
+      :return_false, :beautify, :form, :date, :asset, :integer, :boolean, :me, :echo,
+      :return_nil
 
     def user
       Shared::UserPresenter.new(current_user)
@@ -55,6 +56,10 @@ module IntegrationTest
 
     def return_false
       false
+    end
+
+    def return_nil
+      nil
     end
 
     def valid
