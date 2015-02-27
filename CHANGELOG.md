@@ -1,5 +1,11 @@
 ### Unreleased
 
+### Curlybars 0.1.9 (February 27, 2015)
+
+* Fixes partial when presenter returns nil
+
+  Mauro Codella
+
 ### Curlybars 0.1.8 (February 26, 2015)
 
 * More error messages

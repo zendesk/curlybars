@@ -13,7 +13,7 @@
 #
 # See Curlybars::Presenter for more information on presenters.
 module Curlybars
-  VERSION = "0.1.8"
+  VERSION = "0.1.9"
 
   # Compiles a Curlybars template to Ruby code.
   #
@@ -38,7 +38,7 @@ module Curlybars
   #
   # Returns true if the template is valid, false otherwise.
   def self.valid?(source, file_name)
-    compile(source, filename)
+    # TODO, or remove if doesn't make sense
   end
 end
 
