@@ -11,4 +11,13 @@ describe "{{> partial}}" do
       partial
     HTML
   end
+
+  it "renders nothing when the partial returns `nil`" do
+    template = Curlybars.compile(<<-HBS)
+      {{> return_nil}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+    HTML
+  end
 end
