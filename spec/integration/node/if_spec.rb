@@ -3,7 +3,7 @@ describe "{{#if}}...{{/if}}" do
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
   it "returns positive branch when condition is true" do
-    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid) { true }
+    allow(presenter).to receive(:allows_method?).with(:valid) { true }
     allow(presenter).to receive(:valid) { true }
 
     template = Curlybars.compile(<<-HBS)
@@ -18,7 +18,7 @@ describe "{{#if}}...{{/if}}" do
   end
 
   it "doesn't return positive branch when condition is false" do
-    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid) { true }
+    allow(presenter).to receive(:allows_method?).with(:valid) { true }
     allow(presenter).to receive(:valid) { false }
 
     template = Curlybars.compile(<<-HBS)
@@ -32,7 +32,7 @@ describe "{{#if}}...{{/if}}" do
   end
 
   it "doesn't return positive branch when condition is empty array" do
-    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:collection) { true }
+    allow(presenter).to receive(:allows_method?).with(:collection) { true }
     allow(presenter).to receive(:collection) { [] }
 
     template = Curlybars.compile(<<-HBS)
@@ -46,8 +46,8 @@ describe "{{#if}}...{{/if}}" do
   end
 
   it "works with nested `if blocks` (double positive)" do
-    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid) { true }
-    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:visible) { true }
+    allow(presenter).to receive(:allows_method?).with(:valid) { true }
+    allow(presenter).to receive(:allows_method?).with(:visible) { true }
     allow(presenter).to receive(:valid) { true }
     allow(presenter).to receive(:visible) { true }
 
@@ -67,8 +67,8 @@ describe "{{#if}}...{{/if}}" do
   end
 
   it "works with nested `if blocks` (positive and negative)" do
-    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid) { true }
-    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:visible) { true }
+    allow(presenter).to receive(:allows_method?).with(:valid) { true }
+    allow(presenter).to receive(:allows_method?).with(:visible) { true }
     allow(presenter).to receive(:valid) { true }
     allow(presenter).to receive(:visible) { false }
 
@@ -87,7 +87,7 @@ describe "{{#if}}...{{/if}}" do
   end
 
   it "allows empty if_template" do
-    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid) { true }
+    allow(presenter).to receive(:allows_method?).with(:valid) { true }
     allow(presenter).to receive(:valid) { true }
 
     template = Curlybars.compile(<<-HBS)

@@ -54,4 +54,4 @@ require 'curlybars/error/render'
 require 'curlybars/template_handler'
 require 'curlybars/railtie' if defined?(Rails)
 require 'curlybars/presenter'
-require 'curlybars/methods_whitelisting'
+require 'curlybars/method_whitelist'

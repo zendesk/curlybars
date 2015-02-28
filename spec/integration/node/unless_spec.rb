@@ -3,7 +3,7 @@ describe "{{#unless}}...{{/unless}}" do
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
   it "returns unless_template when condition is false" do
-    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:condition) { true }
+    allow(presenter).to receive(:allows_method?).with(:condition) { true }
     allow(presenter).to receive(:condition) { false }
 
     template = Curlybars.compile(<<-HBS)
@@ -18,7 +18,7 @@ describe "{{#unless}}...{{/unless}}" do
   end
 
   it "doesn't return unless_template when condition is true" do
-    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:condition) { true }
+    allow(presenter).to receive(:allows_method?).with(:condition) { true }
     allow(presenter).to receive(:condition) { true }
 
     template = Curlybars.compile(<<-HBS)
@@ -32,8 +32,8 @@ describe "{{#unless}}...{{/unless}}" do
   end
 
   it "works with nested unless blocks (double negative)" do
-    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:first_condition) { true }
-    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:second_condition) { true }
+    allow(presenter).to receive(:allows_method?).with(:first_condition) { true }
+    allow(presenter).to receive(:allows_method?).with(:second_condition) { true }
     allow(presenter).to receive(:first_condition) { false }
     allow(presenter).to receive(:second_condition) { false }
 
@@ -53,7 +53,7 @@ describe "{{#unless}}...{{/unless}}" do
   end
 
   it "allows empty unless_template" do
-    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid) { true }
+    allow(presenter).to receive(:allows_method?).with(:valid) { true }
     allow(presenter).to receive(:valid) { true }
 
     template = Curlybars.compile(<<-HBS)
@@ -65,8 +65,8 @@ describe "{{#unless}}...{{/unless}}" do
   end
 
   it "works with nested unless blocks (negative and positive)" do
-    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:first_condition) { true }
-    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:second_condition) { true }
+    allow(presenter).to receive(:allows_method?).with(:first_condition) { true }
+    allow(presenter).to receive(:allows_method?).with(:second_condition) { true }
     allow(presenter).to receive(:first_condition) { false }
     allow(presenter).to receive(:second_condition) { true }
 

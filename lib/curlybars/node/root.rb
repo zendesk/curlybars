@@ -13,15 +13,15 @@ module Curlybars
         <<-RUBY
           Struct.new(:contexts, :file_name) do
             def check_context_is_presenter(context, path, position)
-              unless context.class.respond_to? :allows_method?
+              unless context.respond_to? :allows_method?
                 message = "`" + path + "` is not a context type object"
                 raise Curlybars::Error::Render.new('context_is_not_a_presenter', message, position)
               end
             end
 
             def check_context_is_array_of_presenters(collection, path, position)
-              array_of_presenters = collection.respond_to?(:each) && 
-                collection.all? { |presenter| presenter.class.respond_to? :allows_method? }
+              array_of_presenters = collection.respond_to?(:each) &&
+                collection.all? { |presenter| presenter.respond_to? :allows_method? }
               unless array_of_presenters
                 message = "`" + path + "` is not an array of presenters"
                 raise Curlybars::Error::Render.new('context_is_not_an_array_of_presenters', message, position)
@@ -62,7 +62,7 @@ module Curlybars
             end
 
             def check_context_allows_method(context, meth, position)
-              unless context.class.allows_method?(meth.to_sym)
+              unless context.allows_method?(meth.to_sym)
                 message = "`" +  meth + "` is not available. "
                 message += "Add `allow_methods :" + meth + "` to " + context.class.to_s + " to allow this path."
                 raise Curlybars::Error::Render.new('path_not_allowed', message, position)

@@ -107,10 +107,10 @@ describe Curlybars::Node::Root do
   private
 
   def allow_all_methods(presenter)
-    allow(presenter).to receive_message_chain(:class, :allows_method?) { true }
+    allow(presenter).to receive_message_chain(:allows_method?) { true }
   end
 
   def disallow_all_methods(presenter)
-    allow(presenter).to receive_message_chain(:class, :allows_method?) { false }
+    allow(presenter).to receive_message_chain(:allows_method?) { false }
   end
 end

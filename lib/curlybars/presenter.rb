@@ -1,7 +1,7 @@
-require 'curlybars/methods_whitelisting'
+require 'curlybars/method_whitelist'
 
 module Curlybars
   class Presenter < Curly::Presenter
-    include Curlybars::MethodsWhitelisting
+    extend Curlybars::MethodWhitelist
   end
 end
