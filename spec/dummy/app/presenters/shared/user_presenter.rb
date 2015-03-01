@@ -1,5 +1,5 @@
 class Shared::UserPresenter
-  include Curlybars::MethodsWhitelisting
+  extend Curlybars::MethodWhitelist
   attr_reader :user
 
   allow_methods :first_name, :created_at, :avatar

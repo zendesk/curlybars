@@ -1,5 +1,5 @@
 class Posts::NewPostFormPresenter
-  include Curlybars::MethodsWhitelisting
+  extend Curlybars::MethodWhitelist
   include CurlybarsHelper
 
   allow_methods :button_label, :title, :body, :asset, :input

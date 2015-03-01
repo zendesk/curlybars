@@ -3,7 +3,7 @@ describe "{{#unless}}...{{else}}...{{/unless}}" do
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
   it "renders the unless_template" do
-    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:condition) { true }
+    allow(presenter).to receive(:allows_method?).with(:condition) { true }
     allow(presenter).to receive(:condition) { false }
 
     template = Curlybars.compile(<<-HBS)
@@ -20,7 +20,7 @@ describe "{{#unless}}...{{else}}...{{/unless}}" do
   end
 
   it "renders the else_template" do
-    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:condition) { true }
+    allow(presenter).to receive(:allows_method?).with(:condition) { true }
     allow(presenter).to receive(:condition) { true }
 
     template = Curlybars.compile(<<-HBS)
@@ -37,7 +37,7 @@ describe "{{#unless}}...{{else}}...{{/unless}}" do
   end
 
   it "allows empty else_template" do
-    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid) { true }
+    allow(presenter).to receive(:allows_method?).with(:valid) { true }
     allow(presenter).to receive(:valid) { false }
 
     template = Curlybars.compile(<<-HBS)
@@ -52,7 +52,7 @@ describe "{{#unless}}...{{else}}...{{/unless}}" do
   end
 
   it "allows empty unless_template" do
-    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid) { true }
+    allow(presenter).to receive(:allows_method?).with(:valid) { true }
     allow(presenter).to receive(:valid) { true }
 
     template = Curlybars.compile(<<-HBS)
@@ -68,7 +68,7 @@ describe "{{#unless}}...{{else}}...{{/unless}}" do
 
 
   it "allows empty unless_template and else_template" do
-    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid) { true }
+    allow(presenter).to receive(:allows_method?).with(:valid) { true }
     allow(presenter).to receive(:valid) { false }
 
     template = Curlybars.compile(<<-HBS)

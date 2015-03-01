@@ -3,7 +3,7 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
   it "uses each_template when collection is not empty" do
-    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:non_empty_collection) { true }
+    allow(presenter).to receive(:allows_method?).with(:non_empty_collection) { true }
     allow(presenter).to receive(:non_empty_collection) { [presenter] }
 
     template = Curlybars.compile(<<-HBS)
@@ -20,7 +20,7 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
   end
 
   it "uses else_template when collection is not empty" do
-    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:empty_collection) { true }
+    allow(presenter).to receive(:allows_method?).with(:empty_collection) { true }
     allow(presenter).to receive(:empty_collection) { [] }
 
     template = Curlybars.compile(<<-HBS)
@@ -48,7 +48,7 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
     a_path_presenter = path_presenter_class.new(nil, path: 'a_path')
     another_path_presenter = path_presenter_class.new(nil, path: 'another_path')
 
-    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:non_empty_collection) { true }
+    allow(presenter).to receive(:allows_method?).with(:non_empty_collection) { true }
     allow(presenter).to receive(:non_empty_collection) { [a_path_presenter, another_path_presenter] }
 
     template = Curlybars.compile(<<-HBS)
@@ -66,7 +66,7 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
   end
 
   it "allows empty each_template" do
-    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:empty_collection) { true }
+    allow(presenter).to receive(:allows_method?).with(:empty_collection) { true }
     allow(presenter).to receive(:empty_collection) { [] }
 
     template = Curlybars.compile(<<-HBS)
@@ -81,7 +81,7 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
   end
 
   it "allows empty else_template" do
-    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:non_empty_collection) { true }
+    allow(presenter).to receive(:allows_method?).with(:non_empty_collection) { true }
     allow(presenter).to receive(:non_empty_collection) { [presenter] }
 
     template = Curlybars.compile(<<-HBS)
@@ -96,7 +96,7 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
   end
 
   it "allows empty each_template and else_template" do
-    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:non_empty_collection) { true }
+    allow(presenter).to receive(:allows_method?).with(:non_empty_collection) { true }
     allow(presenter).to receive(:non_empty_collection) { [presenter] }
 
     template = Curlybars.compile(<<-HBS)
@@ -115,7 +115,7 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
       {{#each not_a_collection}}{{else}}{{/each}}
     HBS
 
-    expect do 
+    expect do
       eval(template)
     end.to raise_error(Curlybars::Error::Render)
   end
@@ -128,7 +128,7 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
       {{#each not_a_presenter_collection}}{{else}}{{/each}}
     HBS
 
-    expect do 
+    expect do
       eval(template)
     end.to raise_error(Curlybars::Error::Render)
   end

@@ -63,7 +63,7 @@ These are the methods available from Curly:
 - `.depends_on`
 
 #### P.O.R.O. presenters
-They are just Plain Old Ruby Object you expose in your `hbs` templates. All you need is to include `Curlybars::MethodsWhitelisting` module. This inclusion will implement a mechanism to declare which methods you want to expose into the view, integratind seamlessly with existing Object hierarchies.
+They are just Plain Old Ruby Object you expose in your `hbs` templates. All you need is to extend `Curlybars::MethodWhitelist` module. This inclusion will implement a mechanism to declare which methods you want to expose into the view, integratind seamlessly with existing Object hierarchies.
 It's for your convenience only, you can also do it yourself as long as your class
 defines a `.allows_method?` it should work.
 
@@ -80,7 +80,7 @@ methods are available in the presenters you are going to expose in the view.
 
 ```ruby
 class PostPresenter
-  include Curlybars::MethodsWhitelisting
+  extend Curlybars::MethodWhitelist
   allow_methods :title
 
   attr_reader :post
@@ -115,7 +115,7 @@ Same could happen if you include a module and forget that was defining a method.
 
 Curlybars is paranoid about method leaking!
 
-`Curlybars::Presenter` already includes `Curlybars::MethodsWhitelisting`.
+`Curlybars::Presenter` already extends `Curlybars::MethodWhitelist`.
 
 Presenter namespacing
 ---------------------
