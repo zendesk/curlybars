@@ -6,14 +6,14 @@ module Curlybars
     end
 
     def check_context_is_presenter(context, path, position)
-      return if context.class.respond_to? :allows_method?
+      return if context.respond_to? :allows_method?
       message = "`#{path}` is not a context type object"
       raise Curlybars::Error::Render.new('context_is_not_a_presenter', message, position)
     end
 
     def check_context_is_array_of_presenters(collection, path, position)
       array_of_presenters = collection.respond_to?(:each) &&
-      collection.all? { |presenter| presenter.class.respond_to? :allows_method? }
+      collection.all? { |presenter| presenter.respond_to? :allows_method? }
       return if array_of_presenters
       message = "`#{path}` is not an array of presenters"
       raise Curlybars::Error::Render.new('context_is_not_an_array_of_presenters', message, position)
@@ -55,7 +55,7 @@ module Curlybars
     end
 
     def check_context_allows_method(context, meth, position)
-      return if context.class.allows_method?(meth.to_sym)
+      return if context.allows_method?(meth.to_sym)
       message = "`#{meth}` is not available."
       message += "Add `allow_methods :#{meth}` to #{context.class.to_s} to allow this path"
       raise Curlybars::Error::Render.new('path_not_allowed', message, position)
