@@ -5,8 +5,8 @@ module Curlybars
         <<-RUBY
           compiled_path = #{path.compile}.call
 
-          position = hbs.position(#{position.line_number}, #{position.line_offset})
-          hbs.check_context_is_presenter(compiled_path, #{path.path.inspect}, position)
+          position = rendering.position(#{position.line_number}, #{position.line_offset})
+          rendering.check_context_is_presenter(compiled_path, #{path.path.inspect}, position)
 
           contexts << compiled_path
           begin

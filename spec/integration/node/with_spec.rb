@@ -43,7 +43,7 @@ describe "{{#with presenter}}...{{/with}}" do
       {{#with return_true}}{{/with}}
     HBS
 
-    expect do 
+    expect do
       eval(template)
     end.to raise_error(Curlybars::Error::Render)
   end

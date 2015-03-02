@@ -3,7 +3,7 @@ module Curlybars
     If = Struct.new(:expression, :template) do
       def compile
         <<-RUBY
-          if hbs.to_bool(#{expression.compile}.call)
+          if rendering.to_bool(#{expression.compile}.call)
             buffer.safe_concat(#{template.compile})
           end
         RUBY

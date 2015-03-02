@@ -31,7 +31,7 @@ module Curlybars
               !(context.respond_to? :allows_method?)
             end
           unless array_of_presenters
-            position = hbs.position(#{position.line_number}, #{position.line_offset})
+            position = rendering.position(#{position.line_number}, #{position.line_offset})
             message = "`#{path.path}` is not an array of presenters"
             raise Curlybars::Error::Render.new('context_is_not_an_array_of_presenters', message, position)
           end
