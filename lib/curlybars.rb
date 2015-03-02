@@ -43,7 +43,7 @@ module Curlybars
 end
 
 require 'curlybars/configuration'
-require 'curlybars/hbs'
+require 'curlybars/rendering_support'
 require 'curlybars/parser'
 require 'curlybars/position'
 require 'curlybars/lexer'

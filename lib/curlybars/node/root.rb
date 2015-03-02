@@ -4,7 +4,7 @@ module Curlybars
       def compile
         <<-RUBY
           contexts = [presenter]
-          hbs = Curlybars::Hbs.new(contexts, #{position.file_name.inspect})
+          rendering = Curlybars::RenderingSupport.new(contexts, #{position.file_name.inspect})
           #{template.compile}
         RUBY
       end

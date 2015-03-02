@@ -1,8 +1,8 @@
-describe Curlybars::Hbs do
+describe Curlybars::RenderingSupport do
   let(:file_name) { '/app/views/template.hbs' }
   let(:presenter) { double(:presenter) }
   let(:contexts) { [presenter] }
-  let(:hbs) { Curlybars::Hbs.new(contexts, file_name) }
+  let(:hbs) { Curlybars::RenderingSupport.new(contexts, file_name) }
 
   describe "#to_bool" do
     describe "returns true" do

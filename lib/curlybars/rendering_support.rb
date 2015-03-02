@@ -1,5 +1,5 @@
 module Curlybars
-  class Hbs
+  class RenderingSupport
     def initialize(contexts, file_name)
       @contexts = contexts
       @file_name = file_name

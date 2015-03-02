@@ -3,7 +3,7 @@ module Curlybars
     UnlessElse = Struct.new(:expression, :unless_template, :else_template) do
       def compile
         <<-RUBY
-          unless hbs.to_bool(#{expression.compile}.call)
+          unless rendering.to_bool(#{expression.compile}.call)
             buffer.safe_concat(#{unless_template.compile})
           else
             buffer.safe_concat(#{else_template.compile})

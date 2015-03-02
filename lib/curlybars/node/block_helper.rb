@@ -22,8 +22,8 @@ module Curlybars
           result = begin
               context = #{context.compile}.call
 
-              position = hbs.position(#{position.line_number}, #{position.line_offset})
-              hbs.check_context_is_presenter(context, #{context.path.inspect}, position)
+              position = rendering.position(#{position.line_number}, #{position.line_offset})
+              rendering.check_context_is_presenter(context, #{context.path.inspect}, position)
 
               helper = #{helper.compile}
               helper.call(*([context, options].first(helper.arity))) do
