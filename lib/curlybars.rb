@@ -26,16 +26,28 @@ module Curlybars
       ast(source, file_name).compile
     end
 
-    # Whether the Curlybars template is valid.
+    # Validates the source against a presenter.
     #
-    # presenter_class - the presenter class, used to verify.
-    # source - The source HBS String that should be verified.
-    # file_name - The the file name of the template being verified (defaults to `nil`).
+    # presenter_class - the presenter class, used to validate the source.
+    # source - The source HBS String that should be validated.
+    # file_name - The the file name of the template being validated (defaults to `nil`).
+    #
+    # Returns an array of Curlybars::Error::Validation
+    def validate(presenter_class, source, file_name = nil)
+      dependency_tree = presenter_class.dependency_tree
+      ast(source, file_name).validate(dependency_tree)
+    end
+
+    # Check if the source is valid for a given presenter.
+    #
+    # presenter_class - the presenter class, used to check if the source is valid.
+    # source - The source HBS String that should be check to be valid.
+    # file_name - The the file name of the template being checked (defaults to `nil`).
     #
     # Returns true if the template is valid, false otherwise.
     def valid?(presenter_class, source, file_name = nil)
-      dependency_tree = presenter_class.dependency_tree
-      ast(source, file_name).verify(dependency_tree)
+      errors = validate(presenter_class, source, file_name)
+      errors.empty?
     end
 
     private
