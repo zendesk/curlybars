@@ -8,6 +8,13 @@ module Curlybars
           end
         RUBY
       end
+
+      def validate(base_tree)
+        [
+          expression.validate(base_tree),
+          template.validate(base_tree)
+        ]
+      end
     end
   end
 end

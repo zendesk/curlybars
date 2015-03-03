@@ -10,6 +10,10 @@ module Curlybars
           end.exec(contexts, rendering, buffer)
         RUBY
       end
+
+      def validate(dependency_tree)
+        item.validate(dependency_tree)
+      end
     end
   end
 end

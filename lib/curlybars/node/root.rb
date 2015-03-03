@@ -8,6 +8,10 @@ module Curlybars
           #{template.compile}
         RUBY
       end
+
+      def validate(dependency_tree)
+        template.validate(dependency_tree)
+      end
     end
   end
 end

@@ -35,7 +35,10 @@ module Curlybars
     # Returns an array of Curlybars::Error::Validation
     def validate(presenter_class, source, file_name = nil)
       dependency_tree = presenter_class.dependency_tree
-      ast(source, file_name).validate(dependency_tree)
+      errors = ast(source, file_name).validate(dependency_tree)
+      errors.flatten!
+      errors.compact!
+      errors
     end
 
     # Check if the source is valid for a given presenter.
@@ -54,7 +57,7 @@ module Curlybars
 
     def ast(source, file_name)
       tokens = Curlybars::Lexer.lex(source, file_name)
-      ast = Curlybars::Parser.parse(tokens)
+      Curlybars::Parser.parse(tokens)
     rescue RLTK::LexingError => lexing_error
       raise Curlybars::Error::Lex.new(source, file_name, lexing_error)
     rescue RLTK::NotInLanguage => not_in_language_error
