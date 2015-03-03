@@ -40,7 +40,7 @@ module IntegrationTest
 
     allow_methods :partial, :user, :new_comment_form, :valid, :visible, :return_true,
       :return_false, :beautify, :form, :date, :asset, :integer, :boolean, :me, :echo,
-      :return_nil
+      :return_nil, :print_user_name
 
     def user
       Shared::UserPresenter.new(current_user)
@@ -84,6 +84,10 @@ module IntegrationTest
 
     def echo(context, options)
       "%s %s" % [context, options]
+    end
+
+    def print_user_name(context)
+      yield context.user
     end
 
     private
