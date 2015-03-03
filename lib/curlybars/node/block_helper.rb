@@ -26,8 +26,8 @@ module Curlybars
               rendering.check_context_is_presenter(context, #{context.path.inspect}, position)
 
               helper = #{helper.compile}
-              helper.call(*([context, options].first(helper.arity))) do
-                contexts << context
+              helper.call(*([context, options].first(helper.arity))) do |block_helper_context = context|
+                contexts << block_helper_context
                 begin
                   #{template.compile}
                 ensure

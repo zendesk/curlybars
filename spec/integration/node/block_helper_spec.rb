@@ -14,6 +14,24 @@ describe "{{#helper context key=value}}...{{/helper}}" do
     HTML
   end
 
+  it "renders a block helper with a different context, chosen by the block_helper implementation" do
+    template = Curlybars.compile(<<-HBS)
+      {{!--
+        `me` is referring to a context
+        that will yield the block using
+        another context.
+      --}}
+
+      {{#print_user_name me}}
+        {{first_name}}
+      {{/print_user_name}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+      Libo
+    HTML
+  end
+
   it "renders a block helper with options and presenter" do
     template = Curlybars.compile(<<-HBS)
       {{#form new_comment_form class="red" foo="bar"}}
