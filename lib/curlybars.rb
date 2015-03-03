@@ -72,6 +72,7 @@ require 'curlybars/parser'
 require 'curlybars/error/lex'
 require 'curlybars/error/parse'
 require 'curlybars/error/compile'
+require 'curlybars/error/validate'
 require 'curlybars/error/render'
 require 'curlybars/template_handler'
 require 'curlybars/railtie' if defined?(Rails)
