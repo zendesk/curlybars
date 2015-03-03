@@ -15,30 +15,39 @@
 module Curlybars
   VERSION = "0.3.0"
 
-  # Compiles a Curlybars template to Ruby code.
-  #
-  # source - The source HBS String that should be compiled.
-  # file_name - The the file name of the template being compiled.
-  #
-  # Returns a String containing the Ruby code.
-  def self.compile(source, file_name = nil)
-    tokens = Curlybars::Lexer.lex(source, file_name)
-    ast = Curlybars::Parser.parse(tokens)
-    ast.compile
-  rescue RLTK::LexingError => lexing_error
-    raise Curlybars::Error::Lex.new(source, file_name, lexing_error)
-  rescue RLTK::NotInLanguage => not_in_language_error
-    raise Curlybars::Error::Parse.new(source, not_in_language_error)
-  end
+  class << self
+    # Compiles a Curlybars template to Ruby code.
+    #
+    # source - The source HBS String that should be compiled.
+    # file_name - The the file name of the template being compiled (defaults to `nil`).
+    #
+    # Returns a String containing the Ruby code.
+    def compile(source, file_name = nil)
+      ast(source, file_name).compile
+    end
 
-  # Whether the Curlybars template is valid.
-  #
-  # source - The source HBS String that should be verified.
-  # file_name - The the file name of the template being verified.
-  #
-  # Returns true if the template is valid, false otherwise.
-  def self.valid?(source, file_name)
-    # TODO, or remove if doesn't make sense
+    # Whether the Curlybars template is valid.
+    #
+    # presenter_class - the presenter class, used to verify.
+    # source - The source HBS String that should be verified.
+    # file_name - The the file name of the template being verified (defaults to `nil`).
+    #
+    # Returns true if the template is valid, false otherwise.
+    def valid?(presenter_class, source, file_name = nil)
+      dependency_tree = presenter_class.dependency_tree
+      ast(source, file_name).verify(dependency_tree)
+    end
+
+    private
+
+    def ast(source, file_name)
+      tokens = Curlybars::Lexer.lex(source, file_name)
+      ast = Curlybars::Parser.parse(tokens)
+    rescue RLTK::LexingError => lexing_error
+      raise Curlybars::Error::Lex.new(source, file_name, lexing_error)
+    rescue RLTK::NotInLanguage => not_in_language_error
+      raise Curlybars::Error::Parse.new(source, not_in_language_error)
+    end
   end
 end
 
