@@ -4,8 +4,8 @@ Gem::Specification.new do |s|
   s.rubygems_version = '1.3.5'
 
   s.name              = 'curlybars'
-  s.version           = '0.2.0'
-  s.date              = '2015-03-01'
+  s.version           = '0.2.1'
+  s.date              = '2015-03-03'
 
   s.summary     = "Create your views using Handlebars templates!"
   s.description = "A view layer for your Rails apps that separates
@@ -80,6 +80,7 @@ Gem::Specification.new do |s|
     lib/curlybars/position.rb
     lib/curlybars/presenter.rb
     lib/curlybars/railtie.rb
+    lib/curlybars/rendering_support.rb
     lib/curlybars/template_handler.rb
     spec/acceptance/application_layout_spec.rb
     spec/acceptance/collection_blocks_spec.rb
@@ -110,6 +111,7 @@ Gem::Specification.new do |s|
     spec/curlybars/node/unless_spec.rb
     spec/curlybars/node/with_spec.rb
     spec/curlybars/parser_spec.rb
+    spec/curlybars/rendering_support_spec.rb
     spec/curlybars/spec_helper.rb
     spec/curlybars/support/lexer.rb
     spec/curlybars/support/matcher.rb

@@ -1,5 +1,17 @@
 ### Unreleased
 
+### Curlybars 0.2.1 (March 3, 2015)
+
+* Permit to override default context in block helpers
+
+  Mauro Codella
+
+### Curlybars 0.2.0 (March 1, 2015)
+
+* Improve method whitelisting system
+
+  Libo Cannici
+
 ### Curlybars 0.1.9 (February 27, 2015)
 
 * Fixes partial when presenter returns nil
