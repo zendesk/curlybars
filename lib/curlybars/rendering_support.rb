@@ -13,7 +13,8 @@ module Curlybars
 
     def check_context_is_array_of_presenters(collection, path, position)
       array_of_presenters = collection.respond_to?(:each) &&
-      collection.all? { |presenter| presenter.respond_to? :allows_method? }
+        collection.all? { |presenter| presenter.respond_to? :allows_method? }
+
       return if array_of_presenters
       message = "`#{path}` is not an array of presenters"
       raise Curlybars::Error::Render.new('context_is_not_an_array_of_presenters', message, position)
