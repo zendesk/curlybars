@@ -9,14 +9,15 @@ module Curlybars
         <<-RUBY
           options = ActiveSupport::HashWithIndifferentAccess.new
           #{compiled_options}
-          result = begin
-            context = #{(context || DefaultContext.new).compile}.call
-            helper = #{helper.compile}
-            helper.call(*([context, options].compact.first(helper.arity))) do
-              # For consistency, the block must return empty
-              # string in case it is yielded.
-              ''
-            end
+          context = #{(context || DefaultContext.new).compile}.call
+          helper = #{helper.compile}
+          helper_position = rendering.position(#{helper.position.line_number},
+            #{helper.position.line_offset})
+
+          result = rendering.call(helper, #{helper.path.inspect}, helper_position, context, options) do
+            # For consistency, the block must return empty
+            # string in case it is yielded.
+            ''
           end
           buffer.safe_concat(result.to_s)
         RUBY
