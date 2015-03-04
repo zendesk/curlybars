@@ -6,16 +6,18 @@ module Curlybars
     end
 
     def check_context_is_presenter(context, path, position)
-      return if context.respond_to? :allows_method?
+      return if context.nil?
+      return if context.respond_to?(:allows_method?)
       message = "`#{path}` is not a context type object"
       raise Curlybars::Error::Render.new('context_is_not_a_presenter', message, position)
     end
 
     def check_context_is_array_of_presenters(collection, path, position)
-      array_of_presenters = collection.respond_to?(:each) &&
-        collection.all? { |presenter| presenter.respond_to? :allows_method? }
+      return if collection.nil?
+      return if collection.respond_to?(:each) && collection.all? do |presenter|
+        presenter.respond_to? :allows_method?
+      end
 
-      return if array_of_presenters
       message = "`#{path}` is not an array of presenters"
       raise Curlybars::Error::Render.new('context_is_not_an_array_of_presenters', message, position)
     end
