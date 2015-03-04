@@ -6,10 +6,6 @@ module IntegrationTest
       "bold#{yield}italic"
     end
 
-    def this_method_yields
-      yield
-    end
-
     def form(path, opts)
       "beauty class:#{opts[:class]} foo:#{opts[:foo]} #{yield}"
     end
@@ -92,6 +88,10 @@ module IntegrationTest
 
     def print_user_name(context)
       yield context.user
+    end
+
+    def this_method_yields(context)
+      yield
     end
 
     private

@@ -27,6 +27,7 @@ module Curlybars
 
               helper = #{helper.compile}
               helper.call(*([context, options].first(helper.arity))) do |block_helper_context = context|
+                break '' if block_helper_context.nil?
                 contexts << block_helper_context
                 begin
                   #{template.compile}
