@@ -83,6 +83,17 @@ describe "{{#each collection}}...{{/each}}" do
     end.to raise_error(Curlybars::Error::Render)
   end
 
+  it "renders nothing if the context is nil" do
+    template = Curlybars.compile(<<-HBS)
+      {{#each return_nil}}
+        text
+      {{/each}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+    HTML
+  end
+
   it "raises an error if the objects inside of the context array are not presenters" do
     allow(presenter).to receive(:allows_method?).with(:not_a_presenter_collection) { true }
     allow(presenter).to receive(:not_a_presenter_collection) { [:an_element] }

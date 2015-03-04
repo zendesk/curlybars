@@ -22,11 +22,16 @@ module Curlybars
           result = begin
               context = #{context.compile}.call
 
-              position = rendering.position(#{position.line_number}, #{position.line_offset})
-              rendering.check_context_is_presenter(context, #{context.path.inspect}, position)
+              unless context.nil?
+                context_position = rendering.position(#{context.position.line_number},
+                  #{context.position.line_offset})
+                rendering.check_context_is_presenter(context, #{context.path.inspect},
+                  context_position)
+              end
 
               helper = #{helper.compile}
               helper.call(*([context, options].first(helper.arity))) do |block_helper_context = context|
+                break '' if block_helper_context.nil?
                 contexts << block_helper_context
                 begin
                   #{template.compile}

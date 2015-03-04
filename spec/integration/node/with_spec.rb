@@ -37,6 +37,17 @@ describe "{{#with presenter}}...{{/with}}" do
     HTML
   end
 
+  it "renders nothing if the context is nil" do
+    template = Curlybars.compile(<<-HBS)
+      {{#with return_nil}}
+        text
+      {{/with}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+    HTML
+  end
+
   it "raises an exception if the parameter is not a context type object" do
     template = Curlybars.compile(<<-HBS)
       {{#with return_true}}{{/with}}

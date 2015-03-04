@@ -74,6 +74,27 @@ describe "{{#helper context key=value}}...{{/helper}}" do
     HTML
   end
 
+  it "accepts a nil context" do
+    template = Curlybars.compile(<<-HBS)
+      {{#this_method_yields return_nil}}
+      {{/this_method_yields}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+    HTML
+  end
+
+  it "yield produces an empty string in case the context is nil" do
+    template = Curlybars.compile(<<-HBS)
+      {{#this_method_yields return_nil}}
+        text
+      {{/this_method_yields}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+    HTML
+  end
+
   it "raises an exception if the context is not a presenter-like object" do
     template = Curlybars.compile(<<-HBS)
       {{#boolean post}} text {{/boolean}}

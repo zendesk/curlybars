@@ -107,6 +107,20 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
     HTML
   end
 
+  it "renders nothing if the context is nil" do
+    template = Curlybars.compile(<<-HBS)
+      {{#each return_nil}}
+        each_template
+      {{else}}
+        else_template
+      {{/each}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+      else_template
+    HTML
+  end
+
   it "raises an error if the context is not an array-like object" do
     allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:not_a_collection) { true }
     allow(presenter).to receive(:not_a_collection) { "string" }
