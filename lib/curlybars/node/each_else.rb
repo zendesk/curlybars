@@ -4,12 +4,11 @@ module Curlybars
       def compile
         <<-RUBY
           compiled_path = #{path.compile}.call
-          return if compiled_path.nil?
 
-          position = rendering.position(#{position.line_number}, #{position.line_offset})
-          rendering.check_context_is_array_of_presenters(compiled_path, #{path.path.inspect}, position)
+          if rendering.to_bool(compiled_path)
+            position = rendering.position(#{position.line_number}, #{position.line_offset})
+            rendering.check_context_is_array_of_presenters(compiled_path, #{path.path.inspect}, position)
 
-          if compiled_path.any?
             compiled_path.each do |presenter|
               contexts << presenter
               begin
