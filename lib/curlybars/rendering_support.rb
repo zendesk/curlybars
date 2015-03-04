@@ -22,10 +22,10 @@ module Curlybars
 
     def to_bool(condition)
       condition != false &&
-      condition != [] &&
-      condition != 0 &&
-      condition != '' &&
-      condition != nil
+        condition != [] &&
+        condition != 0 &&
+        condition != '' &&
+        !condition.nil?
     end
 
     def path(path, position)
@@ -58,13 +58,13 @@ module Curlybars
     def check_context_allows_method(context, meth, position)
       return if context.allows_method?(meth.to_sym)
       message = "`#{meth}` is not available."
-      message += "Add `allow_methods :#{meth}` to #{context.class.to_s} to allow this path"
+      message += "Add `allow_methods :#{meth}` to #{context.class} to allow this path"
       raise Curlybars::Error::Render.new('path_not_allowed', message, position)
     end
 
     def check_context_has_method(context, meth, position)
       return if context.respond_to?(meth.to_sym)
-      message = "`#{meth}` is not available in #{context.class.to_s}"
+      message = "`#{meth}` is not available in #{context.class}"
       raise Curlybars::Error::Render.new('path_not_allowed', message, position)
     end
   end

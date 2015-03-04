@@ -10,7 +10,7 @@ class Dashboards::ItemPresenter < Curly::Presenter
   end
 
   def subitems
-    %w[1 2 3]
+    %w(1 2 3)
   end
 
   class SubitemPresenter < Curly::Presenter

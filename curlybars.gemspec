@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
   s.email    = 'libo@zendesk.com'
   s.homepage = 'https://github.com/zendesk/curlybars'
 
-  s.require_paths = %w[lib]
+  s.require_paths = %w(lib)
 
   s.rdoc_options = ["--charset=UTF-8"]
 
@@ -36,10 +36,11 @@ Gem::Specification.new do |s|
   s.add_development_dependency("rake")
   s.add_development_dependency("rspec-rails", "~> 3.2")
   s.add_development_dependency("genspec")
+  s.add_development_dependency("rubocop", "~> 0.29.1")
   s.add_development_dependency("byebug", "~> 3.5")
 
   # = MANIFEST =
-  s.files = %w[
+  s.files = %w(
     CHANGELOG.md
     CONTRIBUTING.md
     Gemfile
@@ -171,7 +172,7 @@ Gem::Specification.new do |s|
     spec/method_whitelist_spec.rb
     spec/spec_helper.rb
     spec/template_handler_spec.rb
-  ]
+  )
   # = MANIFEST =
 
   s.test_files = s.files.select { |path| path =~ /^spec\/.*_spec\.rb/ }

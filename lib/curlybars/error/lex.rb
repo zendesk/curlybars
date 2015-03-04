@@ -6,9 +6,9 @@ module Curlybars::Error
       line_number = exception.line_number
       line_offset = exception.line_offset
 
-      error_line = source.split("\n")[line_number-1]
+      error_line = source.split("\n")[line_number - 1]
       before_error = error_line.first(line_offset).last(10)
-      after_error = error_line[line_offset+1..-1].first(10)
+      after_error = error_line[line_offset + 1..-1].first(10)
       error = error_line[line_offset]
 
       details = [before_error, error, after_error]

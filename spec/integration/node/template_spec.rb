@@ -34,11 +34,11 @@ describe "template" do
   end
 
   it "can contain a single backslash" do
-   template = Curlybars.compile('\\')
+    template = Curlybars.compile('\\')
 
-   expect(eval(template)).to resemble(<<-HTML)
-     \\
-   HTML
+    expect(eval(template)).to resemble(<<-HTML)
+      \\
+    HTML
   end
 
   private

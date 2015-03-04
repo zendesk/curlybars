@@ -29,7 +29,6 @@ describe "{{#with presenter}}...{{/with}}" do
   end
 
   it "allows empty with_template" do
-
     template = Curlybars.compile(<<-HBS)
       {{#with user}}{{/with}}
     HBS
