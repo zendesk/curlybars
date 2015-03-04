@@ -66,7 +66,6 @@ describe "{{#unless}}...{{else}}...{{/unless}}" do
     HTML
   end
 
-
   it "allows empty unless_template and else_template" do
     allow(presenter).to receive(:allows_method?).with(:valid) { true }
     allow(presenter).to receive(:valid) { false }

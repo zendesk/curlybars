@@ -1,0 +1,118 @@
+#
+# Special cases
+#
+
+Lint/Eval:
+  Exclude:
+    - spec/integration/**/*
+
+Style/Semicolon:
+  Exclude:
+    - lib/curlybars/lexer.rb
+
+Style/SymbolProc:
+  Exclude:
+    - spec/spec_helper.rb
+
+#
+# Configured cops
+#
+
+# Align ends correctly.
+Lint/EndAlignment:
+  AlignWith: variable
+
+# Align the elements of a hash literal if they span more than one line.
+Style/AlignHash:
+  EnforcedLastArgumentHashStyle: ignore_implicit
+
+# Align the parameters of a method call if they span more than one line.
+Style/AlignParameters:
+  EnforcedStyle: with_fixed_indentation
+
+# Indentation of when in a case/when/[else/]end.
+Style/CaseIndentation:
+  IndentWhenRelativeTo: end
+
+# Checks the indentation of the first parameter in a method call.
+Style/FirstParameterIndentation:
+  EnforcedStyle: consistent
+
+# Enforce the use of Kernel#sprintf, Kernel#format or String#%.
+Style/FormatString:
+  EnforcedStyle: percent
+
+# Checks the indentation of the first key in a hash literal.
+Style/IndentHash:
+  EnforcedStyle: consistent
+
+# Checks indentation of binary operations that span more than one line.
+Style/MultilineOperationIndentation:
+  EnforcedStyle: indented
+
+#
+# Disabled cops
+#
+
+Lint/UnusedBlockArgument:
+  Enabled: false
+
+Lint/UnusedMethodArgument:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Metrics/LineLength:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/ParameterLists:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+Style/AlignArray:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/DotPosition:
+  Enabled: false
+
+Style/EmptyLiteral:
+  Enabled: false
+
+Style/Next:
+  Enabled: false
+
+Style/PerlBackrefs:
+  Enabled: false
+
+Style/RaiseArgs:
+  Enabled: false
+
+Style/SignalException:
+  Enabled: false
+
+Style/SpaceInsideBlockBraces:
+  Enabled: false
+
+Style/StringLiterals:
+  Enabled: false
+
+Style/TrivialAccessors:
+  Enabled: false
+
+Style/WordArray:
+  Enabled: false

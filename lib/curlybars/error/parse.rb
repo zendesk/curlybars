@@ -7,7 +7,7 @@ module Curlybars::Error
       line_offset = exception.current.position.line_offset
       length = exception.current.position.length
 
-      error_line = source.split("\n")[line_number-1]
+      error_line = source.split("\n")[line_number - 1]
       before_error = error_line.first(line_offset).last(10)
       after_error = error_line[line_offset + length..-1].first(10)
       error = error_line.slice(line_offset, length)

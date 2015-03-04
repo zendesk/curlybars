@@ -38,7 +38,7 @@ describe Curlybars::MethodWhitelist do
   end
 
   describe "inheritance and composition" do
-    let (:base_presenter) do
+    let(:base_presenter) do
       link_presenter = Class.new
 
       Class.new do
@@ -47,14 +47,14 @@ describe Curlybars::MethodWhitelist do
       end
     end
 
-    let (:helpers) do
+    let(:helpers) do
       Module.new do
         extend Curlybars::MethodWhitelist
         allow_methods :form
       end
     end
 
-    let (:post_presenter) do
+    let(:post_presenter) do
       Class.new(base_presenter) do
         extend Curlybars::MethodWhitelist
         allow_methods :wave
@@ -82,7 +82,7 @@ describe Curlybars::MethodWhitelist do
 
     it "should setup a schema of methods" do
       expect(dummy_class.methods_schema).
-        to eq({ cook: nil, links: [LinkPresenter], article: ArticlePresenter })
+        to eq(cook: nil, links: [LinkPresenter], article: ArticlePresenter)
     end
   end
 
@@ -108,12 +108,11 @@ describe Curlybars::MethodWhitelist do
 
     it "should return a dependencies tree" do
       expect(dummy_class.dependency_tree).
-        to eq({
+        to eq(
           cook: nil,
           links: [{ url: nil }],
-          article: { title: nil, body: nil}
-        })
+          article: { title: nil, body: nil }
+        )
     end
-
   end
 end

@@ -9,8 +9,8 @@ module CurlybarsHelper
 
   def date(timestamp, opts)
     <<-HTML.strip_heredoc
-      <time datetime="#{timestamp.strftime("%FT%H:%M:%SZ")}" class="#{opts[:class]}">
-        #{timestamp.strftime("%B%e, %Y %H:%M")}
+      <time datetime="#{timestamp.strftime('%FT%H:%M:%SZ')}" class="#{opts[:class]}">
+        #{timestamp.strftime('%B%e, %Y %H:%M')}
       </time>
     HTML
   end

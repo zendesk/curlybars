@@ -18,14 +18,13 @@ module Curlybars
       end
 
       define_singleton_method(:methods_schema) do
-        methods.inject({}) do |memo, method|
+        methods.each_with_object({}) do |method, memo|
           memo[method] = nil
-          memo
         end.merge(methods_with_type)
       end
 
       define_singleton_method(:dependency_tree) do
-        methods_schema.inject({}) do |memo, method_with_type|
+        methods_schema.each_with_object({}) do |method_with_type, memo|
           method_name = method_with_type.first
           type = method_with_type.last
 
@@ -36,8 +35,6 @@ module Curlybars
           else
             memo[method_name] = type
           end
-
-          memo
         end
       end
 
@@ -48,7 +45,7 @@ module Curlybars
 
     def self.extended(base)
       # define a default of no method allowed
-      base.allow_methods()
+      base.allow_methods
     end
   end
 end

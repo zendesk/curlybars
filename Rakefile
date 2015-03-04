@@ -47,10 +47,18 @@ end
 #
 #############################################################################
 
-task :default => :spec
+task default: [:spec, :rubocop]
 
 require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new(:spec)
+
+require 'rubocop/rake_task'
+desc 'Run RuboCop on the lib directory'
+RuboCop::RakeTask.new(:rubocop) do |task|
+  task.patterns = %w(Rakefile lib/**/*.rb spec/**/*.rb)
+  task.formatters = %w(progress)
+  task.fail_on_error = true
+end
 
 desc "Open an irb session preloaded with this library"
 task :console do
@@ -64,7 +72,7 @@ end
 #############################################################################
 
 desc "Create tag v#{version} and build and push #{gem_file} to Rubygems"
-task :release => :build do
+task release: :build do
   unless `git branch` =~ /^\* master$/
     puts "You must be on the master branch to release!"
     exit!
@@ -77,17 +85,17 @@ task :release => :build do
 end
 
 desc "Build #{gem_file} into the pkg directory"
-task :build => :gemspec do
+task build: :gemspec do
   sh "mkdir -p pkg"
   sh "gem build #{gemspec_file}"
   sh "mv #{gem_file} pkg"
 end
 
 desc "Generate #{gemspec_file}"
-task :gemspec => :validate do
+task gemspec: :validate do
   # read spec file and split out manifest section
   spec = File.read(gemspec_file)
-  head, manifest, tail = spec.split("  # = MANIFEST =\n")
+  head, _manifest, tail = spec.split("  # = MANIFEST =\n")
 
   # replace name version and date
   replace_header(head, :name, gem_name)

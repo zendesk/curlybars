@@ -6,7 +6,6 @@ require 'curly/presenter_not_found'
 
 class Curlybars::TemplateHandler < Curly::TemplateHandler
   class << self
-
     private
 
     def compile(template)
