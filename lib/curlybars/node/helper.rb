@@ -13,7 +13,9 @@ module Curlybars
             context = #{(context || DefaultContext.new).compile}.call
             helper = #{helper.compile}
             helper.call(*([context, options].compact.first(helper.arity))) do
-              raise "You cannot yield a block from within a helper. Use a block helper instead."
+              # For consistency, the block must return empty
+              # string in case it is yielded.
+              ''
             end
           end
           buffer.safe_concat(result.to_s)

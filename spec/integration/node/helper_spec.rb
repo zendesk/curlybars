@@ -59,4 +59,13 @@ describe "{{helper context key=value}}" do
       true
     HTML
   end
+
+  it "handles correctly a method that invokes `yield`, returning empty string" do
+    template = Curlybars.compile(<<-HBS)
+      {{this_method_yields}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+    HTML
+  end
 end

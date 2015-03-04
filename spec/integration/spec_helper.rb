@@ -6,6 +6,10 @@ module IntegrationTest
       "bold#{yield}italic"
     end
 
+    def this_method_yields
+      yield
+    end
+
     def form(path, opts)
       "beauty class:#{opts[:class]} foo:#{opts[:foo]} #{yield}"
     end
@@ -40,7 +44,7 @@ module IntegrationTest
 
     allow_methods :partial, :user, :new_comment_form, :valid, :visible, :return_true,
       :return_false, :beautify, :form, :date, :asset, :integer, :boolean, :me, :echo,
-      :return_nil, :print_user_name
+      :return_nil, :print_user_name, :this_method_yields
 
     def user
       Shared::UserPresenter.new(current_user)
