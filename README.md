@@ -94,10 +94,12 @@ It's a good practice to put your helpers into a module that you will include in 
 To implement the helper, we need in the Presenter one of the following signatures:
 ```ruby
 def helper()
-def helper(context:)
-def helper(context:, options:)
+def helper(context)
+def helper(context, _)
+def helper(_, options)
+def helper(context, options)
 ```
-that allows to explicitly declare what is needed as argument.
+The helper parameters can have different names from those in the example.
 
 Note that if the helper has a different signature from all of those listed above, an exception will be thrown at rendering time - `Curlybars::Error::Render`
 
@@ -107,11 +109,11 @@ When the signature is actually broader than the argument specified in the templa
 ```
 and the following helper declaration:
 ```ruby
-def helper(context:, options:)
+def helper(context, options)
 ```
 what you actually get is `nil` as context, and `{}` as options, that has exactly the same effect of having the following signature:
 ```ruby
-def helper(context: nil, options: {})
+def helper(context = nil, options = {})
 ```
 These mechanisms ensure that, unless the helper has a bad implementation, the hbs can never make the backend to raise an exception.
 

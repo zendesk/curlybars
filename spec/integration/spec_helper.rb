@@ -6,11 +6,11 @@ module IntegrationTest
       "bold#{yield}italic"
     end
 
-    def form(context:, options:)
+    def form(context, options)
       "beauty class:#{options[:class]} foo:#{options[:foo]} #{yield}"
     end
 
-    def date(context:, options:)
+    def date(context, options)
       <<-HTML.strip_heredoc
         <time datetime="#{context.strftime('%FT%H:%M:%SZ')}" class="#{options[:class]}">
           #{context.strftime('%B%e, %Y %H:%M')}
@@ -18,12 +18,12 @@ module IntegrationTest
       HTML
     end
 
-    def asset(context:)
+    def asset(context)
       cdn_base_url = "http://cdn.example.com/"
       "#{cdn_base_url}#{context}"
     end
 
-    def input(context:, options:)
+    def input(context, options)
       type = options.fetch(:title, 'text')
       <<-HTML.strip_heredoc
         <input name="#{context.name}" id="#{context.id}" type="#{type}" class="#{options['class']}" value="#{context.value}">
@@ -82,15 +82,15 @@ module IntegrationTest
       self
     end
 
-    def echo(context:, options:)
+    def echo(context, options)
       "%s %s" % [context, options]
     end
 
-    def print_user_name(context:)
+    def print_user_name(context)
       yield context.user
     end
 
-    def this_method_yields(context:)
+    def this_method_yields(context)
       yield
     end
 
