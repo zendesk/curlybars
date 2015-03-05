@@ -1,5 +1,11 @@
 ### Unreleased
 
+### Curlybars 0.4.2 (March 5, 2015)
+
+* Relax helper signature constraints
+
+  Mauro Codella
+
 ### Curlybars 0.4.1 (March 5, 2015)
 
 * Bugfix: call to helper must tolerate default values in the signature
