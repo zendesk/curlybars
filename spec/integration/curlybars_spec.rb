@@ -31,7 +31,6 @@ describe Curlybars do
         expect(errors).to be_empty
       end
 
-
       it "validates {{helper.invoked_on_nil}} with errors" do
         allow(presenter_class).to receive(:dependency_tree) do
           { helper: nil }
