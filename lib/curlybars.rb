@@ -34,6 +34,9 @@ module Curlybars
     #
     # Returns an array of Curlybars::Error::Validation
     def validate(presenter_class, source, file_name = nil)
+      unless presenter_class.respond_to?(:dependency_tree)
+        raise "#{presenter_class} must implement `.dependency_tree` or extend `Curlybars::MethodWhitelist`"
+      end
       dependency_tree = presenter_class.dependency_tree
       errors = ast(source, file_name).validate(dependency_tree)
       errors.flatten!
