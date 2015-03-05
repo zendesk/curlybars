@@ -2,204 +2,213 @@ describe Curlybars do
   let(:presenter_class) { double(:presenter_class) }
 
   describe ".validate" do
-    it "validates {{helper}} with errors" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        {}
+    describe "validates {{helper}}" do
+      it "with errors" do
+        allow(presenter_class).to receive(:dependency_tree) do
+          {}
+        end
+
+        source = <<-HBS
+          {{helper}}
+        HBS
+
+        errors = Curlybars.validate(presenter_class, source)
+
+        expect(errors).not_to be_empty
       end
 
-      source = <<-HBS
-        {{helper}}
-      HBS
+      it "without errors" do
+        allow(presenter_class).to receive(:dependency_tree) do
+          { helper: nil }
+        end
 
-      errors = Curlybars.validate(presenter_class, source)
+        source = <<-HBS
+          {{helper}}
+        HBS
 
-      expect(errors).not_to be_empty
+        errors = Curlybars.validate(presenter_class, source)
+
+        expect(errors).to be_empty
+      end
+
+
+      it "validates {{helper.invoked_on_nil}} with errors" do
+        allow(presenter_class).to receive(:dependency_tree) do
+          { helper: nil }
+        end
+
+        source = <<-HBS
+          {{helper.invoked_on_nil}}
+        HBS
+
+        errors = Curlybars.validate(presenter_class, source)
+
+        expect(errors).not_to be_empty
+      end
+
+      it "validates {{helper.data}} without errors" do
+        allow(presenter_class).to receive(:dependency_tree) do
+          { helper: { data: nil } }
+        end
+
+        source = <<-HBS
+          {{helper.data}}
+        HBS
+
+        errors = Curlybars.validate(presenter_class, source)
+
+        expect(errors).to be_empty
+      end
+
+      it "validates {{helper.data.missing}} with errors" do
+        allow(presenter_class).to receive(:dependency_tree) do
+          { helper: { data: nil } }
+        end
+
+        source = <<-HBS
+          {{helper.data.missing}}
+        HBS
+
+        errors = Curlybars.validate(presenter_class, source)
+
+        expect(errors).not_to be_empty
+      end
     end
 
-    it "validates {{helper}} without errors" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { helper: nil }
+    describe "validates {{#with}}" do
+      it "without errors" do
+        allow(presenter_class).to receive(:dependency_tree) do
+          { a_presenter: {} }
+        end
+
+        source = <<-HBS
+          {{#with a_presenter}}{{/with}}
+        HBS
+
+        errors = Curlybars.validate(presenter_class, source)
+
+        expect(errors).to be_empty
       end
 
-      source = <<-HBS
-        {{helper}}
-      HBS
+      it "with errors due to a leaf" do
+        allow(presenter_class).to receive(:dependency_tree) do
+          { not_a_presenter: nil }
+        end
 
-      errors = Curlybars.validate(presenter_class, source)
+        source = <<-HBS
+          {{#with not_a_presenter}}{{/with}}
+        HBS
 
-      expect(errors).to be_empty
+        errors = Curlybars.validate(presenter_class, source)
+
+        expect(errors).not_to be_empty
+      end
+
+      it "with errors due unallowed method" do
+        allow(presenter_class).to receive(:dependency_tree) do
+          {}
+        end
+
+        source = <<-HBS
+          {{#with unallowed}}{{/with}}
+        HBS
+
+        errors = Curlybars.validate(presenter_class, source)
+
+        expect(errors).not_to be_empty
+      end
     end
 
-    it "validates {{helper.invoked_on_nil}} with errors" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { helper: nil }
+    describe "validates {{#each}}" do
+      it "without errors" do
+        allow(presenter_class).to receive(:dependency_tree) do
+          { a_presenter_collection: [{}] }
+        end
+
+        source = <<-HBS
+          {{#each a_presenter_collection}}{{/each}}
+        HBS
+
+        errors = Curlybars.validate(presenter_class, source)
+
+        expect(errors).to be_empty
       end
 
-      source = <<-HBS
-        {{helper.invoked_on_nil}}
-      HBS
+      it "with errors due to a presenter path" do
+        allow(presenter_class).to receive(:dependency_tree) do
+          { a_presenter: {} }
+        end
 
-      errors = Curlybars.validate(presenter_class, source)
+        source = <<-HBS
+          {{#each a_presenter}}{{/each}}
+        HBS
 
-      expect(errors).not_to be_empty
+        errors = Curlybars.validate(presenter_class, source)
+
+        expect(errors).not_to be_empty
+      end
+
+      it "with errors due to a leaf path" do
+        allow(presenter_class).to receive(:dependency_tree) do
+          { a_leaf: nil }
+        end
+
+        source = <<-HBS
+          {{#each a_leaf}}{{/each}}
+        HBS
+
+        errors = Curlybars.validate(presenter_class, source)
+
+        expect(errors).not_to be_empty
+      end
+
+      it "with errors due unallowed method" do
+        allow(presenter_class).to receive(:dependency_tree) do
+          {}
+        end
+
+        source = <<-HBS
+          {{#each unallowed}}{{/each}}
+        HBS
+
+        errors = Curlybars.validate(presenter_class, source)
+
+        expect(errors).not_to be_empty
+      end
     end
 
-    it "validates {{helper.data}} without errors" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { helper: { data: nil } }
+    describe "validates nested templates" do
+      it "without errors" do
+        allow(presenter_class).to receive(:dependency_tree) do
+          { presenter: { field: nil } }
+        end
+
+        source = <<-HBS
+          {{#with presenter}}
+            {{field}}
+          {{/with}}
+        HBS
+
+        errors = Curlybars.validate(presenter_class, source)
+
+        expect(errors).to be_empty
       end
 
-      source = <<-HBS
-        {{helper.data}}
-      HBS
+      it "with errors" do
+        allow(presenter_class).to receive(:dependency_tree) do
+          { presenter: { field: nil } }
+        end
 
-      errors = Curlybars.validate(presenter_class, source)
+        source = <<-HBS
+          {{#with presenter}}
+            {{unallowed}}
+          {{/with}}
+        HBS
 
-      expect(errors).to be_empty
-    end
+        errors = Curlybars.validate(presenter_class, source)
 
-    it "validates {{helper.data.missing}} with errors" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { helper: { data: nil } }
+        expect(errors).not_to be_empty
       end
-
-      source = <<-HBS
-        {{helper.data.missing}}
-      HBS
-
-      errors = Curlybars.validate(presenter_class, source)
-
-      expect(errors).not_to be_empty
-    end
-
-    it "validates nested {{#with}} without errors" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { a_presenter: {} }
-      end
-
-      source = <<-HBS
-        {{#with not_a_presenter}}{{/with}}
-      HBS
-
-      errors = Curlybars.validate(presenter_class, source)
-
-      expect(errors).not_to be_empty
-    end
-
-    it "validates nested {{#with}} with errors due to a leaf" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { not_a_presenter: nil }
-      end
-
-      source = <<-HBS
-        {{#with not_a_presenter}}{{/with}}
-      HBS
-
-      errors = Curlybars.validate(presenter_class, source)
-
-      expect(errors).not_to be_empty
-    end
-
-    it "validates nested {{#with}} with errors due unallowed method" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        {}
-      end
-
-      source = <<-HBS
-        {{#with unallowed}}{{/with}}
-      HBS
-
-      errors = Curlybars.validate(presenter_class, source)
-
-      expect(errors).not_to be_empty
-    end
-
-    it "validates nested {{#each}} without errors" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { a_presenter_collection: [{}] }
-      end
-
-      source = <<-HBS
-        {{#each a_presenter_collection}}{{/each}}
-      HBS
-
-      errors = Curlybars.validate(presenter_class, source)
-
-      expect(errors).to be_empty
-    end
-
-    it "validates nested {{#each}} with errors due to a presenter path" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { a_presenter: {} }
-      end
-
-      source = <<-HBS
-        {{#each a_presenter}}{{/each}}
-      HBS
-
-      errors = Curlybars.validate(presenter_class, source)
-
-      expect(errors).not_to be_empty
-    end
-
-    it "validates nested {{#each}} with errors due to a leaf path" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { a_leaf: nil }
-      end
-
-      source = <<-HBS
-        {{#each a_leaf}}{{/each}}
-      HBS
-
-      errors = Curlybars.validate(presenter_class, source)
-
-      expect(errors).not_to be_empty
-    end
-
-    it "validates nested {{#each}} with errors due unallowed method" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        {}
-      end
-
-      source = <<-HBS
-        {{#each unallowed}}{{/each}}
-      HBS
-
-      errors = Curlybars.validate(presenter_class, source)
-
-      expect(errors).not_to be_empty
-    end
-
-    it "validates nested templates without errors" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { presenter: { field: nil } }
-      end
-
-      source = <<-HBS
-        {{#with presenter}}
-          {{field}}
-        {{/with}}
-      HBS
-
-      errors = Curlybars.validate(presenter_class, source)
-
-      expect(errors).to be_empty
-    end
-
-    it "validates nested templates with errors" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { presenter: { field: nil } }
-      end
-
-      source = <<-HBS
-        {{#with presenter}}
-          {{unallowed}}
-        {{/with}}
-      HBS
-
-      errors = Curlybars.validate(presenter_class, source)
-
-      expect(errors).not_to be_empty
     end
   end
 end

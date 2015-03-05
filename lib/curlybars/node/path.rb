@@ -38,7 +38,7 @@ module Curlybars
       def check_type_of(check_type, value)
         case check_type
         when :presenter
-          return if value.present?
+          return if value.is_a?(Hash)
           message = "`#{path}` must resolve to a presenter"
           raise Curlybars::Error::Validate.new('not_a_presenter', message, position)
         when :presenter_collection
