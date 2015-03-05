@@ -4,8 +4,8 @@ Gem::Specification.new do |s|
   s.rubygems_version = '1.3.5'
 
   s.name              = 'curlybars'
-  s.version           = '0.2.1'
-  s.date              = '2015-03-03'
+  s.version           = '0.3.0'
+  s.date              = '2015-03-05'
 
   s.summary     = "Create your views using Handlebars templates!"
   s.description = "A view layer for your Rails apps that separates
@@ -40,7 +40,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency("byebug", "~> 3.5")
 
   # = MANIFEST =
-  s.files = %w(
+  s.files = %w[
     CHANGELOG.md
     CONTRIBUTING.md
     Gemfile
@@ -172,7 +172,7 @@ Gem::Specification.new do |s|
     spec/method_whitelist_spec.rb
     spec/spec_helper.rb
     spec/template_handler_spec.rb
-  )
+  ]
   # = MANIFEST =
 
   s.test_files = s.files.select { |path| path =~ /^spec\/.*_spec\.rb/ }

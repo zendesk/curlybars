@@ -67,6 +67,75 @@ They are just Plain Old Ruby Object you expose in your `hbs` templates. All you 
 It's for your convenience only, you can also do it yourself as long as your class
 defines a `.allows_method?` it should work.
 
+Helpers
+-------
+
+You can define custom helpers as normal method in your presenter.
+
+Example:
+```hbs
+{{ excerpt article.body max=400}}
+```
+
+```ruby
+module HandlebarsHelpers
+  extend Curlybars::MethodWhitelist
+  allow_methods :excerpt
+
+  def excerpt(context:, options:)
+    max = options.fetch(:max, 120)
+    context.to_s.truncate(max)
+  end
+end
+```
+
+It's a good practice to put your helpers into a module that you will include in different presenter, but you can also just put them as method of your presenter.
+
+To implement the helper, we need in the Presenter one of the following signatures:
+```ruby
+def helper()
+def helper(context:)
+def helper(context:, options:)
+```
+that allows to explicitly declare what is needed as argument.
+
+Note that if the helper has a different signature from all of those listed above, an exception will be thrown at rendering time - `Curlybars::Error::Render`
+
+When the signature is actually broader than the argument specified in the template, default values are passed. Let's assume we have the following hbs:
+```hbs
+{{helper}}
+```
+and the following helper declaration:
+```ruby
+def helper(context:, options:)
+```
+what you actually get is `nil` as context, and `{}` as options, that has exactly the same effect of having the following signature:
+```ruby
+def helper(context: nil, options: {})
+```
+These mechanisms ensure that, unless the helper has a bad implementation, the hbs can never make the backend to raise an exception.
+
+Block Helpers
+-------------
+You can also context helpers that takes a block.
+
+Example:
+
+```hbs
+{{#form new_post class='red'}}
+  <input type="text" name="body">
+{{/form}}
+```
+
+```ruby
+def form(context:, options:)
+  class = options[:class]
+  action = context.action
+
+  "<form class='#{class}' action='#{action}'>#{yield}</form>"
+end
+```
+
 Method Whitelisting
 -------------------
 
