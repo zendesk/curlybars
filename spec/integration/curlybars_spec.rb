@@ -176,6 +176,36 @@ describe Curlybars do
       end
     end
 
+    describe "validates {{helper context}}" do
+      it "without errors in block_helper" do
+        allow(presenter_class).to receive(:dependency_tree) do
+          { helper: nil, context: nil }
+        end
+
+        source = <<-HBS
+          {{helper context}}
+        HBS
+
+        errors = Curlybars.validate(presenter_class, source)
+
+        expect(errors).to be_empty
+      end
+
+      it "with errors in block_helper" do
+        allow(presenter_class).to receive(:dependency_tree) do
+          { helper: {}, context: nil }
+        end
+
+        source = <<-HBS
+          {{helper context}}
+        HBS
+
+        errors = Curlybars.validate(presenter_class, source)
+
+        expect(errors).not_to be_empty
+      end
+    end
+
     describe "validates {{#block_helper context}} ... {{/block_helper}}" do
       it "without errors in context" do
         allow(presenter_class).to receive(:dependency_tree) do
