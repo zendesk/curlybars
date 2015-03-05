@@ -6,6 +6,10 @@ module Curlybars
           { #{key.to_s.inspect} => #{expression.compile}.call }
         RUBY
       end
+
+      def validate(dependency_tree)
+        expression.validate(dependency_tree)
+      end
     end
   end
 end

@@ -14,6 +14,7 @@ require 'curlybars/error/base'
 require 'curlybars/error/lex'
 require 'curlybars/error/parse'
 require 'curlybars/error/compile'
+require 'curlybars/error/validate'
 require 'curlybars/error/render'
 
 RSpec.configure do |config|

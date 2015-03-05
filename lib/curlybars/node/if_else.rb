@@ -10,6 +10,14 @@ module Curlybars
           end
         RUBY
       end
+
+      def validate(base_tree)
+        [
+          expression.validate(base_tree),
+          if_template.validate(base_tree),
+          else_template.validate(base_tree)
+        ]
+      end
     end
   end
 end

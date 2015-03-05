@@ -46,7 +46,7 @@ module Curlybars
       end
 
       clause('START .path .expression? .options? END') do |path, context, options|
-        Node::Helper.new(path, context, options)
+        Node::Helper.new(path, context, options, pos(0))
       end
 
       clause(

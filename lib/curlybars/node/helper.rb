@@ -1,6 +1,8 @@
+require 'curlybars/error/validate'
+
 module Curlybars
   module Node
-    Helper = Struct.new(:helper, :context, :options) do
+    Helper = Struct.new(:helper, :context, :options, :position) do
       def compile
         compiled_options = (options || []).map do |option|
           "options.merge!(#{option.compile})"
@@ -23,9 +25,21 @@ module Curlybars
         RUBY
       end
 
+      def validate(dependency_tree)
+        [
+          helper.validate(dependency_tree, check_type: :leaf),
+          (context || DefaultContext.new).validate(dependency_tree),
+          (options || []).map { |option| option.validate(dependency_tree) }
+        ]
+      end
+
       class DefaultContext
         def compile
           "->{}"
+        end
+
+        def validate(base_tree)
+          []
         end
       end
     end

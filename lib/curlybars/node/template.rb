@@ -19,6 +19,10 @@ module Curlybars
           end.exec(contexts, rendering)
         RUBY
       end
+
+      def validate(dependency_tree)
+        (items || []).map { |item| item.validate(dependency_tree) }.flatten
+      end
     end
   end
 end

@@ -15,30 +15,57 @@
 module Curlybars
   VERSION = "0.3.0"
 
-  # Compiles a Curlybars template to Ruby code.
-  #
-  # source - The source HBS String that should be compiled.
-  # file_name - The the file name of the template being compiled.
-  #
-  # Returns a String containing the Ruby code.
-  def self.compile(source, file_name = nil)
-    tokens = Curlybars::Lexer.lex(source, file_name)
-    ast = Curlybars::Parser.parse(tokens)
-    ast.compile
-  rescue RLTK::LexingError => lexing_error
-    raise Curlybars::Error::Lex.new(source, file_name, lexing_error)
-  rescue RLTK::NotInLanguage => not_in_language_error
-    raise Curlybars::Error::Parse.new(source, not_in_language_error)
-  end
+  class << self
+    # Compiles a Curlybars template to Ruby code.
+    #
+    # source - The source HBS String that should be compiled.
+    # file_name - The the file name of the template being compiled (defaults to `nil`).
+    #
+    # Returns a String containing the Ruby code.
+    def compile(source, file_name = nil)
+      ast(source, file_name).compile
+    end
 
-  # Whether the Curlybars template is valid.
-  #
-  # source - The source HBS String that should be verified.
-  # file_name - The the file name of the template being verified.
-  #
-  # Returns true if the template is valid, false otherwise.
-  def self.valid?(source, file_name)
-    # TODO, or remove if doesn't make sense
+    # Validates the source against a presenter.
+    #
+    # presenter_class - the presenter class, used to validate the source.
+    # source - The source HBS String that should be validated.
+    # file_name - The the file name of the template being validated (defaults to `nil`).
+    #
+    # Returns an array of Curlybars::Error::Validation
+    def validate(presenter_class, source, file_name = nil)
+      unless presenter_class.respond_to?(:dependency_tree)
+        raise "#{presenter_class} must implement `.dependency_tree` or extend `Curlybars::MethodWhitelist`"
+      end
+      dependency_tree = presenter_class.dependency_tree
+      errors = ast(source, file_name).validate(dependency_tree)
+      errors.flatten!
+      errors.compact!
+      errors
+    end
+
+    # Check if the source is valid for a given presenter.
+    #
+    # presenter_class - the presenter class, used to check if the source is valid.
+    # source - The source HBS String that should be check to be valid.
+    # file_name - The the file name of the template being checked (defaults to `nil`).
+    #
+    # Returns true if the template is valid, false otherwise.
+    def valid?(presenter_class, source, file_name = nil)
+      errors = validate(presenter_class, source, file_name)
+      errors.empty?
+    end
+
+    private
+
+    def ast(source, file_name)
+      tokens = Curlybars::Lexer.lex(source, file_name)
+      Curlybars::Parser.parse(tokens)
+    rescue RLTK::LexingError => lexing_error
+      raise Curlybars::Error::Lex.new(source, file_name, lexing_error)
+    rescue RLTK::NotInLanguage => not_in_language_error
+      raise Curlybars::Error::Parse.new(source, not_in_language_error)
+    end
   end
 end
 
@@ -51,6 +78,7 @@ require 'curlybars/parser'
 require 'curlybars/error/lex'
 require 'curlybars/error/parse'
 require 'curlybars/error/compile'
+require 'curlybars/error/validate'
 require 'curlybars/error/render'
 require 'curlybars/template_handler'
 require 'curlybars/railtie' if defined?(Rails)

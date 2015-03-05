@@ -55,6 +55,7 @@ Gem::Specification.new do |s|
     lib/curlybars/error/lex.rb
     lib/curlybars/error/parse.rb
     lib/curlybars/error/render.rb
+    lib/curlybars/error/validate.rb
     lib/curlybars/lexer.rb
     lib/curlybars/method_whitelist.rb
     lib/curlybars/node/block_helper.rb
@@ -93,6 +94,7 @@ Gem::Specification.new do |s|
     spec/curlybars/error/lex_spec.rb
     spec/curlybars/error/parse_spec.rb
     spec/curlybars/error/render_spec.rb
+    spec/curlybars/error/validate_spec.rb
     spec/curlybars/lexer_spec.rb
     spec/curlybars/node/block_helper_spec.rb
     spec/curlybars/node/each_else_spec.rb
@@ -150,6 +152,7 @@ Gem::Specification.new do |s|
     spec/dummy/config/environments/test.rb
     spec/dummy/config/routes.rb
     spec/integration/comment_spec.rb
+    spec/integration/curlybars_spec.rb
     spec/integration/exception_spec.rb
     spec/integration/node/block_helper_spec.rb
     spec/integration/node/boolean_spec.rb
