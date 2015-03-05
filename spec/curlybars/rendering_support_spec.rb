@@ -3,6 +3,10 @@ describe Curlybars::RenderingSupport do
   let(:presenter) { double(:presenter) }
   let(:contexts) { [presenter] }
   let(:rendering) { Curlybars::RenderingSupport.new(contexts, file_name) }
+  let(:position) do
+    double(:position, file_name: 'template.hbs', line_number: 1, line_offset: 0)
+  end
+  let(:block) { -> {} }
 
   describe "#to_bool" do
     describe "returns true" do
@@ -72,6 +76,55 @@ describe Curlybars::RenderingSupport do
 
       expect do
         rendering.path('sub.method', rendering.position(0, 1))
+      end.to raise_error(Curlybars::Error::Render)
+    end
+  end
+
+  describe "#call" do
+    let(:context) { 'context' }
+    let(:options) { { key: :value } }
+
+    it "passes context and options to a helper that accepts both" do
+      method = ->(context:, options:) { [context, options] }
+
+      output = rendering.call(method, "meth", position, context, options, &block)
+      expect(output).to eq [context, options]
+    end
+
+    it "passes context to a helper that accepts only context" do
+      method = ->(context:) { [context] }
+
+      output = rendering.call(method, "meth", position, context, options, &block)
+      expect(output).to eq [context]
+    end
+
+    it "passes options to a helper that accepts only options" do
+      method = ->(options:) { [options] }
+
+      output = rendering.call(method, "meth", position, context, options, &block)
+      expect(output).to eq [options]
+    end
+
+    it "passes nothing to a helper with no parameters" do
+      method = ->() { :no_params }
+
+      output = rendering.call(method, "meth", position, context, options, &block)
+      expect(output).to eq :no_params
+    end
+
+    it "raises Curlybars::Error::Render if the helper accepts a not allowed keyword parameter" do
+      method = ->(not_allowed:) { }
+
+      expect do
+        rendering.call(method, "meth", position, context, options, &block)
+      end.to raise_error(Curlybars::Error::Render)
+    end
+
+    it "raises Curlybars::Error::Render if the helper accepts a not allowed parameter" do
+      method = ->(parameter) { }
+
+      expect do
+        rendering.call(method, "meth", position, context, options, &block)
       end.to raise_error(Curlybars::Error::Render)
     end
   end

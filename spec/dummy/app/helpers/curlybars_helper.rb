@@ -3,27 +3,27 @@ module CurlybarsHelper
     "bold#{yield}italic"
   end
 
-  def form(path, opts)
-    "beauty class:#{opts[:class]} foo:#{opts[:foo]} #{yield}"
+  def form(context:, options:)
+    "beauty class:#{options[:class]} foo:#{options[:foo]} #{yield}"
   end
 
-  def date(timestamp, opts)
+  def date(context:, options:)
     <<-HTML.strip_heredoc
-      <time datetime="#{timestamp.strftime('%FT%H:%M:%SZ')}" class="#{opts[:class]}">
-        #{timestamp.strftime('%B%e, %Y %H:%M')}
+      <time datetime="#{context.strftime('%FT%H:%M:%SZ')}" class="#{options[:class]}">
+        #{context.strftime('%B%e, %Y %H:%M')}
       </time>
     HTML
   end
 
-  def asset(file_name)
+  def asset(context:)
     cdn_base_url = "http://cdn.example.com/"
-    "#{cdn_base_url}#{file_name}"
+    "#{cdn_base_url}#{context}"
   end
 
-  def input(field, opts)
-    type = opts.fetch(:title, 'text')
+  def input(context:, options:)
+    type = options.fetch(:title, 'text')
     <<-HTML.strip_heredoc
-      <input name="#{field.name}" id="#{field.id}" type="#{type}" class="#{opts['class']}" value="#{field.value}">
+      <input name="#{context.name}" id="#{context.id}" type="#{type}" class="#{options['class']}" value="#{context.value}">
     HTML
   end
 end

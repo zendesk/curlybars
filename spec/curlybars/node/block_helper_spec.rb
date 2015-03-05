@@ -5,9 +5,12 @@ describe Curlybars::Node::BlockHelper do
   let(:context_position) do
     double(:position, file_name: 'template.hbs', line_number: 1, line_offset: 1)
   end
+  let(:helper_position) do
+    double(:helper_position, file_name: 'template.hbs', line_number: 1, line_offset: 1)
+  end
 
   it "compiles the helper" do
-    helper = double(:helper, path: 'helper')
+    helper = double(:helper, path: 'helper', position: helper_position)
     context = double(:context, compile: "context", path: 'path', position: context_position)
     options = nil
     template = double(:template, compile: 'template')
@@ -16,7 +19,7 @@ describe Curlybars::Node::BlockHelper do
   end
 
   it "compiles the context" do
-    helper = double(:helper, compile: 'helper', path: 'helper')
+    helper = double(:helper, compile: 'helper', path: 'helper', position: helper_position)
     context = double(:context, path: 'path', position: context_position)
     options = nil
     template = double('template', compile: 'template')
@@ -25,7 +28,7 @@ describe Curlybars::Node::BlockHelper do
   end
 
   it "compiles the template" do
-    helper = double(:helper, compile: 'helper', path: 'helper')
+    helper = double(:helper, compile: 'helper', path: 'helper', position: helper_position)
     context = double(:context, compile: 'context', path: 'path', position: context_position)
     options = nil
     template = double(:template)
@@ -34,7 +37,7 @@ describe Curlybars::Node::BlockHelper do
   end
 
   it "compiles non-empty options" do
-    helper = double(:helper, compile: 'helper', path: 'helper')
+    helper = double(:helper, compile: 'helper', path: 'helper', position: helper_position)
     context = double(:context, compile: 'context', path: 'path', position: context_position)
     option = double(:option)
     options = [option]
@@ -44,7 +47,7 @@ describe Curlybars::Node::BlockHelper do
   end
 
   it "accepts options = []" do
-    helper = double(:helper, compile: 'helper', path: 'helper')
+    helper = double(:helper, compile: 'helper', path: 'helper', position: helper_position)
     context = double(:context, compile: 'context', path: 'path', position: context_position)
     options = []
     template = double(:template, compile: 'template')
@@ -53,7 +56,7 @@ describe Curlybars::Node::BlockHelper do
   end
 
   it "accepts options = nil" do
-    helper = double(:helper, compile: 'helper', path: 'helper')
+    helper = double(:helper, compile: 'helper', path: 'helper', position: helper_position)
     context = double(:context, compile: 'context', path: 'path', position: context_position)
     options = nil
     template = double(:template, compile: 'template')

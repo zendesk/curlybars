@@ -19,27 +19,29 @@ module Curlybars
         <<-RUBY
           options = ActiveSupport::HashWithIndifferentAccess.new
           #{compiled_options}
-          result = begin
-              context = #{context.compile}.call
 
-              unless context.nil?
-                context_position = rendering.position(#{context.position.line_number},
-                  #{context.position.line_offset})
-                rendering.check_context_is_presenter(context, #{context.path.inspect},
-                  context_position)
-              end
+          context = #{context.compile}.call
 
-              helper = #{helper.compile}
-              helper.call(*([context, options].first(helper.arity))) do |block_helper_context = context|
-                break '' if block_helper_context.nil?
-                contexts << block_helper_context
-                begin
-                  #{template.compile}
-                ensure
-                  contexts.pop
-                end
-              end
+          unless context.nil?
+            context_position = rendering.position(#{context.position.line_number},
+              #{context.position.line_offset})
+            rendering.check_context_is_presenter(context, #{context.path.inspect},
+              context_position)
+          end
+
+          helper = #{helper.compile}
+          helper_position = rendering.position(#{helper.position.line_number},
+            #{helper.position.line_offset})
+
+          result = rendering.call(helper, #{helper.path.inspect}, helper_position, context, options) do |block_helper_context = context|
+            break '' if block_helper_context.nil?
+            contexts << block_helper_context
+            begin
+              #{template.compile}
+            ensure
+              contexts.pop
             end
+          end
           buffer.safe_concat(result.to_s)
         RUBY
       end
