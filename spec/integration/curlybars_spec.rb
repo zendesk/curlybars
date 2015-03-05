@@ -176,6 +176,64 @@ describe Curlybars do
       end
     end
 
+    describe "validates {{#block_helper context}} ... {{/block_helper}}" do
+      it "without errors in context" do
+        allow(presenter_class).to receive(:dependency_tree) do
+          { context: {}, block_helper: nil }
+        end
+
+        source = <<-HBS
+          {{#block_helper context}} ... {{/block_helper}}
+        HBS
+
+        errors = Curlybars.validate(presenter_class, source)
+
+        expect(errors).to be_empty
+      end
+
+      it "with errors in context" do
+        allow(presenter_class).to receive(:dependency_tree) do
+          { context: {}, block_helper: nil }
+        end
+
+        source = <<-HBS
+          {{#block_helper no_a_presenter}} ... {{/block_helper}}
+        HBS
+
+        errors = Curlybars.validate(presenter_class, source)
+
+        expect(errors).not_to be_empty
+      end
+
+      it "without errors in block_helper" do
+        allow(presenter_class).to receive(:dependency_tree) do
+          { block_helper: nil, context: {} }
+        end
+
+        source = <<-HBS
+          {{#block_helper context}} ... {{/block_helper}}
+        HBS
+
+        errors = Curlybars.validate(presenter_class, source)
+
+        expect(errors).to be_empty
+      end
+
+      it "with errors in block_helper" do
+        allow(presenter_class).to receive(:dependency_tree) do
+          { block_helper: {}, context: {} }
+        end
+
+        source = <<-HBS
+          {{#block_helper no_a_presenter}} ... {{/block_helper}}
+        HBS
+
+        errors = Curlybars.validate(presenter_class, source)
+
+        expect(errors).not_to be_empty
+      end
+    end
+
     describe "validates nested templates" do
       it "without errors" do
         allow(presenter_class).to receive(:dependency_tree) do
