@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.rubygems_version = '1.3.5'
 
   s.name              = 'curlybars'
-  s.version           = '0.3.0'
+  s.version           = '0.4.0'
   s.date              = '2015-03-05'
 
   s.summary     = "Create your views using Handlebars templates!"

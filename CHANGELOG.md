@@ -1,5 +1,17 @@
 ### Unreleased
 
+### Curlybars 0.4.0 (March 5, 2015)
+
+* Introduce validation api
+
+  Mauro Codella
+
+### Curlybars 0.3.0 (March 5, 2015)
+
+* Enforce helpers and block helpers signature
+
+  Mauro Codella
+
 ### Curlybars 0.2.1 (March 3, 2015)
 
 * Permit to override default context in block helpers
