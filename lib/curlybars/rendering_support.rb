@@ -47,7 +47,7 @@ module Curlybars
       parameters = helper.parameters
 
       unallowed_parameters = parameters.reject do |type, name|
-        type == :keyreq && ALLOWED_KEYWORD_PARAMETERS.include?(name)
+        [:keyreq, :key].include?(type) && ALLOWED_KEYWORD_PARAMETERS.include?(name)
       end
 
       if unallowed_parameters.any?

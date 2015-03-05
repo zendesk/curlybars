@@ -91,6 +91,13 @@ describe Curlybars::RenderingSupport do
       expect(output).to eq [context, options]
     end
 
+    it "tollerates default values on keyword parameters" do
+      method = ->(context: nil, options: {}) { [context, options] }
+
+      output = rendering.call(method, "meth", position, context, options, &block)
+      expect(output).to eq [context, options]
+    end
+
     it "passes context to a helper that accepts only context" do
       method = ->(context:) { [context] }
 
