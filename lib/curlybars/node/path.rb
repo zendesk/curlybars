@@ -11,12 +11,12 @@ module Curlybars
       end
 
       def validate(base_tree, check_type: :anything)
-        resolve_on(base_tree, check_type: check_type)
+        resolve_and_check!(base_tree, check_type: check_type)
       rescue Curlybars::Error::Validate => path_error
         path_error
       end
 
-      def resolve_on(base_tree, check_type: :anything)
+      def resolve_and_check!(base_tree, check_type: :anything)
         value = path.split(/\./).map(&:to_sym).inject(base_tree) do |sub_tree, step|
           if !sub_tree.is_a?(Hash)
             message = "not possible to access `#{step}` in `#{path}`"
