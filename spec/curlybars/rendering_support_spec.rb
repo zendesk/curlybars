@@ -85,50 +85,73 @@ describe Curlybars::RenderingSupport do
     let(:options) { { key: :value } }
 
     it "passes context and options to a helper that accepts both" do
-      method = ->(context:, options:) { [context, options] }
+      method = ->(context, options) { [context, options] }
 
       output = rendering.call(method, "meth", position, context, options, &block)
       expect(output).to eq [context, options]
     end
 
-    it "tollerates default values on keyword parameters" do
-      method = ->(context: nil, options: {}) { [context, options] }
-
-      output = rendering.call(method, "meth", position, context, options, &block)
-      expect(output).to eq [context, options]
-    end
-
-    it "passes context to a helper that accepts only context" do
-      method = ->(context:) { [context] }
+    it "allows options to be ignored" do
+      method = ->(context, _) { [context] }
 
       output = rendering.call(method, "meth", position, context, options, &block)
       expect(output).to eq [context]
     end
 
-    it "passes options to a helper that accepts only options" do
-      method = ->(options:) { [options] }
+    it "allows context to be ignored" do
+      method = ->(_, options) { [options] }
 
       output = rendering.call(method, "meth", position, context, options, &block)
       expect(output).to eq [options]
     end
 
-    it "passes nothing to a helper with no parameters" do
-      method = ->() { :no_params }
+    it "allows to ignore both context and options" do
+      method = ->(_, _) { :nothing }
 
       output = rendering.call(method, "meth", position, context, options, &block)
-      expect(output).to eq :no_params
+      expect(output).to eq :nothing
     end
 
-    it "raises Curlybars::Error::Render if the helper accepts a not allowed keyword parameter" do
-      method = ->(not_allowed:) { }
+    it "allows to accept only one parameter, that will be the context" do
+      method = ->(context) { [context] }
+
+      output = rendering.call(method, "meth", position, context, options, &block)
+      expect(output).to eq [context]
+    end
+
+    it "allows to have no parameters at all" do
+      method = ->() { :nothing  }
+
+      output = rendering.call(method, "meth", position, context, options, &block)
+      expect(output).to eq :nothing
+    end
+
+    it "raises Curlybars::Error::Render if the helper has more than 2 parameters" do
+      method = ->(one, two, three) { }
 
       expect do
         rendering.call(method, "meth", position, context, options, &block)
       end.to raise_error(Curlybars::Error::Render)
     end
 
-    it "raises Curlybars::Error::Render if the helper accepts a not allowed parameter" do
-      method = ->(parameter) { }
+    it "raises Curlybars::Error::Render if the helper has at least an optional parameter" do
+      method = ->(one, two = :optional) { }
+
+      expect do
+        rendering.call(method, "meth", position, context, options, &block)
+      end.to raise_error(Curlybars::Error::Render)
+    end
+
+    it "raises Curlybars::Error::Render if the helper has at least a keyword parameter" do
+      method = ->(one, keyword:) { }
+
+      expect do
+        rendering.call(method, "meth", position, context, options, &block)
+      end.to raise_error(Curlybars::Error::Render)
+    end
+
+    it "raises Curlybars::Error::Render if the helper has at least an optional keyword parameter" do
+      method = ->(one, keyword: :optional) { }
 
       expect do
         rendering.call(method, "meth", position, context, options, &block)
