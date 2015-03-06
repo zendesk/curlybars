@@ -3,15 +3,12 @@ require 'curlybars/error/compile'
 module Curlybars
   module Node
     BlockHelper = Struct.new(:helper, :context, :options, :template, :helperclose, :position) do
-      def initialize(helper, context, options, template, helperclose, position)
+      def compile
         if helper.path != helperclose.path
           message = "block `#{helper.path}` cannot be closed by `#{helperclose.path}`"
           raise Curlybars::Error::Compile.new('closing_tag_mismatch', message, helperclose.position)
         end
-        super
-      end
 
-      def compile
         compiled_options = options.map do |option|
           "options.merge!(#{option.compile})"
         end.join("\n")
@@ -47,6 +44,11 @@ module Curlybars
       end
 
       def validate(dependency_tree)
+        if helper.path != helperclose.path
+          message = "block `#{helper.path}` cannot be closed by `#{helperclose.path}`"
+          raise Curlybars::Error::Validate.new('closing_tag_mismatch', message, helperclose.position)
+        end
+
         sub_tree = context.resolve_and_check!(dependency_tree, check_type: :presenter)
         [
           helper.validate(dependency_tree, check_type: :leaf),
