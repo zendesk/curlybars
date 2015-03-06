@@ -11,7 +11,7 @@ module Curlybars
         <<-RUBY
           options = ActiveSupport::HashWithIndifferentAccess.new
           #{compiled_options}
-          context = #{(context || DefaultContext.new).compile}.call
+          context = #{context.compile}.call
           helper = #{helper.compile}
           helper_position = rendering.position(#{helper.position.line_number},
             #{helper.position.line_offset})
@@ -28,19 +28,9 @@ module Curlybars
       def validate(dependency_tree)
         [
           helper.validate(dependency_tree, check_type: :leaf),
-          (context || DefaultContext.new).validate(dependency_tree),
+          context.validate(dependency_tree),
           options.map { |option| option.validate(dependency_tree) }
         ]
-      end
-
-      class DefaultContext
-        def compile
-          "->{}"
-        end
-
-        def validate(base_tree)
-          []
-        end
       end
     end
   end

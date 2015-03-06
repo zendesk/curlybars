@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
 
   s.name              = 'curlybars'
   s.version           = '0.4.2'
-  s.date              = '2015-03-05'
+  s.date              = '2015-03-06'
 
   s.summary     = "Create your views using Handlebars templates!"
   s.description = "A view layer for your Rails apps that separates
