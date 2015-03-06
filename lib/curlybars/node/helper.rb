@@ -17,8 +17,7 @@ module Curlybars
             #{helper.position.line_offset})
 
           result = rendering.call(helper, #{helper.path.inspect}, helper_position, context, options) do
-            # For consistency, the block must return empty
-            # string in case it is yielded.
+            # A helper always yields an empty template
             ''
           end
           buffer.safe_concat(result.to_s)
