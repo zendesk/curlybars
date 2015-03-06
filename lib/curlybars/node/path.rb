@@ -12,6 +12,7 @@ module Curlybars
 
       def validate(base_tree, check_type: :anything)
         resolve_and_check!(base_tree, check_type: check_type)
+        []
       rescue Curlybars::Error::Validate => path_error
         path_error
       end
