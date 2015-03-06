@@ -1,5 +1,12 @@
 ### Unreleased
 
+### Curlybars 0.4.4 (March 6, 2015)
+
+* Various fixes
+
+  Libo Cannici
+  Mauro Codella
+
 ### Curlybars 0.4.3 (March 6, 2015)
 
 * Various fixes in validation logic
