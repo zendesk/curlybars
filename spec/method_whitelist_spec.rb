@@ -39,11 +39,11 @@ describe Curlybars::MethodWhitelist do
 
   describe "inheritance and composition" do
     let(:base_presenter) do
-      link_presenter = Class.new
+      stub_const("LinkPresenter", Class.new)
 
       Class.new do
         extend Curlybars::MethodWhitelist
-        allow_methods :cook, link: link_presenter
+        allow_methods :cook, link: LinkPresenter
       end
     end
 
@@ -57,16 +57,27 @@ describe Curlybars::MethodWhitelist do
     let(:post_presenter) do
       Class.new(base_presenter) do
         extend Curlybars::MethodWhitelist
+        include Helpers
         allow_methods :wave
       end
     end
 
     before do
-      post_presenter.include helpers
+      stub_const("Helpers", helpers)
     end
 
     it "should allow methods from inheritance and composition" do
       expect(post_presenter.new.allowed_methods).to eq([:cook, :link, :form, :wave])
+    end
+
+    it "should return a dependency_tree with inheritance and composition" do
+      expect(post_presenter.dependency_tree).
+        to eq(
+          cook: nil,
+          link: LinkPresenter,
+          form: nil,
+          wave: nil
+        )
     end
   end
 
