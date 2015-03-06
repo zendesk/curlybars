@@ -10,7 +10,7 @@ module Curlybars
           rendering.check_context_is_array_of_presenters(compiled_path, #{path.path.inspect}, position)
 
           compiled_path.each do |presenter|
-            contexts << presenter
+            contexts.push(presenter)
             begin
               buffer.safe_concat(#{template.compile})
             ensure

@@ -35,7 +35,7 @@ module Curlybars
 
           result = rendering.call(helper, #{helper.path.inspect}, helper_position, context, options) do |block_helper_context = context|
             break '' if block_helper_context.nil?
-            contexts << block_helper_context
+            contexts.push(block_helper_context)
             begin
               #{template.compile}
             ensure
