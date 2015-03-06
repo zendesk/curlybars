@@ -18,9 +18,22 @@ module Curlybars
       end
 
       define_singleton_method(:methods_schema) do
-        methods.each_with_object({}) do |method, memo|
+        schema = methods.each_with_object({}) do |method, memo|
           memo[method] = nil
-        end.merge(methods_with_type)
+        end
+
+        schema.merge!(methods_with_type)
+
+        # Inheritance
+        schema.merge!(super()) if defined?(super)
+
+        # Included modules
+        included_modules.each do |mod|
+          next unless mod.respond_to?(:methods_schema)
+          schema.merge!(mod.methods_schema)
+        end
+
+        schema
       end
 
       define_singleton_method(:dependency_tree) do
