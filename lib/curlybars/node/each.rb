@@ -21,7 +21,8 @@ module Curlybars
       end
 
       def validate(base_tree)
-        sub_tree = path.resolve_and_check!(base_tree, check_type: :presenter_collection)
+        resolved = path.resolve_and_check!(base_tree, check_type: :presenter_collection)
+        sub_tree = resolved.first
         template.validate(sub_tree)
       rescue Curlybars::Error::Validate => path_error
         path_error
