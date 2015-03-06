@@ -66,7 +66,7 @@ describe Curlybars::Node::BlockHelper do
     helperclose = double(:helper, path: 'helperclose', position: close_position)
 
     expect do
-      Curlybars::Node::BlockHelper.new(helper, nil, nil, nil, helperclose, position)
+      Curlybars::Node::BlockHelper.new(helper, nil, nil, nil, helperclose, position).compile
     end.to raise_error(Curlybars::Error::Compile)
   end
 end
