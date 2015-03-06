@@ -74,7 +74,7 @@ You can define custom helpers as normal method in your presenter.
 
 Example:
 ```hbs
-{{ excerpt article.body max=400}}
+{{excerpt article.body max=400}}
 ```
 
 ```ruby
@@ -130,7 +130,7 @@ Example:
 ```
 
 ```ruby
-def form(context:, options:)
+def form(context, options)
   class = options[:class]
   action = context.action
 
