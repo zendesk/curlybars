@@ -8,32 +8,30 @@ describe Curlybars::Node::BlockHelper do
   let(:helper_position) do
     double(:helper_position, file_name: 'template.hbs', line_number: 1, line_offset: 1)
   end
+  let(:empty_options) { {} }
 
   it "compiles the helper" do
     helper = double(:helper, path: 'helper', position: helper_position)
     context = double(:context, compile: "context", path: 'path', position: context_position)
-    options = nil
     template = double(:template, compile: 'template')
     expect(helper).to receive(:compile)
-    Curlybars::Node::BlockHelper.new(helper, context, options, template, helper, position).compile
+    Curlybars::Node::BlockHelper.new(helper, context, empty_options, template, helper, position).compile
   end
 
   it "compiles the context" do
     helper = double(:helper, compile: 'helper', path: 'helper', position: helper_position)
     context = double(:context, path: 'path', position: context_position)
-    options = nil
     template = double('template', compile: 'template')
     expect(context).to receive(:compile)
-    Curlybars::Node::BlockHelper.new(helper, context, options, template, helper, position).compile
+    Curlybars::Node::BlockHelper.new(helper, context, empty_options, template, helper, position).compile
   end
 
   it "compiles the template" do
     helper = double(:helper, compile: 'helper', path: 'helper', position: helper_position)
     context = double(:context, compile: 'context', path: 'path', position: context_position)
-    options = nil
     template = double(:template)
     expect(template).to receive(:compile)
-    Curlybars::Node::BlockHelper.new(helper, context, options, template, helper, position).compile
+    Curlybars::Node::BlockHelper.new(helper, context, empty_options, template, helper, position).compile
   end
 
   it "compiles non-empty options" do
@@ -49,19 +47,17 @@ describe Curlybars::Node::BlockHelper do
   it "accepts options = []" do
     helper = double(:helper, compile: 'helper', path: 'helper', position: helper_position)
     context = double(:context, compile: 'context', path: 'path', position: context_position)
-    options = []
     template = double(:template, compile: 'template')
     expect(template).to receive(:compile)
-    Curlybars::Node::BlockHelper.new(helper, context, options, template, helper, position).compile
+    Curlybars::Node::BlockHelper.new(helper, context, empty_options, template, helper, position).compile
   end
 
   it "accepts options = nil" do
     helper = double(:helper, compile: 'helper', path: 'helper', position: helper_position)
     context = double(:context, compile: 'context', path: 'path', position: context_position)
-    options = nil
     template = double(:template, compile: 'template')
     expect(template).to receive(:compile)
-    Curlybars::Node::BlockHelper.new(helper, context, options, template, helper, position).compile
+    Curlybars::Node::BlockHelper.new(helper, context, empty_options, template, helper, position).compile
   end
 
   it "raises an IncorrectEndingError when closing is not matching opening" do

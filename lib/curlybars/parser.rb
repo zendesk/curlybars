@@ -19,12 +19,9 @@ require 'curlybars/node/helper'
 require 'curlybars/node/block_helper'
 require 'curlybars/node/option'
 require 'curlybars/node/partial'
-require 'curlybars/node/empty'
 
 module Curlybars
   class Parser < RLTK::Parser
-    EMPTY = Curlybars::Node::Empty.new
-
     start :root
 
     production(:root, 'template?') { |template| Node::Root.new(template || EMPTY, pos(0)) }
@@ -42,11 +39,11 @@ module Curlybars
         'START HASH .path .path .options? END
           .template?
         START SLASH .path END') do |helper, context, options, template, helperclose|
-        Node::BlockHelper.new(helper, context, options, template || EMPTY, helperclose, pos(0))
+        Node::BlockHelper.new(helper, context, options || [], template || EMPTY, helperclose, pos(0))
       end
 
       clause('START .path .expression? .options? END') do |path, context, options|
-        Node::Helper.new(path, context, options, pos(0))
+        Node::Helper.new(path, context || VOID, options || [], pos(0))
       end
 
       clause(
@@ -127,5 +124,25 @@ module Curlybars
     production(:path, 'PATH') { |path| Node::Path.new(path, pos(0)) }
 
     finalize
+
+    VOID = Class.new do
+      def compile
+        "->{}"
+      end
+
+      def validate(base_tree)
+        # Nothing to validate here.
+      end
+    end.new
+
+    EMPTY = Class.new do
+      def compile
+        ''.inspect
+      end
+
+      def validate(base_tree)
+        # Nothing to validate here.
+      end
+    end.new
   end
 end

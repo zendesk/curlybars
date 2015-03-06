@@ -12,7 +12,7 @@ module Curlybars
       end
 
       def compile
-        compiled_options = (options || []).map do |option|
+        compiled_options = options.map do |option|
           "options.merge!(#{option.compile})"
         end.join("\n")
 
@@ -35,7 +35,7 @@ module Curlybars
 
           result = rendering.call(helper, #{helper.path.inspect}, helper_position, context, options) do |block_helper_context = context|
             break '' if block_helper_context.nil?
-            contexts << block_helper_context
+            contexts.push(block_helper_context)
             begin
               #{template.compile}
             ensure
@@ -50,7 +50,7 @@ module Curlybars
         sub_tree = context.resolve_and_check!(dependency_tree, check_type: :presenter)
         [
           helper.validate(dependency_tree, check_type: :leaf),
-          (options || []).map { |option| option.validate(dependency_tree) },
+          options.map { |option| option.validate(dependency_tree) },
           template.validate(sub_tree)
         ]
       rescue Curlybars::Error::Validate => path_error

@@ -9,7 +9,7 @@ module Curlybars
           position = rendering.position(#{position.line_number}, #{position.line_offset})
           rendering.check_context_is_presenter(compiled_path, #{path.path.inspect}, position)
 
-          contexts << compiled_path
+          contexts.push(compiled_path)
           begin
             buffer.safe_concat(#{template.compile})
           ensure
