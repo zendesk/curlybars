@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.rubygems_version = '1.3.5'
 
   s.name              = 'curlybars'
-  s.version           = '0.4.2'
+  s.version           = '0.4.3'
   s.date              = '2015-03-06'
 
   s.summary     = "Create your views using Handlebars templates!"
@@ -62,7 +62,6 @@ Gem::Specification.new do |s|
     lib/curlybars/node/boolean.rb
     lib/curlybars/node/each.rb
     lib/curlybars/node/each_else.rb
-    lib/curlybars/node/empty.rb
     lib/curlybars/node/helper.rb
     lib/curlybars/node/if.rb
     lib/curlybars/node/if_else.rb

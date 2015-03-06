@@ -1,5 +1,11 @@
 ### Unreleased
 
+### Curlybars 0.4.3 (March 6, 2015)
+
+* Various fixes in validation logic
+
+  Mauro Codella
+
 ### Curlybars 0.4.2 (March 5, 2015)
 
 * Relax helper signature constraints
