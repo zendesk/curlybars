@@ -1,5 +1,11 @@
 ### Unreleased
 
+### Curlybars 0.4.5 (March 6, 2015)
+
+* Fixes namespacing problem
+
+  Libo Cannici
+
 ### Curlybars 0.4.4 (March 6, 2015)
 
 * Various fixes
