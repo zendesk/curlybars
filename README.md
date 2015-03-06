@@ -50,6 +50,7 @@ There are 2 kinds of presenters in Curlybars:
  - {{> partial}}
  - {{! … }}
  - {{!-- … --}}
+ - {{~ … ~}}
 
 #### Curlybars::Presenter
 They are like `Curly::Presenter`s with some additions, and they are associated to views that are automatically looked up using the filename and the extension of the view file.
