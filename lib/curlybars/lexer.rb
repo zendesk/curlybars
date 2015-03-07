@@ -30,7 +30,7 @@ module Curlybars
     r(/([A-Za-z_]\w*)\s*=/, :curly) { |key| [:KEY, match[1]] }
     r(/true/, :curly) { |string| [:BOOLEAN, true] }
     r(/false/, :curly) { |string| [:BOOLEAN, false] }
-    r(/[A-Za-z_][\w\.]*\??/, :curly) { |name| [:PATH, name] }
+    r(/(..\/)*[A-Za-z_][\w\.]*\??/, :curly) { |name| [:PATH, name] }
     r(/\d+/, :curly) { |integer| [:INTEGER, integer.to_i] }
     r(/'(.*?)'/m, :curly) { |string| [:STRING, match[1]] }
     r(/"(.*?)"/m, :curly) { |string| [:STRING, match[1]] }

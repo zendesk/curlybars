@@ -332,6 +332,26 @@ describe Curlybars::Lexer do
     end
   end
 
+  describe "can lex paths with or without leading `../`s" do
+    it "`path` is lexed as a path" do
+      expect(lex('{{path}}')).to produce [:START, :PATH, :END]
+    end
+
+    it "`../path` is lexed as a path" do
+      expect(lex('{{../path}}')).to produce [:START, :PATH, :END]
+    end
+
+    it "`../../path` is lexed as a path" do
+      expect(lex('{{../../path}}')).to produce [:START, :PATH, :END]
+    end
+
+    it "`path/../` raises an error" do
+      expect do
+        lex('{{path/../}}')
+      end.to raise_error(RLTK::LexingError)
+    end
+  end
+
   describe "outside a curlybar context" do
     it "`--}}` is lexed as plain text" do
       expect(lex('--}}')).to produce [:TEXT]
