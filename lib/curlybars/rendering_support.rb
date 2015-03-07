@@ -29,10 +29,17 @@ module Curlybars
     end
 
     def path(path, position)
-      chain = path.split(/\./)
+      path_split_by_slashes = path.split('/')
+      backward_steps_on_contexts = path_split_by_slashes.count - 1
+      base_context_position = [contexts.length - backward_steps_on_contexts, 0].max
+      base_context_index = base_context_position - 1
+      base_context = contexts[base_context_index]
+
+      dotted_path_side = path_split_by_slashes.last
+      chain = dotted_path_side.split('.')
       method_to_return = chain.pop
 
-      resolved = chain.inject(contexts.last) do |context, meth|
+      resolved = chain.inject(base_context) do |context, meth|
         raise_if_not_traversable(context, meth, position)
         context.public_send(meth)
       end
@@ -75,8 +82,8 @@ module Curlybars
 
     def check_context_allows_method(context, meth, position)
       return if context.allows_method?(meth.to_sym)
-      message = "`#{meth}` is not available."
-      message += "Add `allow_methods :#{meth}` to #{context.class} to allow this path"
+      message = "`#{meth}` is not available - "
+      message += "add `allow_methods :#{meth}` to #{context.class} to allow this path"
       raise Curlybars::Error::Render.new('path_not_allowed', message, position)
     end
 
