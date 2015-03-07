@@ -15,12 +15,12 @@ describe "{{path}}" do
   it "{{../path}} is evaluated on the second to last context in the stack" do
     template = Curlybars.compile(<<-HBS)
       {{#with user.avatar}}
-        {{../method_in_root_presenter}}
+        {{../context}}
       {{/with}}
     HBS
 
     expect(eval(template)).to resemble(<<-HTML)
-      method_in_root_presenter
+      root_context
     HTML
   end
 
@@ -28,25 +28,41 @@ describe "{{path}}" do
     template = Curlybars.compile(<<-HBS)
       {{#with user}}
         {{#with avatar}}
-          {{../../method_in_root_presenter}}
+          {{../../context}}
         {{/with}}
       {{/with}}
     HBS
 
     expect(eval(template)).to resemble(<<-HTML)
-      method_in_root_presenter
+      root_context
+    HTML
+  end
+
+  it "{{../path}} uses the right context, even when using the same name" do
+    template = Curlybars.compile(<<-HBS)
+      {{#with user}}
+        {{#with avatar}}
+          {{../context}}
+        {{/with}}
+        {{../context}}
+      {{/with}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+      user_context
+      root_context
     HTML
   end
 
   it "a path with more `../` than the stack size will resolve to the root presenter" do
     template = Curlybars.compile(<<-HBS)
-      {{method_in_root_presenter}}
-      {{../method_in_root_presenter}}
-      {{../../method_in_root_presenter}}
+      {{context}}
+      {{../context}}
+      {{../../context}}
     HBS
 
     expect(eval(template)).to resemble(<<-HTML)
-      method_in_root_presenter
+      root_context
     HTML
   end
 
