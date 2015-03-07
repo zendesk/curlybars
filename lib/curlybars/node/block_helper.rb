@@ -43,17 +43,23 @@ module Curlybars
         RUBY
       end
 
-      def validate(dependency_tree)
+      def validate(trees)
         if helper.path != helperclose.path
           message = "block `#{helper.path}` cannot be closed by `#{helperclose.path}`"
           raise Curlybars::Error::Validate.new('closing_tag_mismatch', message, helperclose.position)
         end
 
-        sub_tree = context.resolve_and_check!(dependency_tree, check_type: :presenter)
+        sub_tree = context.resolve_and_check!(trees, check_type: :presenter)
+        template_errors = begin
+          trees.push(sub_tree)
+          template.validate(trees)
+        ensure
+          trees.pop
+        end
         [
-          helper.validate(dependency_tree, check_type: :leaf),
-          options.map { |option| option.validate(dependency_tree) },
-          template.validate(sub_tree)
+          template_errors,
+          helper.validate(trees, check_type: :leaf),
+          options.map { |option| option.validate(trees) }
         ]
       rescue Curlybars::Error::Validate => path_error
         path_error

@@ -11,8 +11,8 @@ module Curlybars
         RUBY
       end
 
-      def validate(dependency_tree)
-        item.validate(dependency_tree)
+      def validate(trees)
+        item.validate(trees)
       end
     end
   end
