@@ -31,7 +31,10 @@ module Curlybars
     def path(path, position)
       path_split_by_slashes = path.split('/')
       backward_steps_on_contexts = path_split_by_slashes.count - 1
-      base_context_position = [contexts.length - backward_steps_on_contexts, 0].max
+      base_context_position = contexts.length - backward_steps_on_contexts
+
+      return -> {} unless base_context_position > 0
+
       base_context_index = base_context_position - 1
       base_context = contexts[base_context_index]
 
@@ -41,7 +44,9 @@ module Curlybars
 
       resolved = chain.inject(base_context) do |context, meth|
         raise_if_not_traversable(context, meth, position)
-        context.public_send(meth)
+        outcome = context.public_send(meth)
+        return -> {} if outcome.nil?
+        outcome
       end
 
       raise_if_not_traversable(resolved, method_to_return, position)

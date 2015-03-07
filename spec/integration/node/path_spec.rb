@@ -47,8 +47,6 @@ describe "{{path}}" do
 
     expect(eval(template)).to resemble(<<-HTML)
       method_in_root_presenter
-      method_in_root_presenter
-      method_in_root_presenter
     HTML
   end
 

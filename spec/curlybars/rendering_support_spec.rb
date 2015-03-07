@@ -78,6 +78,22 @@ describe Curlybars::RenderingSupport do
         rendering.path('sub.method', rendering.position(0, 1))
       end.to raise_error(Curlybars::Error::Render)
     end
+
+    it "returns a method that returns nil, if nil is returned from any method in the chain (except the latter)" do
+      allow_all_methods(presenter)
+      allow(presenter).to receive(:returns_nil) { }
+
+      outcome = rendering.path('returns_nil.another_method', rendering.position(0, 1)).call
+      expect(outcome).to be_nil
+    end
+
+    it "returns a method that returns nil, if `../`` goes too deep in the stack" do
+      allow_all_methods(presenter)
+      allow(presenter).to receive(:returns_nil) { }
+
+      outcome = rendering.path('../too_deep', rendering.position(0, 1)).call
+      expect(outcome).to be_nil
+    end
   end
 
   describe "#call" do
