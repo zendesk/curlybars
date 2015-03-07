@@ -12,7 +12,9 @@ module Curlybars
       end
 
       def validate(trees)
-        item.validate(trees)
+        catch(:skip_item_validation) do
+          item.validate(trees)
+        end
       end
     end
   end

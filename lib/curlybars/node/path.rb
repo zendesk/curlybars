@@ -22,6 +22,8 @@ module Curlybars
         backward_steps_on_trees = path_split_by_slashes.count - 1
         base_tree_position = trees.length - backward_steps_on_trees
 
+        throw :skip_item_validation unless base_tree_position > 0
+
         base_tree_index = base_tree_position - 1
         base_tree = trees[base_tree_index]
 
