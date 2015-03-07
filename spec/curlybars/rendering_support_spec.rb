@@ -79,6 +79,37 @@ describe Curlybars::RenderingSupport do
       end.to raise_error(Curlybars::Error::Render)
     end
 
+    it "refers to the second to last presenter in the stack when using `../`" do
+      sub = double(:sub_presenter)
+      allow_all_methods(sub)
+      allow(sub).to receive(:method) { :sub_method }
+
+      allow_all_methods(presenter)
+      allow(presenter).to receive(:method) { :root_method }
+
+      contexts.push(sub)
+
+      expect(rendering.path('../method', rendering.position(0, 1))).to eq :root_method
+    end
+
+    it "refers to the third to last presenter in the stack when using `../../`" do
+      sub_sub = double(:sub_presenter)
+      allow_all_methods(sub_sub)
+      allow(sub_sub).to receive(:method) { :sub_sub_method }
+
+      sub = double(:sub_presenter)
+      allow_all_methods(sub)
+      allow(sub).to receive(:method) { :sub_method }
+
+      allow_all_methods(presenter)
+      allow(presenter).to receive(:method) { :root_method }
+
+      contexts.push(sub)
+      contexts.push(sub_sub)
+
+      expect(rendering.path('../../method', rendering.position(0, 1))).to eq :root_method
+    end
+
     it "returns a method that returns nil, if nil is returned from any method in the chain (except the latter)" do
       allow_all_methods(presenter)
       allow(presenter).to receive(:returns_nil) { }
