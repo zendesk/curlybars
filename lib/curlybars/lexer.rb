@@ -4,6 +4,8 @@ module Curlybars
   class Lexer < RLTK::Lexer
     match_first
 
+    IDENTIFIER = '[A-Za-z_]\w*'
+
     r(/\\\z/) { |text| [:TEXT, '\\'] }
     r(/\\{/) { |text| [:TEXT, '{'] }
 
@@ -22,15 +24,15 @@ module Curlybars
     r(/\//, :curly) { :SLASH }
     r(/>/, :curly) { :GT }
 
-    r(/if(?![A-Za-z_])/, :curly) { :IF }
-    r(/unless(?![A-Za-z_])/, :curly) { :UNLESS }
-    r(/each(?![A-Za-z_])/, :curly) { :EACH }
-    r(/with(?![A-Za-z_])/, :curly) { :WITH }
-    r(/else(?![A-Za-z_])/, :curly) { :ELSE }
-    r(/([A-Za-z_]\w*)\s*=/, :curly) { |key| [:KEY, match[1]] }
+    r(/if(?=\s|})/, :curly) { :IF }
+    r(/unless(?=\s|})/, :curly) { :UNLESS }
+    r(/each(?=\s|})/, :curly) { :EACH }
+    r(/with(?=\s|})/, :curly) { :WITH }
+    r(/else(?=\s|})/, :curly) { :ELSE }
+    r(/(#{IDENTIFIER}*)\s*=/, :curly) { |key| [:KEY, match[1]] }
     r(/true/, :curly) { |string| [:BOOLEAN, true] }
     r(/false/, :curly) { |string| [:BOOLEAN, false] }
-    r(/(..\/)*[A-Za-z_][\w\.]*\??/, :curly) { |name| [:PATH, name] }
+    r(/(..\/)*(#{IDENTIFIER}\.)*#{IDENTIFIER}\??/, :curly) { |name| [:PATH, name] }
     r(/\d+/, :curly) { |integer| [:INTEGER, integer.to_i] }
     r(/'(.*?)'/m, :curly) { |string| [:STRING, match[1]] }
     r(/"(.*?)"/m, :curly) { |string| [:STRING, match[1]] }
