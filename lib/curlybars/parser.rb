@@ -25,7 +25,7 @@ module Curlybars
     start :root
 
     production(:root, 'template?') { |template| Node::Root.new(template || EMPTY, pos(0)) }
-    production(:template, 'items') { |items| Node::Template.new(items, pos(0)) }
+    production(:template, 'items') { |items| Node::Template.new(items || [], pos(0)) }
 
     production(:items) do
       clause('items item') { |items, item| items << Node::Item.new(item) }

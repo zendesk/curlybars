@@ -12,9 +12,4 @@ describe Curlybars::Node::Template do
     items = []
     Curlybars::Node::Template.new(items, position).compile
   end
-
-  it "tolerates items = nil" do
-    items = nil
-    Curlybars::Node::Template.new(items, position).compile
-  end
 end
