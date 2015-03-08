@@ -35,7 +35,7 @@ There are 2 kinds of presenters in Curlybars:
  - {{#block_helper context}} … {{/block_helper}}
 
 #### The Language
-- A path is an allowed and traversable chain of methods like movie.director
+- A path is an allowed and traversable chain of methods, like `movie.director`
 - An expression is either a path, or a literal like a string, integer or boolean.
 - Curlybars understands this Handlebars language subset:
  - {{helper [expression] [key=expression …]}}
@@ -82,7 +82,7 @@ module HandlebarsHelpers
   extend Curlybars::MethodWhitelist
   allow_methods :excerpt
 
-  def excerpt(context:, options:)
+  def excerpt(context, options)
     max = options.fetch(:max, 120)
     context.to_s.truncate(max)
   end
@@ -91,7 +91,7 @@ end
 
 It's a good practice to put your helpers into a module that you will include in different presenter, but you can also just put them as method of your presenter.
 
-To implement the helper, we need in the Presenter one of the following signatures:
+To implement the helper, one of the following signatures is needed:
 ```ruby
 def helper()
 def helper(context)
@@ -131,10 +131,10 @@ Example:
 
 ```ruby
 def form(context, options)
-  class = options[:class]
+  klass = options[:class]
   action = context.action
 
-  "<form class='#{class}' action='#{action}'>#{yield}</form>"
+  "<form class='#{klass}' action='#{action}'>#{yield}</form>"
 end
 ```
 
