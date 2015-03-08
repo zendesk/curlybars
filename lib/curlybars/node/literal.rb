@@ -1,9 +1,9 @@
 module Curlybars
   module Node
-    Integer = Struct.new(:integer) do
+    Literal = Struct.new(:literal) do
       def compile
         <<-RUBY
-          ->() { #{integer} }
+          ->() { #{literal} }
         RUBY
       end
 
