@@ -5,6 +5,7 @@ module Curlybars
         <<-RUBY
           contexts = [presenter]
           rendering = Curlybars::RenderingSupport.new(contexts, #{position.file_name.inspect})
+          variables = [{}]
           #{template.compile}
         RUBY
       end

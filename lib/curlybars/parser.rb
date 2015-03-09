@@ -12,11 +12,13 @@ require 'curlybars/node/each'
 require 'curlybars/node/each_else'
 require 'curlybars/node/path'
 require 'curlybars/node/literal'
+require 'curlybars/node/variable'
 require 'curlybars/node/with'
 require 'curlybars/node/helper'
 require 'curlybars/node/block_helper'
 require 'curlybars/node/option'
 require 'curlybars/node/partial'
+require 'curlybars/node/output'
 
 module Curlybars
   class Parser < RLTK::Parser
@@ -38,6 +40,10 @@ module Curlybars
           .template?
         START SLASH .path END') do |helper, context, options, template, helperclose|
         Node::BlockHelper.new(helper, context, options || [], template || EMPTY, helperclose, pos(0))
+      end
+
+      clause('START .value END') do |value|
+        Node::Output.new(value)
       end
 
       clause('START .path .expression? .options? END') do |path, context, options|
@@ -113,8 +119,13 @@ module Curlybars
     end
 
     production(:expression) do
+      clause('value') { |value| value }
+      clause('path') { |path| path }
+    end
+
+    production(:value) do
       clause('LITERAL') { |literal| Node::Literal.new(literal) }
-      clause('path')  { |path| path }
+      clause('VARIABLE') { |variable| Node::Variable.new(variable) }
     end
 
     production(:path, 'PATH') { |path| Node::Path.new(path, pos(0)) }
@@ -126,7 +137,7 @@ module Curlybars
         "->{}"
       end
 
-      def validate(base_tree)
+      def validate(branches)
         # Nothing to validate here.
       end
     end.new
@@ -136,7 +147,7 @@ module Curlybars
         ''.inspect
       end
 
-      def validate(base_tree)
+      def validate(branches)
         # Nothing to validate here.
       end
     end.new
