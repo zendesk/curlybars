@@ -37,7 +37,7 @@ module Curlybars
     r(/"(.*?)"/m, :curly) { |string| [:LITERAL, match[1].inspect] }
 
     r(/(#{IDENTIFIER})\s*=/, :curly) { |key| [:KEY, match[1]] }
-    r(/(..\/)*(#{IDENTIFIER}\.)*#{IDENTIFIER}\??/, :curly) { |name| [:PATH, name] }
+    r(/(..\/)*(#{IDENTIFIER}\.)*#{IDENTIFIER}/, :curly) { |name| [:PATH, name] }
 
     r(/\s/, :curly)
 
