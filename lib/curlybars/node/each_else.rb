@@ -6,34 +6,16 @@ module Curlybars
           compiled_path = #{path.compile}.call
 
           if rendering.to_bool(compiled_path)
-            position = rendering.position(#{position.line_number}, #{position.line_offset})
-            rendering.check_context_is_array_of_presenters(compiled_path, #{path.path.inspect}, position)
-
-            compiled_path.each do |presenter|
-              contexts.push(presenter)
-              begin
-                buffer.safe_concat(#{each_template.compile})
-              ensure
-                contexts.pop
-              end
-            end
+            #{Each.new(path, each_template, position).compile}
           else
             buffer.safe_concat(#{else_template.compile})
           end
         RUBY
       end
 
-      def validate(base_tree)
-        resolved = path.resolve_and_check!(base_tree, check_type: :presenter_collection)
-        sub_tree = resolved.first
-        template_errors = begin
-          branches.push(sub_tree)
-          template.validate(branches)
-        ensure
-          branches.pop
-        end
+      def validate(branches)
         [
-          template_errors,
+          Each.new(path, each_template, position).validate(branches),
           else_template.validate(branches)
         ]
       rescue Curlybars::Error::Validate => path_error
