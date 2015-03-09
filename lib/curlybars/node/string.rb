@@ -7,7 +7,7 @@ module Curlybars
         RUBY
       end
 
-      def validate(base_tree)
+      def validate(branches)
         # Nothing to validate here.
       end
     end

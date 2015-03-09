@@ -264,6 +264,38 @@ describe Curlybars do
       end
     end
 
+    describe "validates paths with ../" do
+      it "without errors" do
+        allow(presenter_class).to receive(:dependency_tree) do
+          { sub_context: {}, outer_field: nil }
+        end
+
+        source = <<-HBS
+          {{#with sub_context}}
+            {{../outer_field}}
+          {{/with}}
+        HBS
+
+        errors = Curlybars.validate(presenter_class, source)
+
+        expect(errors).to be_empty
+      end
+
+      it "without errors when it goes out of context" do
+        allow(presenter_class).to receive(:dependency_tree) do
+          {}
+        end
+
+        source = <<-HBS
+          {{../outer_field}}
+        HBS
+
+        errors = Curlybars.validate(presenter_class, source)
+
+        expect(errors).to be_empty
+      end
+    end
+
     describe "validates nested templates" do
       it "without errors" do
         allow(presenter_class).to receive(:dependency_tree) do

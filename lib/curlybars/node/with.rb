@@ -18,9 +18,14 @@ module Curlybars
         RUBY
       end
 
-      def validate(base_tree)
-        sub_tree = path.resolve_and_check!(base_tree, check_type: :presenter)
-        template.validate(sub_tree)
+      def validate(branches)
+        sub_tree = path.resolve_and_check!(branches, check_type: :presenter)
+        begin
+          branches.push(sub_tree)
+          template.validate(branches)
+        ensure
+          branches.pop
+        end
       rescue Curlybars::Error::Validate => path_error
         path_error
       end

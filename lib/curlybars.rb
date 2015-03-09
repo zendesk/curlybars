@@ -38,7 +38,8 @@ module Curlybars
         raise "#{presenter_class} must implement `.dependency_tree` or extend `Curlybars::MethodWhitelist`"
       end
       errors = begin
-        ast(source, file_name).validate(presenter_class.dependency_tree)
+        branches = [presenter_class.dependency_tree]
+        ast(source, file_name).validate(branches)
       rescue Curlybars::Error::Base => ast_error
         [ast_error]
       end

@@ -24,11 +24,11 @@ module Curlybars
         RUBY
       end
 
-      def validate(dependency_tree)
+      def validate(branches)
         [
-          helper.validate(dependency_tree, check_type: :leaf),
-          context.validate(dependency_tree),
-          options.map { |option| option.validate(dependency_tree) }
+          helper.validate(branches, check_type: :leaf),
+          context.validate(branches),
+          options.map { |option| option.validate(branches) }
         ]
       end
     end

@@ -12,6 +12,60 @@ describe "{{path}}" do
     HTML
   end
 
+  it "{{../path}} is evaluated on the second to last context in the stack" do
+    template = Curlybars.compile(<<-HBS)
+      {{#with user.avatar}}
+        {{../context}}
+      {{/with}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+      root_context
+    HTML
+  end
+
+  it "{{../../path}} is evaluated on the third to last context in the stack" do
+    template = Curlybars.compile(<<-HBS)
+      {{#with user}}
+        {{#with avatar}}
+          {{../../context}}
+        {{/with}}
+      {{/with}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+      root_context
+    HTML
+  end
+
+  it "{{../path}} uses the right context, even when using the same name" do
+    template = Curlybars.compile(<<-HBS)
+      {{#with user}}
+        {{#with avatar}}
+          {{../context}}
+        {{/with}}
+        {{../context}}
+      {{/with}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+      user_context
+      root_context
+    HTML
+  end
+
+  it "a path with more `../` than the stack size will resolve to empty string" do
+    template = Curlybars.compile(<<-HBS)
+      {{context}}
+      {{../context}}
+      {{../../context}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+      root_context
+    HTML
+  end
+
   it "raises when trying to call methods not implemented on context" do
     template = Curlybars.compile(<<-HBS)
       {{not_in_whitelist}}

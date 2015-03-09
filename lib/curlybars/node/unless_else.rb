@@ -12,11 +12,11 @@ module Curlybars
       end
     end
 
-    def validate(base_tree)
+    def validate(branches)
       [
-        expression.validate(base_tree),
-        unless_template.validate(base_tree),
-        else_template.validate(base_tree)
+        expression.validate(branches),
+        unless_template.validate(branches),
+        else_template.validate(branches)
       ]
     end
   end

@@ -10,15 +10,26 @@ module Curlybars
         RUBY
       end
 
-      def validate(base_tree, check_type: :anything)
-        resolve_and_check!(base_tree, check_type: check_type)
+      def validate(branches, check_type: :anything)
+        resolve_and_check!(branches, check_type: check_type)
         []
       rescue Curlybars::Error::Validate => path_error
         path_error
       end
 
-      def resolve_and_check!(base_tree, check_type: :anything)
-        value = path.split(/\./).map(&:to_sym).inject(base_tree) do |sub_tree, step|
+      def resolve_and_check!(branches, check_type: :anything)
+        path_split_by_slashes = path.split('/')
+        backward_steps_on_branches = path_split_by_slashes.count - 1
+        base_tree_position = branches.length - backward_steps_on_branches
+
+        throw :skip_item_validation unless base_tree_position > 0
+
+        base_tree_index = base_tree_position - 1
+        base_tree = branches[base_tree_index]
+
+        dotted_path_side = path_split_by_slashes.last
+
+        value = dotted_path_side.split(/\./).map(&:to_sym).inject(base_tree) do |sub_tree, step|
           if !sub_tree.is_a?(Hash)
             message = "not possible to access `#{step}` in `#{path}`"
             raise Curlybars::Error::Validate.new('cannot_access_presenter', message, position)
