@@ -7,8 +7,8 @@ module Curlybars
         RUBY
       end
 
-      def validate(trees)
-        expression.validate(trees)
+      def validate(branches)
+        expression.validate(branches)
       end
     end
   end

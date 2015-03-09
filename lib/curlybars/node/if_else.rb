@@ -11,11 +11,11 @@ module Curlybars
         RUBY
       end
 
-      def validate(trees)
+      def validate(branches)
         [
-          expression.validate(trees),
-          if_template.validate(trees),
-          else_template.validate(trees)
+          expression.validate(branches),
+          if_template.validate(branches),
+          else_template.validate(branches)
         ]
       end
     end

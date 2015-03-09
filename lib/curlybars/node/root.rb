@@ -9,8 +9,8 @@ module Curlybars
         RUBY
       end
 
-      def validate(trees)
-        template.validate(trees)
+      def validate(branches)
+        template.validate(branches)
       end
     end
   end

@@ -10,22 +10,22 @@ module Curlybars
         RUBY
       end
 
-      def validate(trees, check_type: :anything)
-        resolve_and_check!(trees, check_type: check_type)
+      def validate(branches, check_type: :anything)
+        resolve_and_check!(branches, check_type: check_type)
         []
       rescue Curlybars::Error::Validate => path_error
         path_error
       end
 
-      def resolve_and_check!(trees, check_type: :anything)
+      def resolve_and_check!(branches, check_type: :anything)
         path_split_by_slashes = path.split('/')
-        backward_steps_on_trees = path_split_by_slashes.count - 1
-        base_tree_position = trees.length - backward_steps_on_trees
+        backward_steps_on_branches = path_split_by_slashes.count - 1
+        base_tree_position = branches.length - backward_steps_on_branches
 
         throw :skip_item_validation unless base_tree_position > 0
 
         base_tree_index = base_tree_position - 1
-        base_tree = trees[base_tree_index]
+        base_tree = branches[base_tree_index]
 
         dotted_path_side = path_split_by_slashes.last
 

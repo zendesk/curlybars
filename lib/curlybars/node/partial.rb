@@ -7,8 +7,8 @@ module Curlybars
         RUBY
       end
 
-      def validate(trees)
-        path.validate(trees, check_type: :leaf)
+      def validate(branches)
+        path.validate(branches, check_type: :leaf)
       end
     end
   end

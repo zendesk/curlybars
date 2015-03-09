@@ -54,7 +54,7 @@ describe "{{path}}" do
     HTML
   end
 
-  it "a path with more `../` than the stack size will resolve to the root presenter" do
+  it "a path with more `../` than the stack size will resolve to empty string" do
     template = Curlybars.compile(<<-HBS)
       {{context}}
       {{../context}}

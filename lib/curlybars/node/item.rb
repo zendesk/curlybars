@@ -11,9 +11,9 @@ module Curlybars
         RUBY
       end
 
-      def validate(trees)
+      def validate(branches)
         catch(:skip_item_validation) do
-          item.validate(trees)
+          item.validate(branches)
         end
       end
     end

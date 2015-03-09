@@ -20,8 +20,8 @@ module Curlybars
         RUBY
       end
 
-      def validate(trees)
-        (items || []).map { |item| item.validate(trees) }.flatten
+      def validate(branches)
+        (items || []).map { |item| item.validate(branches) }.flatten
       end
     end
   end
