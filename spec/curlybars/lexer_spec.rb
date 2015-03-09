@@ -48,73 +48,73 @@ describe Curlybars::Lexer do
 
   describe "{{<integer>}}" do
     it "is lexed as an integer" do
-      expect(lex("{{7}}")).to produce [:START, :INTEGER, :END]
+      expect(lex("{{7}}")).to produce [:START, :LITERAL, :END]
     end
 
-    it "returns the expressed boolean" do
-      integer_token = lex("{{7}}").detect {|token| token.type == :INTEGER}
-      expect(integer_token.value).to eq 7
+    it "returns the expressed integer" do
+      literal_token = lex("{{7}}").detect {|token| token.type == :LITERAL}
+      expect(literal_token.value).to eq 7
     end
   end
 
   describe "{{<boolean>}}" do
     it "{{true}} is lexed as boolean" do
-      expect(lex("{{true}}")).to produce [:START, :BOOLEAN, :END]
+      expect(lex("{{true}}")).to produce [:START, :LITERAL, :END]
     end
 
     it "{{false}} is lexed as boolean" do
-      expect(lex("{{false}}")).to produce [:START, :BOOLEAN, :END]
+      expect(lex("{{false}}")).to produce [:START, :LITERAL, :END]
     end
 
     it "returns the expressed boolean" do
-      boolean_token = lex("{{true}}").detect {|token| token.type == :BOOLEAN}
-      expect(boolean_token.value).to be_truthy
+      literal_token = lex("{{true}}").detect {|token| token.type == :LITERAL}
+      expect(literal_token.value).to be_truthy
     end
   end
 
   describe "{{''}}" do
-    it "is lexed as a string" do
-      expect(lex("{{''}}")).to produce [:START, :STRING, :END]
+    it "is lexed as a literal" do
+      expect(lex("{{''}}")).to produce [:START, :LITERAL, :END]
     end
 
     it "returns the string between quotes" do
-      string_token = lex("{{'string'}}").detect {|token| token.type == :STRING}
-      expect(string_token.value).to eq 'string'
+      literal_token = lex("{{'string'}}").detect {|token| token.type == :LITERAL}
+      expect(literal_token.value).to eq '"string"'
     end
 
     it "is lexed when string is multiline" do
-      expect(lex("text {{'\n'}} text")).to produce [:TEXT, :START, :STRING, :END, :TEXT]
+      expect(lex("text {{'\n'}} text")).to produce [:TEXT, :START, :LITERAL, :END, :TEXT]
     end
 
     it "is resilient to whitespaces" do
-      expect(lex("{{ '' }}")).to produce [:START, :STRING, :END]
+      expect(lex("{{ '' }}")).to produce [:START, :LITERAL, :END]
     end
 
     it "is lexed when present in plain text" do
-      expect(lex("text {{''}} text")).to produce [:TEXT, :START, :STRING, :END, :TEXT]
+      expect(lex("text {{''}} text")).to produce [:TEXT, :START, :LITERAL, :END, :TEXT]
     end
   end
 
   describe '{{""}}' do
-    it "is lexed as a string" do
-      expect(lex('{{""}}')).to produce [:START, :STRING, :END]
+    it "is lexed as a literal" do
+      expect(lex('{{""}}')).to produce [:START, :LITERAL, :END]
     end
 
     it "returns the string between quotes" do
-      string_token = lex('{{"string"}}').detect {|token| token.type == :STRING}
-      expect(string_token.value).to eq 'string'
+      literal_token = lex('{{"string"}}').detect {|token| token.type == :LITERAL}
+      expect(literal_token.value).to eq '"string"'
     end
 
     it "is lexed when string is multiline" do
-      expect(lex('text {{"\n"}} text')).to produce [:TEXT, :START, :STRING, :END, :TEXT]
+      expect(lex('text {{"\n"}} text')).to produce [:TEXT, :START, :LITERAL, :END, :TEXT]
     end
 
     it "is resilient to whitespaces" do
-      expect(lex('{{ "" }}')).to produce [:START, :STRING, :END]
+      expect(lex('{{ "" }}')).to produce [:START, :LITERAL, :END]
     end
 
     it "is lexed when present in plain text" do
-      expect(lex('text {{""}} text')).to produce [:TEXT, :START, :STRING, :END, :TEXT]
+      expect(lex('text {{""}} text')).to produce [:TEXT, :START, :LITERAL, :END, :TEXT]
     end
   end
 

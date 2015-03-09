@@ -29,13 +29,15 @@ module Curlybars
     r(/each(?=\s|})/, :curly) { :EACH }
     r(/with(?=\s|})/, :curly) { :WITH }
     r(/else(?=\s|})/, :curly) { :ELSE }
+
+    r(/true/, :curly) { |boolean| [:LITERAL, true] }
+    r(/false/, :curly) { |boolean| [:LITERAL, false] }
+    r(/\d+/, :curly) { |integer| [:LITERAL, integer.to_i] }
+    r(/'(.*?)'/m, :curly) { |string| [:LITERAL, match[1].inspect] }
+    r(/"(.*?)"/m, :curly) { |string| [:LITERAL, match[1].inspect] }
+
     r(/(#{IDENTIFIER})\s*=/, :curly) { |key| [:KEY, match[1]] }
-    r(/true/, :curly) { |string| [:BOOLEAN, true] }
-    r(/false/, :curly) { |string| [:BOOLEAN, false] }
     r(/(..\/)*(#{IDENTIFIER}\.)*#{IDENTIFIER}\??/, :curly) { |name| [:PATH, name] }
-    r(/\d+/, :curly) { |integer| [:INTEGER, integer.to_i] }
-    r(/'(.*?)'/m, :curly) { |string| [:STRING, match[1]] }
-    r(/"(.*?)"/m, :curly) { |string| [:STRING, match[1]] }
 
     r(/\s/, :curly)
 

@@ -11,9 +11,7 @@ require 'curlybars/node/unless_else'
 require 'curlybars/node/each'
 require 'curlybars/node/each_else'
 require 'curlybars/node/path'
-require 'curlybars/node/string'
-require 'curlybars/node/integer'
-require 'curlybars/node/boolean'
+require 'curlybars/node/literal'
 require 'curlybars/node/with'
 require 'curlybars/node/helper'
 require 'curlybars/node/block_helper'
@@ -115,9 +113,7 @@ module Curlybars
     end
 
     production(:expression) do
-      clause('STRING') { |string| Node::String.new(string) }
-      clause('INTEGER') { |integer| Node::Integer.new(integer) }
-      clause('BOOLEAN') { |boolean| Node::Boolean.new(boolean) }
+      clause('LITERAL') { |literal| Node::Literal.new(literal) }
       clause('path')  { |path| path }
     end
 
