@@ -2,7 +2,7 @@ module Curlybars
   module Node
     Template = Struct.new(:items, :position) do
       def compile
-        compiled_items = (items || []).map(&:compile).join("\n")
+        compiled_items = items.map(&:compile).join("\n")
 
         <<-RUBY
           Module.new do
@@ -21,7 +21,7 @@ module Curlybars
       end
 
       def validate(branches)
-        (items || []).map { |item| item.validate(branches) }.flatten
+        items.map { |item| item.validate(branches) }
       end
     end
   end
