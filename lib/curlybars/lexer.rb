@@ -29,7 +29,7 @@ module Curlybars
     r(/each(?=\s|})/, :curly) { :EACH }
     r(/with(?=\s|})/, :curly) { :WITH }
     r(/else(?=\s|})/, :curly) { :ELSE }
-    r(/(#{IDENTIFIER}*)\s*=/, :curly) { |key| [:KEY, match[1]] }
+    r(/(#{IDENTIFIER})\s*=/, :curly) { |key| [:KEY, match[1]] }
     r(/true/, :curly) { |string| [:BOOLEAN, true] }
     r(/false/, :curly) { |string| [:BOOLEAN, false] }
     r(/(..\/)*(#{IDENTIFIER}\.)*#{IDENTIFIER}\??/, :curly) { |name| [:PATH, name] }
