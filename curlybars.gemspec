@@ -4,8 +4,8 @@ Gem::Specification.new do |s|
   s.rubygems_version = '1.3.5'
 
   s.name              = 'curlybars'
-  s.version           = '0.4.5'
-  s.date              = '2015-03-06'
+  s.version           = '0.4.6'
+  s.date              = '2015-03-09'
 
   s.summary     = "Create your views using Handlebars templates!"
   s.description = "A view layer for your Rails apps that separates
@@ -65,8 +65,8 @@ Gem::Specification.new do |s|
     lib/curlybars/node/helper.rb
     lib/curlybars/node/if.rb
     lib/curlybars/node/if_else.rb
-    lib/curlybars/node/integer.rb
     lib/curlybars/node/item.rb
+    lib/curlybars/node/literal.rb
     lib/curlybars/node/option.rb
     lib/curlybars/node/partial.rb
     lib/curlybars/node/path.rb
@@ -102,11 +102,11 @@ Gem::Specification.new do |s|
     spec/curlybars/node/if_else_spec.rb
     spec/curlybars/node/if_spec.rb
     spec/curlybars/node/item_spec.rb
+    spec/curlybars/node/literal_spec.rb
     spec/curlybars/node/option_spec.rb
     spec/curlybars/node/partial_spec.rb
     spec/curlybars/node/path_spec.rb
     spec/curlybars/node/root_spec.rb
-    spec/curlybars/node/string_spec.rb
     spec/curlybars/node/template_spec.rb
     spec/curlybars/node/text_spec.rb
     spec/curlybars/node/unless_else_spec.rb
@@ -154,14 +154,12 @@ Gem::Specification.new do |s|
     spec/integration/curlybars_spec.rb
     spec/integration/exception_spec.rb
     spec/integration/node/block_helper_spec.rb
-    spec/integration/node/boolean_spec.rb
     spec/integration/node/each_else_spec.rb
     spec/integration/node/each_spec.rb
     spec/integration/node/escape_spec.rb
     spec/integration/node/helper_spec.rb
     spec/integration/node/if_else_spec.rb
     spec/integration/node/if_spec.rb
-    spec/integration/node/integer_spec.rb
     spec/integration/node/partial_spec.rb
     spec/integration/node/path_spec.rb
     spec/integration/node/template_spec.rb

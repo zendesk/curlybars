@@ -1,5 +1,12 @@
 ### Unreleased
 
+### Curlybars 0.4.6 (March 9, 2015)
+
+* Refactors
+* `../` in paths
+
+  Mauro Codella
+
 ### Curlybars 0.4.5 (March 6, 2015)
 
 * Fixes namespacing problem
