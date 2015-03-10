@@ -40,7 +40,7 @@ module IntegrationTest
 
     allow_methods :partial, :user, :new_comment_form, :valid, :visible, :return_true,
       :return_false, :beautify, :form, :date, :asset, :integer, :boolean, :me, :echo,
-      :return_nil, :print_user_name, :this_method_yields, :context
+      :return_nil, :print_user_name, :this_method_yields, :context, :two_elements
 
     def user
       Shared::UserPresenter.new(current_user)
@@ -96,6 +96,10 @@ module IntegrationTest
 
     def this_method_yields(context)
       yield
+    end
+
+    def two_elements
+      [user, user]
     end
 
     private

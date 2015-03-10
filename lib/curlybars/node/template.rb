@@ -6,7 +6,7 @@ module Curlybars
 
         <<-RUBY
           Module.new do
-            def self.exec(contexts, rendering)
+            def self.exec(contexts, rendering, variables)
               unless contexts.length < 10
                 message = "Nesting too deep"
                 position = rendering.position(#{position.line_number}, #{position.line_offset})
@@ -16,7 +16,7 @@ module Curlybars
               #{compiled_items}
               buffer
             end
-          end.exec(contexts, rendering)
+          end.exec(contexts, rendering, variables)
         RUBY
       end
 

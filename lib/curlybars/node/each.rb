@@ -3,17 +3,23 @@ module Curlybars
     Each = Struct.new(:path, :template, :position) do
       def compile
         <<-RUBY
-          compiled_path = #{path.compile}.call
-          return if compiled_path.nil?
+          collection = #{path.compile}.call
+          return if collection.nil?
 
           position = rendering.position(#{position.line_number}, #{position.line_offset})
-          rendering.check_context_is_array_of_presenters(compiled_path, #{path.path.inspect}, position)
+          rendering.check_context_is_array_of_presenters(collection, #{path.path.inspect}, position)
 
-          compiled_path.each do |presenter|
-            contexts.push(presenter)
+          collection.each_with_index do |presenter, index|
             begin
+              contexts.push(presenter)
+              variables.push({
+                index: index,
+                first: index == 0,
+                last: index == (collection.length - 1),
+              })
               buffer.safe_concat(#{template.compile})
             ensure
+              variables.pop
               contexts.pop
             end
           end

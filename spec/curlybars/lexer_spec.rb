@@ -118,6 +118,30 @@ describe Curlybars::Lexer do
     end
   end
 
+  describe "{{@variable}}" do
+    it "is lexed as a varaible" do
+      expect(lex('{{@var}}')).to produce [:START, :VARIABLE, :END]
+    end
+
+    it "returns the identifier after `@`" do
+      variable_token = lex('{{@var}}').detect {|token| token.type == :VARIABLE}
+      expect(variable_token.value).to eq 'var'
+    end
+
+    it "returns the identifier after `@` also when using `../`" do
+      variable_token = lex('{{@../var}}').detect {|token| token.type == :VARIABLE}
+      expect(variable_token.value).to eq '../var'
+    end
+
+    it "is resilient to whitespaces" do
+      expect(lex('{{ @var }}')).to produce [:START, :VARIABLE, :END]
+    end
+
+    it "is lexed when present in plain text" do
+      expect(lex('text {{@var}} text')).to produce [:TEXT, :START, :VARIABLE, :END, :TEXT]
+    end
+  end
+
   describe "{{path context options}}" do
     it "is lexed with context and options" do
       expect(lex('{{path context key=value}}')).to produce [:START, :PATH, :PATH, :KEY, :PATH, :END]

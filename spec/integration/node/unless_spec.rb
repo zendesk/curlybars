@@ -83,4 +83,16 @@ describe "{{#unless}}...{{/unless}}" do
       outer_unless_template
     HTML
   end
+
+  it "allows usage of variables in condition" do
+    template = Curlybars.compile(<<-HBS)
+      {{#each two_elements}}
+        {{#unless @first}}I am the second!{{/unless}}
+      {{/each}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+      I am the second!
+    HTML
+  end
 end
