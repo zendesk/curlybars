@@ -1,3 +1,7 @@
+AllCops:
+  Exclude:
+    - curlybars.gemspec
+
 #
 # Special cases
 #
@@ -61,6 +65,9 @@ Lint/UnusedMethodArgument:
   Enabled: false
 
 Metrics/AbcSize:
+  Enabled: false
+
+Metrics/ClassLength:
   Enabled: false
 
 Metrics/CyclomaticComplexity:
