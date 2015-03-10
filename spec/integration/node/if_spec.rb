@@ -97,4 +97,16 @@ describe "{{#if}}...{{/if}}" do
     expect(eval(template)).to resemble(<<-HTML)
     HTML
   end
+
+  it "allows usage of variables in condition" do
+    template = Curlybars.compile(<<-HBS)
+      {{#each two_elements}}
+        {{#if @first}}I am the first!{{/if}}
+      {{/each}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+      I am the first!
+    HTML
+  end
 end

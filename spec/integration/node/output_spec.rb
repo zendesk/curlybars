@@ -36,13 +36,13 @@ describe '{{value}}' do
     HBS
 
     expect(eval(template)).to resemble(<<-HTML)
-      0
-      true
-      false
+      Index: 0
+      First: true
+      Last: false
 
-      1
-      false
-      true
+      Index: 1
+      First: false
+      Last: true
     HTML
   end
 end

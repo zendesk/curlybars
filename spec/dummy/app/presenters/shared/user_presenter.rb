@@ -2,7 +2,7 @@ class Shared::UserPresenter
   extend Curlybars::MethodWhitelist
   attr_reader :user
 
-  allow_methods :first_name, :created_at, :avatar, :context
+  allow_methods :first_name, :created_at, :avatar, :context, :me
 
   def initialize(user)
     @user = user
@@ -19,6 +19,10 @@ class Shared::UserPresenter
   def avatar
     avatar = @user.avatar
     Shared::AvatarPresenter.new(avatar)
+  end
+
+  def me
+    self
   end
 
   def context

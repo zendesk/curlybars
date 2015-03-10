@@ -94,6 +94,77 @@ describe "{{#each collection}}...{{/each}}" do
     HTML
   end
 
+  it "gives access to `@index` variable" do
+    template = Curlybars.compile(<<-HBS)
+      {{#each two_elements}}
+        {{@index}}
+      {{/each}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+      0
+      1
+    HTML
+  end
+
+  it "gives access to `@first` variable" do
+    template = Curlybars.compile(<<-HBS)
+      {{#each two_elements}}
+        {{@first}}
+      {{/each}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+      true
+      false
+    HTML
+  end
+
+  it "gives access to `@last` variable" do
+    template = Curlybars.compile(<<-HBS)
+      {{#each two_elements}}
+        {{@last}}
+      {{/each}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+      false
+      true
+    HTML
+  end
+
+  it "gives access to variables from nested {{#with}}" do
+    template = Curlybars.compile(<<-HBS)
+      {{#each two_elements}}
+        {{#with me}}
+          {{@index}}
+        {{/with}}
+      {{/each}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+      0
+      1
+    HTML
+  end
+
+  it "gives access to variables from nested {{#each}}" do
+    template = Curlybars.compile(<<-HBS)
+      {{#each two_elements}}
+        {{#each ../two_elements}}
+          {{@../index}}
+        {{/each}}
+      {{/each}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+      0
+      0
+      1
+      1
+    HTML
+  end
+
   it "raises an error if the objects inside of the context array are not presenters" do
     allow(presenter).to receive(:allows_method?).with(:not_a_presenter_collection) { true }
     allow(presenter).to receive(:not_a_presenter_collection) { [:an_element] }
