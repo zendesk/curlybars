@@ -66,6 +66,32 @@ describe "{{path}}" do
     HTML
   end
 
+  it "understands `this` as the current presenter" do
+    template = Curlybars.compile(<<-HBS)
+      {{user.avatar.url}}
+      {{#with this}}
+        {{user.avatar.url}}
+      {{/with}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+      http://example.com/foo.png
+      http://example.com/foo.png
+    HTML
+  end
+
+  it "understands `../this` as the outer presenter" do
+    template = Curlybars.compile(<<-HBS)
+      {{#with user.avatar}}
+        {{../context}}
+      {{/with}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+      root_context
+    HTML
+  end
+
   it "raises when trying to call methods not implemented on context" do
     template = Curlybars.compile(<<-HBS)
       {{not_in_whitelist}}

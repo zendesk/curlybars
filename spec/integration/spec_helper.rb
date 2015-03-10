@@ -39,7 +39,7 @@ module IntegrationTest
     include Helpers
 
     allow_methods :partial, :user, :new_comment_form, :valid, :visible, :return_true,
-      :return_false, :beautify, :form, :date, :asset, :integer, :boolean, :me, :echo,
+      :return_false, :beautify, :form, :date, :asset, :integer, :boolean, :echo,
       :return_nil, :print_user_name, :this_method_yields, :context, :two_elements
 
     def user
@@ -80,10 +80,6 @@ module IntegrationTest
 
     def context
       'root_context'
-    end
-
-    def me
-      self
     end
 
     def echo(context, options)

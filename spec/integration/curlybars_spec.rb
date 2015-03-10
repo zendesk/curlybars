@@ -296,6 +296,42 @@ describe Curlybars do
       end
     end
 
+    describe "validates path with `this`" do
+      it "without errors" do
+        allow(presenter_class).to receive(:dependency_tree) do
+          { field: nil }
+        end
+
+        source = <<-HBS
+          {{#with this}}
+            {{field}}
+          {{/with}}
+        HBS
+
+        errors = Curlybars.validate(presenter_class, source)
+
+        expect(errors).to be_empty
+      end
+
+      it "to refer an outer scope" do
+        allow(presenter_class).to receive(:dependency_tree) do
+          { field: nil, sub_presenter: {} }
+        end
+
+        source = <<-HBS
+          {{#with sub_presenter}}
+            {{#with ../this}}
+              {{field}}
+            {{/with}}
+          {{/with}}
+        HBS
+
+        errors = Curlybars.validate(presenter_class, source)
+
+        expect(errors).to be_empty
+      end
+    end
+
     describe "validates nested templates" do
       it "without errors" do
         allow(presenter_class).to receive(:dependency_tree) do

@@ -45,7 +45,7 @@ describe "template" do
 
   def hbs_with_depth(depth)
     hbs = "%s"
-    depth.times { hbs %= "{{#with me}}%s{{/with}}" }
+    depth.times { hbs %= "{{#with this}}%s{{/with}}" }
     hbs %= ''
   end
 end
