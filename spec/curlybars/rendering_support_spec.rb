@@ -1,6 +1,6 @@
 describe Curlybars::RenderingSupport do
   let(:file_name) { '/app/views/template.hbs' }
-  let(:presenter) { double(:presenter) }
+  let(:presenter) { double(:presenter, allows_method?: true) }
   let(:contexts) { [presenter] }
   let(:rendering) { Curlybars::RenderingSupport.new(contexts, file_name) }
   let(:position) do
@@ -220,6 +220,71 @@ describe Curlybars::RenderingSupport do
     it "returns a position with line_offset" do
       position = rendering.position(0, 1)
       expect(position.line_offset).to eq 1
+    end
+  end
+
+  describe "#check_context_is_hash_or_enum_of_presenters" do
+    it "doesn't raise an exception when argument is an empty enumerable" do
+      collection = []
+      rendering.check_context_is_hash_or_enum_of_presenters(collection, 'path', position)
+    end
+
+    it "doesn't raise an exception when argument is an empty hash" do
+      collection = {}
+      rendering.check_context_is_hash_or_enum_of_presenters(collection, nil, position)
+    end
+
+    it "doesn't raise an exception when argument is an enumerable of presenters" do
+      collection = [presenter]
+      rendering.check_context_is_hash_or_enum_of_presenters(collection, 'path', position)
+    end
+
+    it "doesn't raise an exception when argument is a hash of presenters" do
+      collection = { presenter: presenter }
+      rendering.check_context_is_hash_or_enum_of_presenters(collection, 'path', position)
+    end
+
+    it "raises when it is not an hash or an enumerable" do
+      expect do
+        rendering.check_context_is_hash_or_enum_of_presenters(:not_a_presenter, 'path', position)
+      end.to raise_error(Curlybars::Error::Render)
+    end
+
+    it "raises when it is not an hash or an enumerable of presenters" do
+      expect do
+        rendering.check_context_is_hash_or_enum_of_presenters([:not_a_presenter], 'path', position)
+      end.to raise_error(Curlybars::Error::Render)
+    end
+  end
+
+  describe "#check_context_is_presenter" do
+    it "doesn't raise an exception when argument is a presenter" do
+      rendering.check_context_is_presenter(presenter, 'path', position)
+    end
+
+    it "raises when it is not a presenter" do
+      expect do
+        rendering.check_context_is_presenter(:not_a_presenter, 'path', position)
+      end.to raise_error(Curlybars::Error::Render)
+    end
+  end
+
+  describe "#coerce_to_hash" do
+    it "leaves hashes intacted" do
+      hash = { key: :value }
+      expect(rendering.coerce_to_hash(hash, 'path', position)).to be hash
+    end
+
+    it "transform an Array to a Hash" do
+      array = [:a, :b, :c]
+      expected_hash = { 0 => :a, 1 => :b, 2 => :c }
+      expect(rendering.coerce_to_hash(array, 'path', position)).to eq expected_hash
+    end
+
+    it "raises when it is not a hash or an enumerable" do
+      expect do
+        rendering.coerce_to_hash(:not_a_presenter, 'path', position)
+      end.to raise_error(Curlybars::Error::Render)
     end
   end
 

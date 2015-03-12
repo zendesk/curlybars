@@ -43,7 +43,7 @@ module Curlybars
 
           if type.respond_to?(:dependency_tree)
             memo[method_name] = type.dependency_tree
-          elsif type.is_a?(Array)
+          elsif type.is_a?(Array) || type.is_a?(Hash)
             memo[method_name] = [type.first.dependency_tree]
           else
             memo[method_name] = type

@@ -43,7 +43,7 @@ describe "{{#each collection}}...{{/each}}" do
     HTML
   end
 
-  it "uses each_template when collection is not empty" do
+  it "uses each_template when collection is a not empty enumerable" do
     path_presenter_class = Class.new(Curlybars::Presenter) do
       presents :path
       allow_methods :path
@@ -60,6 +60,35 @@ describe "{{#each collection}}...{{/each}}" do
 
     template = Curlybars.compile(<<-HBS)
       {{#each non_empty_collection}}
+        {{path}}
+      {{/each}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+      a_path
+      another_path
+    HTML
+  end
+
+  it "uses each_template when collection is a not empty hash" do
+    path_presenter_class = Class.new(Curlybars::Presenter) do
+      presents :path
+      allow_methods :path
+      def path
+        @path
+      end
+    end
+
+    a_path_presenter = path_presenter_class.new(nil, path: 'a_path')
+    another_path_presenter = path_presenter_class.new(nil, path: 'another_path')
+
+    allow(presenter).to receive(:allows_method?).with(:non_empty_hash) { true }
+    allow(presenter).to receive(:non_empty_hash) do
+      { first: a_path_presenter, second: another_path_presenter }
+    end
+
+    template = Curlybars.compile(<<-HBS)
+      {{#each non_empty_hash}}
         {{path}}
       {{/each}}
     HBS
@@ -162,6 +191,35 @@ describe "{{#each collection}}...{{/each}}" do
       0
       1
       1
+    HTML
+  end
+
+  it "gives access to variables when collection is a not empty hash" do
+    path_presenter_class = Class.new(Curlybars::Presenter) do
+      presents :path
+      allow_methods :path
+      def path
+        @path
+      end
+    end
+
+    a_path_presenter = path_presenter_class.new(nil, path: 'a_path')
+    another_path_presenter = path_presenter_class.new(nil, path: 'another_path')
+
+    allow(presenter).to receive(:allows_method?).with(:non_empty_hash) { true }
+    allow(presenter).to receive(:non_empty_hash) do
+      { first: a_path_presenter, second: another_path_presenter }
+    end
+
+    template = Curlybars.compile(<<-HBS)
+      {{#each non_empty_hash}}
+        {{@index}}) {{@key}}: {{path}}
+      {{/each}}
+    HBS
+
+    expect(eval(template)).to resemble(<<-HTML)
+      0) first: a_path
+      1) second: another_path
     HTML
   end
 
