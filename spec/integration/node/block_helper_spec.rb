@@ -22,7 +22,7 @@ describe "{{#helper context key=value}}...{{/helper}}" do
         another context.
       --}}
 
-      {{#print_user_name me}}
+      {{#print_user_name this}}
         {{first_name}}
       {{/print_user_name}}
     HBS

@@ -30,7 +30,9 @@ module Curlybars
         dotted_path_side = path_split_by_slashes.last
 
         value = dotted_path_side.split(/\./).map(&:to_sym).inject(base_tree) do |sub_tree, step|
-          if !sub_tree.is_a?(Hash)
+          if step == :this
+            next sub_tree
+          elsif !sub_tree.is_a?(Hash)
             message = "not possible to access `#{step}` in `#{path}`"
             raise Curlybars::Error::Validate.new('cannot_access_presenter', message, position)
           elsif !sub_tree.key?(step)

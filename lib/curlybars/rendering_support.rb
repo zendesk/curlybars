@@ -43,11 +43,14 @@ module Curlybars
       method_to_return = chain.pop
 
       resolved = chain.inject(base_context) do |context, meth|
+        next context if meth == 'this'
         raise_if_not_traversable(context, meth, position)
         outcome = context.public_send(meth)
         return -> {} if outcome.nil?
         outcome
       end
+
+      return -> { resolved } if method_to_return == 'this'
 
       raise_if_not_traversable(resolved, method_to_return, position)
       resolved.method(method_to_return.to_sym)
