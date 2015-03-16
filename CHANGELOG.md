@@ -1,5 +1,11 @@
 ### Unreleased
 
+### Curlybars 0.4.8 (March 16, 2015)
+
+* Pin FFI dependency to 1.9.6
+
+  Mauro Codella
+
 ### Curlybars 0.4.7 (March 16, 2015)
 
 * Various fixes
