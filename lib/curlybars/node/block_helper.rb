@@ -43,16 +43,16 @@ module Curlybars
       def validate(branches)
         check_open_and_close_elements(helper, helperclose, Curlybars::Error::Validate)
 
-        sub_tree = context.resolve_and_check!(branches, check_type: :presenter)
+        helper_tree = helper.resolve_and_check!(branches, check_type: :presenter)
         template_errors = begin
-          branches.push(sub_tree)
+          branches.push(helper_tree)
           template.validate(branches)
         ensure
           branches.pop
         end
         [
           template_errors,
-          helper.validate(branches, check_type: :leaf),
+          context.validate(branches, check_type: :presenter),
           options.map { |option| option.validate(branches) }
         ]
       rescue Curlybars::Error::Validate => path_error
