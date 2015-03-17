@@ -64,6 +64,7 @@ module Curlybars
 
     def ast(source, file_name)
       tokens = Curlybars::Lexer.lex(source, file_name)
+      Curlybars::Processor::Tilde.process(tokens)
       Curlybars::Parser.parse(tokens)
     rescue RLTK::LexingError => lexing_error
       raise Curlybars::Error::Lex.new(source, file_name, lexing_error)
@@ -79,6 +80,7 @@ require 'curlybars/parser'
 require 'curlybars/position'
 require 'curlybars/lexer'
 require 'curlybars/parser'
+require 'curlybars/processor/tilde'
 require 'curlybars/error/lex'
 require 'curlybars/error/parse'
 require 'curlybars/error/compile'

@@ -17,6 +17,9 @@ module Curlybars
     r(/}}/, :comment) { pop_state }
     r(/./m, :comment)
 
+    r(/{{~/) { push_state :curly; :TILDE_START }
+    r(/~}}/, :curly) { pop_state; :TILDE_END }
+
     r(/{{/) { push_state :curly; :START }
     r(/}}/, :curly) { pop_state; :END }
 
