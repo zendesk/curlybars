@@ -27,12 +27,15 @@ module Curlybars
           helper_position = rendering.position(#{helper.position.line_number},
             #{helper.position.line_offset})
 
-          result = rendering.call(helper, #{helper.path.inspect}, helper_position, context, options) do |block_helper_context = context|
-            break '' if block_helper_context.nil?
-            contexts.push(block_helper_context)
+          result = rendering.call(helper, #{helper.path.inspect}, helper_position,
+            context, options) do |block_helper_context = context, **vars|
+            break if block_helper_context.nil?
             begin
+              contexts.push(block_helper_context)
+              variables.push(vars.symbolize_keys)
               #{template.compile}
             ensure
+              variables.pop
               contexts.pop
             end
           end

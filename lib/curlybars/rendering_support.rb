@@ -37,8 +37,8 @@ module Curlybars
       variable = variable_split_by_slashes.last.to_sym
       backward_steps_on_variables = variable_split_by_slashes.count - 1
       variables_position = variables.length - backward_steps_on_variables
-      scope = variables.first(variables_position).reverse.find do |scope|
-        scope.key? variable
+      scope = variables.first(variables_position).reverse.find do |vars|
+        vars.key? variable
       end
       return scope[variable] if scope
     end
