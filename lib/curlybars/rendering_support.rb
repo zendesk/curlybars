@@ -32,13 +32,15 @@ module Curlybars
         !condition.nil?
     end
 
-    def variable(variable)
-      variable_split_by_slashes = variable.split('/')
+    def variable(variable_path)
+      variable_split_by_slashes = variable_path.split('/')
+      variable = variable_split_by_slashes.last.to_sym
       backward_steps_on_variables = variable_split_by_slashes.count - 1
       variables_position = variables.length - backward_steps_on_variables
-      index = variables_position - 1
-      return if index < 0
-      variables[index][variable_split_by_slashes.last.to_sym]
+      scope = variables.first(variables_position).reverse.find do |scope|
+        scope.key? variable
+      end
+      return scope[variable] if scope
     end
 
     def path(path, position)
