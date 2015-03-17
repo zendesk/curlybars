@@ -11,18 +11,21 @@ module Curlybars
       raise Curlybars::Error::Render.new('context_is_not_a_presenter', message, position)
     end
 
-    def check_context_is_array_of_presenters(collection, path, position)
+    def check_context_is_hash_or_enum_of_presenters(collection, path, position)
+      collection = collection.values if collection.is_a?(Hash)
+
       return if collection.respond_to?(:each) && collection.all? do |presenter|
         presenter.respond_to? :allows_method?
       end
 
-      message = "`#{path}` is not an array of presenters"
+      message = "`#{path}` is not an array of presenters or a hash of such"
       raise Curlybars::Error::Render.new('context_is_not_an_array_of_presenters', message, position)
     end
 
     def to_bool(condition)
       condition != false &&
         condition != [] &&
+        condition != {} &&
         condition != 0 &&
         condition != '' &&
         !condition.nil?
@@ -76,6 +79,17 @@ module Curlybars
 
     def position(line_number, line_offset)
       Curlybars::Position.new(file_name, line_number, line_offset)
+    end
+
+    def coerce_to_hash(collection, path, position)
+      if collection.is_a?(Hash)
+        collection
+      elsif collection.respond_to? :each_with_index
+        collection.each_with_index.map { |value, index| [index, value] }.to_h
+      else
+        message = "`#{path}` must return either an Enumerable or an Hash of presenters."
+        raise Curlybars::Error::Render.new('not_an_enumerable_or_hash', message, position)
+      end
     end
 
     private
