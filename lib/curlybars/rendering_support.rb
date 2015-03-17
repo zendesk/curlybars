@@ -1,7 +1,8 @@
 module Curlybars
   class RenderingSupport
-    def initialize(contexts, file_name)
+    def initialize(contexts, variables, file_name)
       @contexts = contexts
+      @variables = variables
       @file_name = file_name
     end
 
@@ -29,6 +30,15 @@ module Curlybars
         condition != 0 &&
         condition != '' &&
         !condition.nil?
+    end
+
+    def variable(variable)
+      variable_split_by_slashes = variable.split('/')
+      backward_steps_on_variables = variable_split_by_slashes.count - 1
+      variables_position = variables.length - backward_steps_on_variables
+      index = variables_position - 1
+      return if index < 0
+      variables[index][variable_split_by_slashes.last.to_sym]
     end
 
     def path(path, position)
@@ -94,7 +104,7 @@ module Curlybars
 
     private
 
-    attr_reader :contexts, :file_name
+    attr_reader :contexts, :variables, :file_name
 
     def raise_if_not_traversable(context, meth, position)
       check_context_is_presenter(context, meth, position)

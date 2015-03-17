@@ -2,7 +2,8 @@ describe Curlybars::RenderingSupport do
   let(:file_name) { '/app/views/template.hbs' }
   let(:presenter) { double(:presenter, allows_method?: true) }
   let(:contexts) { [presenter] }
-  let(:rendering) { Curlybars::RenderingSupport.new(contexts, file_name) }
+  let(:variables) { [{}] }
+  let(:rendering) { Curlybars::RenderingSupport.new(contexts, variables, file_name) }
   let(:position) do
     double(:position, file_name: 'template.hbs', line_number: 1, line_offset: 0)
   end
