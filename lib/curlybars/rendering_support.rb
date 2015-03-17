@@ -25,6 +25,7 @@ module Curlybars
     def to_bool(condition)
       condition != false &&
         condition != [] &&
+        condition != {} &&
         condition != 0 &&
         condition != '' &&
         !condition.nil?

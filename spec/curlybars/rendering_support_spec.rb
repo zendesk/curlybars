@@ -32,6 +32,10 @@ describe Curlybars::RenderingSupport do
         expect(rendering.to_bool([])).to be_falsey
       end
 
+      it "with `{}`" do
+        expect(rendering.to_bool({})).to be_falsey
+      end
+
       it "with `0`" do
         expect(rendering.to_bool(0)).to be_falsey
       end
