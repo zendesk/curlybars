@@ -4,8 +4,12 @@ module Curlybars
       def compile
         <<-RUBY
           contexts = [presenter]
-          rendering = Curlybars::RenderingSupport.new(contexts, #{position.file_name.inspect})
           variables = [{}]
+          rendering = Curlybars::RenderingSupport.new(
+            contexts,
+            variables,
+            #{position.file_name.inspect}
+          )
           #{template.compile}
         RUBY
       end
