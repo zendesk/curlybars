@@ -32,7 +32,9 @@ module Curlybars
         !condition.nil?
     end
 
-    def variable(variable_path)
+    def variable(variable_path, position)
+      check_traverse_not_too_deep(variable_path, position)
+
       variable_split_by_slashes = variable_path.split('/')
       variable = variable_split_by_slashes.last.to_sym
       backward_steps_on_variables = variable_split_by_slashes.count - 1
@@ -44,6 +46,8 @@ module Curlybars
     end
 
     def path(path, position)
+      check_traverse_not_too_deep(path, position)
+
       path_split_by_slashes = path.split('/')
       backward_steps_on_contexts = path_split_by_slashes.count - 1
       base_context_position = contexts.length - backward_steps_on_contexts
@@ -125,6 +129,12 @@ module Curlybars
       return if context.respond_to?(meth.to_sym)
       message = "`#{meth}` is not available in #{context.class}"
       raise Curlybars::Error::Render.new('path_not_allowed', message, position)
+    end
+
+    def check_traverse_not_too_deep(traverse, position)
+      return unless traverse.count('.') > 10
+      message = "`#{traverse}` too deep"
+      raise Curlybars::Error::Render.new('traverse_too_deep', message, position)
     end
   end
 end
