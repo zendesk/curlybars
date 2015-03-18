@@ -125,7 +125,7 @@ module Curlybars
 
     production(:value) do
       clause('LITERAL') { |literal| Node::Literal.new(literal) }
-      clause('VARIABLE') { |variable| Node::Variable.new(variable) }
+      clause('VARIABLE') { |variable| Node::Variable.new(variable, pos(0)) }
     end
 
     production(:path, 'PATH') { |path| Node::Path.new(path, pos(0)) }

@@ -124,11 +124,14 @@ describe Curlybars::RenderingSupport do
     end
 
     it "returns a method that returns nil, if `../`` goes too deep in the stack" do
-      allow_all_methods(presenter)
-      allow(presenter).to receive(:returns_nil) { }
-
       outcome = rendering.path('../too_deep', rendering.position(0, 1)).call
       expect(outcome).to be_nil
+    end
+
+    it "raises an exception if tha path is too deep (> 10)" do
+      expect do
+        rendering.path('a.b.c.d.e.f.g.h.i.l', rendering.position(0, 1))
+      end.to raise_error(Curlybars::Error::Render)
     end
   end
 
