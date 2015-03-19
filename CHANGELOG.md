@@ -1,5 +1,12 @@
 ### Unreleased
 
+### Curlybars 0.4.9 (March 19, 2015)
+
+* Custom variables in block helpers
+* Each and EachElse can iterate over Hashes
+
+  Mauro Codella
+
 ### Curlybars 0.4.8 (March 16, 2015)
 
 * Pin FFI dependency to 1.9.6
