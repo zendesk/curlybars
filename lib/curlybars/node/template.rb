@@ -7,7 +7,7 @@ module Curlybars
         <<-RUBY
           Module.new do
             def self.exec(contexts, rendering, variables)
-              unless contexts.length < 10
+              unless contexts.length < Curlybars.configuration.nesting_limit
                 message = "Nesting too deep"
                 position = rendering.position(#{position.line_number}, #{position.line_offset})
                 raise Curlybars::Error::Render.new('nesting_too_deep', message, position)

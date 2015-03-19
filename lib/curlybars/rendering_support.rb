@@ -132,7 +132,7 @@ module Curlybars
     end
 
     def check_traverse_not_too_deep(traverse, position)
-      return unless traverse.count('.') > 10
+      return unless traverse.count('.') > Curlybars.configuration.traversing_limit
       message = "`#{traverse}` too deep"
       raise Curlybars::Error::Render.new('traverse_too_deep', message, position)
     end
