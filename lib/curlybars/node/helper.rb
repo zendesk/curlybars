@@ -11,7 +11,7 @@ module Curlybars
         <<-RUBY
           options = ActiveSupport::HashWithIndifferentAccess.new
           #{compiled_options}
-          context = #{context.compile}.call
+          context = rendering.cached_call(#{context.compile})
           helper = #{helper.compile}
           helper_position = rendering.position(#{helper.position.line_number},
             #{helper.position.line_offset})

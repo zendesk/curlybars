@@ -14,7 +14,7 @@ module Curlybars
           options = ActiveSupport::HashWithIndifferentAccess.new
           #{compiled_options}
 
-          context = #{context.compile}.call
+          context = rendering.cached_call(#{context.compile})
 
           unless context.nil?
             context_position = rendering.position(#{context.position.line_number},

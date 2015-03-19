@@ -4,6 +4,7 @@ module Curlybars
       @contexts = contexts
       @variables = variables
       @file_name = file_name
+      @cached_calls = {}
     end
 
     def check_context_is_presenter(context, path, position)
@@ -75,6 +76,11 @@ module Curlybars
       resolved.method(method_to_return.to_sym)
     end
 
+    def cached_call(meth)
+      return cached_calls[meth] if cached_calls.key? meth
+      cached_calls[meth] = meth.call
+    end
+
     def call(helper, helper_path, helper_position, context, options, &block)
       parameters = helper.parameters
 
@@ -110,7 +116,7 @@ module Curlybars
 
     private
 
-    attr_reader :contexts, :variables, :file_name
+    attr_reader :contexts, :variables, :cached_calls, :file_name
 
     def raise_if_not_traversable(context, meth, position)
       check_context_is_presenter(context, meth, position)

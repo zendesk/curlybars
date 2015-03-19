@@ -1,6 +1,6 @@
 describe Curlybars::RenderingSupport do
   let(:file_name) { '/app/views/template.hbs' }
-  let(:presenter) { double(:presenter, allows_method?: true) }
+  let(:presenter) { double(:presenter, allows_method?: true, meth: :value) }
   let(:contexts) { [presenter] }
   let(:variables) { [{}] }
   let(:rendering) { Curlybars::RenderingSupport.new(contexts, variables, file_name) }
@@ -132,6 +132,42 @@ describe Curlybars::RenderingSupport do
       expect do
         rendering.path('a.b.c.d.e.f.g.h.i.l', rendering.position(0, 1))
       end.to raise_error(Curlybars::Error::Render)
+    end
+  end
+
+  describe "#cached_call" do
+    before do
+      class APresenter
+        def meth
+          :value
+        end
+      end
+    end
+
+    it "(cache miss) calls the method if not cached already" do
+      meth = presenter.method(:meth)
+
+      expect(meth).to receive(:call).exactly(1).times
+
+      rendering.cached_call(meth)
+    end
+
+    it "(cache hit) avoids to call a method for more than one time" do
+      meth = presenter.method(:meth)
+
+      expect(meth).to receive(:call).exactly(1).times
+
+      rendering.cached_call(meth)
+      rendering.cached_call(meth)
+    end
+
+    it "the returned cached value is the same as the uncached one" do
+      meth = presenter.method(:meth)
+
+      first_outcome = rendering.cached_call(meth)
+      second_outcome = rendering.cached_call(meth)
+
+      expect(second_outcome).to eq first_outcome
     end
   end
 
