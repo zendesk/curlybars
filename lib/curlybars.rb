@@ -13,7 +13,7 @@
 #
 # See Curlybars::Presenter for more information on presenters.
 module Curlybars
-  VERSION = "0.4.9"
+  VERSION = "0.4.10"
 
   class << self
     # Compiles a Curlybars template to Ruby code.

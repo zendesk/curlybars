@@ -1,5 +1,13 @@
 ### Unreleased
 
+### Curlybars 0.4.10 (March 19, 2015)
+
+* Cache presenter methods calls, when not helpers
+* Make nesting/traversing checks configurable
+
+  Mauro Codella
+  Libo Cannici
+
 ### Curlybars 0.4.9 (March 19, 2015)
 
 * Custom variables in block helpers
