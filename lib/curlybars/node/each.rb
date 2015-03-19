@@ -3,7 +3,7 @@ module Curlybars
     Each = Struct.new(:path, :template, :position) do
       def compile
         <<-RUBY
-          collection = #{path.compile}.call
+          collection = rendering.cached_call(#{path.compile})
           return if collection.nil?
 
           position = rendering.position(#{position.line_number}, #{position.line_offset})

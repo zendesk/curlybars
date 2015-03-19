@@ -3,7 +3,7 @@ module Curlybars
     Option = Struct.new(:key, :expression) do
       def compile
         <<-RUBY
-          { #{key.to_s.inspect} => #{expression.compile}.call }
+          { #{key.to_s.inspect} => rendering.cached_call(#{expression.compile}) }
         RUBY
       end
 

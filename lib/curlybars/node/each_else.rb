@@ -3,7 +3,7 @@ module Curlybars
     EachElse = Struct.new(:path, :each_template, :else_template, :position) do
       def compile
         <<-RUBY
-          compiled_path = #{path.compile}.call
+          compiled_path = rendering.cached_call(#{path.compile})
 
           if rendering.to_bool(compiled_path)
             #{Each.new(path, each_template, position).compile}
