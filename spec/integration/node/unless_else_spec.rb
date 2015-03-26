@@ -83,7 +83,7 @@ describe "{{#unless}}...{{else}}...{{/unless}}" do
   describe "#validate" do
     let(:presenter_class) { double(:presenter_class) }
 
-    it "vaidates with errors the condition" do
+    it "validates with errors the condition" do
       allow(presenter_class).to receive(:dependency_tree) do
         {}
       end

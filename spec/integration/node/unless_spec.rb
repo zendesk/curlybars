@@ -101,7 +101,7 @@ describe "{{#unless}}...{{/unless}}" do
   describe "#validate" do
     let(:presenter_class) { double(:presenter_class) }
 
-    it "vaidates with errors the condition" do
+    it "validates with errors the condition" do
       allow(presenter_class).to receive(:dependency_tree) do
         {}
       end
@@ -115,7 +115,7 @@ describe "{{#unless}}...{{/unless}}" do
       expect(errors).not_to be_empty
     end
 
-    it "vaidates with errors the nested template" do
+    it "validates with errors the nested template" do
       allow(presenter_class).to receive(:dependency_tree) do
         { condition: nil }
       end
