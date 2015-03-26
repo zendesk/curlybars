@@ -10,13 +10,13 @@ module Curlybars
           end
         RUBY
       end
-    end
 
-    def validate(branches)
-      [
-        Unless.new(expression, unless_template).validate(branches),
-        else_template.validate(branches)
-      ]
+      def validate(branches)
+        [
+          Unless.new(expression, unless_template).validate(branches),
+          else_template.validate(branches)
+        ]
+      end
     end
   end
 end
