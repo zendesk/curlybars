@@ -24,5 +24,6 @@ describe "{{> partial}}" do
   end
 
   describe "#validate" do
+    let(:presenter_class) { double(:presenter_class) }
   end
 end

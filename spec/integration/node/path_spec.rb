@@ -105,5 +105,70 @@ describe "{{path}}" do
   end
 
   describe "#validate" do
+    let(:presenter_class) { double(:presenter_class) }
+
+    it "without errors" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { sub_context: {}, outer_field: nil }
+      end
+
+      source = <<-HBS
+        {{#with sub_context}}
+          {{../outer_field}}
+        {{/with}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).to be_empty
+    end
+
+    it "without errors when it goes out of context" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        {}
+      end
+
+      source = <<-HBS
+        {{../outer_field}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).to be_empty
+    end
+
+    it "without errors using `this`" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { field: nil }
+      end
+
+      source = <<-HBS
+        {{#with this}}
+          {{field}}
+        {{/with}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).to be_empty
+    end
+
+    it "to refer an outer scope using `this`" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { field: nil, sub_presenter: {} }
+      end
+
+      source = <<-HBS
+        {{#with sub_presenter}}
+          {{#with ../this}}
+            {{field}}
+          {{/with}}
+        {{/with}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).to be_empty
+    end
   end
 end

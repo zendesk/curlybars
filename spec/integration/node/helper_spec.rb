@@ -72,5 +72,106 @@ describe "{{helper context key=value}}" do
   end
 
   describe "#validate" do
+    let(:presenter_class) { double(:presenter_class) }
+
+    it "with errors" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        {}
+      end
+
+      source = <<-HBS
+        {{helper}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).not_to be_empty
+    end
+
+    it "without errors" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { helper: nil }
+      end
+
+      source = <<-HBS
+        {{helper}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).to be_empty
+    end
+
+    it "validates {{helper.invoked_on_nil}} with errors" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { helper: nil }
+      end
+
+      source = <<-HBS
+        {{helper.invoked_on_nil}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).not_to be_empty
+    end
+
+    it "validates {{helper.data}} without errors" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { helper: { data: nil } }
+      end
+
+      source = <<-HBS
+        {{helper.data}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).to be_empty
+    end
+
+    it "validates {{helper.data.missing}} with errors" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { helper: { data: nil } }
+      end
+
+      source = <<-HBS
+        {{helper.data.missing}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).not_to be_empty
+    end
+
+    describe "with context" do
+      it "without errors in block_helper" do
+        allow(presenter_class).to receive(:dependency_tree) do
+          { helper: nil, context: nil }
+        end
+
+        source = <<-HBS
+          {{helper context}}
+        HBS
+
+        errors = Curlybars.validate(presenter_class, source)
+
+        expect(errors).to be_empty
+      end
+
+      it "with errors in block_helper" do
+        allow(presenter_class).to receive(:dependency_tree) do
+          { helper: {}, context: nil }
+        end
+
+        source = <<-HBS
+          {{helper context}}
+        HBS
+
+        errors = Curlybars.validate(presenter_class, source)
+
+        expect(errors).not_to be_empty
+      end
+    end
   end
 end

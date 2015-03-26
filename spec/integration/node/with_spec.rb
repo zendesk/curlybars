@@ -61,5 +61,48 @@ describe "{{#with presenter}}...{{/with}}" do
   end
 
   describe "#validate" do
+    let(:presenter_class) { double(:presenter_class) }
+
+    it "without errors" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { a_presenter: {} }
+      end
+
+      source = <<-HBS
+        {{#with a_presenter}}{{/with}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).to be_empty
+    end
+
+    it "with errors due to a leaf" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { not_a_presenter: nil }
+      end
+
+      source = <<-HBS
+        {{#with not_a_presenter}}{{/with}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).not_to be_empty
+    end
+
+    it "with errors due unallowed method" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        {}
+      end
+
+      source = <<-HBS
+        {{#with unallowed}}{{/with}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).not_to be_empty
+    end
   end
 end
