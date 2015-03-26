@@ -114,5 +114,35 @@ describe "{{#if}}...{{/if}}" do
 
   describe "#validate" do
     let(:presenter_class) { double(:presenter_class) }
+
+    it "vaidates with errors the condition" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        {}
+      end
+
+      source = <<-HBS
+        {{#if condition}}{{/if}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).not_to be_empty
+    end
+
+    it "vaidates with errors the nested template" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { condition: nil }
+      end
+
+      source = <<-HBS
+        {{#if condition}}
+          {{unallowed_method}}
+        {{/if}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).not_to be_empty
+    end
   end
 end
