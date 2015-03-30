@@ -1,149 +1,213 @@
 describe "{{#each collection}}...{{else}}...{{/each}}" do
-  let(:post) { double("post") }
-  let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
+  describe "#compile" do
+    let(:post) { double("post") }
+    let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
-  it "uses each_template when collection is not empty" do
-    allow(presenter).to receive(:allows_method?).with(:non_empty_collection) { true }
-    allow(presenter).to receive(:non_empty_collection) { [presenter] }
+    it "uses each_template when collection is not empty" do
+      allow(presenter).to receive(:allows_method?).with(:non_empty_collection) { true }
+      allow(presenter).to receive(:non_empty_collection) { [presenter] }
 
-    template = Curlybars.compile(<<-HBS)
-      {{#each non_empty_collection}}
+      template = Curlybars.compile(<<-HBS)
+        {{#each non_empty_collection}}
+          each_template
+        {{else}}
+          else_template
+        {{/each}}
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
         each_template
-      {{else}}
-        else_template
-      {{/each}}
-    HBS
-
-    expect(eval(template)).to resemble(<<-HTML)
-      each_template
-    HTML
-  end
-
-  it "uses else_template when collection is not empty" do
-    allow(presenter).to receive(:allows_method?).with(:empty_collection) { true }
-    allow(presenter).to receive(:empty_collection) { [] }
-
-    template = Curlybars.compile(<<-HBS)
-      {{#each empty_collection}}
-        each_template
-      {{else}}
-        else_template
-      {{/each}}
-    HBS
-
-    expect(eval(template)).to resemble(<<-HTML)
-      else_template
-    HTML
-  end
-
-  it "uses each_template when collection is not empty" do
-    path_presenter_class = Class.new(Curlybars::Presenter) do
-      presents :path
-      allow_methods :path
-      def path
-        @path
-      end
+      HTML
     end
 
-    a_path_presenter = path_presenter_class.new(nil, path: 'a_path')
-    another_path_presenter = path_presenter_class.new(nil, path: 'another_path')
+    it "uses else_template when collection is not empty" do
+      allow(presenter).to receive(:allows_method?).with(:empty_collection) { true }
+      allow(presenter).to receive(:empty_collection) { [] }
 
-    allow(presenter).to receive(:allows_method?).with(:non_empty_collection) { true }
-    allow(presenter).to receive(:non_empty_collection) { [a_path_presenter, another_path_presenter] }
+      template = Curlybars.compile(<<-HBS)
+        {{#each empty_collection}}
+          each_template
+        {{else}}
+          else_template
+        {{/each}}
+      HBS
 
-    template = Curlybars.compile(<<-HBS)
-      {{#each non_empty_collection}}
-        {{path}}
-      {{else}}
+      expect(eval(template)).to resemble(<<-HTML)
         else_template
-      {{/each}}
-    HBS
+      HTML
+    end
 
-    expect(eval(template)).to resemble(<<-HTML)
-      a_path
-      another_path
-    HTML
-  end
+    it "uses each_template when collection is not empty" do
+      path_presenter_class = Class.new(Curlybars::Presenter) do
+        presents :path
+        allow_methods :path
+        def path
+          @path
+        end
+      end
 
-  it "allows empty each_template" do
-    allow(presenter).to receive(:allows_method?).with(:empty_collection) { true }
-    allow(presenter).to receive(:empty_collection) { [] }
+      a_path_presenter = path_presenter_class.new(nil, path: 'a_path')
+      another_path_presenter = path_presenter_class.new(nil, path: 'another_path')
 
-    template = Curlybars.compile(<<-HBS)
-      {{#each empty_collection}}{{else}}
+      allow(presenter).to receive(:allows_method?).with(:non_empty_collection) { true }
+      allow(presenter).to receive(:non_empty_collection) { [a_path_presenter, another_path_presenter] }
+
+      template = Curlybars.compile(<<-HBS)
+        {{#each non_empty_collection}}
+          {{path}}
+        {{else}}
+          else_template
+        {{/each}}
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
+        a_path
+        another_path
+      HTML
+    end
+
+    it "allows empty each_template" do
+      allow(presenter).to receive(:allows_method?).with(:empty_collection) { true }
+      allow(presenter).to receive(:empty_collection) { [] }
+
+      template = Curlybars.compile(<<-HBS)
+        {{#each empty_collection}}{{else}}
+          else_template
+        {{/each}}
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
         else_template
-      {{/each}}
-    HBS
+      HTML
+    end
 
-    expect(eval(template)).to resemble(<<-HTML)
-      else_template
-    HTML
-  end
+    it "allows empty else_template" do
+      allow(presenter).to receive(:allows_method?).with(:non_empty_collection) { true }
+      allow(presenter).to receive(:non_empty_collection) { [presenter] }
 
-  it "allows empty else_template" do
-    allow(presenter).to receive(:allows_method?).with(:non_empty_collection) { true }
-    allow(presenter).to receive(:non_empty_collection) { [presenter] }
+      template = Curlybars.compile(<<-HBS)
+        {{#each non_empty_collection}}
+          each_template
+        {{else}}{{/each}}
+      HBS
 
-    template = Curlybars.compile(<<-HBS)
-      {{#each non_empty_collection}}
+      expect(eval(template)).to resemble(<<-HTML)
         each_template
-      {{else}}{{/each}}
-    HBS
+      HTML
+    end
 
-    expect(eval(template)).to resemble(<<-HTML)
-      each_template
-    HTML
-  end
+    it "allows empty each_template and else_template" do
+      allow(presenter).to receive(:allows_method?).with(:non_empty_collection) { true }
+      allow(presenter).to receive(:non_empty_collection) { [presenter] }
 
-  it "allows empty each_template and else_template" do
-    allow(presenter).to receive(:allows_method?).with(:non_empty_collection) { true }
-    allow(presenter).to receive(:non_empty_collection) { [presenter] }
+      template = Curlybars.compile(<<-HBS)
+        {{#each non_empty_collection}}{{else}}{{/each}}
+      HBS
 
-    template = Curlybars.compile(<<-HBS)
-      {{#each non_empty_collection}}{{else}}{{/each}}
-    HBS
+      expect(eval(template)).to resemble(<<-HTML)
+      HTML
+    end
 
-    expect(eval(template)).to resemble(<<-HTML)
-    HTML
-  end
+    it "renders nothing if the context is nil" do
+      template = Curlybars.compile(<<-HBS)
+        {{#each return_nil}}
+          each_template
+        {{else}}
+          else_template
+        {{/each}}
+      HBS
 
-  it "renders nothing if the context is nil" do
-    template = Curlybars.compile(<<-HBS)
-      {{#each return_nil}}
-        each_template
-      {{else}}
+      expect(eval(template)).to resemble(<<-HTML)
         else_template
-      {{/each}}
-    HBS
+      HTML
+    end
 
-    expect(eval(template)).to resemble(<<-HTML)
-      else_template
-    HTML
+    it "raises an error if the context is not an array-like object" do
+      allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:not_a_collection) { true }
+      allow(presenter).to receive(:not_a_collection) { "string" }
+
+      template = Curlybars.compile(<<-HBS)
+        {{#each not_a_collection}}{{else}}{{/each}}
+      HBS
+
+      expect do
+        eval(template)
+      end.to raise_error(Curlybars::Error::Render)
+    end
+
+    it "raises an error if the objects inside of the context array are not presenters" do
+      allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:not_a_presenter_collection) { true }
+      allow(presenter).to receive(:not_a_presenter_collection) { [:an_element] }
+
+      template = Curlybars.compile(<<-HBS)
+        {{#each not_a_presenter_collection}}{{else}}{{/each}}
+      HBS
+
+      expect do
+        eval(template)
+      end.to raise_error(Curlybars::Error::Render)
+    end
   end
 
-  it "raises an error if the context is not an array-like object" do
-    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:not_a_collection) { true }
-    allow(presenter).to receive(:not_a_collection) { "string" }
+  describe "#validate" do
+    let(:presenter_class) { double(:presenter_class) }
 
-    template = Curlybars.compile(<<-HBS)
-      {{#each not_a_collection}}{{else}}{{/each}}
-    HBS
+    let(:presenter_class) { double(:presenter_class) }
 
-    expect do
-      eval(template)
-    end.to raise_error(Curlybars::Error::Render)
-  end
+    it "without errors" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { a_presenter_collection: [{}] }
+      end
 
-  it "raises an error if the objects inside of the context array are not presenters" do
-    allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:not_a_presenter_collection) { true }
-    allow(presenter).to receive(:not_a_presenter_collection) { [:an_element] }
+      source = <<-HBS
+        {{#each a_presenter_collection}} {{else}} {{/each}}
+      HBS
 
-    template = Curlybars.compile(<<-HBS)
-      {{#each not_a_presenter_collection}}{{else}}{{/each}}
-    HBS
+      errors = Curlybars.validate(presenter_class, source)
 
-    expect do
-      eval(template)
-    end.to raise_error(Curlybars::Error::Render)
+      expect(errors).to be_empty
+    end
+
+    it "with errors due to a presenter path" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { a_presenter: {} }
+      end
+
+      source = <<-HBS
+        {{#each a_presenter}} {{else}} {{/each}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).not_to be_empty
+    end
+
+    it "with errors due to a leaf path" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { a_leaf: nil }
+      end
+
+      source = <<-HBS
+        {{#each a_leaf}} {{else}} {{/each}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).not_to be_empty
+    end
+
+    it "with errors due unallowed method" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        {}
+      end
+
+      source = <<-HBS
+        {{#each unallowed}} {{else}} {{/each}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).not_to be_empty
+    end
   end
 end
