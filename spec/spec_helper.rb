@@ -7,6 +7,7 @@ require 'byebug'
 require 'dummy/config/environment'
 require 'rspec/rails'
 
+require 'curlybars/safe_buffer'
 require 'curlybars/lexer'
 require 'curlybars/parser'
 require 'curlybars/position'

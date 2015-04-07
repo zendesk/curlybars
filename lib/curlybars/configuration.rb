@@ -19,11 +19,13 @@ module Curlybars
     attr_accessor :presenters_namespace
     attr_accessor :nesting_limit
     attr_accessor :traversing_limit
+    attr_accessor :output_limit
 
     def initialize
       @presenters_namespace = ''
       @nesting_limit = 10
       @traversing_limit = 10
+      @output_limit = 1.megabyte
     end
   end
 end

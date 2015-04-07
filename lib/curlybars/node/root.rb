@@ -10,7 +10,7 @@ module Curlybars
             variables,
             #{position.file_name.inspect}
           )
-          buffer = ActiveSupport::SafeBuffer.new
+          buffer = Curlybars::SafeBuffer.new
           #{template.compile}
           buffer
         RUBY

@@ -34,7 +34,7 @@ module Curlybars
               contexts.push(block_helper_context)
               variables.push(vars.symbolize_keys)
               outer_buffer = buffer
-              buffer = ActiveSupport::SafeBuffer.new
+              buffer = Curlybars::SafeBuffer.new
               #{template.compile}
               buffer
             ensure
