@@ -4,7 +4,7 @@ module Curlybars
       def compile
         <<-RUBY
           unless rendering.to_bool(rendering.cached_call(#{expression.compile}))
-            buffer.safe_concat(#{template.compile})
+            #{template.compile}
           end
         RUBY
       end

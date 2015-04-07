@@ -11,7 +11,7 @@ module Curlybars
 
           contexts.push(compiled_path)
           begin
-            buffer.safe_concat(#{template.compile})
+            #{template.compile}
           ensure
             contexts.pop
           end
