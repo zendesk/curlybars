@@ -42,7 +42,7 @@ module Curlybars
     r(/@((?:\.\.\/)*#{IDENTIFIER})/, :curly) { |variable| [:VARIABLE, match[1]] }
 
     r(/(#{IDENTIFIER})\s*=/, :curly) { [:KEY, match[1]] }
-    r(/(?:\.\.\/)*(#{IDENTIFIER}\.)*#{IDENTIFIER}/, :curly) { |name| [:PATH, name] }
+    r(/(?:\.\.\/)*(?:#{IDENTIFIER}\.)*#{IDENTIFIER}/, :curly) { |name| [:PATH, name] }
 
     r(/\s/, :curly)
 
