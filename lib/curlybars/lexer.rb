@@ -6,8 +6,8 @@ module Curlybars
 
     IDENTIFIER = '[A-Za-z_]\w*'
 
-    r(/\\\z/) { |text| [:TEXT, '\\'] }
-    r(/\\{/) { |text| [:TEXT, '{'] }
+    r(/\\{/) { [:TEXT, '{'] }
+    r(/\\/) { [:TEXT, '\\'] }
 
     r(/{{!--/) { push_state :comment_block }
     r(/--}}/, :comment_block) { pop_state }

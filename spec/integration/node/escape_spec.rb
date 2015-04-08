@@ -4,9 +4,23 @@ describe '`\` as an escaping character' do
 
   it "escapes `{`" do
     template = Curlybars.compile(<<-HBS)
-      \\{{!
+      text \\{{! text
     HBS
 
-    expect(eval(template)).to resemble('{{!')
+    expect(eval(template)).to resemble('text {{! text')
+  end
+
+  it "escapes `\\`" do
+    template = Curlybars.compile(<<-HBS)
+      text \\ text
+    HBS
+
+    expect(eval(template)).to resemble('text \\ text')
+  end
+
+  it "escapes `\\` at the end of the string" do
+    template = Curlybars.compile('text \\')
+
+    expect(eval(template)).to resemble('text \\')
   end
 end
