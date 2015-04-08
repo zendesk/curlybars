@@ -1,5 +1,11 @@
 ### Unreleased
 
+### Curlybars 0.4.11 (April 8, 2015)
+
+* Security constraints
+
+  Mauro Codella
+
 ### Curlybars 0.4.10 (March 19, 2015)
 
 * Cache presenter methods calls, when not helpers
