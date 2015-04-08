@@ -22,7 +22,7 @@ module Curlybars
                 first: index == 0,
                 last: index == (collection.length - 1),
               })
-              buffer.safe_concat(#{template.compile})
+              #{template.compile}
             ensure
               variables.pop
               contexts.pop

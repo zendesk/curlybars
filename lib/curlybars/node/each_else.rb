@@ -8,7 +8,7 @@ module Curlybars
           if rendering.to_bool(compiled_path)
             #{Each.new(path, each_template, position).compile}
           else
-            buffer.safe_concat(#{else_template.compile})
+            #{else_template.compile}
           end
         RUBY
       end

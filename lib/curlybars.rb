@@ -74,6 +74,7 @@ module Curlybars
   end
 end
 
+require 'curlybars/safe_buffer'
 require 'curlybars/configuration'
 require 'curlybars/rendering_support'
 require 'curlybars/parser'

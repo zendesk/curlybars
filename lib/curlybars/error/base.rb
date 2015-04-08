@@ -6,6 +6,7 @@ module Curlybars::Error
       super(message)
       @id = id
       @position = position
+      return if position.nil?
       return if position.file_name.nil?
       location = "%s:%d:%d" % [position.file_name, position.line_number, position.line_offset]
       set_backtrace([location])
