@@ -36,8 +36,8 @@ module Curlybars
     r(/true/, :curly) { [:LITERAL, true] }
     r(/false/, :curly) { [:LITERAL, false] }
     r(/[-+]?\d+/, :curly) { |integer| [:LITERAL, integer.to_i] }
-    r(/'(.*?)'/m, :curly) { [:LITERAL, match[1].inspect] }
-    r(/"(.*?)"/m, :curly) { [:LITERAL, match[1].inspect] }
+    r(/'(.*?)'/, :curly) { [:LITERAL, match[1].inspect] }
+    r(/"(.*?)"/, :curly) { [:LITERAL, match[1].inspect] }
 
     r(/@((?:\.\.\/)*#{IDENTIFIER})/, :curly) { |variable| [:VARIABLE, match[1]] }
 

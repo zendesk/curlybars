@@ -82,10 +82,6 @@ describe Curlybars::Lexer do
       expect(literal_token.value).to eq '"string"'
     end
 
-    it "is lexed when string is multiline" do
-      expect(lex("text {{'\n'}} text")).to produce [:TEXT, :START, :LITERAL, :END, :TEXT]
-    end
-
     it "is resilient to whitespaces" do
       expect(lex("{{ '' }}")).to produce [:START, :LITERAL, :END]
     end
@@ -103,10 +99,6 @@ describe Curlybars::Lexer do
     it "returns the string between quotes" do
       literal_token = lex('{{"string"}}').detect {|token| token.type == :LITERAL}
       expect(literal_token.value).to eq '"string"'
-    end
-
-    it "is lexed when string is multiline" do
-      expect(lex('text {{"\n"}} text')).to produce [:TEXT, :START, :LITERAL, :END, :TEXT]
     end
 
     it "is resilient to whitespaces" do
