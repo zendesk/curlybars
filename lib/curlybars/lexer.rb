@@ -6,8 +6,8 @@ module Curlybars
 
     IDENTIFIER = '[A-Za-z_]\w*'
 
-    r(/\\\z/) { |text| [:TEXT, '\\'] }
-    r(/\\{/) { |text| [:TEXT, '{'] }
+    r(/\\{/) { [:TEXT, '{'] }
+    r(/\\/) { [:TEXT, '\\'] }
 
     r(/{{!--/) { push_state :comment_block }
     r(/--}}/, :comment_block) { pop_state }
@@ -27,22 +27,22 @@ module Curlybars
     r(/\//, :curly) { :SLASH }
     r(/>/, :curly) { :GT }
 
-    r(/if(?=\s|})/, :curly) { :IF }
-    r(/unless(?=\s|})/, :curly) { :UNLESS }
-    r(/each(?=\s|})/, :curly) { :EACH }
-    r(/with(?=\s|})/, :curly) { :WITH }
-    r(/else(?=\s|})/, :curly) { :ELSE }
+    r(/if\b/, :curly) { :IF }
+    r(/unless\b/, :curly) { :UNLESS }
+    r(/each\b/, :curly) { :EACH }
+    r(/with\b/, :curly) { :WITH }
+    r(/else\b/, :curly) { :ELSE }
 
-    r(/true/, :curly) { |boolean| [:LITERAL, true] }
-    r(/false/, :curly) { |boolean| [:LITERAL, false] }
-    r(/\d+/, :curly) { |integer| [:LITERAL, integer.to_i] }
-    r(/'(.*?)'/m, :curly) { |string| [:LITERAL, match[1].inspect] }
-    r(/"(.*?)"/m, :curly) { |string| [:LITERAL, match[1].inspect] }
+    r(/true/, :curly) { [:LITERAL, true] }
+    r(/false/, :curly) { [:LITERAL, false] }
+    r(/[-+]?\d+/, :curly) { |integer| [:LITERAL, integer.to_i] }
+    r(/'(.*?)'/, :curly) { [:LITERAL, match[1].inspect] }
+    r(/"(.*?)"/, :curly) { [:LITERAL, match[1].inspect] }
 
-    r(/@((..\/)*#{IDENTIFIER})/, :curly) { |variable| [:VARIABLE, match[1]] }
+    r(/@((?:\.\.\/)*#{IDENTIFIER})/, :curly) { |variable| [:VARIABLE, match[1]] }
 
-    r(/(#{IDENTIFIER})\s*=/, :curly) { |key| [:KEY, match[1]] }
-    r(/(..\/)*(#{IDENTIFIER}\.)*#{IDENTIFIER}/, :curly) { |name| [:PATH, name] }
+    r(/(#{IDENTIFIER})\s*=/, :curly) { [:KEY, match[1]] }
+    r(/(?:\.\.\/)*(?:#{IDENTIFIER}\.)*#{IDENTIFIER}/, :curly) { |name| [:PATH, name] }
 
     r(/\s/, :curly)
 
