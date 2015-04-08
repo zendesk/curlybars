@@ -39,10 +39,10 @@ module Curlybars
     r(/'(.*?)'/m, :curly) { |string| [:LITERAL, match[1].inspect] }
     r(/"(.*?)"/m, :curly) { |string| [:LITERAL, match[1].inspect] }
 
-    r(/@((..\/)*#{IDENTIFIER})/, :curly) { |variable| [:VARIABLE, match[1]] }
+    r(/@((?:\.\.\/)*#{IDENTIFIER})/, :curly) { |variable| [:VARIABLE, match[1]] }
 
     r(/(#{IDENTIFIER})\s*=/, :curly) { |key| [:KEY, match[1]] }
-    r(/(..\/)*(#{IDENTIFIER}\.)*#{IDENTIFIER}/, :curly) { |name| [:PATH, name] }
+    r(/(?:\.\.\/)*(#{IDENTIFIER}\.)*#{IDENTIFIER}/, :curly) { |name| [:PATH, name] }
 
     r(/\s/, :curly)
 
