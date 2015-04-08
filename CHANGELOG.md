@@ -1,5 +1,11 @@
 ### Unreleased
 
+### Curlybars 0.4.12 (April 8, 2015)
+
+* Lexer fixes
+
+  Mauro Codella
+
 ### Curlybars 0.4.11 (April 8, 2015)
 
 * Security constraints
