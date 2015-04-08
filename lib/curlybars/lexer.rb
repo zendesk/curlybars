@@ -27,11 +27,11 @@ module Curlybars
     r(/\//, :curly) { :SLASH }
     r(/>/, :curly) { :GT }
 
-    r(/if(?=\s|})/, :curly) { :IF }
-    r(/unless(?=\s|})/, :curly) { :UNLESS }
-    r(/each(?=\s|})/, :curly) { :EACH }
-    r(/with(?=\s|})/, :curly) { :WITH }
-    r(/else(?=\s|})/, :curly) { :ELSE }
+    r(/if\b/, :curly) { :IF }
+    r(/unless\b/, :curly) { :UNLESS }
+    r(/each\b/, :curly) { :EACH }
+    r(/with\b/, :curly) { :WITH }
+    r(/else\b/, :curly) { :ELSE }
 
     r(/true/, :curly) { |boolean| [:LITERAL, true] }
     r(/false/, :curly) { |boolean| [:LITERAL, false] }
