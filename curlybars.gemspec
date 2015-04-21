@@ -1,7 +1,8 @@
-Gem::Specification.new do |s|
+require './lib/curlybars/version'
 
+Gem::Specification.new do |s|
   s.name        = 'curlybars'
-  s.version     = '0.4.12'
+  s.version     = Curlybars::VERSION
 
   s.summary     = "Create your views using Handlebars templates!"
   s.description = "A view layer for your Rails apps that separates
