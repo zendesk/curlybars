@@ -7,6 +7,27 @@ Curlybars
 
 A fork of [Curly](https://github.com/zendesk/curly) that speaks Handlebars.
 
+Installation
+------------
+
+Add this line to your application's Gemfile:
+
+```ruby
+gem 'curlybars'
+```
+
+And then execute:
+
+```bash
+bundle
+```
+
+Or install it yourself as:
+
+```bash
+gem install curlybars
+```
+
 How to use Curlybars
 --------------------
 
@@ -209,6 +230,15 @@ This will make the lookup system to search for presenters like:
 ```
 Experimental::Articles::ShowPresenter
 ```
+
+Contributing
+------------
+
+1. Fork the project
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create a new Pull Request
 
 Copyright and License
 ---------------------
