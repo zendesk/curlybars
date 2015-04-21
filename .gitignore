@@ -1,21 +1,22 @@
+/.bundle/
+/Gemfile.lock
+/coverage/
+/pkg/
+/spec/reports/
+/tmp/
+*.bundle
+*.so
+*.o
+*.a
+mkmf.log
 *.gem
 *.rbc
-.bundle
 .config
-coverage
-InstalledFiles
-lib/bundler/man
-pkg
 rdoc
-spec/reports
-test/tmp
-test/version_tmp
-tmp
-
-# YARD artifacts
-.yardoc
-_yardoc
-doc/
-Gemfile.lock
 .ruby-version
 .DS_Store
+
+# YARD artifacts
+/.yardoc/
+/_yardoc/
+/doc/
