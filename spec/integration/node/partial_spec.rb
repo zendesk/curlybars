@@ -39,5 +39,33 @@ describe "{{> partial}}" do
 
       expect(errors).not_to be_empty
     end
+
+    it "raises when using a helper as a partial" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { helper: nil }
+      end
+
+      source = <<-HBS
+        {{> helper}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).not_to be_empty
+    end
+
+    it "does not raise with a valid partial" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { partial: :partial }
+      end
+
+      source = <<-HBS
+        {{> partial}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).to be_empty
+    end
   end
 end

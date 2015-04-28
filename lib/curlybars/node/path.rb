@@ -63,6 +63,10 @@ module Curlybars
           return if value.nil?
           message = "`#{path}` cannot resolve to a presenter or a collection of such"
           raise Curlybars::Error::Validate.new('not_a_leaf', message, position)
+        when :partial
+          return if value == :partial
+          message = "`#{path}` cannot resolve to a partial"
+          raise Curlybars::Error::Validate.new('not_a_partial', message, position)
         when :anything
         else
           raise "invalid type `#{check_type}`"
