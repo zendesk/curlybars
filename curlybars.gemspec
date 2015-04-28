@@ -21,6 +21,8 @@ Gem::Specification.new do |s|
   s.email    = 'libo@zendesk.com'
   s.homepage = 'https://github.com/zendesk/curlybars'
 
+  s.metadata['allowed_push_host'] = "https://gem.zdsys.com/gems/"
+
   s.require_paths = %w(lib)
 
   s.rdoc_options = ["--charset=UTF-8"]
@@ -36,6 +38,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency("genspec")
   s.add_development_dependency("rubocop", "~> 0.29.1")
   s.add_development_dependency("byebug", "~> 3.5")
+  s.add_development_dependency("bundler")
+  s.add_development_dependency("private_gem")
 
   s.files       = Dir.glob('lib/**/*.rb')
   s.executables = Dir.glob('bin/**/*').map {|f| File.basename(f)}

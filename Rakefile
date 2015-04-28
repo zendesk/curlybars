@@ -1,5 +1,5 @@
-# Remove comment when this gem goes public
-# require 'bundler/gem_tasks'
+require 'bundler/setup'
+require 'private_gem/tasks'
 
 task default: [:spec, :rubocop]
 
