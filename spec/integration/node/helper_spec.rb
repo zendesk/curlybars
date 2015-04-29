@@ -88,6 +88,20 @@ describe "{{helper context key=value}}" do
       expect(errors).not_to be_empty
     end
 
+    it "raises when using a partial as an helper" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { partial: :partial }
+      end
+
+      source = <<-HBS
+        {{partial}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).not_to be_empty
+    end
+
     it "without errors" do
       allow(presenter_class).to receive(:dependency_tree) do
         { helper: nil }

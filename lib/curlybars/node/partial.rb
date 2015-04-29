@@ -8,7 +8,7 @@ module Curlybars
       end
 
       def validate(branches)
-        path.validate(branches, check_type: :leaf)
+        path.validate(branches, check_type: :partial)
       end
     end
   end

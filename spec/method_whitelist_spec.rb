@@ -82,18 +82,32 @@ describe Curlybars::MethodWhitelist do
   end
 
   describe ".methods_schema" do
-    before do
-      stub_const("ArticlePresenter", Class.new { extend Curlybars::MethodWhitelist })
+    it "should setup a schema propagating nil" do
       stub_const("LinkPresenter", Class.new { extend Curlybars::MethodWhitelist })
+      dummy_class.class_eval { allow_methods :cook }
 
-      dummy_class.class_eval do
-        allow_methods :cook, links: [LinkPresenter], article: ArticlePresenter
-      end
+      expect(dummy_class.methods_schema).to eq(cook: nil)
     end
 
-    it "should setup a schema of methods" do
-      expect(dummy_class.methods_schema).
-        to eq(cook: nil, links: [LinkPresenter], article: ArticlePresenter)
+    it "should setup a schema any random type" do
+      stub_const("LinkPresenter", Class.new { extend Curlybars::MethodWhitelist })
+      dummy_class.class_eval { allow_methods something: :foobar }
+
+      expect(dummy_class.methods_schema).to eq(something: :foobar)
+    end
+
+    it "should setup a schema propagating the return type of the method" do
+      stub_const("ArticlePresenter", Class.new { extend Curlybars::MethodWhitelist })
+      dummy_class.class_eval { allow_methods article: ArticlePresenter }
+
+      expect(dummy_class.methods_schema).to eq(article: ArticlePresenter)
+    end
+
+    it "should setup a schema propagating a collection" do
+      stub_const("LinkPresenter", Class.new { extend Curlybars::MethodWhitelist })
+      dummy_class.class_eval { allow_methods links: [LinkPresenter] }
+
+      expect(dummy_class.methods_schema).to eq(links: [LinkPresenter])
     end
   end
 
