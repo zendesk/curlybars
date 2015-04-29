@@ -1,5 +1,17 @@
 ### Unreleased
 
+### Curlybars 0.4.12 (April 29, 2015)
+
+* Differentiate partials from helpers during validation
+
+  Libo Cannici & Mauro Codella
+
+### Curlybars 0.4.12 (April 28, 2015)
+
+* Update dependency of Curly
+
+  Libo Cannici
+
 ### Curlybars 0.4.12 (April 8, 2015)
 
 * Lexer fixes
