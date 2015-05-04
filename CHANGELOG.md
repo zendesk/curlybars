@@ -1,5 +1,17 @@
 ### Unreleased
 
+### Curlybars 0.5.1 (May 4, 2015)
+
+* Token factory API to be used in pre-processors
+
+  Libo Cannici & Mauro Codella
+
+### Curlybars 0.5.0 (May 4, 2015)
+
+* Support for custom pre-processors
+
+  Libo Cannici & Mauro Codella
+
 ### Curlybars 0.4.12 (April 29, 2015)
 
 * Differentiate partials from helpers during validation
