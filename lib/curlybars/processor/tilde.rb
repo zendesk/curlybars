@@ -2,7 +2,7 @@ module Curlybars
   module Processor
     class Tilde
       class << self
-        def process(tokens)
+        def process!(tokens)
           tokens.each_with_index do |token, index|
             case token.type
             when :TILDE_START

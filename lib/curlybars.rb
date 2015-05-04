@@ -62,9 +62,15 @@ module Curlybars
 
     private
 
+    def processors
+      [Curlybars::Processor::Tilde] + Curlybars.configuration.custom_processors
+    end
+
     def ast(source, file_name)
       tokens = Curlybars::Lexer.lex(source, file_name)
-      Curlybars::Processor::Tilde.process(tokens)
+
+      processors.each { |processor| processor.process!(tokens) }
+
       Curlybars::Parser.parse(tokens)
     rescue RLTK::LexingError => lexing_error
       raise Curlybars::Error::Lex.new(source, file_name, lexing_error)
