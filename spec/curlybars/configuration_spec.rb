@@ -19,6 +19,14 @@ describe Curlybars::Configuration do
     end
   end
 
+  describe "#custom_processors" do
+    it "can set value" do
+      config = Curlybars::Configuration.new
+      config.custom_processors = ['test']
+      expect(config.custom_processors).to eq(['test'])
+    end
+  end
+
   describe ".configure" do
     before do
       Curlybars.configure do |config|

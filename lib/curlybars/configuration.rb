@@ -21,6 +21,7 @@ module Curlybars
     attr_accessor :traversing_limit
     attr_accessor :output_limit
     attr_accessor :rendering_timeout
+    attr_accessor :custom_processors
 
     def initialize
       @presenters_namespace = ''
@@ -28,6 +29,7 @@ module Curlybars
       @traversing_limit = 10
       @output_limit = 1.megabyte
       @rendering_timeout = 10.seconds
+      @custom_processors = []
     end
   end
 end
