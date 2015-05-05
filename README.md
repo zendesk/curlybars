@@ -231,6 +231,257 @@ This will make the lookup system to search for presenters like:
 Experimental::Articles::ShowPresenter
 ```
 
+Exceptions
+----------
+
+Curlybars raises the following exceptions:
+- `Curlybars::Error::Lex`
+- `Curlybars::Error::Parse`
+- `Curlybars::Error::Compile`
+- `Curlybars::Error::Validate`
+- `Curlybars::Error::Render`
+
+Every exception object carries at least the following attributes that can be consumed:
+
+ * id: a unique identifier for the exception
+ * message: a generic error message, that describes the encountered issue
+ * position: a `Curlybars::Position`, pointing to the exact location to the error, meaningful for the `id`.
+
+### Lexer Errors
+
+During the lexing phase, a `Curlybars::Error::Lex` exception can be raised.
+
+Only one id is available for this exception: `lex`
+
+#### lex
+
+Example: the following HBS raises this exception:
+```hbs
+{{! a string cannot be surrounded by two different types of quotes }}
+
+{{t 'a string"}}
+```
+
+```hbs
+{{! a path cannot be written using commas (only dots are valid) }}
+
+{{first,second "a string"}}
+```
+
+### Parser Errors
+
+During the parsing phase, a `Curlybars::Error::Parse` exception can be raised.
+
+Only one id is available for this exception: `parse`
+
+#### parse
+
+Example: the following HBS raises this exception:
+```hbs
+{{! #each can only iterate over a collection }}
+
+{{#each 'a string'}}
+{{/each}}
+```
+
+### Compiler Errors
+
+During the compilation phase, a `Curlybars::Error::Compile` exception can be raised.
+
+Only one id is available for this exception: `compile.closing_tag_mismatch`
+
+#### compile.closing_tag_mismatch
+
+ Example: the following HBS raises this exception:
+```hbs
+{{! a block helper can only be closed by a tag with the same name }}
+
+{{#foo}}
+{{/bar}}
+```
+
+### Validation Errors
+
+During the validation phase, a `Curlybars::Error::Validate` exception can be raised.
+
+The following descriptors are available:
+- `validate.closing_tag_mismatch`
+- `validate.not_a_partial`
+- `validate.not_a_presenter`
+- `validate.not_a_presenter_collection`
+- `validate.not_a_leaf`
+- `validate.unallowed_path`
+
+#### validate.closing_tag_mismatch
+
+This exception occurs when a block helper is not closed properly. This means that each custom block helper must be closed by a tag with the same name - ie. the following example will raise this exception:
+
+```hbs
+{{! a block helper can only be closed by a tag with the same name }}
+
+{{#foo}}
+  ...
+{{/bar}}
+```
+
+#### validate.not_a_partial
+
+This exception occurs when a path is called as a partial but it's not given
+the allowed methods definition on the presenter - ie. the following example will raise this exception:
+
+```ruby
+class NavigationPresenter
+  allow_method menu: :partial
+
+  def menu
+    ...
+  end
+end
+```
+
+```hbs
+{{! this will NOT raise the exception }}
+
+{{> menu}}
+
+{{! this will raise the exception }}
+
+{{menu}}
+```
+
+#### validate.not_a_presenter
+
+This exception occurs when a language construct that consumes a presenter is given a path that according to its `allow_method` declaration is not supposed to evaluate to a
+presenter - ie. the following example will raise this exception:
+
+```ruby
+class ArticlePresenter
+  allow_methods :title, author: AuthorPresenter
+
+  def title
+    "Niccolò Macchiavelli"
+  end
+
+  def author
+    ...
+  end
+end
+```
+
+```hbs
+{{! this will NOT raise the exception }}
+
+{{#with author}}
+  ...
+{{/with}}
+
+{{! this will raise the exception }}
+
+{{#with title}}
+  ...
+{{/with}}
+```
+
+#### validate.not_a_presenter_collection
+
+This exception occurs when a language construct that consumes a presenter is given a path that according to its `allow_method` declaration is not supposed to evaluate to a
+collection of presenters - ie. the following example will raise this exception:
+
+```ruby
+class ArticlePresenter
+  allow_methods :title, comments: [CommentPresenter]
+
+  def title
+    "Niccolò Macchiavelli"
+  end
+
+  def comments
+    ...
+  end
+end
+```
+
+```hbs
+{{! this will NOT raise the exception }}
+
+{{#each comments}}
+  ...
+{{/each}}
+
+{{! this will raise the exception }}
+
+{{#each title}}
+  ...
+{{/each}}
+```
+
+#### validate.not_a_leaf
+
+This exception occurs when a language construct that consumes a presenter is given a path that according to its `allow_method` declaration is not supposed to evaluate to a method that returns a terminal output - ie. the following example will raise this exception:
+
+```ruby
+class ArticlePresenter
+  allow_methods :link, comments: [CommentPresenter]
+
+  def link(url)
+    "<a href='#{url}'>link</a>"
+  end
+
+  def comments
+    ...
+  end
+end
+```
+
+```hbs
+{{! this will NOT raise the exception }}
+
+{{link 'http://test.com/cat.jpg'}}
+
+{{! this will raise the exception }}
+
+{{comments 'http://test.com/cat.jpg'}}
+```
+
+#### validate.unallowed_path
+
+This exception occurs when a path is not allowed, given the allowed method definition
+on the presenter - ie. the following example will raise this exception:
+
+```ruby
+class UserPresenter
+  allow_methods :name
+
+  def name
+    "Nicolø"
+  end
+end
+```
+
+```hbs
+{{! this will NOT raise the exception }}
+
+{{ user.name }}
+
+{{! this will raise the exception }}
+
+{{ user.foo }}
+```
+
+### Rendering Errors
+
+During the validation phase, a `Curlybars::Error::Render` exception can be raised.
+
+The following descriptors are available:
+- `render.context_is_not_a_presenter`
+- `render.context_is_not_an_array_of_presenters`
+- `render.invalid_helper_signature`
+- `render.not_an_enumerable_or_hash`
+- `render.path_not_allowed`
+- `render.traverse_too_deep`
+- `render.output_too_long`
+- `render.timeout`
+
 Contributing
 ------------
 
