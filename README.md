@@ -244,18 +244,18 @@ Curlybars raises the following exceptions:
 Every exception object carries at least the following attributes that can be consumed:
 
  * id: a unique identifier for the exception
- * message: a generic error message, that describes the encountered issue
- * position: a `Curlybars::Position`, pointing to the exact location to the error, meaningful for the `id`.
+ * message: a generic error message that describes the encountered issue
+ * position: a `Curlybars::Position` pointing to the exact location to the error. Meaningful for the `id`
 
 ### Lexer Errors
 
 During the lexing phase, a `Curlybars::Error::Lex` exception can be raised.
 
-Only one id is available for this exception: `lex`
+Only one id is available for this exception: `lex`.
 
 #### lex
 
-Example: the following HBS raises this exception:
+Example - The following HBS raises this exception:
 ```hbs
 {{! a string cannot be surrounded by two different types of quotes }}
 
@@ -272,11 +272,11 @@ Example: the following HBS raises this exception:
 
 During the parsing phase, a `Curlybars::Error::Parse` exception can be raised.
 
-Only one id is available for this exception: `parse`
+Only one id is available for this exception: `parse`.
 
 #### parse
 
-Example: the following HBS raises this exception:
+Example - The following HBS raises this exception:
 ```hbs
 {{! #each can only iterate over a collection }}
 
@@ -288,11 +288,11 @@ Example: the following HBS raises this exception:
 
 During the compilation phase, a `Curlybars::Error::Compile` exception can be raised.
 
-Only one id is available for this exception: `compile.closing_tag_mismatch`
+Only one id is available for this exception: `compile.closing_tag_mismatch`.
 
 #### compile.closing_tag_mismatch
 
- Example: the following HBS raises this exception:
+ Example - The following HBS raises this exception:
 ```hbs
 {{! a block helper can only be closed by a tag with the same name }}
 
@@ -314,7 +314,7 @@ The following descriptors are available:
 
 #### validate.closing_tag_mismatch
 
-This exception occurs when a block helper is not closed properly. This means that each custom block helper must be closed by a tag with the same name - ie. the following example will raise this exception:
+This exception occurs when a block helper is not closed properly. This means that each custom block helper must be closed by a tag with the same name. For example, the following example will raise this exception:
 
 ```hbs
 {{! a block helper can only be closed by a tag with the same name }}
@@ -327,7 +327,7 @@ This exception occurs when a block helper is not closed properly. This means tha
 #### validate.not_a_partial
 
 This exception occurs when a path is called as a partial but it's not given
-the allowed methods definition on the presenter - ie. the following example will raise this exception:
+the allowed methods definition on the presenter. For example, the following example will raise this exception:
 
 ```ruby
 class NavigationPresenter
@@ -351,8 +351,8 @@ end
 
 #### validate.not_a_presenter
 
-This exception occurs when a language construct that consumes a presenter is given a path that according to its `allow_method` declaration is not supposed to evaluate to a
-presenter - ie. the following example will raise this exception:
+This exception occurs when a language construct that consumes a presenter is given a path that, according to its `allow_method` declaration, is not supposed to evaluate to a
+presenter. For example, the following example will raise this exception:
 
 ```ruby
 class ArticlePresenter
@@ -384,8 +384,8 @@ end
 
 #### validate.not_a_presenter_collection
 
-This exception occurs when a language construct that consumes a presenter is given a path that according to its `allow_method` declaration is not supposed to evaluate to a
-collection of presenters - ie. the following example will raise this exception:
+This exception occurs when a language construct that consumes a presenter is given a path that, according to its `allow_method` declaration, is not supposed to evaluate to a
+collection of presenters. For example, the following example will raise this exception:
 
 ```ruby
 class ArticlePresenter
@@ -417,7 +417,7 @@ end
 
 #### validate.not_a_leaf
 
-This exception occurs when a language construct that consumes a presenter is given a path that according to its `allow_method` declaration is not supposed to evaluate to a method that returns a terminal output - ie. the following example will raise this exception:
+This exception occurs when a language construct that consumes a presenter is given a path that, according to its `allow_method` declaration, is not supposed to evaluate to a method that returns a terminal output. For example, the following example will raise this exception:
 
 ```ruby
 class ArticlePresenter
@@ -446,7 +446,7 @@ end
 #### validate.unallowed_path
 
 This exception occurs when a path is not allowed, given the allowed method definition
-on the presenter - ie. the following example will raise this exception:
+on the presenter. For example, the following example will raise this exception:
 
 ```ruby
 class UserPresenter
