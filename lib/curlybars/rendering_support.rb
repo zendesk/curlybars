@@ -103,14 +103,14 @@ module Curlybars
       Curlybars::Position.new(file_name, line_number, line_offset)
     end
 
-    def coerce_to_hash(collection, path, position)
+    def coerce_to_hash!(collection, path, position)
+      check_context_is_hash_or_enum_of_presenters(collection, path, position)
       if collection.is_a?(Hash)
         collection
       elsif collection.respond_to? :each_with_index
         collection.each_with_index.map { |value, index| [index, value] }.to_h
       else
-        message = "`#{path}` must return either an Enumerable or an Hash of presenters."
-        raise Curlybars::Error::Render.new('not_an_enumerable_or_hash', message, position)
+        raise "Collection is not coerceable to hash"
       end
     end
 
