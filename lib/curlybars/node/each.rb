@@ -7,12 +7,8 @@ module Curlybars
           return if collection.nil?
 
           position = rendering.position(#{position.line_number}, #{position.line_offset})
-          rendering.check_context_is_hash_or_enum_of_presenters(
-            collection,
-            #{path.path.inspect},
-            position)
 
-          collection = rendering.coerce_to_hash(collection, #{path.path.inspect}, position)
+          collection = rendering.coerce_to_hash!(collection, #{path.path.inspect}, position)
           collection.each.with_index.map do |key_and_presenter, index|
             begin
               contexts.push(key_and_presenter[1])

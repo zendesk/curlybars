@@ -313,21 +313,24 @@ describe Curlybars::RenderingSupport do
     end
   end
 
-  describe "#coerce_to_hash" do
+  describe "#coerce_to_hash!" do
+    let(:a_presenter) { double(:a_presenter, allows_method?: true, meth: :value) }
+    let(:another_presenter) { double(:another_presenter, allows_method?: true, meth: :value) }
+
     it "leaves hashes intacted" do
-      hash = { key: :value }
-      expect(rendering.coerce_to_hash(hash, 'path', position)).to be hash
+      hash = { first: a_presenter }
+      expect(rendering.coerce_to_hash!(hash, 'path', position)).to be hash
     end
 
     it "transform an Array to a Hash" do
-      array = [:a, :b, :c]
-      expected_hash = { 0 => :a, 1 => :b, 2 => :c }
-      expect(rendering.coerce_to_hash(array, 'path', position)).to eq expected_hash
+      array = [a_presenter, another_presenter]
+      expected_hash = { 0 => a_presenter, 1 => another_presenter }
+      expect(rendering.coerce_to_hash!(array, 'path', position)).to eq expected_hash
     end
 
     it "raises when it is not a hash or an enumerable" do
       expect do
-        rendering.coerce_to_hash(:not_a_presenter, 'path', position)
+        rendering.coerce_to_hash!(:not_a_presenter, 'path', position)
       end.to raise_error(Curlybars::Error::Render)
     end
   end
