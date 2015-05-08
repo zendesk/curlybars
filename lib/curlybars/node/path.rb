@@ -32,7 +32,7 @@ module Curlybars
         value = dotted_path_side.split(/\./).map(&:to_sym).inject(base_tree) do |sub_tree, step|
           if step == :this
             next sub_tree
-          elsif not (sub_tree.is_a?(Hash) && sub_tree.key?(step))
+          elsif !(sub_tree.is_a?(Hash) && sub_tree.key?(step))
             message = "not possible to access `#{step}` in `#{path}`"
             raise Curlybars::Error::Validate.new('unallowed_path', message, position)
           end
