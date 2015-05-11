@@ -34,7 +34,7 @@ module Curlybars
             next sub_tree
           elsif !(sub_tree.is_a?(Hash) && sub_tree.key?(step))
             message = "not possible to access `#{step}` in `#{path}`"
-            raise Curlybars::Error::Validate.new('unallowed_path', message, position)
+            raise Curlybars::Error::Validate.new('unallowed_path', message, position, path: path, step: step)
           end
           sub_tree[step]
         end
