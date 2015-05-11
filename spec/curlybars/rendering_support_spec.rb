@@ -75,6 +75,17 @@ describe Curlybars::RenderingSupport do
       end.to raise_error(Curlybars::Error::Render)
     end
 
+    it "exposes the unallowed method in the exception payload" do
+      disallow_all_methods(presenter)
+      allow(presenter).to receive(:forbidden_method) { :forbidden_method }
+
+      begin
+        rendering.path('forbidden_method', rendering.position(0, 1))
+      rescue Curlybars::Error::Render => e
+        expect(e.metadata).to eq(meth: :forbidden_method)
+      end
+    end
+
     it "raises an exception when the context is not a presenter" do
       sub = double(:not_presenter)
       allow(presenter).to receive(:sub) { sub }

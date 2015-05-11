@@ -470,6 +470,12 @@ end
 {{ user.foo }}
 ```
 
+Furthermore the exception exposed additional information in a `metadata` payload
+with the following attributes (in the example above):
+
+* path: "user.foo"
+* step: :foo
+
 ### Rendering Errors
 
 During the validation phase, a `Curlybars::Error::Render` exception can be raised.
@@ -610,6 +616,11 @@ end
 
 {{author.surnames}}
 ```
+
+Furthermore the exception exposed additional information in a `metadata` payload
+with the following attribute (in the example above):
+
+* meth: :surnames
 
 #### render.traverse_too_deep
 
