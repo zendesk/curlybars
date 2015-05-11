@@ -170,5 +170,25 @@ describe "{{path}}" do
 
       expect(errors).to be_empty
     end
+
+    describe "with errors" do
+      let(:source) { "{{unallowed_path}}" }
+
+      before do
+        allow(presenter_class).to receive(:dependency_tree) { {} }
+      end
+
+      it "raises with errors" do
+        errors = Curlybars.validate(presenter_class, source)
+
+        expect(errors).not_to be_empty
+      end
+
+      it "raises with metadata" do
+        errors = Curlybars.validate(presenter_class, source)
+
+        expect(errors.first.metadata).to eq(path: "unallowed_path", step: :unallowed_path)
+      end
+    end
   end
 end

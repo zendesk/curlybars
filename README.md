@@ -470,6 +470,12 @@ end
 {{ user.foo }}
 ```
 
+Furthermore the exception exposed additional information in a `metadata` payload
+with the following attributes (in the example above):
+
+* path: "user.foo"
+* step: :foo
+
 ### Rendering Errors
 
 During the validation phase, a `Curlybars::Error::Render` exception can be raised.
@@ -479,7 +485,7 @@ The following descriptors are available:
 - `render.context_is_not_an_array_of_presenters`
 - `render.invalid_helper_signature`
 - `render.not_an_enumerable_or_hash`
-- `render.path_not_allowed`
+- `render.unallowed_path`
 - `render.traverse_too_deep`
 - `render.output_too_long`
 - `render.timeout`
@@ -579,7 +585,7 @@ end
 {{bad_signature_helper 'context'}}
 ```
 
-#### render.path_not_allowed
+#### render.unallowed_path
 
 This exception occurs when a path containing an unallowed subpath is used.
 
@@ -610,6 +616,11 @@ end
 
 {{author.surnames}}
 ```
+
+Furthermore the exception exposed additional information in a `metadata` payload
+with the following attribute (in the example above):
+
+* meth: :surnames
 
 #### render.traverse_too_deep
 

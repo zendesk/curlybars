@@ -128,13 +128,13 @@ module Curlybars
       return if context.allows_method?(meth.to_sym)
       message = "`#{meth}` is not available - "
       message += "add `allow_methods :#{meth}` to #{context.class} to allow this path"
-      raise Curlybars::Error::Render.new('path_not_allowed', message, position)
+      raise Curlybars::Error::Render.new('unallowed_path', message, position, meth: meth.to_sym)
     end
 
     def check_context_has_method(context, meth, position)
       return if context.respond_to?(meth.to_sym)
       message = "`#{meth}` is not available in #{context.class}"
-      raise Curlybars::Error::Render.new('path_not_allowed', message, position)
+      raise Curlybars::Error::Render.new('unallowed_path', message, position)
     end
 
     def check_traverse_not_too_deep(traverse, position)
