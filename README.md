@@ -479,7 +479,7 @@ The following descriptors are available:
 - `render.context_is_not_an_array_of_presenters`
 - `render.invalid_helper_signature`
 - `render.not_an_enumerable_or_hash`
-- `render.path_not_allowed`
+- `render.unallowed_path`
 - `render.traverse_too_deep`
 - `render.output_too_long`
 - `render.timeout`
@@ -579,7 +579,7 @@ end
 {{bad_signature_helper 'context'}}
 ```
 
-#### render.path_not_allowed
+#### render.unallowed_path
 
 This exception occurs when a path containing an unallowed subpath is used.
 
