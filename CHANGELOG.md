@@ -1,5 +1,11 @@
 ### Unreleased
 
+### Curlybars 0.5.4 (May 11, 2015)
+
+* Expose metadata in some exceptions
+
+  Libo Cannici & Mauro Codella
+
 ### Curlybars 0.5.1 (May 4, 2015)
 
 * Token factory API to be used in pre-processors
