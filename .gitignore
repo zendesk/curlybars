@@ -15,6 +15,7 @@ mkmf.log
 rdoc
 .ruby-version
 .DS_Store
+*.swp
 
 # YARD artifacts
 /.yardoc/
