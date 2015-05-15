@@ -1,7 +1,21 @@
-describe "{{#helper context key=value}}...{{/helper}}" do
+describe "{{#helper context key=value}}...<{{else}}>...{{/helper}}" do
   describe "#compile" do
     let(:post) { double("post") }
     let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
+
+    it "renders the inverse block" do
+      template = Curlybars.compile(<<-HBS)
+        {{#render_inverse}}
+          fn
+        {{else}}
+          inverse
+        {{/render_inverse}}
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
+        inverse
+      HTML
+    end
 
     it "renders a block helper without options" do
       template = Curlybars.compile(<<-HBS)
