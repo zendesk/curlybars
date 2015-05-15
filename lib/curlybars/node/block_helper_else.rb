@@ -2,7 +2,7 @@ require 'curlybars/error/compile'
 
 module Curlybars
   module Node
-    BlockHelper = Struct.new(:helper, :context, :options, :template, :helperclose, :position) do
+    BlockHelperElse = Struct.new(:helper, :context, :options, :helper_template, :else_template, :helperclose, :position) do
       def compile
         check_open_and_close_elements(helper, helperclose, Curlybars::Error::Compile)
 
@@ -26,16 +26,14 @@ module Curlybars
           helper = #{helper.compile}
           helper_position = rendering.position(#{helper.position.line_number},
             #{helper.position.line_offset})
-
-          result = rendering.call(helper, #{helper.path.inspect}, helper_position,
-            context, options) do |block_helper_context = context, **vars|
+          fn = Proc.new do |block_helper_context = context, **vars|
             break if block_helper_context.nil?
             begin
               contexts.push(block_helper_context)
               variables.push(vars.symbolize_keys)
               outer_buffer = buffer
               buffer = Curlybars::SafeBuffer.new
-              #{template.compile}
+              #{helper_template.compile}
               buffer
             ensure
               buffer = outer_buffer
@@ -43,6 +41,30 @@ module Curlybars
               contexts.pop
             end
           end
+
+          options[:fn] = fn
+
+          inverse = Proc.new do |block_helper_context = context, **vars|
+            break if block_helper_context.nil?
+            begin
+              contexts.push(block_helper_context)
+              variables.push(vars.symbolize_keys)
+              outer_buffer = buffer
+              buffer = Curlybars::SafeBuffer.new
+              #{else_template.compile}
+              buffer
+            ensure
+              buffer = outer_buffer
+              variables.pop
+              contexts.pop
+            end
+          end
+
+          options[:inverse] = inverse
+
+          result = rendering.call(helper, #{helper.path.inspect}, helper_position,
+            context, options, &fn)
+
           buffer.safe_concat(result.to_s)
         RUBY
       end

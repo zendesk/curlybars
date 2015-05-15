@@ -12,7 +12,7 @@ require 'curlybars/node/literal'
 require 'curlybars/node/variable'
 require 'curlybars/node/with_else'
 require 'curlybars/node/helper'
-require 'curlybars/node/block_helper'
+require 'curlybars/node/block_helper_else'
 require 'curlybars/node/option'
 require 'curlybars/node/partial'
 require 'curlybars/node/output'
@@ -36,7 +36,32 @@ module Curlybars
         'START HASH .path .path .options? END
           .template?
         START SLASH .path END') do |helper, context, options, template, helperclose|
-        Node::BlockHelper.new(helper, context, options || [], template || EMPTY, helperclose, pos(0))
+        Node::BlockHelperElse.new(
+          helper,
+          context,
+          options || [],
+          template || EMPTY,
+          EMPTY,
+          helperclose,
+          pos(0)
+        )
+      end
+
+      clause(
+        'START HASH .path .path .options? END
+          .template?
+        START ELSE END
+          .template?
+        START SLASH .path END') do |helper, context, options, helper_template, else_template, helperclose|
+        Node::BlockHelperElse.new(
+          helper,
+          context,
+          options || [],
+          helper_template || EMPTY,
+          else_template || EMPTY,
+          helperclose,
+          pos(0)
+        )
       end
 
       clause('START .value END') do |value|

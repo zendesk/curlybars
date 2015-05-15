@@ -5,7 +5,7 @@ describe "{{#helper context key=value}}...<{{else}}>...{{/helper}}" do
 
     it "renders the inverse block" do
       template = Curlybars.compile(<<-HBS)
-        {{#render_inverse}}
+        {{#render_inverse this}}
           fn
         {{else}}
           inverse
