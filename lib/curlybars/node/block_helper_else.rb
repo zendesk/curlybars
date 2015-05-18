@@ -26,7 +26,7 @@ module Curlybars
           helper = #{helper.compile}
           helper_position = rendering.position(#{helper.position.line_number},
             #{helper.position.line_offset})
-          fn = Proc.new do |block_helper_context = context, **vars|
+          fn = ->(block_helper_context = context, **vars) do
             break if block_helper_context.nil?
             begin
               contexts.push(block_helper_context)
@@ -44,7 +44,7 @@ module Curlybars
 
           options[:fn] = fn
 
-          inverse = Proc.new do |block_helper_context = context, **vars|
+          inverse = ->(block_helper_context = context, **vars) do
             break if block_helper_context.nil?
             begin
               contexts.push(block_helper_context)
@@ -73,14 +73,17 @@ module Curlybars
         check_open_and_close_elements(helper, helperclose, Curlybars::Error::Validate)
 
         helper_tree = helper.resolve_and_check!(branches, check_type: :presenter)
-        template_errors = begin
+        helper_template_errors = begin
           branches.push(helper_tree)
-          template.validate(branches)
+          helper_template.validate(branches)
         ensure
           branches.pop
         end
+
+        else_template_errors = helper_template.validate(branches)
         [
-          template_errors,
+          helper_template_errors,
+          else_template_errors,
           context.validate(branches, check_type: :presenter),
           options.map { |option| option.validate(branches) }
         ]

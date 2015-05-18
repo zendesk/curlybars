@@ -8,7 +8,6 @@ module IntegrationTest
 
     def form(context, options)
       "beauty class:#{options[:class]} foo:#{options[:foo]} #{yield}"
-      options[:fn].call
     end
 
     def date(context, options)
