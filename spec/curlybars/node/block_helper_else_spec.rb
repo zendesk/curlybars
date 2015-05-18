@@ -28,12 +28,21 @@ describe Curlybars::Node::BlockHelperElse do
     Curlybars::Node::BlockHelperElse.new(helper, context, empty_options, template, else_template, helper, position).compile
   end
 
-  it "compiles the template" do
+  it "compiles the helper_template" do
     helper = double(:helper, compile: 'helper', path: 'helper', position: helper_position)
     context = double(:context, compile: 'context', path: 'path', position: context_position)
     template = double(:template)
     else_template = double(:else_template, compile: 'else_template')
     expect(template).to receive(:compile)
+    Curlybars::Node::BlockHelperElse.new(helper, context, empty_options, template, else_template, helper, position).compile
+  end
+
+  it "compiles the else_template" do
+    helper = double(:helper, compile: 'helper', path: 'helper', position: helper_position)
+    context = double(:context, compile: 'context', path: 'path', position: context_position)
+    template = double(:template, compile: 'else_template')
+    else_template = double(:else_template)
+    expect(else_template).to receive(:compile)
     Curlybars::Node::BlockHelperElse.new(helper, context, empty_options, template, else_template, helper, position).compile
   end
 
