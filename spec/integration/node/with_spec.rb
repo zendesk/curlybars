@@ -38,7 +38,21 @@ describe "{{#with presenter}}...{{/with}}" do
       HTML
     end
 
-    it "renders nothing if the context is nil" do
+    it "renders the else templte if the context is nil" do
+      template = Curlybars.compile(<<-HBS)
+        {{#with return_nil}}
+          text
+        {{else}}
+          else
+        {{/with}}
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
+        else
+      HTML
+    end
+
+    it "renders nothing if the context is nil and no else block is specified" do
       template = Curlybars.compile(<<-HBS)
         {{#with return_nil}}
           text
