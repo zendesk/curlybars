@@ -1,31 +1,41 @@
 module Curlybars
   module Node
-    With = Struct.new(:path, :template, :position) do
+    WithElse = Struct.new(:path, :with_template, :else_template, :position) do
       def compile
         <<-RUBY
-          compiled_path = rendering.cached_call(#{path.compile})
-          return if compiled_path.nil?
+        compiled_path = rendering.cached_call(#{path.compile})
 
+        if rendering.to_bool(compiled_path)
           position = rendering.position(#{position.line_number}, #{position.line_offset})
           rendering.check_context_is_presenter(compiled_path, #{path.path.inspect}, position)
 
           contexts.push(compiled_path)
           begin
-            #{template.compile}
+            #{with_template.compile}
           ensure
             contexts.pop
           end
+        else
+          #{else_template.compile}
+        end
         RUBY
       end
 
       def validate(branches)
         sub_tree = path.resolve_and_check!(branches, check_type: :presenter)
-        begin
+        with_template_errors = begin
           branches.push(sub_tree)
-          template.validate(branches)
+          with_template.validate(branches)
         ensure
           branches.pop
         end
+
+        else_template_errors = else_template.validate(branches)
+
+        [
+          with_template_errors,
+          else_template_errors
+        ]
       rescue Curlybars::Error::Validate => path_error
         path_error
       end

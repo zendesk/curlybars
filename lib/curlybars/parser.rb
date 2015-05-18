@@ -4,16 +4,13 @@ require 'curlybars/node/root'
 require 'curlybars/node/template'
 require 'curlybars/node/item'
 require 'curlybars/node/text'
-require 'curlybars/node/if'
 require 'curlybars/node/if_else'
-require 'curlybars/node/unless'
 require 'curlybars/node/unless_else'
-require 'curlybars/node/each'
 require 'curlybars/node/each_else'
 require 'curlybars/node/path'
 require 'curlybars/node/literal'
 require 'curlybars/node/variable'
-require 'curlybars/node/with'
+require 'curlybars/node/with_else'
 require 'curlybars/node/helper'
 require 'curlybars/node/block_helper'
 require 'curlybars/node/option'
@@ -53,8 +50,8 @@ module Curlybars
       clause(
         'START HASH IF .expression END
           .template?
-        START SLASH IF END') do |expression, template|
-        Node::If.new(expression, template || EMPTY)
+        START SLASH IF END') do |expression, if_template|
+        Node::IfElse.new(expression, if_template || EMPTY, EMPTY)
       end
 
       clause(
@@ -69,8 +66,8 @@ module Curlybars
       clause(
         'START HASH UNLESS .expression END
           .template?
-        START SLASH UNLESS END') do |expression, template|
-        Node::Unless.new(expression, template || EMPTY)
+        START SLASH UNLESS END') do |expression, unless_template|
+        Node::UnlessElse.new(expression, unless_template || EMPTY, EMPTY)
       end
 
       clause(
@@ -85,8 +82,8 @@ module Curlybars
       clause(
         'START HASH EACH .path END
           .template?
-        START SLASH EACH END') do |path, template|
-        Node::Each.new(path, template || EMPTY, pos(0))
+        START SLASH EACH END') do |path, each_template|
+        Node::EachElse.new(path, each_template || EMPTY, EMPTY, pos(0))
       end
 
       clause(
@@ -101,8 +98,17 @@ module Curlybars
       clause(
         'START HASH WITH .path END
           .template?
-        START SLASH WITH END') do |path, template|
-        Node::With.new(path, template || EMPTY, pos(0))
+        START SLASH WITH END') do |path, with_template|
+        Node::WithElse.new(path, with_template || EMPTY, EMPTY, pos(0))
+      end
+
+      clause(
+        'START HASH WITH .path END
+          .template?
+        START ELSE END
+          .template?
+        START SLASH WITH END') do |path, with_template, else_template|
+        Node::WithElse.new(path, with_template || EMPTY, else_template || EMPTY, pos(0))
       end
 
       clause('START GT .path END') do |path|

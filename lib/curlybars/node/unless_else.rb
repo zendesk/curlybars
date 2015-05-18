@@ -13,7 +13,8 @@ module Curlybars
 
       def validate(branches)
         [
-          Unless.new(expression, unless_template).validate(branches),
+          expression.validate(branches),
+          unless_template.validate(branches),
           else_template.validate(branches)
         ]
       end
