@@ -17,6 +17,20 @@ describe "{{#helper context key=value}}...<{{else}}>...{{/helper}}" do
       HTML
     end
 
+    it "renders the fn block" do
+      template = Curlybars.compile(<<-HBS)
+        {{#render_fn this}}
+          fn
+        {{else}}
+          inverse
+        {{/render_fn}}
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
+        fn
+      HTML
+    end
+
     it "renders a block helper without options" do
       template = Curlybars.compile(<<-HBS)
         {{#beautify new_comment_form}}
@@ -254,6 +268,39 @@ describe "{{#helper context key=value}}...<{{else}}>...{{/helper}}" do
 
       source = <<-HBS
         {{#block_helper context}} ... {{/block_helper}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).not_to be_empty
+    end
+
+    it "with errors in fn block" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { context: {}, block_helper: {} }
+      end
+
+      source = <<-HBS
+        {{#block_helper context}}
+          {{invalid}}
+        {{/block_helper}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).not_to be_empty
+    end
+
+    it "with errors in inverse block" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { context: {}, block_helper: {} }
+      end
+
+      source = <<-HBS
+        {{#block_helper context}}
+        {{else}}
+          {{invalid}}
+        {{/block_helper}}
       HBS
 
       errors = Curlybars.validate(presenter_class, source)

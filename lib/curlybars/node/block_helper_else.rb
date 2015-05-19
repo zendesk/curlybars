@@ -77,7 +77,7 @@ module Curlybars
           branches.pop
         end
 
-        else_template_errors = helper_template.validate(branches)
+        else_template_errors = else_template.validate(branches)
         [
           helper_template_errors,
           else_template_errors,
