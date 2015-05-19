@@ -145,7 +145,7 @@ describe "{{#helper context key=value}}...<{{else}}>...{{/helper}}" do
     it "renders a block helper with options and presenter" do
       template = Curlybars.compile(<<-HBS)
         {{#form new_comment_form class="red" foo="bar"}}
-          {{button_label}}
+          {{new_comment_form.button_label}}
         {{/form}}
       HBS
 
@@ -194,7 +194,7 @@ describe "{{#helper context key=value}}...<{{else}}>...{{/helper}}" do
       HTML
     end
 
-    it "yield produces an empty string in case the context is nil" do
+    it "yield tolerated nil as pushed context" do
       template = Curlybars.compile(<<-HBS)
         {{#this_method_yields return_nil}}
           text
@@ -202,6 +202,7 @@ describe "{{#helper context key=value}}...<{{else}}>...{{/helper}}" do
       HBS
 
       expect(eval(template)).to resemble(<<-HTML)
+        text
       HTML
     end
 

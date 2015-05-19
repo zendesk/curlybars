@@ -40,7 +40,7 @@ module IntegrationTest
 
     allow_methods :render_fn, :render_inverse, :user, :new_comment_form, :valid, :visible, :return_true,
       :return_false, :beautify, :form, :date, :asset, :integer, :boolean, :echo,
-      :return_nil, :print_user_name, :this_method_yields, :context, :two_elements,
+      :return_nil, :print_user_name, :this_method_yields, :this_method_yields, :context, :two_elements,
       :yield_custom_variable, :yield_custom_variable_and_custom_presenter,
       partial: :partial
 
@@ -92,8 +92,12 @@ module IntegrationTest
       yield context.user
     end
 
-    def this_method_yields(context)
+    def this_method_yields
       yield
+    end
+
+    def this_method_yields_nil
+      yield nil
     end
 
     def yield_custom_variable
