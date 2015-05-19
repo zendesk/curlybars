@@ -31,6 +31,16 @@ describe "{{#helper context key=value}}...<{{else}}>...{{/helper}}" do
       HTML
     end
 
+    it "block helpers can access the current context" do
+      template = Curlybars.compile(<<-HBS)
+        {{#print_current_context this}} {{/print_current_context}}
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
+        root_context
+      HTML
+    end
+
     it "renders a block helper without options" do
       template = Curlybars.compile(<<-HBS)
         {{#beautify new_comment_form}}
