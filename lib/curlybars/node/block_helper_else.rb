@@ -44,10 +44,8 @@ module Curlybars
 
           options[:fn] = fn
 
-          inverse = ->(block_helper_context = context, **vars) do
-            break if block_helper_context.nil?
+          inverse = ->(**vars) do
             begin
-              contexts.push(block_helper_context)
               variables.push(vars.symbolize_keys)
               outer_buffer = buffer
               buffer = Curlybars::SafeBuffer.new
@@ -56,7 +54,6 @@ module Curlybars
             ensure
               buffer = outer_buffer
               variables.pop
-              contexts.pop
             end
           end
 
