@@ -55,6 +55,8 @@ module Curlybars
             end
           end
 
+          options[:this] = contexts.last
+
           result = rendering.call(helper, #{helper.path.inspect}, helper_position,
             context, options, &options[:fn])
 
