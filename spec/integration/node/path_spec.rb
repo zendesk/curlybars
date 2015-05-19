@@ -123,6 +123,20 @@ describe "{{path}}" do
       expect(errors).to be_empty
     end
 
+    it "without errors when it's a deprecated component" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { deprecated: :deprecated }
+      end
+
+      source = <<-HBS
+        {{deprecated}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).to be_empty
+    end
+
     it "without errors when it goes out of context" do
       allow(presenter_class).to receive(:dependency_tree) do
         {}

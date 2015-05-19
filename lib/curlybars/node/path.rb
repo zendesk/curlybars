@@ -57,7 +57,7 @@ module Curlybars
           message = "`#{path}` must resolve to a collection of presenters"
           raise Curlybars::Error::Validate.new('not_a_presenter_collection', message, position)
         when :leaf
-          return if value.nil?
+          return if value.nil? || value == :deprecated
           message = "`#{path}` cannot resolve to a presenter or a collection of such"
           raise Curlybars::Error::Validate.new('not_a_leaf', message, position)
         when :partial
