@@ -8,7 +8,7 @@ module IntegrationTest
 
     def form(context, options)
       "beauty class:#{options[:class]} foo:#{options[:foo]} #{yield}"
-      end
+    end
 
     def date(context, options)
       <<-HTML.strip_heredoc
