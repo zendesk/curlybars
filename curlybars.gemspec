@@ -30,7 +30,7 @@ Gem::Specification.new do |s|
   s.add_dependency("actionpack", [">= 3.1", "< 5.0"])
   s.add_dependency("rltk", "3.0.1")
   s.add_dependency("ffi", "1.9.6")
-  s.add_dependency("curly-templates", "~> 2.4.1")
+  s.add_dependency("curly-templates", "~> 2.0")
 
   s.add_development_dependency("railties", [">= 3.1", "< 5.0"])
   s.add_development_dependency("rake")
