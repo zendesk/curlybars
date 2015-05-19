@@ -38,7 +38,7 @@ module IntegrationTest
   class Presenter < Curlybars::Presenter
     include Helpers
 
-    allow_methods :user, :new_comment_form, :valid, :visible, :return_true,
+    allow_methods :render_fn, :render_inverse, :user, :new_comment_form, :valid, :visible, :return_true,
       :return_false, :beautify, :form, :date, :asset, :integer, :boolean, :echo,
       :return_nil, :print_user_name, :this_method_yields, :context, :two_elements,
       :yield_custom_variable, :yield_custom_variable_and_custom_presenter,
@@ -109,6 +109,14 @@ module IntegrationTest
 
     def two_elements
       [user, user]
+    end
+
+    def render_inverse(_, options)
+      options[:inverse].call
+    end
+
+    def render_fn(_, options)
+      options[:fn].call
     end
 
     private

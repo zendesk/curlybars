@@ -1,7 +1,35 @@
-describe "{{#helper context key=value}}...{{/helper}}" do
+describe "{{#helper context key=value}}...<{{else}}>...{{/helper}}" do
   describe "#compile" do
     let(:post) { double("post") }
     let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
+
+    it "renders the inverse block" do
+      template = Curlybars.compile(<<-HBS)
+        {{#render_inverse this}}
+          fn
+        {{else}}
+          inverse
+        {{/render_inverse}}
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
+        inverse
+      HTML
+    end
+
+    it "renders the fn block" do
+      template = Curlybars.compile(<<-HBS)
+        {{#render_fn this}}
+          fn
+        {{else}}
+          inverse
+        {{/render_fn}}
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
+        fn
+      HTML
+    end
 
     it "renders a block helper without options" do
       template = Curlybars.compile(<<-HBS)
@@ -240,6 +268,39 @@ describe "{{#helper context key=value}}...{{/helper}}" do
 
       source = <<-HBS
         {{#block_helper context}} ... {{/block_helper}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).not_to be_empty
+    end
+
+    it "with errors in fn block" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { context: {}, block_helper: {} }
+      end
+
+      source = <<-HBS
+        {{#block_helper context}}
+          {{invalid}}
+        {{/block_helper}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).not_to be_empty
+    end
+
+    it "with errors in inverse block" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { context: {}, block_helper: {} }
+      end
+
+      source = <<-HBS
+        {{#block_helper context}}
+        {{else}}
+          {{invalid}}
+        {{/block_helper}}
       HBS
 
       errors = Curlybars.validate(presenter_class, source)
