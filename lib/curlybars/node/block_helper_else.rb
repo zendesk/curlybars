@@ -26,28 +26,26 @@ module Curlybars
           helper = #{helper.compile}
           helper_position = rendering.position(#{helper.position.line_number},
             #{helper.position.line_offset})
-          fn = ->(block_helper_context = context, **vars) do
-            break if block_helper_context.nil?
+
+          options[:fn] = ->(pushed_context = nil, **vars) do
+            contexts.push(pushed_context) if pushed_context != nil
+            variables.push(vars.symbolize_keys)
+            outer_buffer = buffer
             begin
-              contexts.push(block_helper_context)
-              variables.push(vars.symbolize_keys)
-              outer_buffer = buffer
               buffer = Curlybars::SafeBuffer.new
               #{helper_template.compile}
               buffer
             ensure
               buffer = outer_buffer
               variables.pop
-              contexts.pop
+              contexts.pop if pushed_context != nil
             end
           end
 
-          options[:fn] = fn
-
-          inverse = ->(**vars) do
+          options[:inverse] = ->(**vars) do
+            variables.push(vars.symbolize_keys)
+            outer_buffer = buffer
             begin
-              variables.push(vars.symbolize_keys)
-              outer_buffer = buffer
               buffer = Curlybars::SafeBuffer.new
               #{else_template.compile}
               buffer
@@ -57,10 +55,8 @@ module Curlybars
             end
           end
 
-          options[:inverse] = inverse
-
           result = rendering.call(helper, #{helper.path.inspect}, helper_position,
-            context, options, &fn)
+            context, options, &options[:fn])
 
           buffer.safe_concat(result.to_s)
         RUBY
