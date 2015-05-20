@@ -81,22 +81,20 @@ module Curlybars
       cached_calls[meth] = meth.call
     end
 
-    def call(helper, helper_path, helper_position, context, options, &block)
+    def call(helper, helper_path, helper_position, arguments, options, &block)
       parameters = helper.parameters
 
       has_invalid_parameters = parameters.map(&:first).map { |type| type != :req }.any?
-      if parameters.length > 2 || has_invalid_parameters
+      if has_invalid_parameters
         file_path = helper.source_location.first
         line_number = helper.source_location.last
 
         message = "#{file_path}:#{line_number} - `#{helper_path}` bad signature "
-        message << "for #{helper} - helpers must have at most two parameters "
-        message << ", and they have to be mandatory"
+        message << "for #{helper} - helpers must have only required parameters"
         raise Curlybars::Error::Render.new('invalid_helper_signature', message, helper_position)
       end
 
-      arguments = [context, options].first(parameters.length)
-      helper.call(*arguments, &block)
+      helper.call(*arguments_for_signature(helper, arguments, options), &block)
     end
 
     def position(line_number, line_offset)
@@ -117,6 +115,17 @@ module Curlybars
     private
 
     attr_reader :contexts, :variables, :cached_calls, :file_name
+
+    def arguments_for_signature(helper, arguments, options)
+      return [] if helper.parameters.length == 0
+
+      number_of_parameters_available_for_arguments = helper.parameters.length - 1
+      arguments_that_can_fit = arguments.first(number_of_parameters_available_for_arguments)
+      nil_padding_length = number_of_parameters_available_for_arguments - arguments_that_can_fit.length
+      nil_padding = Array.new(nil_padding_length)
+
+      [arguments_that_can_fit, nil_padding, options].flatten
+    end
 
     def raise_if_not_traversable(context, meth, position)
       check_context_is_presenter(context, meth, position)

@@ -2,77 +2,85 @@ describe Curlybars::Node::BlockHelperElse do
   let(:position) do
     double(:position, file_name: 'template.hbs', line_number: 1, line_offset: 0)
   end
-  let(:context_position) do
+  let(:argument_position) do
     double(:position, file_name: 'template.hbs', line_number: 1, line_offset: 1)
   end
   let(:helper_position) do
     double(:helper_position, file_name: 'template.hbs', line_number: 1, line_offset: 1)
   end
+  let(:empty_arguments) { [] }
   let(:empty_options) { {} }
 
   it "compiles the helper" do
     helper = double(:helper, path: 'helper', position: helper_position)
-    context = double(:context, compile: "context", path: 'path', position: context_position)
+    argument = double(:argument, compile: "argument", path: 'path', position: argument_position)
+    arguments = [argument]
     helper_template = double(:helper_template, compile: 'helper_template')
     else_template = double(:else_template, compile: 'else_template')
     expect(helper).to receive(:compile)
-    Curlybars::Node::BlockHelperElse.new(helper, context, empty_options, helper_template, else_template, helper, position).compile
+    Curlybars::Node::BlockHelperElse.new(helper, arguments, empty_options, helper_template, else_template, helper, position).compile
   end
 
-  it "compiles the context" do
+  it "compiles the argument" do
     helper = double(:helper, compile: 'helper', path: 'helper', position: helper_position)
-    context = double(:context, path: 'path', position: context_position)
+    argument = double(:argument, path: 'path', position: argument_position)
+    arguments = [argument]
     helper_template = double('helper_template', compile: 'helper_template')
     else_template = double(:else_template, compile: 'else_template')
-    expect(context).to receive(:compile)
-    Curlybars::Node::BlockHelperElse.new(helper, context, empty_options, helper_template, else_template, helper, position).compile
+    expect(argument).to receive(:compile)
+    Curlybars::Node::BlockHelperElse.new(helper, arguments, empty_options, helper_template, else_template, helper, position).compile
   end
 
   it "compiles the helper_template" do
     helper = double(:helper, compile: 'helper', path: 'helper', position: helper_position)
-    context = double(:context, compile: 'context', path: 'path', position: context_position)
+    argument = double(:argument, compile: 'argument', path: 'path', position: argument_position)
+    arguments = [argument]
     helper_template = double(:helper_template)
     else_template = double(:else_template, compile: 'else_template')
     expect(helper_template).to receive(:compile)
-    Curlybars::Node::BlockHelperElse.new(helper, context, empty_options, helper_template, else_template, helper, position).compile
+    Curlybars::Node::BlockHelperElse.new(helper, arguments, empty_options, helper_template, else_template, helper, position).compile
   end
 
   it "compiles the else_template" do
     helper = double(:helper, compile: 'helper', path: 'helper', position: helper_position)
-    context = double(:context, compile: 'context', path: 'path', position: context_position)
+    argument = double(:argument, compile: 'argument', path: 'path', position: argument_position)
+    arguments = [argument]
     helper_template = double(:helper_template, compile: 'helper_template')
     else_template = double(:else_template)
     expect(else_template).to receive(:compile)
-    Curlybars::Node::BlockHelperElse.new(helper, context, empty_options, helper_template, else_template, helper, position).compile
+    Curlybars::Node::BlockHelperElse.new(helper, arguments, empty_options, helper_template, else_template, helper, position).compile
   end
 
   it "compiles non-empty options" do
     helper = double(:helper, compile: 'helper', path: 'helper', position: helper_position)
-    context = double(:context, compile: 'context', path: 'path', position: context_position)
+    argument = double(:argument, compile: 'argument', path: 'path', position: argument_position)
+    arguments = [argument]
     option = double(:option)
     options = [option]
     helper_template = double(:helper_template, compile: 'helper_template')
     else_template = double(:else_template, compile: 'else_template')
     expect(option).to receive(:compile)
-    Curlybars::Node::BlockHelperElse.new(helper, context, options, helper_template, else_template, helper, position).compile
+    Curlybars::Node::BlockHelperElse.new(helper, arguments, options, helper_template, else_template, helper, position).compile
+  end
+
+  it "accepts arguments = []" do
+    helper = double(:helper, compile: 'helper', path: 'helper', position: helper_position)
+    helper_template = double(:helper_template, compile: 'helper_template')
+    option = double(:option, compile: 'option')
+    options = [option]
+    else_template = double(:else_template, compile: 'else_template')
+    expect(helper_template).to receive(:compile)
+    Curlybars::Node::BlockHelperElse.new(helper, empty_arguments, options, helper_template, else_template, helper, position).compile
   end
 
   it "accepts options = []" do
     helper = double(:helper, compile: 'helper', path: 'helper', position: helper_position)
-    context = double(:context, compile: 'context', path: 'path', position: context_position)
+    argument = double(:argument, compile: 'argument', path: 'path', position: argument_position)
+    arguments = [argument]
     helper_template = double(:helper_template, compile: 'helper_template')
     else_template = double(:else_template, compile: 'else_template')
     expect(helper_template).to receive(:compile)
-    Curlybars::Node::BlockHelperElse.new(helper, context, empty_options, helper_template, else_template, helper, position).compile
-  end
-
-  it "accepts options = nil" do
-    helper = double(:helper, compile: 'helper', path: 'helper', position: helper_position)
-    context = double(:context, compile: 'context', path: 'path', position: context_position)
-    helper_template = double(:helper_template, compile: 'helper_template')
-    else_template = double(:else_template, compile: 'else_template')
-    expect(helper_template).to receive(:compile)
-    Curlybars::Node::BlockHelperElse.new(helper, context, empty_options, helper_template, else_template, helper, position).compile
+    Curlybars::Node::BlockHelperElse.new(helper, arguments, empty_options, helper_template, else_template, helper, position).compile
   end
 
   it "raises an IncorrectEndingError when closing is not matching opening" do

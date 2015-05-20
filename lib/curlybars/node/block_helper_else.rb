@@ -2,9 +2,13 @@ require 'curlybars/error/compile'
 
 module Curlybars
   module Node
-    BlockHelperElse = Struct.new(:helper, :context, :options, :helper_template, :else_template, :helperclose, :position) do
+    BlockHelperElse = Struct.new(:helper, :arguments, :options, :helper_template, :else_template, :helperclose, :position) do
       def compile
         check_open_and_close_elements(helper, helperclose, Curlybars::Error::Compile)
+
+        compiled_arguments = arguments.map do |argument|
+          "arguments.push(rendering.cached_call(#{argument.compile}))"
+        end.join("\n")
 
         compiled_options = options.map do |option|
           "options.merge!(#{option.compile})"
@@ -14,14 +18,8 @@ module Curlybars
           options = ActiveSupport::HashWithIndifferentAccess.new
           #{compiled_options}
 
-          context = rendering.cached_call(#{context.compile})
-
-          unless context.nil?
-            context_position = rendering.position(#{context.position.line_number},
-              #{context.position.line_offset})
-            rendering.check_context_is_presenter(context, #{context.path.inspect},
-              context_position)
-          end
+          arguments = []
+          #{compiled_arguments}
 
           helper = #{helper.compile}
           helper_position = rendering.position(#{helper.position.line_number},
@@ -58,7 +56,7 @@ module Curlybars
           options[:this] = contexts.last
 
           result = rendering.call(helper, #{helper.path.inspect}, helper_position,
-            context, options, &options[:fn])
+            arguments, options, &options[:fn])
 
           buffer.safe_concat(result.to_s)
         RUBY
@@ -77,14 +75,15 @@ module Curlybars
         elsif helper.leaf?(branches)
           helper_template.validate(branches)
         else
-          raise "#{helper.path} must be allowed either as a leaf or a presenter"
+          message = "#{helper.path} must be allowed either as a leaf or a presenter"
+          raise Curlybars::Error::Validate.new('invalid_block_helper', message, helper.position)
         end
 
         else_template_errors = else_template.validate(branches)
         [
           helper_template_errors,
           else_template_errors,
-          context.validate(branches, check_type: :presenter),
+          arguments.map { |argument| argument.validate(branches) },
           options.map { |option| option.validate(branches) }
         ]
       rescue Curlybars::Error::Validate => path_error

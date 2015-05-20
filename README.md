@@ -113,31 +113,96 @@ end
 
 It's a good practice to put your helpers into a module that you will include in different presenter, but you can also just put them as method of your presenter.
 
-To implement the helper, one of the following signatures is needed:
-```ruby
-def helper()
-def helper(context)
-def helper(context, _)
-def helper(_, options)
-def helper(context, options)
-```
-The helper parameters can have different names from those in the example.
+To implement the helper, some rules must be observed in order to formulate a correct signature.
+First of all, the last argument in the signature will always be assigned by the options.
+If other parameters are present, they will be assigned to the given arguments, in the order
+in which they are specified.
 
-Note that if the helper has a different signature from all of those listed above, an exception will be thrown at rendering time - `Curlybars::Error::Render`
+It is ok to define a helper that does not have any parameter.
 
-When the signature is actually broader than the argument specified in the template, default values are passed. Let's assume we have the following hbs:
+Some examples will clarify the rules above.
+
+Let's suppose that we have the following code:
+
 ```hbs
-{{helper}}
+{{helper 'argument' key1='value1'}}
 ```
-and the following helper declaration:
+
+In order to get those arguments as parameters of our helper, we must give to it
+a signature like the following:
+
 ```ruby
-def helper(context, options)
+def helper(argument, options)
+ ...
+end
 ```
-what you actually get is `nil` as context, and `{}` as options, that has exactly the same effect of having the following signature:
+
+if more argument are passed, they will be discarded, i.e.:
+
+```hbs
+{{helper 'argument' 'other' key1='value1'}}
+```
+
 ```ruby
-def helper(context = nil, options = {})
+def helper(argument, options)
+ # only the first argument is available
+end
 ```
-These mechanisms ensure that, unless the helper has a bad implementation, the hbs can never make the backend to raise an exception.
+
+On the contrary, if the helper has more parameters that given arguments, then `nil`
+will be bassed by Curlybars by default, i.e.:
+
+```hbs
+{{helper 'argument' key1='value1'}}
+```
+
+```ruby
+def helper(argument, second_argument, options)
+  # second_argument will be nil
+end
+```
+
+It is okay to have no parameters at all:
+
+```hbs
+{{helper 'argument' key1='value1'}}
+```
+
+```ruby
+def helper
+  # will discard anything
+end
+```
+
+But if we want to use at least one argument, we have to specify the options in the signature as well:
+
+```hbs
+{{helper 'argument'}}
+```
+
+```ruby
+def helper(argument, options)
+  # will use only argument
+end
+```
+
+You can always discard the options explicitly, using the `_` placeholder:
+
+```hbs
+{{helper 'argument'}}
+```
+
+```ruby
+def helper(argument, _)
+  # will discard options in a more readable way
+end
+```
+
+Note that there is an edge case with passing the options: if the method accepts only one
+
+Note that if the helper has an invalid signature, an exception will be thrown at rendering time - `Curlybars::Error::Render`
+
+All the rules above also applies to block helpers.
 
 Block Helpers
 -------------
@@ -311,6 +376,7 @@ The following descriptors are available:
 - `validate.not_a_presenter`
 - `validate.not_a_presenter_collection`
 - `validate.not_a_leaf`
+- `validate.invalid_block_helper`
 - `validate.unallowed_path`
 
 #### validate.closing_tag_mismatch
@@ -445,6 +511,26 @@ end
 {{comments 'http://test.com/cat.jpg'}}
 ```
 
+#### validate.invalid_block_helper
+
+This exception is raised when a block helper is not allowed either as a leaf or a presenter.
+
+```ruby
+class UserPresenter
+  allow_methods block_helper: :other
+
+  def name
+    ...
+  end
+end
+```
+
+```hbs
+{{! this will raise the exception }}
+
+{{#block_helper}} ... {{/block_helper}}
+```
+
 #### validate.unallowed_path
 
 This exception occurs when a path is not allowed, given the allowed method definition
@@ -558,8 +644,7 @@ end
 
 #### render.invalid_helper_signature
 
-This exception occurs when an attempt to call a helper with an invalid signature is made. Refer to the related section for
-further details on what a correct helper signature looks like.
+This exception occurs when an attempt to call a helper with an invalid signature is made. Refer to the related section for further details on what a correct helper signature looks like.
 
 ```ruby
 class ArticlePresenter

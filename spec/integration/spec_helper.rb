@@ -18,7 +18,7 @@ module IntegrationTest
       HTML
     end
 
-    def asset(context)
+    def asset(context, _)
       cdn_base_url = "http://cdn.example.com/"
       "#{cdn_base_url}#{context}"
     end
@@ -39,7 +39,7 @@ module IntegrationTest
     include Helpers
 
     allow_methods :print_current_context, :render_fn, :render_inverse, :user, :new_comment_form, :valid, :visible, :return_true,
-      :return_false, :beautify, :form, :date, :asset, :integer, :boolean, :echo,
+      :return_false, :beautify, :form, :date, :asset, :integer, :boolean, :echo, :just_yield, :print_args_and_options,
       :return_nil, :print_user_name, :this_method_yields, :this_method_yields, :context, :two_elements,
       :yield_custom_variable, :yield_custom_variable_and_custom_presenter,
       partial: :partial
@@ -50,6 +50,14 @@ module IntegrationTest
 
     def new_comment_form
       Posts::NewPostFormPresenter.new
+    end
+
+    def just_yield
+      yield
+    end
+
+    def print_args_and_options(arg1, arg2, options)
+      "#{arg1}, #{arg2}, key=#{options[:key]}"
     end
 
     def return_true
@@ -88,7 +96,7 @@ module IntegrationTest
       "%s %s" % [context, options]
     end
 
-    def print_user_name(context)
+    def print_user_name(context, _)
       yield context.user
     end
 
@@ -107,7 +115,7 @@ module IntegrationTest
         cond: true)
     end
 
-    def yield_custom_variable_and_custom_presenter(context)
+    def yield_custom_variable_and_custom_presenter(context, _)
       yield(context.user, custom: 'custom variable')
     end
 

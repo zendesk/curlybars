@@ -11,7 +11,6 @@ require 'curlybars/node/path'
 require 'curlybars/node/literal'
 require 'curlybars/node/variable'
 require 'curlybars/node/with_else'
-require 'curlybars/node/helper'
 require 'curlybars/node/block_helper_else'
 require 'curlybars/node/option'
 require 'curlybars/node/partial'
@@ -33,12 +32,12 @@ module Curlybars
       clause('TEXT') { |text| Node::Text.new(text) }
 
       clause(
-        'START HASH .path .path .options? END
+        'START HASH .path .expressions? .options? END
           .template?
-        START SLASH .path END') do |helper, context, options, template, helperclose|
+        START SLASH .path END') do |helper, arguments, options, template, helperclose|
         Node::BlockHelperElse.new(
           helper,
-          context,
+          arguments || [],
           options || [],
           template || EMPTY,
           EMPTY,
@@ -48,14 +47,14 @@ module Curlybars
       end
 
       clause(
-        'START HASH .path .path .options? END
+        'START HASH .path .expressions? .options? END
           .template?
         START ELSE END
           .template?
-        START SLASH .path END') do |helper, context, options, helper_template, else_template, helperclose|
+        START SLASH .path END') do |helper, arguments, options, helper_template, else_template, helperclose|
         Node::BlockHelperElse.new(
           helper,
-          context,
+          arguments || [],
           options || [],
           helper_template || EMPTY,
           else_template || EMPTY,
@@ -64,12 +63,20 @@ module Curlybars
         )
       end
 
-      clause('START .value END') do |value|
-        Node::Output.new(value)
+      clause('START .path .expressions? .options? END') do |helper, arguments, options|
+        Node::BlockHelperElse.new(
+          helper,
+          arguments || [],
+          options || [],
+          EMPTY,
+          EMPTY,
+          helper,
+          pos(0)
+        )
       end
 
-      clause('START .path .expression? .options? END') do |path, context, options|
-        Node::Helper.new(path, context || VOID, options || [], pos(0))
+      clause('START .value END') do |value|
+        Node::Output.new(value)
       end
 
       clause(
@@ -145,8 +152,14 @@ module Curlybars
       clause('options option') { |options, option| options << option }
       clause('option') { |option| [option] }
     end
+
     production(:option, '.KEY .expression') do |key, expression|
       Node::Option.new(key, expression)
+    end
+
+    production(:expressions) do
+      clause('expressions expression') { |expressions, expression| expressions << expression }
+      clause('expression') { |expression| [expression] }
     end
 
     production(:expression) do
