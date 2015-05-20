@@ -67,12 +67,17 @@ module Curlybars
       def validate(branches)
         check_open_and_close_elements(helper, helperclose, Curlybars::Error::Validate)
 
-        helper_tree = helper.resolve_and_check!(branches, check_type: :presenter)
-        helper_template_errors = begin
-          branches.push(helper_tree)
+        helper_template_errors = if helper.presenter?(branches)
+          begin
+            branches.push(helper.resolve(branches))
+            helper_template.validate(branches)
+          ensure
+            branches.pop
+          end
+        elsif helper.leaf?(branches)
           helper_template.validate(branches)
-        ensure
-          branches.pop
+        else
+          raise "#{helper.path} must be allowed either as a leaf or a presenter"
         end
 
         else_template_errors = else_template.validate(branches)
