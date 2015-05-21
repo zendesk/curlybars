@@ -124,7 +124,7 @@ module Curlybars
       nil_padding_length = number_of_parameters_available_for_arguments - arguments_that_can_fit.length
       nil_padding = Array.new(nil_padding_length)
 
-      [arguments_that_can_fit, nil_padding, options].flatten
+      [arguments_that_can_fit, nil_padding, options].flatten(1)
     end
 
     def raise_if_not_traversable(context, meth, position)
