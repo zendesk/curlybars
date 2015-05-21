@@ -3,6 +3,26 @@ describe "{{helper context key=value}}" do
     let(:post) { double("post") }
     let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
+    it "passes two arguments" do
+      template = Curlybars.compile(<<-HBS)
+        {{print_args_and_options 'first' 'second'}}
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
+        first, second, key=
+      HTML
+    end
+
+    it "passes two arguments and options" do
+      template = Curlybars.compile(<<-HBS)
+        {{print_args_and_options 'first' 'second' key='value'}}
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
+        first, second, key=value
+      HTML
+    end
+
     it "renders a helper with expression and options" do
       template = Curlybars.compile(<<-HBS)
         {{date user.created_at class='metadata'}}
@@ -171,20 +191,6 @@ describe "{{helper context key=value}}" do
         errors = Curlybars.validate(presenter_class, source)
 
         expect(errors).to be_empty
-      end
-
-      it "with errors in block_helper" do
-        allow(presenter_class).to receive(:dependency_tree) do
-          { helper: {}, context: nil }
-        end
-
-        source = <<-HBS
-          {{helper context}}
-        HBS
-
-        errors = Curlybars.validate(presenter_class, source)
-
-        expect(errors).not_to be_empty
       end
     end
   end

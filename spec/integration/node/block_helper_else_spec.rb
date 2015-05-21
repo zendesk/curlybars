@@ -1,11 +1,45 @@
-describe "{{#helper context key=value}}...<{{else}}>...{{/helper}}" do
+describe "{{#helper arg1 arg2 ... key=value ...}}...<{{else}}>...{{/helper}}" do
   describe "#compile" do
     let(:post) { double("post") }
     let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
+    it "accepts no arguments at all" do
+      template = Curlybars.compile(<<-HBS)
+        {{#just_yield}}
+          template
+        {{/just_yield}}
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
+        template
+      HTML
+    end
+
+    it "passes two arguments" do
+      template = Curlybars.compile(<<-HBS)
+        {{#print_args_and_options 'first' 'second'}}
+        {{/print_args_and_options}}
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
+        first, second, key=
+      HTML
+    end
+
+    it "passes two arguments and options" do
+      template = Curlybars.compile(<<-HBS)
+        {{#print_args_and_options 'first' 'second' key='value'}}
+        {{/print_args_and_options}}
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
+        first, second, key=value
+      HTML
+    end
+
     it "renders the inverse block" do
       template = Curlybars.compile(<<-HBS)
-        {{#render_inverse this}}
+        {{#render_inverse}}
           fn
         {{else}}
           inverse
@@ -19,7 +53,7 @@ describe "{{#helper context key=value}}...<{{else}}>...{{/helper}}" do
 
     it "renders the fn block" do
       template = Curlybars.compile(<<-HBS)
-        {{#render_fn this}}
+        {{#render_fn}}
           fn
         {{else}}
           inverse
@@ -33,7 +67,7 @@ describe "{{#helper context key=value}}...<{{else}}>...{{/helper}}" do
 
     it "block helpers can access the current context" do
       template = Curlybars.compile(<<-HBS)
-        {{#print_current_context this}} {{/print_current_context}}
+        {{#print_current_context}} {{/print_current_context}}
       HBS
 
       expect(eval(template)).to resemble(<<-HTML)
@@ -43,7 +77,7 @@ describe "{{#helper context key=value}}...<{{else}}>...{{/helper}}" do
 
     it "renders a block helper without options" do
       template = Curlybars.compile(<<-HBS)
-        {{#beautify new_comment_form}}
+        {{#beautify}}
           template
         {{/beautify}}
       HBS
@@ -73,7 +107,7 @@ describe "{{#helper context key=value}}...<{{else}}>...{{/helper}}" do
 
     it "renders a block helper with custom variables" do
       template = Curlybars.compile(<<-HBS)
-        {{#yield_custom_variable this}}
+        {{#yield_custom_variable}}
           {{!--
             `@custom1` and `@custom2` are variables yielded
             by the block helper implementation.
@@ -91,7 +125,7 @@ describe "{{#helper context key=value}}...<{{else}}>...{{/helper}}" do
 
     it "renders a block helper with custom variables that can be used in conditionals" do
       template = Curlybars.compile(<<-HBS)
-        {{#yield_custom_variable this}}
+        {{#yield_custom_variable}}
           {{!--
             `@cond` is a boolean variable yielded
             by the block helper implementation.
@@ -110,7 +144,7 @@ describe "{{#helper context key=value}}...<{{else}}>...{{/helper}}" do
 
     it "renders a block helper with custom variables that can be seen by nested contexts" do
       template = Curlybars.compile(<<-HBS)
-        {{#yield_custom_variable this}}
+        {{#yield_custom_variable}}
           {{!--
             `@custom1` and `@custom2` are variables yielded
             by the block helper implementation.

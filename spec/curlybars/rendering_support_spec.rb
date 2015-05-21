@@ -183,80 +183,105 @@ describe Curlybars::RenderingSupport do
   end
 
   describe "#call" do
-    let(:context) { 'context' }
-    let(:options) { { key: :value } }
+    it "calls with no arguments a method with no parameters" do
+      method = ->() { :return }
+      arguments = []
 
-    it "passes context and options to a helper that accepts both" do
-      method = ->(context, options) { [context, options] }
-
-      output = rendering.call(method, "meth", position, context, options, &block)
-      expect(output).to eq [context, options]
+      output = rendering.call(method, "method", position, arguments, :options, &block)
+      expect(output).to eq :return
     end
 
-    it "allows options to be ignored" do
-      method = ->(context, _) { [context] }
+    it "calls with one argument a method with no parameters, discarding the parameter" do
+      method = ->() { :return }
+      arguments = [:argument]
 
-      output = rendering.call(method, "meth", position, context, options, &block)
-      expect(output).to eq [context]
+      output = rendering.call(method, "method", position, arguments, :options, &block)
+      expect(output).to eq :return
     end
 
-    it "allows context to be ignored" do
-      method = ->(_, options) { [options] }
+    it "a method with only one parameter can only receive the options" do
+      method = ->(parameter) { parameter }
+      arguments = []
 
-      output = rendering.call(method, "meth", position, context, options, &block)
-      expect(output).to eq [options]
+      output = rendering.call(method, "method", position, arguments, :options, &block)
+      expect(output).to eq :options
     end
 
-    it "allows to ignore both context and options" do
-      method = ->(_, _) { :nothing }
+    it "a method with only one parameter can only receive the options, even with some arguments" do
+      method = ->(parameter) { parameter }
+      arguments = [:argument]
 
-      output = rendering.call(method, "meth", position, context, options, &block)
-      expect(output).to eq :nothing
+      output = rendering.call(method, "method", position, arguments, :options, &block)
+      expect(output).to eq :options
     end
 
-    it "allows to accept only one parameter, that will be the context" do
-      method = ->(context) { [context] }
+    it "a method with two parameter can receive nil as first argument and the options" do
+      method = ->(parameter, options) { [parameter, options] }
+      arguments = []
 
-      output = rendering.call(method, "meth", position, context, options, &block)
-      expect(output).to eq [context]
+      output = rendering.call(method, "method", position, arguments, :options, &block)
+      expect(output).to eq [nil, :options]
     end
 
-    it "allows to have no parameters at all" do
-      method = ->() { :nothing  }
+    it "a method with two parameter can receive an argument and the options" do
+      method = ->(parameter, options) { [parameter, options] }
+      arguments = [:argument]
 
-      output = rendering.call(method, "meth", position, context, options, &block)
-      expect(output).to eq :nothing
+      output = rendering.call(method, "method", position, arguments, :options, &block)
+      expect(output).to eq [:argument, :options]
     end
 
-    it "raises Curlybars::Error::Render if the helper has more than 2 parameters" do
-      method = ->(one, two, three) { }
+    it "a method with three parameter can receive two arguments and the options" do
+      method = ->(first, second, options) { [first, second, options] }
+      arguments = [:first, :second]
 
-      expect do
-        rendering.call(method, "meth", position, context, options, &block)
-      end.to raise_error(Curlybars::Error::Render)
+      output = rendering.call(method, "method", position, arguments, :options, &block)
+      expect(output).to eq [:first, :second, :options]
+    end
+
+    it "a method with three parameter can receive one argument, nil and the options" do
+      method = ->(first, second, options) { [first, second, options] }
+      arguments = [:first]
+
+      output = rendering.call(method, "method", position, arguments, :options, &block)
+      expect(output).to eq [:first, nil, :options]
+    end
+
+    it "a method with three parameter can receive nil, nil and the options" do
+      method = ->(first, second, options) { [first, second, options] }
+      arguments = []
+
+      output = rendering.call(method, "method", position, arguments, :options, &block)
+      expect(output).to eq [nil, nil, :options]
     end
 
     it "raises Curlybars::Error::Render if the helper has at least an optional parameter" do
       method = ->(one, two = :optional) { }
+      arguments = [:arg1]
+      options = { key: :value }
 
       expect do
-        rendering.call(method, "meth", position, context, options, &block)
+        rendering.call(method, "method", position, arguments, options, &block)
       end.to raise_error(Curlybars::Error::Render)
     end
 
     it "raises Curlybars::Error::Render if the helper has at least a keyword parameter" do
-      method = ->(one, keyword:) { }
+      method = ->(keyword:) { }
+      arguments = [:arg1]
+      options = { key: :value }
 
       expect do
-        rendering.call(method, "meth", position, context, options, &block)
+        rendering.call(method, "method", position, arguments, options, &block)
       end.to raise_error(Curlybars::Error::Render)
     end
 
     it "raises Curlybars::Error::Render if the helper has at least an optional keyword parameter" do
-      method = ->(one, keyword: :optional) { }
+      method = ->(keyword: :optional) { }
+      arguments = [:arg1]
+      options = { key: :value }
 
       expect do
-        rendering.call(method, "meth", position, context, options, &block)
+        rendering.call(method, "meth", position, arguments, options, &block)
       end.to raise_error(Curlybars::Error::Render)
     end
   end

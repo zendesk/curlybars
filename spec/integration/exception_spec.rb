@@ -20,7 +20,7 @@ describe "Exception reporting" do
     end.to raise_error(Curlybars::Error::Compile)
   end
 
-  it "Throw Curlybars::Error::Render in case of a lex error occurs" do
+  it "Throw Curlybars::Error::Render in case of a rendering error occurs" do
     compiled = Curlybars.compile('{{#form not_allowed_path}} ... {{/form}}')
 
     expect do
