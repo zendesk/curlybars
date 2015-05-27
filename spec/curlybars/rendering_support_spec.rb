@@ -255,6 +255,15 @@ describe Curlybars::RenderingSupport do
       expect(output).to eq [nil, nil, :options]
     end
 
+    it "calls a method passing an array as argument" do
+      method = ->(parameter, _) { parameter }
+      array = [1, 2, 3]
+      arguments = [array]
+
+      output = rendering.call(method, "method", position, arguments, :options, &block)
+      expect(output).to eq arguments.first
+    end
+
     it "raises Curlybars::Error::Render if the helper has at least an optional parameter" do
       method = ->(one, two = :optional) { }
       arguments = [:arg1]

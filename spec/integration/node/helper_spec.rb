@@ -3,16 +3,6 @@ describe "{{helper context key=value}}" do
     let(:post) { double("post") }
     let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
-    it "accepts an array as argument" do
-      template = Curlybars.compile(<<-HBS)
-        {{print array_of_strings}}
-      HBS
-
-      expect(eval(template)).to resemble(<<-HTML)
-        ["a", "b"]
-      HTML
-    end
-
     it "passes two arguments" do
       template = Curlybars.compile(<<-HBS)
         {{print_args_and_options 'first' 'second'}}
