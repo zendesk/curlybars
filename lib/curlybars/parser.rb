@@ -20,7 +20,7 @@ module Curlybars
   class Parser < RLTK::Parser
     start :root
 
-    production(:root, 'template?') { |template| Node::Root.new(template || EMPTY, pos(0)) }
+    production(:root, 'template?') { |template| Node::Root.new(template || VOID, pos(0)) }
     production(:template, 'items') { |items| Node::Template.new(items || [], pos(0)) }
 
     production(:items) do
@@ -39,8 +39,8 @@ module Curlybars
           helper,
           arguments || [],
           options || [],
-          template || EMPTY,
-          EMPTY,
+          template || VOID,
+          VOID,
           helperclose,
           pos(0)
         )
@@ -56,8 +56,8 @@ module Curlybars
           helper,
           arguments || [],
           options || [],
-          helper_template || EMPTY,
-          else_template || EMPTY,
+          helper_template || VOID,
+          else_template || VOID,
           helperclose,
           pos(0)
         )
@@ -68,8 +68,8 @@ module Curlybars
           helper,
           arguments || [],
           options || [],
-          EMPTY,
-          EMPTY,
+          VOID,
+          VOID,
           helper,
           pos(0)
         )
@@ -83,7 +83,7 @@ module Curlybars
         'START HASH IF .expression END
           .template?
         START SLASH IF END') do |expression, if_template|
-        Node::IfElse.new(expression, if_template || EMPTY, EMPTY)
+        Node::IfElse.new(expression, if_template || VOID, VOID)
       end
 
       clause(
@@ -92,14 +92,14 @@ module Curlybars
         START ELSE END
           .template?
         START SLASH IF END') do |expression, if_template, else_template|
-        Node::IfElse.new(expression, if_template || EMPTY, else_template || EMPTY)
+        Node::IfElse.new(expression, if_template || VOID, else_template || VOID)
       end
 
       clause(
         'START HASH UNLESS .expression END
           .template?
         START SLASH UNLESS END') do |expression, unless_template|
-        Node::UnlessElse.new(expression, unless_template || EMPTY, EMPTY)
+        Node::UnlessElse.new(expression, unless_template || VOID, VOID)
       end
 
       clause(
@@ -108,14 +108,14 @@ module Curlybars
         START ELSE END
           .template?
         START SLASH UNLESS END') do |expression, unless_template, else_template|
-        Node::UnlessElse.new(expression, unless_template || EMPTY, else_template || EMPTY)
+        Node::UnlessElse.new(expression, unless_template || VOID, else_template || VOID)
       end
 
       clause(
         'START HASH EACH .path END
           .template?
         START SLASH EACH END') do |path, each_template|
-        Node::EachElse.new(path, each_template || EMPTY, EMPTY, pos(0))
+        Node::EachElse.new(path, each_template || VOID, VOID, pos(0))
       end
 
       clause(
@@ -124,14 +124,14 @@ module Curlybars
         START ELSE END
           .template?
         START SLASH EACH END') do |path, each_template, else_template|
-        Node::EachElse.new(path, each_template || EMPTY, else_template || EMPTY, pos(0))
+        Node::EachElse.new(path, each_template || VOID, else_template || VOID, pos(0))
       end
 
       clause(
         'START HASH WITH .path END
           .template?
         START SLASH WITH END') do |path, with_template|
-        Node::WithElse.new(path, with_template || EMPTY, EMPTY, pos(0))
+        Node::WithElse.new(path, with_template || VOID, VOID, pos(0))
       end
 
       clause(
@@ -140,7 +140,7 @@ module Curlybars
         START ELSE END
           .template?
         START SLASH WITH END') do |path, with_template, else_template|
-        Node::WithElse.new(path, with_template || EMPTY, else_template || EMPTY, pos(0))
+        Node::WithElse.new(path, with_template || VOID, else_template || VOID, pos(0))
       end
 
       clause('START GT .path END') do |path|
@@ -178,21 +178,11 @@ module Curlybars
 
     VOID = Class.new do
       def compile
-        "->{}"
+        # Nothing to compile.
       end
 
       def validate(branches)
-        # Nothing to validate here.
-      end
-    end.new
-
-    EMPTY = Class.new do
-      def compile
-        ''.inspect
-      end
-
-      def validate(branches)
-        # Nothing to validate here.
+        # Nothing to validate.
       end
     end.new
   end
