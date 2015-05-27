@@ -199,7 +199,7 @@ describe Curlybars::RenderingSupport do
       expect(output).to eq :return
     end
 
-    it "a method with only one parameter can only receive the options" do
+    it "calls a method with only one parameter can only receive the options" do
       method = ->(parameter) { parameter }
       arguments = []
 
@@ -207,7 +207,7 @@ describe Curlybars::RenderingSupport do
       expect(output).to eq :options
     end
 
-    it "a method with only one parameter can only receive the options, even with some arguments" do
+    it "calls a method with only one parameter can only receive the options, even with some arguments" do
       method = ->(parameter) { parameter }
       arguments = [:argument]
 
@@ -215,7 +215,7 @@ describe Curlybars::RenderingSupport do
       expect(output).to eq :options
     end
 
-    it "a method with two parameter can receive nil as first argument and the options" do
+    it "calls a method with two parameter can receive nil as first argument and the options" do
       method = ->(parameter, options) { [parameter, options] }
       arguments = []
 
@@ -223,7 +223,7 @@ describe Curlybars::RenderingSupport do
       expect(output).to eq [nil, :options]
     end
 
-    it "a method with two parameter can receive an argument and the options" do
+    it "calls a method with two parameter can receive an argument and the options" do
       method = ->(parameter, options) { [parameter, options] }
       arguments = [:argument]
 
@@ -231,7 +231,7 @@ describe Curlybars::RenderingSupport do
       expect(output).to eq [:argument, :options]
     end
 
-    it "a method with three parameter can receive two arguments and the options" do
+    it "calls a method with three parameter can receive two arguments and the options" do
       method = ->(first, second, options) { [first, second, options] }
       arguments = [:first, :second]
 
@@ -239,7 +239,7 @@ describe Curlybars::RenderingSupport do
       expect(output).to eq [:first, :second, :options]
     end
 
-    it "a method with three parameter can receive one argument, nil and the options" do
+    it "calls a method with three parameter can receive one argument, nil and the options" do
       method = ->(first, second, options) { [first, second, options] }
       arguments = [:first]
 
@@ -247,7 +247,7 @@ describe Curlybars::RenderingSupport do
       expect(output).to eq [:first, nil, :options]
     end
 
-    it "a method with three parameter can receive nil, nil and the options" do
+    it "calls a method with three parameter can receive nil, nil and the options" do
       method = ->(first, second, options) { [first, second, options] }
       arguments = []
 
