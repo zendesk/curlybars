@@ -66,6 +66,17 @@ describe Curlybars::RenderingSupport do
       expect(rendering.path('sub.method', rendering.position(0, 1))).to eq :method
     end
 
+    it "returns the length of a collection, when `lenght` is the last step" do
+      allow_all_methods(presenter)
+      single_element_presenter = double(:single_element_presenter)
+      allow_all_methods(single_element_presenter)
+      collection = [single_element_presenter]
+      allow(presenter).to receive(:collection) { collection }
+
+      returned_method = rendering.path('collection.length', rendering.position(0, 1))
+      expect(returned_method.call).to eq collection.length
+    end
+
     it "raises an exception when the method is not allowed" do
       disallow_all_methods(presenter)
       allow(presenter).to receive(:forbidden_method) { :forbidden_method }
