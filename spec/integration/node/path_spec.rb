@@ -93,6 +93,16 @@ describe "{{path}}" do
       HTML
     end
 
+    it "understands `length` as allowed method on a collection" do
+      template = Curlybars.compile(<<-HBS)
+        {{array_of_users.length}}
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
+        1
+      HTML
+    end
+
     it "raises when trying to call methods not implemented on context" do
       template = Curlybars.compile(<<-HBS)
         {{not_in_whitelist}}
@@ -165,6 +175,48 @@ describe "{{path}}" do
       errors = Curlybars.validate(presenter_class, source)
 
       expect(errors).to be_empty
+    end
+
+    it "without errors using `length` on a collection of presenters" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { collection_of_presenters: [{}] }
+      end
+
+      source = <<-HBS
+        {{collection_of_presenters.length}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).to be_empty
+    end
+
+    it "with errors using `length` on anything else than a collection" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { presenter: {} }
+      end
+
+      source = <<-HBS
+        {{presenter.length}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).not_to be_empty
+    end
+
+    it "with errors when adding another step after `length`" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { presenter: {} }
+      end
+
+      source = <<-HBS
+        {{presenter.length.anything}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).not_to be_empty
     end
 
     it "to refer an outer scope using `this`" do

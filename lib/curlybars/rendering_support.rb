@@ -14,11 +14,7 @@ module Curlybars
     end
 
     def check_context_is_hash_or_enum_of_presenters(collection, path, position)
-      collection = collection.values if collection.is_a?(Hash)
-
-      return if collection.respond_to?(:each) && collection.all? do |presenter|
-        presenter.respond_to? :allows_method?
-      end
+      return if presenter_collection?(collection)
 
       message = "`#{path}` is not an array of presenters or a hash of such"
       raise Curlybars::Error::Render.new('context_is_not_an_array_of_presenters', message, position)
@@ -64,6 +60,7 @@ module Curlybars
 
       resolved = chain.inject(base_context) do |context, meth|
         next context if meth == 'this'
+        next context.count if meth == 'length' && presenter_collection?(context)
         raise_if_not_traversable(context, meth, position)
         outcome = context.public_send(meth)
         return -> {} if outcome.nil?
@@ -71,6 +68,10 @@ module Curlybars
       end
 
       return -> { resolved } if method_to_return == 'this'
+
+      if method_to_return == 'length' && presenter_collection?(resolved)
+        return -> { resolved.count }
+      end
 
       raise_if_not_traversable(resolved, method_to_return, position)
       resolved.method(method_to_return.to_sym)
@@ -150,6 +151,14 @@ module Curlybars
       return unless traverse.count('.') > Curlybars.configuration.traversing_limit
       message = "`#{traverse}` too deep"
       raise Curlybars::Error::Render.new('traverse_too_deep', message, position)
+    end
+
+    def presenter_collection?(collection)
+      collection = collection.values if collection.is_a?(Hash)
+
+      collection.respond_to?(:each) && collection.all? do |presenter|
+        presenter.respond_to? :allows_method?
+      end
     end
   end
 end
