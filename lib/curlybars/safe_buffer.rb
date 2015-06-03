@@ -1,9 +1,5 @@
 module Curlybars
-  class SafeBuffer < SimpleDelegator
-    def initialize(*args)
-      super(ActiveSupport::SafeBuffer.new(*args))
-    end
-
+  class SafeBuffer < ActiveSupport::SafeBuffer
     def safe_concat(buffer)
       if (length + buffer.length) > Curlybars.configuration.output_limit
         message = "Output too long (> %s bytes)" % Curlybars.configuration.output_limit
