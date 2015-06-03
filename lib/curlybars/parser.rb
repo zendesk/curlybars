@@ -182,7 +182,7 @@ module Curlybars
       end
 
       def validate(branches)
-        # Nothing to validate.
+        [] # Nothing to validate.
       end
     end.new
   end
