@@ -5,6 +5,16 @@ describe Curlybars::SafeBuffer do
     allow(Curlybars).to receive(:configuration) { configuration }
   end
 
+  describe '#is_a?' do
+    it "is a String" do
+      expect(Curlybars::SafeBuffer.new.is_a?(String)).to be_truthy
+    end
+
+    it "is a ActiveSupport::SafeBuffer" do
+      expect(Curlybars::SafeBuffer.new.is_a?(ActiveSupport::SafeBuffer)).to be_truthy
+    end
+  end
+
   describe "#safe_concat" do
     it "accepts when (buffer length + the existing output lenght) <= output_limit" do
       allow(configuration).to receive(:output_limit) { 10 }
