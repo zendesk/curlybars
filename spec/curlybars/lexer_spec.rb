@@ -368,6 +368,20 @@ describe Curlybars::Lexer do
     end
   end
 
+  describe "can lex paths with dashes" do
+    it "`surrounded by other valid chars" do
+      expect(lex('{{a-path}}')).to produce [:START, :PATH, :END]
+    end
+
+    it "at the beginning" do
+      expect(lex('{{-path}}')).to produce [:START, :PATH, :END]
+    end
+
+    it "at the end" do
+      expect(lex('{{path-}}')).to produce [:START, :PATH, :END]
+    end
+  end
+
   describe "outside a curlybar context" do
     it "`--}}` is lexed as plain text" do
       expect(lex('--}}')).to produce [:TEXT]
