@@ -25,6 +25,16 @@ describe "{{path}}" do
       HTML
     end
 
+    it "{{-a-path-}} is a valid path" do
+      template = Curlybars.compile(<<-HBS)
+        {{-a-path-}}
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
+        a path, whose name contains underscores
+      HTML
+    end
+
     it "{{../../path}} is evaluated on the third to last context in the stack" do
       template = Curlybars.compile(<<-HBS)
         {{#with user}}

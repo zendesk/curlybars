@@ -4,7 +4,7 @@ module Curlybars
   class Lexer < RLTK::Lexer
     match_first
 
-    IDENTIFIER = '[A-Za-z_]\w*'
+    IDENTIFIER = '[A-Za-z_\-][\w\-]*'
 
     r(/\\{/) { [:TEXT, '{'] }
     r(/\\/) { [:TEXT, '\\'] }
