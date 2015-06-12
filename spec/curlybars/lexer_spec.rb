@@ -382,6 +382,12 @@ describe Curlybars::Lexer do
     end
   end
 
+  describe "can lex paths with identifiers that are numebrs" do
+    it "`surrounded by other valid chars" do
+      expect(lex('{{path.123}}')).to produce [:START, :PATH, :END]
+    end
+  end
+
   describe "outside a curlybar context" do
     it "`--}}` is lexed as plain text" do
       expect(lex('--}}')).to produce [:TEXT]
