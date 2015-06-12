@@ -4,7 +4,15 @@ module Curlybars
   class Lexer < RLTK::Lexer
     match_first
 
-    IDENTIFIER = '[A-Za-z_\-][\w\-]*'
+    # The following is an identifier Handlebars compliant
+    # IDENTIFIER = '[A-Za-z_][0-9\w]*'
+
+    # This accomodates the edge case of identifiers containing dashes
+    # IDENTIFIER = '[A-Za-z_\-][0-9\w\-]*'
+
+    # This accomodates the edge case of identifiers containing all numbers
+    # and dashes
+    IDENTIFIER = '[0-9A-Za-z_\-][0-9\w\-]*'
 
     r(/\\{/) { [:TEXT, '{'] }
     r(/\\/) { [:TEXT, '\\'] }
