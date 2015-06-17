@@ -23,7 +23,12 @@ module Curlybars
     #
     # Returns a String containing the Ruby code.
     def compile(source, file_name = nil)
-      ast(source, file_name).compile
+      transformers = Curlybars.configuration.compiler_transformers
+      transformed_source = transformers.inject(source) do |memo, transformer|
+        transformer.transform(memo)
+      end
+
+      ast(transformed_source, file_name).compile
     end
 
     # Validates the source against a presenter.

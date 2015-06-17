@@ -22,6 +22,7 @@ module Curlybars
     attr_accessor :output_limit
     attr_accessor :rendering_timeout
     attr_accessor :custom_processors
+    attr_accessor :compiler_transformers
 
     def initialize
       @presenters_namespace = ''
@@ -30,6 +31,7 @@ module Curlybars
       @output_limit = 1.megabyte
       @rendering_timeout = 10.seconds
       @custom_processors = []
+      @compiler_transformers = []
     end
   end
 end
