@@ -1,10 +1,18 @@
 module CurlybarsPresenters
   class Articles::ShowPresenter < Curlybars::Presenter
     presents :article
-    allow_methods :author, :user, :title
+    allow_methods :author, :user, :title, :comment, :body
 
     def title
       @article.title
+    end
+
+    def comment
+      @article.comment
+    end
+
+    def body
+      @article.body.html_safe
     end
 
     def author

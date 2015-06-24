@@ -3,7 +3,7 @@ module Curlybars
     Text = Struct.new(:text) do
       def compile
         <<-RUBY
-          buffer.safe_concat(#{text.inspect})
+          buffer.concat(#{text.inspect}.html_safe)
         RUBY
       end
 
