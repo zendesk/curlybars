@@ -58,7 +58,7 @@ module Curlybars
           result = rendering.call(helper, #{helper.path.inspect}, helper_position,
             arguments, options, &options[:fn])
 
-          buffer.safe_concat(result.to_s)
+          buffer.concat(result.to_s)
         RUBY
       end
 

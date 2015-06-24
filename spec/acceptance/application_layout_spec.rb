@@ -28,7 +28,7 @@ describe "Using Curly(bars) for the application layout", type: :request do
       Curlybars.reset
     end
 
-    example "A simple layout view in Curlybars" do
+    example "A simple layout view in Curlybars with html safe logic" do
       get '/articles/1'
 
       expect(body).to eq(<<-HTML.strip_heredoc)
@@ -40,6 +40,10 @@ describe "Using Curly(bars) for the application layout", type: :request do
         <p>Hi Admin</p>
 
         <h1>Article: The Prince</h1>
+
+        <p>This is <strong>important</strong>!</p>
+
+        <p>&lt;script&gt;alert(&#39;bad&#39;)&lt;/script&gt;</p>
 
 
         <p>

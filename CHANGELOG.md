@@ -1,5 +1,11 @@
 ### Unreleased
 
+### Curlybars 0.5.13 (June 18, 2015)
+
+* Add support for compiler transformers
+
+  Libo Cannici & Mauro Codella
+
 ### Curlybars 0.5.4 (May 11, 2015)
 
 * Expose metadata in some exceptions

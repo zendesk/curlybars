@@ -3,7 +3,7 @@ module Curlybars
     Partial = Struct.new(:path) do
       def compile
         <<-RUBY
-          buffer.safe_concat(rendering.cached_call(#{path.compile}).to_s)
+          buffer.concat(rendering.cached_call(#{path.compile}).to_s)
         RUBY
       end
 

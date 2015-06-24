@@ -3,7 +3,7 @@ module Curlybars
     Output = Struct.new(:value) do
       def compile
         <<-RUBY
-          buffer.safe_concat(rendering.cached_call(#{value.compile}).to_s)
+          buffer.concat(rendering.cached_call(#{value.compile}).to_s)
         RUBY
       end
 
