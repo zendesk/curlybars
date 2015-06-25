@@ -38,12 +38,20 @@ module Curlybars
     # file_name - The the file name of the template being validated (defaults to `nil`).
     #
     # Returns an array of Curlybars::Error::Validation
-    def validate(presenter_class, source, file_name = nil)
+    def validate(presenter_class, source, file_name = nil, **options)
+      options.reverse_merge! strict: false
+
       unless presenter_class.respond_to?(:dependency_tree)
         raise "#{presenter_class} must implement `.dependency_tree` or extend `Curlybars::MethodWhitelist`"
       end
       errors = begin
-        branches = [presenter_class.dependency_tree]
+        dependency_tree = presenter_class.dependency_tree
+
+        if options[:strict]
+          Curlybars::DeprecatedBranchesRemover.perform!(dependency_tree)
+        end
+
+        branches = [dependency_tree]
         ast(source, file_name).validate(branches)
       rescue Curlybars::Error::Base => ast_error
         [ast_error]
@@ -60,8 +68,8 @@ module Curlybars
     # file_name - The the file name of the template being checked (defaults to `nil`).
     #
     # Returns true if the template is valid, false otherwise.
-    def valid?(presenter_class, source, file_name = nil)
-      errors = validate(presenter_class, source, file_name)
+    def valid?(presenter_class, source, file_name = nil, **options)
+      errors = validate(presenter_class, source, file_name, **options)
       errors.empty?
     end
 
@@ -103,3 +111,4 @@ require 'curlybars/template_handler'
 require 'curlybars/railtie' if defined?(Rails)
 require 'curlybars/presenter'
 require 'curlybars/method_whitelist'
+require 'curlybars/deprecated_branches_remover'
