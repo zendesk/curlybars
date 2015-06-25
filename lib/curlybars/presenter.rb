@@ -196,35 +196,6 @@ module Curlybars
         end
       end
 
-      # Whether a component is available to templates rendered with the
-      # presenter.
-      #
-      # Templates have components which correspond with methods defined on
-      # the presenter. By default, only public instance methods can be
-      # referenced, and any method defined on Curlybars::Presenter itself cannot be
-      # referenced. This means that methods such as `#cache_key` and #inspect
-      # are not available. This is done for safety purposes.
-      #
-      # This policy can be changed by overriding this method in your presenters.
-      #
-      # name - The String name of the component.
-      #
-      # Returns true if the method can be referenced by a template,
-      #   false otherwise.
-      def component_available?(name)
-        available_components.include?(name)
-      end
-
-      # A list of components available to templates rendered with the presenter.
-      #
-      # Returns an Array of String component names.
-      def available_components
-        @_available_components ||= begin
-          methods = public_instance_methods - Curlybars::Presenter.public_instance_methods
-          methods.map(&:to_s)
-        end
-      end
-
       # The set of view paths that the presenter depends on.
       #
       # Examples
