@@ -201,6 +201,20 @@ describe "{{path}}" do
       expect(errors).to be_empty
     end
 
+    it "with errors when it's a deprecated component and validation is strict" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { deprecated: :deprecated }
+      end
+
+      source = <<-HBS
+        {{deprecated}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source, strict: true)
+
+      expect(errors).not_to be_empty
+    end
+
     it "with errors using `length` on anything else than a collection" do
       allow(presenter_class).to receive(:dependency_tree) do
         { presenter: {} }
