@@ -10,7 +10,7 @@ describe Curlybars::Processor::Tilde do
         text_token("text \t\r\n"),
         tilde_start_token
       ]
-      Curlybars::Processor::Tilde.process!(tokens)
+      Curlybars::Processor::Tilde.process!(tokens, 'identifier')
 
       expect(tokens.first.value).to eq 'text'
     end
@@ -22,7 +22,7 @@ describe Curlybars::Processor::Tilde do
         end_token,
         tilde_start_token
       ]
-      Curlybars::Processor::Tilde.process!(tokens)
+      Curlybars::Processor::Tilde.process!(tokens, 'identifier')
 
       expect(tokens.first.value).to eq "text \t\r\n"
     end
@@ -34,7 +34,7 @@ describe Curlybars::Processor::Tilde do
         tilde_end_token,
         text_token("\t\r\n text")
       ]
-      Curlybars::Processor::Tilde.process!(tokens)
+      Curlybars::Processor::Tilde.process!(tokens, 'identifier')
 
       expect(tokens.last.value).to eq 'text'
     end
@@ -46,7 +46,7 @@ describe Curlybars::Processor::Tilde do
         end_token,
         text_token("\t\r\n text")
       ]
-      Curlybars::Processor::Tilde.process!(tokens)
+      Curlybars::Processor::Tilde.process!(tokens, 'identifier')
 
       expect(tokens.last.value).to eq "\t\r\n text"
     end
