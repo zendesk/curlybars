@@ -19,26 +19,26 @@ module Curlybars
     # Compiles a Curlybars template to Ruby code.
     #
     # source - The source HBS String that should be compiled.
-    # file_name - The the file name of the template being compiled (defaults to `nil`).
+    # identifier - The the file name of the template being compiled (defaults to `nil`).
     #
     # Returns a String containing the Ruby code.
-    def compile(source, file_name = nil)
+    def compile(source, identifier = nil)
       transformers = Curlybars.configuration.compiler_transformers
       transformed_source = transformers.inject(source) do |memo, transformer|
-        transformer.transform(memo)
+        transformer.transform(memo, identifier)
       end
 
-      ast(transformed_source, file_name).compile
+      ast(transformed_source, identifier).compile
     end
 
     # Validates the source against a presenter.
     #
     # presenter_class - the presenter class, used to validate the source.
     # source - The source HBS String that should be validated.
-    # file_name - The the file name of the template being validated (defaults to `nil`).
+    # identifier - The the file name of the template being validated (defaults to `nil`).
     #
     # Returns an array of Curlybars::Error::Validation
-    def validate(presenter_class, source, file_name = nil, **options)
+    def validate(presenter_class, source, identifier = nil, **options)
       options.reverse_merge! strict: false
 
       unless presenter_class.respond_to?(:dependency_tree)
@@ -52,7 +52,7 @@ module Curlybars
         end
 
         branches = [dependency_tree]
-        ast(source, file_name).validate(branches)
+        ast(source, identifier).validate(branches)
       rescue Curlybars::Error::Base => ast_error
         [ast_error]
       end
@@ -65,11 +65,11 @@ module Curlybars
     #
     # presenter_class - the presenter class, used to check if the source is valid.
     # source - The source HBS String that should be check to be valid.
-    # file_name - The the file name of the template being checked (defaults to `nil`).
+    # identifier - The the file name of the template being checked (defaults to `nil`).
     #
     # Returns true if the template is valid, false otherwise.
-    def valid?(presenter_class, source, file_name = nil, **options)
-      errors = validate(presenter_class, source, file_name, **options)
+    def valid?(presenter_class, source, identifier = nil, **options)
+      errors = validate(presenter_class, source, identifier, **options)
       errors.empty?
     end
 
@@ -79,14 +79,14 @@ module Curlybars
       [Curlybars::Processor::Tilde] + Curlybars.configuration.custom_processors
     end
 
-    def ast(source, file_name)
-      tokens = Curlybars::Lexer.lex(source, file_name)
+    def ast(source, identifier)
+      tokens = Curlybars::Lexer.lex(source, identifier)
 
-      processors.each { |processor| processor.process!(tokens) }
+      processors.each { |processor| processor.process!(tokens, identifier) }
 
       Curlybars::Parser.parse(tokens)
     rescue RLTK::LexingError => lexing_error
-      raise Curlybars::Error::Lex.new(source, file_name, lexing_error)
+      raise Curlybars::Error::Lex.new(source, identifier, lexing_error)
     rescue RLTK::NotInLanguage => not_in_language_error
       raise Curlybars::Error::Parse.new(source, not_in_language_error)
     end

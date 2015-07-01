@@ -4,7 +4,7 @@ module Curlybars
       extend TokenFactory
 
       class << self
-        def process!(tokens)
+        def process!(tokens, identifier)
           tokens.each_with_index do |token, index|
             case token.type
             when :TILDE_START
