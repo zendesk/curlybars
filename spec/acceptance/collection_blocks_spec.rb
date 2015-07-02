@@ -1,6 +1,12 @@
 describe "Collection blocks", type: :request do
+  before do
+    Curlybars.configure do |config|
+      config.presenters_namespace = 'curlybars_presenters'
+    end
+  end
+
   example "Rendering collections" do
-    get '/collection'
+    get '/categories'
 
     expect(body).to eq(<<-HTML.strip_heredoc)
       <html>
@@ -8,24 +14,12 @@ describe "Collection blocks", type: :request do
         <title>Dummy app</title>
       </head>
       <body>
-      <ul>
 
-        <li>uno</li>
-        <ul>
-          <li>1</li><li>2</li><li>3</li>
-        </ul>
+      <h1>This are the categories</h1>
 
-        <li>dos</li>
-        <ul>
-          <li>1</li><li>2</li><li>3</li>
-        </ul>
+      <p>One</p>
+      <p>Two</p>
 
-        <li>tres!</li>
-        <ul>
-          <li>1</li><li>2</li><li>3</li>
-        </ul>
-
-      </ul>
 
       </body>
       </html>
