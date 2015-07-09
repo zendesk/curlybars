@@ -1,4 +1,4 @@
-class Dashboards::ItemPresenter < Curly::Presenter
+class Dashboards::ItemPresenter < Curlybars::Presenter
   presents :item, :name
 
   def item
@@ -13,7 +13,7 @@ class Dashboards::ItemPresenter < Curly::Presenter
     %w(1 2 3)
   end
 
-  class SubitemPresenter < Curly::Presenter
+  class SubitemPresenter < Curlybars::Presenter
     presents :item, :subitem
 
     def name

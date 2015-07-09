@@ -1,5 +1,7 @@
-class Dashboards::ShowPresenter < Curly::Presenter
+class Dashboards::ShowPresenter < Curlybars::Presenter
   presents :message
+
+  allow_methods :message, :welcome
 
   def message
     @message

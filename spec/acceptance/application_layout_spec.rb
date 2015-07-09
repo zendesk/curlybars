@@ -1,5 +1,5 @@
-describe "Using Curly(bars) for the application layout", type: :request do
-  example "A simple layout view in Curly" do
+describe "Using Curlybars for the application layout", type: :request do
+  example "A simple layout view in Curlybars" do
     get '/'
 
     expect(body).to eq(<<-HTML.strip_heredoc)

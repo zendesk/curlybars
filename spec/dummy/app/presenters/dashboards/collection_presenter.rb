@@ -1,4 +1,4 @@
-class Dashboards::CollectionPresenter < Curly::Presenter
+class Dashboards::CollectionPresenter < Curlybars::Presenter
   presents :items, :name
 
   def items

@@ -108,7 +108,7 @@ describe Curlybars::TemplateHandler do
   it "should fail if there's no matching presenter class" do
     allow(template).to receive(:virtual_path) { "missing" }
     allow(template).to receive(:source) { " FOO " }
-    expect { output }.to raise_exception(Curly::PresenterNotFound)
+    expect { output }.to raise_exception(Curlybars::Error::Presenter::NotFound)
   end
 
   it "allows calling public methods on the presenter" do

@@ -1,11 +1,11 @@
-class Dashboards::NewPresenter < Curly::Presenter
+class Dashboards::NewPresenter < Curlybars::Presenter
   presents :name
 
   def form(&block)
     form_for(:dashboard, &block)
   end
 
-  class FormPresenter < Curly::Presenter
+  class FormPresenter < Curlybars::Presenter
     presents :form, :name
 
     def name_field(&block)
@@ -14,7 +14,7 @@ class Dashboards::NewPresenter < Curly::Presenter
       end
     end
 
-    class NameFieldPresenter < Curly::Presenter
+    class NameFieldPresenter < Curlybars::Presenter
       presents :form, :name
 
       def label
