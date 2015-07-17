@@ -1,5 +1,4 @@
 require 'curlybars/method_whitelist'
-require 'curlybars/error/presenter/invalid_name'
 
 module Curlybars
   # A base class that can be subclassed by concrete presenters.
@@ -159,40 +158,11 @@ module Curlybars
       def presenter_for_path(path)
         name_space = Curlybars.configuration.presenters_namespace
         name_spaced_path = File.join(name_space, path)
+        full_class_name = name_spaced_path.camelize << "Presenter"
         begin
-          # Assume that the path can be derived without a prefix; In other words
-          # from the given path we can look up objects by namespace.
-          presenter_for_name(name_spaced_path.camelize, [])
-        rescue Curlybars::Error::Presenter::InvalidName
+          full_class_name.constantize
+        rescue NameError
           nil
-        end
-      end
-
-      # Retrieve the named presenter with consideration for object scope.
-      # The namespace_prefixes are to acknowledge that sometimes we will have
-      # a subclass of Curlybars::Presenter receiving the .presenter_for_name
-      # and other times we will not (when we are receiving this message by
-      # way of the .presenter_for_path method).
-      def presenter_for_name(name, namespace_prefixes = to_s.split('::'))
-        full_class_name = name.camelcase << "Presenter"
-        relative_namespace = full_class_name.split("::")
-        class_name = relative_namespace.pop
-        namespace = namespace_prefixes + relative_namespace
-
-        # Because Rails' autoloading mechanism doesn't work properly with
-        # namespace we need to loop through the namespace ourselves. Ideally,
-        # `X::Y.const_get("Z")` would autoload `X::Z`, but only `X::Y::Z` is
-        # attempted by Rails. This sucks, and hopefully we can find a better
-        # solution in the future.
-        begin
-          full_name = namespace.join("::") << "::" << class_name
-          const_get(full_name)
-        rescue NameError => e
-          if namespace.empty?
-            raise Curlybars::Error::Presenter::InvalidName.new(e, name)
-          end
-          namespace.pop
-          retry
         end
       end
 
