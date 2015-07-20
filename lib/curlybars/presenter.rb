@@ -158,7 +158,7 @@ module Curlybars
       def presenter_for_path(path)
         name_space = Curlybars.configuration.presenters_namespace
         name_spaced_path = File.join(name_space, path)
-        full_class_name = name_spaced_path.camelize << "Presenter"
+        full_class_name = presenter_name_for_path(name_spaced_path)
         begin
           full_class_name.constantize
         rescue NameError
