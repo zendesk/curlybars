@@ -136,6 +136,20 @@ module Curlybars
     end
 
     class << self
+      # The name of the presenter class for a given view path.
+      #
+      # path - The String path of a view.
+      #
+      # Examples
+      #
+      #   Curlybars::TemplateHandler.presenter_name_for_path("foo/bar")
+      #   #=> "Foo::BarPresenter"
+      #
+      # Returns the String name of the matching presenter class.
+      def presenter_name_for_path(path)
+        "#{path}_presenter".camelize
+      end
+
       # Returns the presenter class for the given path.
       #
       # path - The String path of a template.
@@ -144,7 +158,7 @@ module Curlybars
       def presenter_for_path(path)
         name_space = Curlybars.configuration.presenters_namespace
         name_spaced_path = File.join(name_space, path)
-        full_class_name = "#{name_spaced_path}_presenter".camelize
+        full_class_name = name_spaced_path.camelize << "Presenter"
         begin
           full_class_name.constantize
         rescue NameError
