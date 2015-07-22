@@ -13,6 +13,15 @@ describe "{{path}}" do
       HTML
     end
 
+    it "is tolerant to paths that return `nil`" do
+      template = Curlybars.compile(<<-HBS)
+        {{return_nil.property}}
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
+      HTML
+    end
+
     it "{{../path}} is evaluated on the second to last context in the stack" do
       template = Curlybars.compile(<<-HBS)
         {{#with user.avatar}}
