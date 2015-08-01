@@ -10,6 +10,10 @@ Lint/Eval:
   Exclude:
     - spec/integration/**/*
 
+Style/ClassAndModuleChildren:
+  Exclude:
+    - spec/dummy/**/*
+
 Style/Semicolon:
   Exclude:
     - lib/curlybars/lexer.rb
@@ -86,9 +90,6 @@ Metrics/PerceivedComplexity:
   Enabled: false
 
 Style/AlignArray:
-  Enabled: false
-
-Style/ClassAndModuleChildren:
   Enabled: false
 
 Style/Documentation:
