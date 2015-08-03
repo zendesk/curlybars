@@ -219,7 +219,7 @@ describe Curlybars::TemplateHandler do
 
     it "happens and raises when rendering >= rendering_timeout" do
       # setting the rendering_timeout to a reasonably small value
-      allow(configuration).to receive(:rendering_timeout) { 0.1.seconds }
+      allow(configuration).to receive(:rendering_timeout) { 0.01.seconds }
       allow(context).to receive(:bar) { sleep 10.seconds } # slow operation
 
       expect { output }.to raise_error(Curlybars::Error::Render)
