@@ -45,11 +45,7 @@ module Curlybars
         raise "#{presenter_class} must implement `.dependency_tree` or extend `Curlybars::MethodWhitelist`"
       end
       errors = begin
-        dependency_tree = presenter_class.dependency_tree
-
-        if options[:strict]
-          Curlybars::DeprecatedBranchesRemover.perform!(dependency_tree)
-        end
+        dependency_tree = presenter_class.dependency_tree(strict: options[:strict])
 
         branches = [dependency_tree]
         ast(source, identifier).validate(branches)
@@ -111,4 +107,3 @@ require 'curlybars/template_handler'
 require 'curlybars/railtie' if defined?(Rails)
 require 'curlybars/presenter'
 require 'curlybars/method_whitelist'
-require 'curlybars/deprecated_branches_remover'

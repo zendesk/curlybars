@@ -120,21 +120,29 @@ describe Curlybars::MethodWhitelist do
 
       article_presenter = Class.new do
         extend Curlybars::MethodWhitelist
-        allow_methods :title, :body
+        allow_methods :title, :body, old_body: :deprecated
       end
 
       stub_const("ArticlePresenter", article_presenter)
       stub_const("LinkPresenter", link_presenter)
 
       dummy_class.class_eval do
-        allow_methods :cook, links: [LinkPresenter], article: ArticlePresenter
+        allow_methods cook: :deprecated, links: [LinkPresenter], article: ArticlePresenter
       end
     end
 
-    it "should return a dependencies tree" do
+    it "should return a dependencies tree that includes deprecated methods" do
       expect(dummy_class.dependency_tree).
         to eq(
-          cook: nil,
+          cook: :deprecated,
+          links: [{ url: nil }],
+          article: { title: nil, body: nil, old_body: :deprecated }
+        )
+    end
+
+    it "should return a dependencies tree that does not include deprecated methods when strict" do
+      expect(dummy_class.dependency_tree(strict: true)).
+        to eq(
           links: [{ url: nil }],
           article: { title: nil, body: nil }
         )
