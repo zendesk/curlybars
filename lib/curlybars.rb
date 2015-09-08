@@ -39,7 +39,10 @@ module Curlybars
     #
     # Returns an array of Curlybars::Error::Validation
     def validate(presenter_class, source, identifier = nil, **options)
-      options.reverse_merge! strict: false
+      options.reverse_merge!(
+        strict: false,
+        run_processors: true
+      )
 
       unless presenter_class.respond_to?(:dependency_tree)
         raise "#{presenter_class} must implement `.dependency_tree` or extend `Curlybars::MethodWhitelist`"
@@ -48,7 +51,7 @@ module Curlybars
         dependency_tree = presenter_class.dependency_tree(strict: options[:strict])
 
         branches = [dependency_tree]
-        ast(source, identifier).validate(branches)
+        ast(source, identifier, **options).validate(branches)
       rescue Curlybars::Error::Base => ast_error
         [ast_error]
       end
@@ -71,14 +74,16 @@ module Curlybars
 
     private
 
-    def processors
-      [Curlybars::Processor::Tilde] + Curlybars.configuration.custom_processors
-    end
-
-    def ast(source, identifier)
+    def ast(source, identifier, **options)
       tokens = Curlybars::Lexer.lex(source, identifier)
 
-      processors.each { |processor| processor.process!(tokens, identifier) }
+      Curlybars::Processor::Tilde.process!(tokens, identifier)
+
+      if options[:run_processors]
+        Curlybars.configuration.custom_processors.each do |processor|
+          processor.process!(tokens, identifier)
+        end
+      end
 
       Curlybars::Parser.parse(tokens)
     rescue RLTK::LexingError => lexing_error
