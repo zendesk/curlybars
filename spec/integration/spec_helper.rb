@@ -44,8 +44,8 @@ module IntegrationTest
 
     allow_methods :print_current_context, :render_fn, :render_inverse, :user, :new_comment_form, :valid, :visible, :return_true,
       :return_false, :beautify, :form, :date, :asset, :integer, :boolean, :echo, :just_yield, :print_args_and_options,
-      :return_nil, :print_user_name, :this_method_yields, :this_method_yields, :context, :two_elements,
-      :yield_custom_variable, :yield_custom_variable_and_custom_presenter, :print, :array_of_users, :'-a-path-',
+      :return_nil, :this_method_yields, :this_method_yields, :context, :two_elements,
+      :yield_custom_variable, :print, :array_of_users, :'-a-path-',
       partial: :partial
 
     def print(argument, _)
@@ -108,10 +108,6 @@ module IntegrationTest
       "%s %s" % [context, options]
     end
 
-    def print_user_name(context, _)
-      yield context.user
-    end
-
     def this_method_yields
       yield
     end
@@ -125,10 +121,6 @@ module IntegrationTest
         custom1: 'custom variable1',
         custom2: 'custom variable 2',
         cond: true)
-    end
-
-    def yield_custom_variable_and_custom_presenter(context, _)
-      yield(context.user, custom: 'custom variable')
     end
 
     def two_elements

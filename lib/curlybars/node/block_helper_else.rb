@@ -25,8 +25,7 @@ module Curlybars
           helper_position = rendering.position(#{helper.position.line_number},
             #{helper.position.line_offset})
 
-          options[:fn] = ->(pushed_context = nil, **vars) do
-            contexts.push(pushed_context) if pushed_context != nil
+          options[:fn] = ->(**vars) do
             variables.push(vars.symbolize_keys)
             outer_buffer = buffer
             begin
@@ -36,7 +35,6 @@ module Curlybars
             ensure
               buffer = outer_buffer
               variables.pop
-              contexts.pop if pushed_context != nil
             end
           end
 
@@ -58,21 +56,16 @@ module Curlybars
           result = rendering.call(helper, #{helper.path.inspect}, helper_position,
             arguments, options, &options[:fn])
 
-          buffer.concat(result.to_s)
+          unless rendering.presenter?(result) || rendering.presenter_collection?(result)
+            buffer.concat(result.to_s)
+          end
         RUBY
       end
 
       def validate(branches)
         check_open_and_close_elements(helper, helperclose, Curlybars::Error::Validate)
 
-        helper_template_errors = if helper.presenter?(branches)
-          begin
-            branches.push(helper.resolve(branches))
-            helper_template.validate(branches)
-          ensure
-            branches.pop
-          end
-        elsif helper.leaf?(branches)
+        helper_template_errors = if helper.leaf?(branches)
           helper_template.validate(branches)
         else
           message = "#{helper.path} must be allowed either as a leaf or a presenter"

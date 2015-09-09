@@ -87,24 +87,6 @@ describe "{{#helper arg1 arg2 ... key=value ...}}...<{{else}}>...{{/helper}}" do
       HTML
     end
 
-    it "renders a block helper with a different context, chosen by the block_helper implementation" do
-      template = Curlybars.compile(<<-HBS)
-        {{!--
-          `this` is referring to a context
-          that will yield the block using
-          another context.
-        --}}
-
-        {{#print_user_name this}}
-          {{first_name}}
-        {{/print_user_name}}
-      HBS
-
-      expect(eval(template)).to resemble(<<-HTML)
-        Libo
-      HTML
-    end
-
     it "renders a block helper with custom variables" do
       template = Curlybars.compile(<<-HBS)
         {{#yield_custom_variable}}
@@ -158,31 +140,6 @@ describe "{{#helper arg1 arg2 ... key=value ...}}...<{{else}}>...{{/helper}}" do
       expect(eval(template)).to resemble(<<-HTML)
         custom variable1
         custom variable2
-      HTML
-    end
-
-    it "renders a block helper with a different context and a custom variable" do
-      template = Curlybars.compile(<<-HBS)
-        {{!--
-          `this` is referring to a context
-          that will yield the block using
-          another context.
-        --}}
-
-        {{#yield_custom_variable_and_custom_presenter this}}
-          {{first_name}}
-
-          {{!--
-            `@custom` is a variable yielded
-            by the block helper implementation.
-          --}}
-          {{@custom}}
-        {{/yield_custom_variable_and_custom_presenter}}
-      HBS
-
-      expect(eval(template)).to resemble(<<-HTML)
-        Libo
-        custom variable
       HTML
     end
 
@@ -266,7 +223,7 @@ describe "{{#helper arg1 arg2 ... key=value ...}}...<{{else}}>...{{/helper}}" do
 
     it "without errors in context" do
       allow(presenter_class).to receive(:dependency_tree) do
-        { block_helper: {}, context: {} }
+        { block_helper: nil, context: {} }
       end
 
       source = <<-HBS
@@ -308,7 +265,7 @@ describe "{{#helper arg1 arg2 ... key=value ...}}...<{{else}}>...{{/helper}}" do
 
     it "without errors in block_helper" do
       allow(presenter_class).to receive(:dependency_tree) do
-        { block_helper: {}, context: {} }
+        { block_helper: nil, context: {} }
       end
 
       source = <<-HBS

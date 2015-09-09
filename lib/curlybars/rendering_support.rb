@@ -8,7 +8,7 @@ module Curlybars
     end
 
     def check_context_is_presenter(context, path, position)
-      return if context.respond_to?(:allows_method?)
+      return if presenter?(context)
       message = "`#{path}` is not a context type object"
       raise Curlybars::Error::Render.new('context_is_not_a_presenter', message, position)
     end
@@ -113,6 +113,18 @@ module Curlybars
       end
     end
 
+    def presenter?(context)
+      context.respond_to? :allows_method?
+    end
+
+    def presenter_collection?(collection)
+      collection = collection.values if collection.is_a?(Hash)
+
+      collection.respond_to?(:each) && collection.all? do |presenter|
+        presenter?(presenter)
+      end
+    end
+
     private
 
     attr_reader :contexts, :variables, :cached_calls, :file_name
@@ -151,14 +163,6 @@ module Curlybars
       return unless traverse.count('.') > Curlybars.configuration.traversing_limit
       message = "`#{traverse}` too deep"
       raise Curlybars::Error::Render.new('traverse_too_deep', message, position)
-    end
-
-    def presenter_collection?(collection)
-      collection = collection.values if collection.is_a?(Hash)
-
-      collection.respond_to?(:each) && collection.all? do |presenter|
-        presenter.respond_to? :allows_method?
-      end
     end
   end
 end
