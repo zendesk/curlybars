@@ -89,6 +89,24 @@ describe "{{helper context key=value}}" do
       expect(eval(template)).to resemble(<<-HTML)
       HTML
     end
+
+    it "doesn't render if the path returns a presenter" do
+      template = Curlybars.compile(<<-HBS)
+        {{user}}
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
+      HTML
+    end
+
+    it "doesn't render if the path returns a collection of presenters" do
+      template = Curlybars.compile(<<-HBS)
+        {{array_of_users}}
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
+      HTML
+    end
   end
 
   describe "#validate" do
