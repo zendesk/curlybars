@@ -28,7 +28,7 @@ module Curlybars
         transformer.transform(memo, identifier)
       end
 
-      ast(transformed_source, identifier).compile
+      ast(transformed_source, identifier, run_processors: true).compile
     end
 
     # Validates the source against a presenter.
@@ -51,7 +51,7 @@ module Curlybars
         dependency_tree = presenter_class.dependency_tree(strict: options[:strict])
 
         branches = [dependency_tree]
-        ast(source, identifier, **options).validate(branches)
+        ast(source, identifier, run_processors: options[:run_processors]).validate(branches)
       rescue Curlybars::Error::Base => ast_error
         [ast_error]
       end
@@ -74,12 +74,12 @@ module Curlybars
 
     private
 
-    def ast(source, identifier, **options)
+    def ast(source, identifier, run_processors:)
       tokens = Curlybars::Lexer.lex(source, identifier)
 
       Curlybars::Processor::Tilde.process!(tokens, identifier)
 
-      if options[:run_processors]
+      if run_processors
         Curlybars.configuration.custom_processors.each do |processor|
           processor.process!(tokens, identifier)
         end
