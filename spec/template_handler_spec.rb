@@ -99,6 +99,19 @@ describe Curlybars::TemplateHandler do
     stub_const("TestPresenter", presenter_class)
   end
 
+  it "strips the `# encoding: *` directive away from the template" do
+    allow(template).to receive(:source) do
+      <<-TEMPLATE.strip_heredoc
+        # encoding: utf-8"
+        first line
+      TEMPLATE
+    end
+    expect(output).to eq(<<-TEMPLATE.strip_heredoc)
+
+      first line
+    TEMPLATE
+  end
+
   it "passes in the presenter context to the presenter class" do
     allow(context).to receive(:bar) { "BAR" }
     allow(template).to receive(:source) { "{{bar}}" }

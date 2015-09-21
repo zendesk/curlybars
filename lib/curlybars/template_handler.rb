@@ -50,7 +50,12 @@ module Curlybars
 
         raise Curlybars::Error::Presenter::NotFound.new(path) if presenter_class.nil?
 
-        source = Curlybars.compile(template.source, template.identifier)
+        # For security reason, we strip the encoding directive in order to avoid
+        # potential issues when rendering the template in another character
+        # encoding.
+        safe_source = template.source.gsub(/\A#{ActionView::ENCODING_FLAG}/, '')
+
+        source = Curlybars.compile(safe_source, template.identifier)
 
         <<-RUBY
           require 'timeout'
