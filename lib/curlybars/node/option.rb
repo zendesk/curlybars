@@ -8,7 +8,7 @@ module Curlybars
       end
 
       def validate(branches)
-        expression.validate(branches)
+        expression.validate_as_value(branches)
       end
     end
   end

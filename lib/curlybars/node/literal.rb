@@ -10,6 +10,10 @@ module Curlybars
       def validate(branches)
         # Nothing to validate here.
       end
+
+      def validate_as_value(branches)
+        # It is always a value.
+      end
     end
   end
 end

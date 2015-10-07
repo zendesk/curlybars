@@ -10,6 +10,10 @@ module Curlybars
         RUBY
       end
 
+      def validate_as_value(branches)
+        validate(branches, check_type: :leaf)
+      end
+
       def validate(branches, check_type: :anything)
         resolve_and_check!(branches, check_type: check_type)
         []
