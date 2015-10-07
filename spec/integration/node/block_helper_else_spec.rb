@@ -221,9 +221,23 @@ describe "{{#helper arg1 arg2 ... key=value ...}}...<{{else}}>...{{/helper}}" do
   describe "#validate" do
     let(:presenter_class) { double(:presenter_class) }
 
+    it "without errors when invoking a leaf" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { name: nil }
+      end
+
+      source = <<-HBS
+        {{name}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).to be_empty
+    end
+
     it "without errors if argument is a leaf" do
       allow(presenter_class).to receive(:dependency_tree) do
-        { block_helper: nil, argument: nil }
+        { block_helper: :helper, argument: nil }
       end
 
       source = <<-HBS
@@ -237,7 +251,7 @@ describe "{{#helper arg1 arg2 ... key=value ...}}...<{{else}}>...{{/helper}}" do
 
     it "without errors if argument is a literal" do
       allow(presenter_class).to receive(:dependency_tree) do
-        { block_helper: nil }
+        { block_helper: :helper }
       end
 
       source = <<-HBS
@@ -251,7 +265,7 @@ describe "{{#helper arg1 arg2 ... key=value ...}}...<{{else}}>...{{/helper}}" do
 
     it "without errors if argument is a variable" do
       allow(presenter_class).to receive(:dependency_tree) do
-        { block_helper: nil }
+        { block_helper: :helper }
       end
 
       source = <<-HBS
@@ -265,7 +279,7 @@ describe "{{#helper arg1 arg2 ... key=value ...}}...<{{else}}>...{{/helper}}" do
 
     it "without errors if option is a leaf" do
       allow(presenter_class).to receive(:dependency_tree) do
-        { block_helper: nil, argument: nil }
+        { block_helper: :helper, argument: nil }
       end
 
       source = <<-HBS
@@ -279,7 +293,7 @@ describe "{{#helper arg1 arg2 ... key=value ...}}...<{{else}}>...{{/helper}}" do
 
     it "without errors if option is a literal" do
       allow(presenter_class).to receive(:dependency_tree) do
-        { block_helper: nil }
+        { block_helper: :helper }
       end
 
       source = <<-HBS
@@ -293,7 +307,7 @@ describe "{{#helper arg1 arg2 ... key=value ...}}...<{{else}}>...{{/helper}}" do
 
     it "without errors if option is a variable" do
       allow(presenter_class).to receive(:dependency_tree) do
-        { block_helper: nil }
+        { block_helper: :helper }
       end
 
       source = <<-HBS
@@ -307,7 +321,7 @@ describe "{{#helper arg1 arg2 ... key=value ...}}...<{{else}}>...{{/helper}}" do
 
     it "without errors in block_helper" do
       allow(presenter_class).to receive(:dependency_tree) do
-        { block_helper: nil, context: nil }
+        { block_helper: :helper, context: nil }
       end
 
       source = <<-HBS
@@ -319,9 +333,37 @@ describe "{{#helper arg1 arg2 ... key=value ...}}...<{{else}}>...{{/helper}}" do
       expect(errors).to be_empty
     end
 
+    it "with errors when invoking a leaf with arguments" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { name: nil }
+      end
+
+      source = <<-HBS
+        {{name 'argument'}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).not_to be_empty
+    end
+
+    it "with errors when invoking a leaf with options" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { name: nil }
+      end
+
+      source = <<-HBS
+        {{name option='value'}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).not_to be_empty
+    end
+
     it "with errors if argument is not a value" do
       allow(presenter_class).to receive(:dependency_tree) do
-        { context: nil, not_a_value: {} }
+        { block_helper: :helper, not_a_value: {} }
       end
 
       source = <<-HBS
@@ -335,7 +377,7 @@ describe "{{#helper arg1 arg2 ... key=value ...}}...<{{else}}>...{{/helper}}" do
 
     it "with errors if option is not a value" do
       allow(presenter_class).to receive(:dependency_tree) do
-        { context: nil, not_a_value: {} }
+        { block_helper: :helper, not_a_value: {} }
       end
 
       source = <<-HBS
@@ -349,7 +391,7 @@ describe "{{#helper arg1 arg2 ... key=value ...}}...<{{else}}>...{{/helper}}" do
 
     it "with errors in fn block" do
       allow(presenter_class).to receive(:dependency_tree) do
-        { context: {}, block_helper: {} }
+        { context: {}, block_helper: :helper }
       end
 
       source = <<-HBS
@@ -365,7 +407,7 @@ describe "{{#helper arg1 arg2 ... key=value ...}}...<{{else}}>...{{/helper}}" do
 
     it "with errors in inverse block" do
       allow(presenter_class).to receive(:dependency_tree) do
-        { context: {}, block_helper: {} }
+        { context: {}, block_helper: :helper }
       end
 
       source = <<-HBS

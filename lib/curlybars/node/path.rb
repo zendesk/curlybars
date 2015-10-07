@@ -47,6 +47,10 @@ module Curlybars
         resolve(branches) == :partial
       end
 
+      def helper?(branches)
+        resolve(branches) == :helper
+      end
+
       def resolve(branches)
         @value ||= begin
           path_split_by_slashes = path.split('/')
@@ -94,6 +98,10 @@ module Curlybars
           return if partial?(branches)
           message = "`#{path}` cannot resolve to a partial"
           raise Curlybars::Error::Validate.new('not_a_partial', message, position)
+        when :helper
+          return if helper?(branches)
+          message = "`#{path}` cannot resolve to a helper"
+          raise Curlybars::Error::Validate.new('not_a_helper', message, position)
         when :anything
         else
           raise "invalid type `#{check_type}`"

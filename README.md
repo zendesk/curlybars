@@ -376,6 +376,7 @@ The following descriptors are available:
 - `validate.not_a_presenter`
 - `validate.not_a_presenter_collection`
 - `validate.not_a_leaf`
+- `validate.not_a_helper`
 - `validate.invalid_block_helper`
 - `validate.unallowed_path`
 
@@ -511,6 +512,35 @@ end
 {{comments 'http://test.com/cat.jpg'}}
 ```
 
+#### validate.not_a_helper
+
+This exception occurs when a path not marked as helper has been invoked. For instance:
+
+```ruby
+class ArticlePresenter
+  allow_methods :not_a_helper, helper: :helper
+
+  def not_a_helper
+    ...
+  end
+
+  def helper
+    ...
+  end
+
+end
+```
+
+```hbs
+{{! this will NOT raise the exception }}
+
+{{helper 'argument'}}
+
+{{! this will raise the exception }}
+
+{{not_a_helper 'argument'}}
+```
+
 #### validate.invalid_block_helper
 
 This exception is raised when a block helper is not allowed either as a leaf or a presenter.
@@ -518,6 +548,23 @@ This exception is raised when a block helper is not allowed either as a leaf or 
 ```ruby
 class UserPresenter
   allow_methods block_helper: :other
+end
+```
+
+```hbs
+{{! this will raise the exception }}
+
+{{#block_helper}} ... {{/block_helper}}
+```
+
+#### validate.invalid_signature
+
+This exception is raised when invoking a method that is allowed as leaf - hence,
+doesn't accept any arguments or options.
+
+```ruby
+class UserPresenter
+  allow_methods :name
 
   def name
     ...
@@ -528,7 +575,7 @@ end
 ```hbs
 {{! this will raise the exception }}
 
-{{#block_helper}} ... {{/block_helper}}
+{{name 'argument' option='value'}}
 ```
 
 #### validate.unallowed_path
