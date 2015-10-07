@@ -76,7 +76,7 @@ module Curlybars
         [
           helper_template_errors,
           else_template_errors,
-          arguments.map { |argument| argument.validate(branches) },
+          arguments.map { |argument| argument.validate_as_value(branches) },
           options.map { |option| option.validate(branches) }
         ]
       rescue Curlybars::Error::Validate => path_error

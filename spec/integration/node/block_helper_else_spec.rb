@@ -221,9 +221,93 @@ describe "{{#helper arg1 arg2 ... key=value ...}}...<{{else}}>...{{/helper}}" do
   describe "#validate" do
     let(:presenter_class) { double(:presenter_class) }
 
-    it "without errors in context" do
+    it "without errors if argument is a leaf" do
       allow(presenter_class).to receive(:dependency_tree) do
-        { block_helper: nil, context: {} }
+        { block_helper: nil, argument: nil }
+      end
+
+      source = <<-HBS
+        {{#block_helper argument}} ... {{/block_helper}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).to be_empty
+    end
+
+    it "without errors if argument is a literal" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { block_helper: nil }
+      end
+
+      source = <<-HBS
+        {{#block_helper 'argument'}} ... {{/block_helper}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).to be_empty
+    end
+
+    it "without errors if argument is a variable" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { block_helper: nil }
+      end
+
+      source = <<-HBS
+        {{#block_helper @var}} ... {{/block_helper}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).to be_empty
+    end
+
+    it "without errors if option is a leaf" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { block_helper: nil, argument: nil }
+      end
+
+      source = <<-HBS
+        {{#block_helper option=argument}} ... {{/block_helper}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).to be_empty
+    end
+
+    it "without errors if option is a literal" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { block_helper: nil }
+      end
+
+      source = <<-HBS
+        {{#block_helper option='argument'}} ... {{/block_helper}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).to be_empty
+    end
+
+    it "without errors if option is a variable" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { block_helper: nil }
+      end
+
+      source = <<-HBS
+        {{#block_helper option=@var}} ... {{/block_helper}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).to be_empty
+    end
+
+    it "without errors in block_helper" do
+      allow(presenter_class).to receive(:dependency_tree) do
+        { block_helper: nil, context: nil }
       end
 
       source = <<-HBS
@@ -235,27 +319,13 @@ describe "{{#helper arg1 arg2 ... key=value ...}}...<{{else}}>...{{/helper}}" do
       expect(errors).to be_empty
     end
 
-    it "without errors then block helper does not push a context" do
+    it "with errors if argument is not a value" do
       allow(presenter_class).to receive(:dependency_tree) do
-        { block_helper: nil, context: {} }
+        { context: nil, not_a_value: {} }
       end
 
       source = <<-HBS
-        {{#block_helper context}} ... {{/block_helper}}
-      HBS
-
-      errors = Curlybars.validate(presenter_class, source)
-
-      expect(errors).to be_empty
-    end
-
-    it "with errors in context" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { context: nil, block_helper: {} }
-      end
-
-      source = <<-HBS
-        {{#block_helper no_a_presenter}} ... {{/block_helper}}
+        {{#block_helper not_a_value}} ... {{/block_helper}}
       HBS
 
       errors = Curlybars.validate(presenter_class, source)
@@ -263,18 +333,18 @@ describe "{{#helper arg1 arg2 ... key=value ...}}...<{{else}}>...{{/helper}}" do
       expect(errors).not_to be_empty
     end
 
-    it "without errors in block_helper" do
+    it "with errors if option is not a value" do
       allow(presenter_class).to receive(:dependency_tree) do
-        { block_helper: nil, context: {} }
+        { context: nil, not_a_value: {} }
       end
 
       source = <<-HBS
-        {{#block_helper context}} ... {{/block_helper}}
+        {{#block_helper option=not_a_value}} ... {{/block_helper}}
       HBS
 
       errors = Curlybars.validate(presenter_class, source)
 
-      expect(errors).to be_empty
+      expect(errors).not_to be_empty
     end
 
     it "with errors in fn block" do
