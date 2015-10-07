@@ -65,22 +65,22 @@ module Curlybars
       def validate(branches)
         check_open_and_close_elements(helper, helperclose, Curlybars::Error::Validate)
 
-        helper_template_errors = if helper.leaf?(branches)
-          helper_template.validate(branches)
+        if helper.leaf?(branches)
+          if arguments.any? || options.any?
+            message = "#{helper.path} doesn't accept any arguments or options"
+            Curlybars::Error::Validate.new('invalid_signature', message, helper.position)
+          end
+        elsif helper.helper?(branches)
+          [
+            helper_template.validate(branches),
+            else_template.validate(branches),
+            arguments.map { |argument| argument.validate_as_value(branches) },
+            options.map { |option| option.validate(branches) }
+          ]
         else
-          message = "#{helper.path} must be allowed either as a leaf or a presenter"
-          raise Curlybars::Error::Validate.new('invalid_block_helper', message, helper.position)
+          message = "#{helper.path} must be allowed as helper or leaf"
+          Curlybars::Error::Validate.new('invalid_block_helper', message, helper.position)
         end
-
-        else_template_errors = else_template.validate(branches)
-        [
-          helper_template_errors,
-          else_template_errors,
-          arguments.map { |argument| argument.validate_as_value(branches) },
-          options.map { |option| option.validate(branches) }
-        ]
-      rescue Curlybars::Error::Validate => path_error
-        path_error
       end
 
       private
