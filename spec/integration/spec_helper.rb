@@ -149,4 +149,17 @@ module IntegrationTest
       User.new('Libo')
     end
   end
+
+  class GlobalHelperProvider
+    extend Curlybars::MethodWhitelist
+
+    allow_methods :global_helper
+
+    def initialize(context = nil)
+    end
+
+    def global_helper(argument, options)
+      "#{argument} - option:#{options[:option]}"
+    end
+  end
 end

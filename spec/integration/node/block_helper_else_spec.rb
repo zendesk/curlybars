@@ -1,7 +1,19 @@
 describe "{{#helper arg1 arg2 ... key=value ...}}...<{{else}}>...{{/helper}}" do
+  let(:global_helpers_providers) { [IntegrationTest::GlobalHelperProvider.new] }
+
   describe "#compile" do
     let(:post) { double("post") }
     let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
+
+    it "can be a global helper" do
+      template = Curlybars.compile(<<-HBS)
+        {{global_helper 'argument' option='value'}}
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
+        argument - option:value
+      HTML
+    end
 
     it "accepts no arguments at all" do
       template = Curlybars.compile(<<-HBS)
@@ -220,6 +232,19 @@ describe "{{#helper arg1 arg2 ... key=value ...}}...<{{else}}>...{{/helper}}" do
 
   describe "#validate" do
     let(:presenter_class) { double(:presenter_class) }
+
+    it "without errors when global helper" do
+      allow(presenter_class).to receive(:dependency_tree).and_return({})
+      allow(Curlybars.configuration).to receive(:global_helpers_provider_classes).and_return([IntegrationTest::GlobalHelperProvider])
+
+      source = <<-HBS
+        {{global_helper}}
+      HBS
+
+      errors = Curlybars.validate(presenter_class, source)
+
+      expect(errors).to be_empty
+    end
 
     it "without errors when invoking a leaf" do
       allow(presenter_class).to receive(:dependency_tree) do

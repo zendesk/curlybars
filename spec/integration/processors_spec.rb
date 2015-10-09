@@ -1,5 +1,6 @@
 describe "processors" do
   let(:presenter) { double(:presenter, dependency_tree: { curlybars: nil }) }
+  let(:global_helpers_providers) { [] }
   let(:processor) { double(:processor) }
 
   before do

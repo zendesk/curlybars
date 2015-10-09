@@ -53,6 +53,8 @@ module Curlybars
 
       def resolve(branches)
         @value ||= begin
+          return :helper if global_helpers_dependency_tree.key?(path.to_sym)
+
           path_split_by_slashes = path.split('/')
           backward_steps_on_branches = path_split_by_slashes.count - 1
           base_tree_position = branches.length - backward_steps_on_branches
@@ -79,6 +81,14 @@ module Curlybars
       end
 
       private
+
+      # TODO: extract me away
+      def global_helpers_dependency_tree
+        @global_helpers_dependency_tree ||= begin
+          classes = Curlybars.configuration.global_helpers_provider_classes
+          classes.map(&:dependency_tree).inject({}, :merge)
+        end
+      end
 
       def check_type_of(branches, check_type)
         case check_type

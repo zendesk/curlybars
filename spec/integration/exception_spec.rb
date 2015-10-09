@@ -1,6 +1,7 @@
 describe "Exception reporting" do
   let(:post) { double("post") }
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
+  let(:global_helpers_providers) { [] }
 
   it "Throw Curlybars::Error::Lex in case of a lex error occurs" do
     expect do

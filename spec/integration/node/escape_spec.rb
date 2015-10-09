@@ -1,6 +1,7 @@
 describe '`\` as an escaping character' do
   let(:post) { double("post") }
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
+  let(:global_helpers_providers) { [] }
 
   it "escapes `{`" do
     template = Curlybars.compile(<<-HBS)

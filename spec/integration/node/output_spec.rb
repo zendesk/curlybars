@@ -1,4 +1,6 @@
 describe '{{value}}' do
+  let(:global_helpers_providers) { [] }
+
   describe "#compile" do
     let(:post) { double("post") }
     let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
