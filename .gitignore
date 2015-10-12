@@ -16,6 +16,7 @@ rdoc
 .ruby-version
 .DS_Store
 *.swp
+tags
 
 # YARD artifacts
 /.yardoc/
