@@ -1,10 +1,19 @@
 module Curlybars
   class RenderingSupport
-    def initialize(contexts, variables, file_name)
+    def initialize(contexts, variables, file_name, global_helpers_providers = [])
       @contexts = contexts
       @variables = variables
       @file_name = file_name
       @cached_calls = {}
+
+      @global_helpers = {}
+
+      global_helpers_providers.each do |provider|
+        provider.allowed_methods.each do |global_helper_name|
+          symbol = global_helper_name.to_sym
+          @global_helpers[symbol] = provider.method(symbol)
+        end
+      end
     end
 
     def check_context_is_presenter(context, path, position)
@@ -43,6 +52,8 @@ module Curlybars
     end
 
     def path(path, position)
+      return global_helpers[path.to_sym] if global_helpers.key?(path.to_sym)
+
       check_traverse_not_too_deep(path, position)
 
       path_split_by_slashes = path.split('/')
@@ -127,7 +138,7 @@ module Curlybars
 
     private
 
-    attr_reader :contexts, :variables, :cached_calls, :file_name
+    attr_reader :contexts, :variables, :cached_calls, :file_name, :global_helpers
 
     def arguments_for_signature(helper, arguments, options)
       return [] if helper.parameters.length == 0

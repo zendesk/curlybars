@@ -8,7 +8,8 @@ module Curlybars
           rendering = Curlybars::RenderingSupport.new(
             contexts,
             variables,
-            #{position.file_name.inspect}
+            #{position.file_name.inspect},
+            global_helpers_providers
           )
           buffer = Curlybars::SafeBuffer.new
           #{template.compile}

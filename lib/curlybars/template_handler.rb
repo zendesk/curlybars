@@ -66,6 +66,9 @@ module Curlybars
             options = local_assigns
           end
 
+          provider_classes = Curlybars.configuration.global_helpers_provider_classes
+          global_helpers_providers = provider_classes.map { |klass| klass.new(self) }
+
           presenter = ::#{presenter_class}.new(self, options)
           presenter.setup!
 

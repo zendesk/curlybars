@@ -23,6 +23,7 @@ module Curlybars
     attr_accessor :rendering_timeout
     attr_accessor :custom_processors
     attr_accessor :compiler_transformers
+    attr_accessor :global_helpers_provider_classes
 
     def initialize
       @presenters_namespace = ''
@@ -32,6 +33,7 @@ module Curlybars
       @rendering_timeout = 10.seconds
       @custom_processors = []
       @compiler_transformers = []
+      @global_helpers_provider_classes = []
     end
   end
 end

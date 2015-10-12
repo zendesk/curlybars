@@ -1,4 +1,6 @@
 describe "tilde operator" do
+  let(:global_helpers_providers) { [] }
+
   describe "compilation" do
     let(:post) { double("post") }
     let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
