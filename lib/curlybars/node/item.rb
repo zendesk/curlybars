@@ -3,7 +3,7 @@ module Curlybars
     Item = Struct.new(:item) do
       def compile
         <<-RUBY
-          Module.new do
+          ::Module.new do
             def self.exec(contexts, rendering, variables, buffer)
               #{item.compile}
             end
