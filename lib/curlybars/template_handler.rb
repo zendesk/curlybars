@@ -66,24 +66,24 @@ module Curlybars
             options = local_assigns
           end
 
-          provider_classes = Curlybars.configuration.global_helpers_provider_classes
+          provider_classes = ::Curlybars.configuration.global_helpers_provider_classes
           global_helpers_providers = provider_classes.map { |klass| klass.new(self) }
 
           presenter = ::#{presenter_class}.new(self, options)
           presenter.setup!
 
-          @output_buffer = output_buffer || ActiveSupport::SafeBuffer.new
+          @output_buffer = output_buffer || ::ActiveSupport::SafeBuffer.new
 
-          Curlybars::TemplateHandler.cache_if_key_is_not_nil(self, presenter) do
+          ::Curlybars::TemplateHandler.cache_if_key_is_not_nil(self, presenter) do
             begin
-              Timeout::timeout(Curlybars.configuration.rendering_timeout) do
+              ::Timeout::timeout(::Curlybars.configuration.rendering_timeout) do
                 safe_concat begin
                   #{source}
                 end
               end
-            rescue Timeout::Error
-              message = "Rendering took too long (> %s seconds)" % Curlybars.configuration.rendering_timeout
-              raise Curlybars::Error::Render.new('timeout', message, nil)
+            rescue ::Timeout::Error
+              message = "Rendering took too long (> %s seconds)" % ::Curlybars.configuration.rendering_timeout
+              raise ::Curlybars::Error::Render.new('timeout', message, nil)
             end
           end
 

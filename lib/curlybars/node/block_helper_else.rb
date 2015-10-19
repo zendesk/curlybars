@@ -15,7 +15,7 @@ module Curlybars
         end.join("\n")
 
         <<-RUBY
-          options = ActiveSupport::HashWithIndifferentAccess.new
+          options = ::ActiveSupport::HashWithIndifferentAccess.new
           #{compiled_options}
 
           arguments = []
@@ -29,7 +29,7 @@ module Curlybars
             variables.push(vars.symbolize_keys)
             outer_buffer = buffer
             begin
-              buffer = Curlybars::SafeBuffer.new
+              buffer = ::Curlybars::SafeBuffer.new
               #{helper_template.compile}
               buffer
             ensure
@@ -42,7 +42,7 @@ module Curlybars
             variables.push(vars.symbolize_keys)
             outer_buffer = buffer
             begin
-              buffer = Curlybars::SafeBuffer.new
+              buffer = ::Curlybars::SafeBuffer.new
               #{else_template.compile}
               buffer
             ensure
