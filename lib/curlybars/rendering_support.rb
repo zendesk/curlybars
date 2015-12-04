@@ -1,6 +1,9 @@
 module Curlybars
   class RenderingSupport
-    def initialize(contexts, variables, file_name, global_helpers_providers = [])
+    def initialize(timeout, contexts, variables, file_name, global_helpers_providers = [])
+      @timeout = timeout
+      @start_time = Time.now
+
       @contexts = contexts
       @variables = variables
       @file_name = file_name
@@ -14,6 +17,13 @@ module Curlybars
           @global_helpers[symbol] = provider.method(symbol)
         end
       end
+    end
+
+    def check_timeout!
+      return unless timeout.present?
+      return unless (Time.now - start_time) > timeout
+      message = "Rendering took too long (> #{timeout} seconds)"
+      raise ::Curlybars::Error::Render.new('timeout', message, nil)
     end
 
     def check_context_is_presenter(context, path, position)
@@ -138,7 +148,7 @@ module Curlybars
 
     private
 
-    attr_reader :contexts, :variables, :cached_calls, :file_name, :global_helpers
+    attr_reader :contexts, :variables, :cached_calls, :file_name, :global_helpers, :start_time, :timeout
 
     def arguments_for_signature(helper, arguments, options)
       return [] if helper.parameters.length == 0

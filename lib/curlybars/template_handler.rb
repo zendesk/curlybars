@@ -58,8 +58,6 @@ module Curlybars
         source = Curlybars.compile(safe_source, template.identifier)
 
         <<-RUBY
-          require 'timeout'
-
           if local_assigns.empty?
             options = assigns
           else
@@ -75,15 +73,8 @@ module Curlybars
           @output_buffer = output_buffer || ::ActiveSupport::SafeBuffer.new
 
           ::Curlybars::TemplateHandler.cache_if_key_is_not_nil(self, presenter) do
-            begin
-              ::Timeout::timeout(::Curlybars.configuration.rendering_timeout) do
-                safe_concat begin
-                  #{source}
-                end
-              end
-            rescue ::Timeout::Error
-              message = "Rendering took too long (> %s seconds)" % ::Curlybars.configuration.rendering_timeout
-              raise ::Curlybars::Error::Render.new('timeout', message, nil)
+            safe_concat begin
+              #{source}
             end
           end
 

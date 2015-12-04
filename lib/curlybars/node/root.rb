@@ -6,6 +6,7 @@ module Curlybars
           contexts = [presenter]
           variables = [{}]
           rendering = ::Curlybars::RenderingSupport.new(
+            ::Curlybars.configuration.rendering_timeout,
             contexts,
             variables,
             #{position.file_name.inspect},

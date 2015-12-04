@@ -10,6 +10,7 @@ module Curlybars
 
             collection = rendering.coerce_to_hash!(collection, #{path.path.inspect}, position)
             collection.each.with_index.map do |key_and_presenter, index|
+              rendering.check_timeout!
               begin
                 contexts.push(key_and_presenter[1])
                 variables.push({

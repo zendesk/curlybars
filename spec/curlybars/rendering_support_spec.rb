@@ -3,11 +3,32 @@ describe Curlybars::RenderingSupport do
   let(:presenter) { double(:presenter, allows_method?: true, meth: :value) }
   let(:contexts) { [presenter] }
   let(:variables) { [{}] }
-  let(:rendering) { Curlybars::RenderingSupport.new(contexts, variables, file_name) }
+  let(:rendering) { Curlybars::RenderingSupport.new(1.second, contexts, variables, file_name) }
   let(:position) do
     double(:position, file_name: 'template.hbs', line_number: 1, line_offset: 0)
   end
   let(:block) { -> {} }
+
+  describe "#check_timeout!" do
+    it "skips checking if timeout is nil" do
+      rendering = Curlybars::RenderingSupport.new(nil, contexts, variables, file_name)
+
+      sleep 0.1.seconds
+      expect { rendering.check_timeout! }.not_to raise_error
+    end
+
+    it "doesn't happen when rendering is < rendering_timeout" do
+      rendering = Curlybars::RenderingSupport.new(10.seconds, contexts, variables, file_name)
+      expect { rendering.check_timeout! }.not_to raise_error
+    end
+
+    it "happens and raises when rendering >= rendering_timeout" do
+      rendering = Curlybars::RenderingSupport.new(0.01.seconds, contexts, variables, file_name)
+
+      sleep 0.1.seconds
+      expect { rendering.check_timeout! }.to raise_error(Curlybars::Error::Render)
+    end
+  end
 
   describe "#to_bool" do
     describe "returns true" do
