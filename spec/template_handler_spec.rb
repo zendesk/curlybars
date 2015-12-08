@@ -214,31 +214,6 @@ describe Curlybars::TemplateHandler do
     end
   end
 
-  context "timeout" do
-    let(:configuration) { Curlybars::Configuration.new }
-
-    before do
-      allow(template).to receive(:source) { "{{bar}}" }
-      allow(Curlybars).to receive(:configuration) { configuration }
-    end
-
-    it "doesn't happen when rendering is < rendering_timeout" do
-      # setting the rendering_timeout to a reasonably big value
-      allow(configuration).to receive(:rendering_timeout) { 10.seconds }
-      allow(context).to receive(:bar) { 'fast operation' }
-
-      expect { output }.not_to raise_error
-    end
-
-    it "happens and raises when rendering >= rendering_timeout" do
-      # setting the rendering_timeout to a reasonably small value
-      allow(configuration).to receive(:rendering_timeout) { 0.01.seconds }
-      allow(context).to receive(:bar) { sleep 10.seconds } # slow operation
-
-      expect { output }.to raise_error(Curlybars::Error::Render)
-    end
-  end
-
   def output
     code = Curlybars::TemplateHandler.call(template)
     context.reset!

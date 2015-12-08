@@ -5,6 +5,7 @@ module Curlybars
         <<-RUBY
           ::Module.new do
             def self.exec(contexts, rendering, variables, buffer)
+              rendering.check_timeout!
               #{item.compile}
             end
           end.exec(contexts, rendering, variables, buffer)
