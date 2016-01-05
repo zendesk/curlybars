@@ -27,11 +27,11 @@ Gem::Specification.new do |s|
 
   s.rdoc_options = ["--charset=UTF-8"]
 
-  s.add_dependency("actionpack", [">= 3.1", "< 5.0"])
+  s.add_dependency("actionpack", [">= 4.1", "< 5.0"])
   s.add_dependency("rltk", "3.0.1")
   s.add_dependency("ffi", "1.9.6")
 
-  s.add_development_dependency("railties", [">= 3.1", "< 5.0"])
+  s.add_development_dependency("railties", [">= 4.1", "< 5.0"])
   s.add_development_dependency("rake")
   s.add_development_dependency("rspec-rails", "~> 3.2")
   s.add_development_dependency("genspec")
@@ -39,6 +39,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency("byebug", "~> 3.5")
   s.add_development_dependency("bundler")
   s.add_development_dependency("private_gem")
+  s.add_development_dependency("wwtd", ">= 0.5.3")
 
   s.files       = Dir.glob('lib/**/*.rb')
   s.executables = Dir.glob('bin/**/*').map {|f| File.basename(f)}

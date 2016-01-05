@@ -2,5 +2,10 @@ language: ruby
 cache: bundler
 rvm:
   - 2.1.6
+  - 2.2.4
+gemfile:
+ - gemfiles/rails4.1.gemfile
+ - gemfiles/rails4.2.gemfile
 branches:
   only: [master]
+bundler_args: ""
