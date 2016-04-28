@@ -1,3 +1,3 @@
 module Curlybars
-  VERSION = '0.7.15'
+  VERSION = '0.8.0'
 end

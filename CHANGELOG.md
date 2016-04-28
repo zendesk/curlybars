@@ -1,5 +1,9 @@
 ### Unreleased
 
+### Curlybars 0.8.0 (April 28, 2015)
+
+* Remove support for :deprecated methods
+
 ### Curlybars 0.5.13 (June 18, 2015)
 
 * Add support for compiler transformers
