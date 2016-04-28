@@ -40,7 +40,6 @@ module Curlybars
     # Returns an array of Curlybars::Error::Validation
     def validate(presenter_class, source, identifier = nil, **options)
       options.reverse_merge!(
-        strict: false,
         run_processors: true
       )
 
@@ -48,7 +47,7 @@ module Curlybars
         raise "#{presenter_class} must implement `.dependency_tree` or extend `Curlybars::MethodWhitelist`"
       end
       errors = begin
-        dependency_tree = presenter_class.dependency_tree(strict: options[:strict])
+        dependency_tree = presenter_class.dependency_tree
 
         branches = [dependency_tree]
         ast(source, identifier, run_processors: options[:run_processors]).validate(branches)

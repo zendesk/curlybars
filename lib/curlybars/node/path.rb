@@ -40,7 +40,7 @@ module Curlybars
 
       def leaf?(branches)
         value = resolve(branches)
-        value.nil? || value == :deprecated
+        value.nil?
       end
 
       def partial?(branches)

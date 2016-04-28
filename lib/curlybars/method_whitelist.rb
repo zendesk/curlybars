@@ -36,17 +36,15 @@ module Curlybars
         schema
       end
 
-      define_singleton_method(:dependency_tree) do |strict: false|
+      define_singleton_method(:dependency_tree) do
         methods_schema.each_with_object({}) do |method_with_type, memo|
           method_name = method_with_type.first
           type = method_with_type.last
 
-          next if strict && type == :deprecated
-
           if type.respond_to?(:dependency_tree)
-            memo[method_name] = type.dependency_tree(strict: strict)
+            memo[method_name] = type.dependency_tree
           elsif type.is_a?(Array)
-            memo[method_name] = [type.first.dependency_tree(strict: strict)]
+            memo[method_name] = [type.first.dependency_tree]
           else
             memo[method_name] = type
           end

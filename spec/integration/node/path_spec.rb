@@ -138,13 +138,6 @@ describe "{{path}}" do
   describe "#validate" do
     let(:presenter_class) { double(:presenter_class) }
 
-    it "fetches a dependency_tree in strict mode when validate is strict" do
-      expect(presenter_class).to receive(:dependency_tree).
-        with(strict: true)
-
-      Curlybars.validate(presenter_class, "", strict: true)
-    end
-
     it "without errors" do
       allow(presenter_class).to receive(:dependency_tree) do
         { sub_context: {}, outer_field: nil }
@@ -154,20 +147,6 @@ describe "{{path}}" do
         {{#with sub_context}}
           {{../outer_field}}
         {{/with}}
-      HBS
-
-      errors = Curlybars.validate(presenter_class, source)
-
-      expect(errors).to be_empty
-    end
-
-    it "without errors when it's a deprecated component" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { deprecated: :deprecated }
-      end
-
-      source = <<-HBS
-        {{deprecated}}
       HBS
 
       errors = Curlybars.validate(presenter_class, source)
