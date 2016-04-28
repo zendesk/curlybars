@@ -57,9 +57,7 @@ describe "template" do
     let(:presenter_class) { double(:presenter_class) }
 
     it "without errors" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { presenter: { field: nil } }
-      end
+      dependency_tree = { presenter: { field: nil } }
 
       source = <<-HBS
         {{#with presenter}}
@@ -67,15 +65,13 @@ describe "template" do
         {{/with}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).to be_empty
     end
 
     it "with errors" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { presenter: { field: nil } }
-      end
+      dependency_tree = { presenter: { field: nil } }
 
       source = <<-HBS
         {{#with presenter}}
@@ -83,7 +79,7 @@ describe "template" do
         {{/with}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).not_to be_empty
     end

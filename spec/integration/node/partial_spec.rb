@@ -29,43 +29,37 @@ describe "{{> partial}}" do
     let(:presenter_class) { double(:presenter_class) }
 
     it "validates the path with errors" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        {}
-      end
+      dependency_tree = {}
 
       source = <<-HBS
         {{> unallowed_partial}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).not_to be_empty
     end
 
     it "raises when using a helper as a partial" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { helper: nil }
-      end
+      dependency_tree = { helper: nil }
 
       source = <<-HBS
         {{> helper}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).not_to be_empty
     end
 
     it "does not raise with a valid partial" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { partial: :partial }
-      end
+      dependency_tree = { partial: :partial }
 
       source = <<-HBS
         {{> partial}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).to be_empty
     end

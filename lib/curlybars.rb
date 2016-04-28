@@ -33,22 +33,17 @@ module Curlybars
 
     # Validates the source against a presenter.
     #
-    # presenter_class - the presenter class, used to validate the source.
+    # dependency_tree - a presenter dependency tree as defined in Curlybars::MethodWhitelist
     # source - The source HBS String that should be validated.
     # identifier - The the file name of the template being validated (defaults to `nil`).
     #
     # Returns an array of Curlybars::Error::Validation
-    def validate(presenter_class, source, identifier = nil, **options)
+    def validate(dependency_tree, source, identifier = nil, **options)
       options.reverse_merge!(
         run_processors: true
       )
 
-      unless presenter_class.respond_to?(:dependency_tree)
-        raise "#{presenter_class} must implement `.dependency_tree` or extend `Curlybars::MethodWhitelist`"
-      end
       errors = begin
-        dependency_tree = presenter_class.dependency_tree
-
         branches = [dependency_tree]
         ast(source, identifier, run_processors: options[:run_processors]).validate(branches)
       rescue Curlybars::Error::Base => ast_error
