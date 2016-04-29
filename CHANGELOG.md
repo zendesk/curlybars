@@ -1,5 +1,9 @@
 ### Unreleased
 
+### Curlybars 0.9.0 (April 29, 2015)
+
+* Changed signature of `Curlybars.validate`, now using a directly a dependency tree
+
 ### Curlybars 0.8.0 (April 28, 2015)
 
 * Remove support for :deprecated methods
