@@ -3,11 +3,11 @@ describe "root" do
     let(:presenter_class) { double(:presenter_class) }
 
     it "without errors if template is empty" do
-      allow(presenter_class).to receive(:dependency_tree) { {} }
+      dependency_tree = {}
 
       source = ""
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).to be_empty
     end

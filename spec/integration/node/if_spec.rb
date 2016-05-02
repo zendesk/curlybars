@@ -118,23 +118,19 @@ describe "{{#if}}...{{/if}}" do
     let(:presenter_class) { double(:presenter_class) }
 
     it "validates with errors the condition" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        {}
-      end
+      dependency_tree = {}
 
       source = <<-HBS
         {{#if condition}}{{/if}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).not_to be_empty
     end
 
     it "validates with errors the nested template" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { condition: nil }
-      end
+      dependency_tree = { condition: nil }
 
       source = <<-HBS
         {{#if condition}}
@@ -142,7 +138,7 @@ describe "{{#if}}...{{/if}}" do
         {{/if}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).not_to be_empty
     end

@@ -157,57 +157,49 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
     let(:presenter_class) { double(:presenter_class) }
 
     it "without errors" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { a_presenter_collection: [{}] }
-      end
+      dependency_tree = { a_presenter_collection: [{}] }
 
       source = <<-HBS
         {{#each a_presenter_collection}} {{else}} {{/each}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).to be_empty
     end
 
     it "with errors due to a presenter path" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { a_presenter: {} }
-      end
+      dependency_tree = { a_presenter: {} }
 
       source = <<-HBS
         {{#each a_presenter}} {{else}} {{/each}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).not_to be_empty
     end
 
     it "with errors due to a leaf path" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { a_leaf: nil }
-      end
+      dependency_tree = { a_leaf: nil }
 
       source = <<-HBS
         {{#each a_leaf}} {{else}} {{/each}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).not_to be_empty
     end
 
     it "with errors due unallowed method" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        {}
-      end
+      dependency_tree = {}
 
       source = <<-HBS
         {{#each unallowed}} {{else}} {{/each}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).not_to be_empty
     end

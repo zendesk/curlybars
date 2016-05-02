@@ -115,72 +115,62 @@ describe "{{helper context key=value}}" do
     let(:presenter_class) { double(:presenter_class) }
 
     it "with errors" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        {}
-      end
+      dependency_tree = {}
 
       source = <<-HBS
         {{helper}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).not_to be_empty
     end
 
     it "raises when using a partial as an helper" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { partial: :partial }
-      end
+      dependency_tree = { partial: :partial }
 
       source = <<-HBS
         {{partial}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).not_to be_empty
     end
 
     it "without errors" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { helper: :helper }
-      end
+      dependency_tree = { helper: :helper }
 
       source = <<-HBS
         {{helper}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).to be_empty
     end
 
     it "validates {{helper.invoked_on_nil}} with errors" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { helper: :helper }
-      end
+      dependency_tree = { helper: :helper }
 
       source = <<-HBS
         {{helper.invoked_on_nil}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).not_to be_empty
     end
 
     describe "with context" do
       it "without errors in block_helper" do
-        allow(presenter_class).to receive(:dependency_tree) do
-          { helper: :helper, context: nil }
-        end
+        dependency_tree = { helper: :helper, context: nil }
 
         source = <<-HBS
           {{helper context}}
         HBS
 
-        errors = Curlybars.validate(presenter_class, source)
+        errors = Curlybars.validate(dependency_tree, source)
 
         expect(errors).to be_empty
       end

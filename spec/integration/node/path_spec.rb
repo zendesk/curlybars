@@ -139,9 +139,7 @@ describe "{{path}}" do
     let(:presenter_class) { double(:presenter_class) }
 
     it "without errors" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { sub_context: {}, outer_field: nil }
-      end
+      dependency_tree = { sub_context: {}, outer_field: nil }
 
       source = <<-HBS
         {{#with sub_context}}
@@ -149,29 +147,25 @@ describe "{{path}}" do
         {{/with}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).to be_empty
     end
 
     it "without errors when it goes out of context" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        {}
-      end
+      dependency_tree = {}
 
       source = <<-HBS
         {{../outer_field}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).to be_empty
     end
 
     it "without errors using `this`" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { field: nil }
-      end
+      dependency_tree = { field: nil }
 
       source = <<-HBS
         {{#with this}}
@@ -179,57 +173,49 @@ describe "{{path}}" do
         {{/with}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).to be_empty
     end
 
     it "without errors using `length` on a collection of presenters" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { collection_of_presenters: [{}] }
-      end
+      dependency_tree = { collection_of_presenters: [{}] }
 
       source = <<-HBS
         {{collection_of_presenters.length}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).to be_empty
     end
 
     it "with errors using `length` on anything else than a collection" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { presenter: {} }
-      end
+      dependency_tree = { presenter: {} }
 
       source = <<-HBS
         {{presenter.length}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).not_to be_empty
     end
 
     it "with errors when adding another step after `length`" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { presenter: {} }
-      end
+      dependency_tree = { presenter: {} }
 
       source = <<-HBS
         {{presenter.length.anything}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).not_to be_empty
     end
 
     it "to refer an outer scope using `this`" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { field: nil, sub_presenter: {} }
-      end
+      dependency_tree = { field: nil, sub_presenter: {} }
 
       source = <<-HBS
         {{#with sub_presenter}}
@@ -239,7 +225,7 @@ describe "{{path}}" do
         {{/with}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).to be_empty
     end
@@ -247,18 +233,16 @@ describe "{{path}}" do
     describe "with errors" do
       let(:source) { "{{unallowed_path}}" }
 
-      before do
-        allow(presenter_class).to receive(:dependency_tree) { {} }
-      end
-
       it "raises with errors" do
-        errors = Curlybars.validate(presenter_class, source)
+        dependency_tree = {}
+        errors = Curlybars.validate(dependency_tree, source)
 
         expect(errors).not_to be_empty
       end
 
       it "raises with metadata" do
-        errors = Curlybars.validate(presenter_class, source)
+        dependency_tree = {}
+        errors = Curlybars.validate(dependency_tree, source)
 
         expect(errors.first.metadata).to eq(path: "unallowed_path", step: :unallowed_path)
       end

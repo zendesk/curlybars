@@ -234,190 +234,165 @@ describe "{{#helper arg1 arg2 ... key=value ...}}...<{{else}}>...{{/helper}}" do
     let(:presenter_class) { double(:presenter_class) }
 
     it "without errors when global helper" do
-      allow(presenter_class).to receive(:dependency_tree).and_return({})
       allow(Curlybars.configuration).to receive(:global_helpers_provider_classes).and_return([IntegrationTest::GlobalHelperProvider])
+
+      dependency_tree = {}
 
       source = <<-HBS
         {{global_helper}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).to be_empty
     end
 
     it "without errors when invoking a leaf" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { name: nil }
-      end
+      dependency_tree = { name: nil }
 
       source = <<-HBS
         {{name}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).to be_empty
     end
 
     it "without errors if argument is a leaf" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { block_helper: :helper, argument: nil }
-      end
+      dependency_tree = { block_helper: :helper, argument: nil }
 
       source = <<-HBS
         {{#block_helper argument}} ... {{/block_helper}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).to be_empty
     end
 
     it "without errors if argument is a literal" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { block_helper: :helper }
-      end
+      dependency_tree = { block_helper: :helper }
 
       source = <<-HBS
         {{#block_helper 'argument'}} ... {{/block_helper}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).to be_empty
     end
 
     it "without errors if argument is a variable" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { block_helper: :helper }
-      end
+      dependency_tree = { block_helper: :helper }
 
       source = <<-HBS
         {{#block_helper @var}} ... {{/block_helper}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).to be_empty
     end
 
     it "without errors if option is a leaf" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { block_helper: :helper, argument: nil }
-      end
+      dependency_tree = { block_helper: :helper, argument: nil }
 
       source = <<-HBS
         {{#block_helper option=argument}} ... {{/block_helper}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).to be_empty
     end
 
     it "without errors if option is a literal" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { block_helper: :helper }
-      end
+      dependency_tree = { block_helper: :helper }
 
       source = <<-HBS
         {{#block_helper option='argument'}} ... {{/block_helper}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).to be_empty
     end
 
     it "without errors if option is a variable" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { block_helper: :helper }
-      end
+      dependency_tree = { block_helper: :helper }
 
       source = <<-HBS
         {{#block_helper option=@var}} ... {{/block_helper}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).to be_empty
     end
 
     it "without errors in block_helper" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { block_helper: :helper, context: nil }
-      end
+      dependency_tree = { block_helper: :helper, context: nil }
 
       source = <<-HBS
         {{#block_helper context}} ... {{/block_helper}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).to be_empty
     end
 
     it "with errors when invoking a leaf with arguments" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { name: nil }
-      end
+      dependency_tree = { name: nil }
 
       source = <<-HBS
         {{name 'argument'}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).not_to be_empty
     end
 
     it "with errors when invoking a leaf with options" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { name: nil }
-      end
+      dependency_tree = { name: nil }
 
       source = <<-HBS
         {{name option='value'}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).not_to be_empty
     end
 
     it "with errors if argument is not a value" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { block_helper: :helper, not_a_value: {} }
-      end
+      dependency_tree = { block_helper: :helper, not_a_value: {} }
 
       source = <<-HBS
         {{#block_helper not_a_value}} ... {{/block_helper}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).not_to be_empty
     end
 
     it "with errors if option is not a value" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { block_helper: :helper, not_a_value: {} }
-      end
+      dependency_tree = { block_helper: :helper, not_a_value: {} }
 
       source = <<-HBS
         {{#block_helper option=not_a_value}} ... {{/block_helper}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).not_to be_empty
     end
 
     it "with errors in fn block" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { context: {}, block_helper: :helper }
-      end
+      dependency_tree = { context: {}, block_helper: :helper }
 
       source = <<-HBS
         {{#block_helper context}}
@@ -425,15 +400,13 @@ describe "{{#helper arg1 arg2 ... key=value ...}}...<{{else}}>...{{/helper}}" do
         {{/block_helper}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).not_to be_empty
     end
 
     it "with errors in inverse block" do
-      allow(presenter_class).to receive(:dependency_tree) do
-        { context: {}, block_helper: :helper }
-      end
+      dependency_tree = { context: {}, block_helper: :helper }
 
       source = <<-HBS
         {{#block_helper context}}
@@ -442,7 +415,7 @@ describe "{{#helper arg1 arg2 ... key=value ...}}...<{{else}}>...{{/helper}}" do
         {{/block_helper}}
       HBS
 
-      errors = Curlybars.validate(presenter_class, source)
+      errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).not_to be_empty
     end
