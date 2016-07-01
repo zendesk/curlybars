@@ -27,11 +27,11 @@ Gem::Specification.new do |s|
 
   s.rdoc_options = ["--charset=UTF-8"]
 
-  s.add_dependency("actionpack", [">= 4.1", "< 5.0"])
+  s.add_dependency("actionpack", [">= 4.1", "< 5.1"])
   s.add_dependency("rltk", "3.0.1")
   s.add_dependency("ffi", "1.9.6")
 
-  s.add_development_dependency("railties", [">= 4.1", "< 5.0"])
+  s.add_development_dependency("railties", [">= 4.1", "< 5.1"])
   s.add_development_dependency("rake")
   s.add_development_dependency("rspec-rails", "~> 3.2")
   s.add_development_dependency("genspec")

@@ -1,0 +1,10 @@
+source "http://rubygems.org"
+
+gemspec path: "../"
+
+gem "actionpack", "~> 5.0.0"
+gem "railties", "~> 5.0.0"
+gem "rspec-rails", "3.5.0.beta4"
+gem "rspec", "3.5.0.beta4"
+
+eval_gemfile("gemfiles/common.rb")
