@@ -33,7 +33,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency("railties", [">= 4.1", "< 5.1"])
   s.add_development_dependency("rake")
-  s.add_development_dependency("rspec-rails", "~> 3.2")
+  s.add_development_dependency("rspec-rails", "~> 3.5")
   s.add_development_dependency("genspec")
   s.add_development_dependency("rubocop", "~> 0.29.1")
   s.add_development_dependency("byebug", "~> 3.5")
