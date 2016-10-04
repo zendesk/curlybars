@@ -16,6 +16,7 @@ module Curlybars
   end
 
   class Configuration
+    attr_accessor :default_cache_options
     attr_accessor :presenters_namespace
     attr_accessor :nesting_limit
     attr_accessor :traversing_limit
@@ -26,6 +27,7 @@ module Curlybars
     attr_accessor :global_helpers_provider_classes
 
     def initialize
+      @default_cache_options = {}
       @presenters_namespace = ''
       @nesting_limit = 10
       @traversing_limit = 10

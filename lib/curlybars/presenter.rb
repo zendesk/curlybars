@@ -1,4 +1,5 @@
 require 'curlybars/method_whitelist'
+require 'curlybars/configuration'
 
 module Curlybars
   # A base class that can be subclassed by concrete presenters.
@@ -114,7 +115,7 @@ module Curlybars
     #
     # Returns a Hash.
     def cache_options
-      {}
+      Curlybars.configuration.default_cache_options
     end
 
     # The duration that the view should be cached for. Only relevant if
