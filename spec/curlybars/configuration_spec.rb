@@ -19,6 +19,22 @@ describe Curlybars::Configuration do
     end
   end
 
+  describe "#default_cache_options" do
+    it "defaults to an empty hash" do
+      default_cache_options = Curlybars::Configuration.new.default_cache_options
+
+      expect(default_cache_options).to eq({})
+    end
+  end
+
+  describe "#default_cache_options=" do
+    it "can set value" do
+      config = Curlybars::Configuration.new
+      config.default_cache_options = { skip_digest: true }
+      expect(config.default_cache_options).to eq(skip_digest: true)
+    end
+  end
+
   describe "#custom_processors" do
     it "can set value" do
       config = Curlybars::Configuration.new
