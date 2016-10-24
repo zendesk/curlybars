@@ -789,6 +789,13 @@ the value set for the `output_limit` configuration parameter.
 This exception occurs when the rendering process is taking more than the value
 set for the `rendering_timeout` configuration parameter.
 
+Caching
+-------
+Curlybars tracks template dependencies and adds them to “its own” part of the cache key.
+Curlybars doesn’t allow Rails to properly track template dependencies, and thus, we’re
+disabling that feature. - thus, `{ skip_digest: true }` will be always merged
+to the cache options provided by the presenters.
+
 Contributing
 ------------
 

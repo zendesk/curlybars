@@ -115,7 +115,7 @@ module Curlybars
     #
     # Returns a Hash.
     def cache_options
-      Curlybars.configuration.default_cache_options
+      {}
     end
 
     # The duration that the view should be cached for. Only relevant if

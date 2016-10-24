@@ -31,6 +31,10 @@ module Curlybars
           cache_options = presenter.cache_options || {}
           cache_options[:expires_in] ||= presenter.cache_duration
 
+          # Curlybars doesn't allow Rails to handle the template digest.
+          # So, we disable it.
+          cache_options[:skip_digest] = true
+
           context.cache([key, presenter_key].compact, cache_options) do
             yield
           end
