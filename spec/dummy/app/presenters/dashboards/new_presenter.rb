@@ -10,7 +10,7 @@ class Dashboards::NewPresenter < Curlybars::Presenter
 
     def name_field(&block)
       content_tag :div, class: "field" do
-        block.call
+        yield
       end
     end
 

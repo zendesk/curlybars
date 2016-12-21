@@ -35,7 +35,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency("rake")
   s.add_development_dependency("rspec-rails", "~> 3.5")
   s.add_development_dependency("genspec")
-  s.add_development_dependency("rubocop", "~> 0.29.1")
+  s.add_development_dependency("rubocop", "~> 0.46.0")
   s.add_development_dependency("byebug", "~> 3.5")
   s.add_development_dependency("bundler")
   s.add_development_dependency("private_gem")

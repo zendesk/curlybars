@@ -22,10 +22,8 @@ module Curlybars
       def cache_if_key_is_not_nil(context, presenter)
         key = presenter.cache_key
         if key.present?
-          if presenter.class.respond_to?(:cache_key)
-            presenter_key = presenter.class.cache_key
-          else
-            presenter_key = nil
+          presenter_key = if presenter.class.respond_to?(:cache_key)
+            presenter.class.cache_key
           end
 
           cache_options = presenter.cache_options || {}

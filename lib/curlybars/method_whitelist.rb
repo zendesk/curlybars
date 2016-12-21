@@ -41,12 +41,12 @@ module Curlybars
           method_name = method_with_type.first
           type = method_with_type.last
 
-          if type.respond_to?(:dependency_tree)
-            memo[method_name] = type.dependency_tree
+          memo[method_name] = if type.respond_to?(:dependency_tree)
+            type.dependency_tree
           elsif type.is_a?(Array)
-            memo[method_name] = [type.first.dependency_tree]
+            [type.first.dependency_tree]
           else
-            memo[method_name] = type
+            type
           end
         end
       end

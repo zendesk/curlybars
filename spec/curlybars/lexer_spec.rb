@@ -163,17 +163,20 @@ describe Curlybars::Lexer do
   describe "{{#if path}}...{{/if}}" do
     it "is lexed" do
       expect(lex('{{#if path}} text {{/if}}')).to produce(
-        [:START, :HASH, :IF, :PATH, :END, :TEXT, :START, :SLASH, :IF, :END])
+        [:START, :HASH, :IF, :PATH, :END, :TEXT, :START, :SLASH, :IF, :END]
+      )
     end
 
     it "is resilient to whitespaces" do
       expect(lex('{{ # if path }} text {{/ if }}')).to produce(
-        [:START, :HASH, :IF, :PATH, :END, :TEXT, :START, :SLASH, :IF, :END])
+        [:START, :HASH, :IF, :PATH, :END, :TEXT, :START, :SLASH, :IF, :END]
+      )
     end
 
     it "is lexed when present in plain text" do
       expect(lex('text {{#if path}} text {{/if}} text')).to produce(
-        [:TEXT, :START, :HASH, :IF, :PATH, :END, :TEXT, :START, :SLASH, :IF, :END, :TEXT])
+        [:TEXT, :START, :HASH, :IF, :PATH, :END, :TEXT, :START, :SLASH, :IF, :END, :TEXT]
+      )
     end
   end
 
@@ -182,38 +185,44 @@ describe Curlybars::Lexer do
       expect(lex('{{#if path}} text {{else}} text {{/if}}')).to produce(
         [:START, :HASH, :IF, :PATH, :END,
           :TEXT, :START, :ELSE, :END,
-          :TEXT, :START, :SLASH, :IF, :END])
+          :TEXT, :START, :SLASH, :IF, :END]
+      )
     end
 
     it "is resilient to whitespaces" do
       expect(lex('{{ # if path }} text {{ else }} text {{/ if }}')).to produce(
         [:START, :HASH, :IF, :PATH, :END,
           :TEXT, :START, :ELSE, :END,
-          :TEXT, :START, :SLASH, :IF, :END])
+          :TEXT, :START, :SLASH, :IF, :END]
+      )
     end
 
     it "is lexed when present in plain text" do
       expect(lex('text {{#if path}} text {{else}} text {{/if}} text')).to produce(
         [:TEXT, :START, :HASH, :IF, :PATH, :END,
           :TEXT, :START, :ELSE, :END,
-          :TEXT, :START, :SLASH, :IF, :END, :TEXT])
+          :TEXT, :START, :SLASH, :IF, :END, :TEXT]
+      )
     end
   end
 
   describe "{{#unless path}}...{{/unless}}" do
     it "is lexed" do
       expect(lex('{{#unless path}} text {{/unless}}')).to produce(
-        [:START, :HASH, :UNLESS, :PATH, :END, :TEXT, :START, :SLASH, :UNLESS, :END])
+        [:START, :HASH, :UNLESS, :PATH, :END, :TEXT, :START, :SLASH, :UNLESS, :END]
+      )
     end
 
     it "is resilient to whitespaces" do
       expect(lex('{{ # unless path }} text {{/ unless }}')).to produce(
-        [:START, :HASH, :UNLESS, :PATH, :END, :TEXT, :START, :SLASH, :UNLESS, :END])
+        [:START, :HASH, :UNLESS, :PATH, :END, :TEXT, :START, :SLASH, :UNLESS, :END]
+      )
     end
 
     it "is lexed when present in plain text" do
       expect(lex('text {{#unless path}} text {{/unless}} text')).to produce(
-        [:TEXT, :START, :HASH, :UNLESS, :PATH, :END, :TEXT, :START, :SLASH, :UNLESS, :END, :TEXT])
+        [:TEXT, :START, :HASH, :UNLESS, :PATH, :END, :TEXT, :START, :SLASH, :UNLESS, :END, :TEXT]
+      )
     end
   end
 
@@ -222,38 +231,44 @@ describe Curlybars::Lexer do
       expect(lex('{{#unless path}} text {{else}} text {{/unless}}')).to produce(
         [:START, :HASH, :UNLESS, :PATH, :END,
           :TEXT, :START, :ELSE, :END,
-          :TEXT, :START, :SLASH, :UNLESS, :END])
+          :TEXT, :START, :SLASH, :UNLESS, :END]
+      )
     end
 
     it "is resilient to whitespaces" do
       expect(lex('{{ # unless path }} text {{ else }} text {{/ unless }}')).to produce(
         [:START, :HASH, :UNLESS, :PATH, :END,
           :TEXT, :START, :ELSE, :END,
-          :TEXT, :START, :SLASH, :UNLESS, :END])
+          :TEXT, :START, :SLASH, :UNLESS, :END]
+      )
     end
 
     it "is lexed when present in plain text" do
       expect(lex('text {{#unless path}} text {{else}} text {{/unless}} text')).to produce(
         [:TEXT, :START, :HASH, :UNLESS, :PATH, :END,
           :TEXT, :START, :ELSE, :END,
-          :TEXT, :START, :SLASH, :UNLESS, :END, :TEXT])
+          :TEXT, :START, :SLASH, :UNLESS, :END, :TEXT]
+      )
     end
   end
 
   describe "{{#each path}}...{{/each}}" do
     it "is lexed" do
       expect(lex('{{#each path}} text {{/each}}')).to produce(
-        [:START, :HASH, :EACH, :PATH, :END, :TEXT, :START, :SLASH, :EACH, :END])
+        [:START, :HASH, :EACH, :PATH, :END, :TEXT, :START, :SLASH, :EACH, :END]
+      )
     end
 
     it "is resilient to whitespaces" do
       expect(lex('{{ # each path }} text {{/ each }}')).to produce(
-        [:START, :HASH, :EACH, :PATH, :END, :TEXT, :START, :SLASH, :EACH, :END])
+        [:START, :HASH, :EACH, :PATH, :END, :TEXT, :START, :SLASH, :EACH, :END]
+      )
     end
 
     it "is lexed when present in plain text" do
       expect(lex('text {{#each path}} text {{/each}} text')).to produce(
-        [:TEXT, :START, :HASH, :EACH, :PATH, :END, :TEXT, :START, :SLASH, :EACH, :END, :TEXT])
+        [:TEXT, :START, :HASH, :EACH, :PATH, :END, :TEXT, :START, :SLASH, :EACH, :END, :TEXT]
+      )
     end
   end
 
@@ -262,60 +277,70 @@ describe Curlybars::Lexer do
       expect(lex('{{#each path}} text {{else}} text {{/each}}')).to produce(
         [:START, :HASH, :EACH, :PATH, :END,
           :TEXT, :START, :ELSE, :END,
-          :TEXT, :START, :SLASH, :EACH, :END])
+          :TEXT, :START, :SLASH, :EACH, :END]
+      )
     end
 
     it "is resilient to whitespaces" do
       expect(lex('{{ # each path }} text {{ else }} text {{/ each }}')).to produce(
         [:START, :HASH, :EACH, :PATH, :END,
           :TEXT, :START, :ELSE, :END,
-          :TEXT, :START, :SLASH, :EACH, :END])
+          :TEXT, :START, :SLASH, :EACH, :END]
+      )
     end
 
     it "is lexed when present in plain text" do
       expect(lex('text {{#each path}} text {{else}} text {{/each}} text')).to produce(
         [:TEXT, :START, :HASH, :EACH, :PATH, :END,
           :TEXT, :START, :ELSE, :END,
-          :TEXT, :START, :SLASH, :EACH, :END, :TEXT])
+          :TEXT, :START, :SLASH, :EACH, :END, :TEXT]
+      )
     end
   end
 
   describe "{{#with path}}...{{/with}}" do
     it "is lexed" do
       expect(lex('{{#with path}} text {{/with}}')).to produce(
-        [:START, :HASH, :WITH, :PATH, :END, :TEXT, :START, :SLASH, :WITH, :END])
+        [:START, :HASH, :WITH, :PATH, :END, :TEXT, :START, :SLASH, :WITH, :END]
+      )
     end
 
     it "is resilient to whitespaces" do
       expect(lex('{{ # with path }} text {{/ with }}')).to produce(
-        [:START, :HASH, :WITH, :PATH, :END, :TEXT, :START, :SLASH, :WITH, :END])
+        [:START, :HASH, :WITH, :PATH, :END, :TEXT, :START, :SLASH, :WITH, :END]
+      )
     end
 
     it "is lexed when present in plain text" do
       expect(lex('text {{#with path}} text {{/with}} text')).to produce(
-        [:TEXT, :START, :HASH, :WITH, :PATH, :END, :TEXT, :START, :SLASH, :WITH, :END, :TEXT])
+        [:TEXT, :START, :HASH, :WITH, :PATH, :END, :TEXT, :START, :SLASH, :WITH, :END, :TEXT]
+      )
     end
   end
 
   describe "{{#path path options}}...{{/path}}" do
     it "is lexed with context and options" do
       expect(lex('{{#path context key=value}} text {{/path}}')).to produce(
-        [:START, :HASH, :PATH, :PATH, :KEY, :PATH, :END, :TEXT, :START, :SLASH, :PATH, :END])
+        [:START, :HASH, :PATH, :PATH, :KEY, :PATH, :END, :TEXT, :START, :SLASH, :PATH, :END]
+      )
     end
 
     it "is lexed without options" do
       expect(lex('{{#path context}} text {{/path}}')).to produce(
-        [:START, :HASH, :PATH, :PATH, :END, :TEXT, :START, :SLASH, :PATH, :END])
+        [:START, :HASH, :PATH, :PATH, :END, :TEXT, :START, :SLASH, :PATH, :END]
+      )
     end
 
     it "is resilient to whitespaces" do
       expect(lex('{{ # path context key = value}} text {{/ path }}')).to produce(
-        [:START, :HASH, :PATH, :PATH, :KEY, :PATH, :END, :TEXT, :START, :SLASH, :PATH, :END])
+        [:START, :HASH, :PATH, :PATH, :KEY, :PATH, :END, :TEXT, :START, :SLASH, :PATH, :END]
+      )
     end
 
     it "is lexed when present in plain text" do
       expect(lex('text {{#path context key=value}} text {{/path}} text')).to produce(
-        [:TEXT, :START, :HASH, :PATH, :PATH, :KEY, :PATH, :END, :TEXT, :START, :SLASH, :PATH, :END, :TEXT])
+        [:TEXT, :START, :HASH, :PATH, :PATH, :KEY, :PATH, :END, :TEXT, :START, :SLASH, :PATH, :END, :TEXT]
+      )
     end
   end
 
