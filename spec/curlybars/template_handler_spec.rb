@@ -118,7 +118,7 @@ describe Curlybars::TemplateHandler do
     expect(output).to eq("BAR")
   end
 
-  it "should fail if there's no matching presenter class" do
+  it "fails if there's no matching presenter class" do
     allow(template).to receive(:virtual_path) { "missing" }
     allow(template).to receive(:source) { " FOO " }
     expect { output }.to raise_exception(Curlybars::Error::Presenter::NotFound)

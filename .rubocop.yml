@@ -1,3 +1,6 @@
+require:
+  - rubocop-rspec
+
 AllCops:
   DisplayCopNames: true
   Exclude:
@@ -19,6 +22,15 @@ Performance/FixedSize:
   Exclude:
     - spec/**/*
 
+RSpec/MultipleExpectations:
+  Exclude:
+    - 'spec/curlybars/template_handler_spec.rb'
+
+RSpec/RepeatedDescription:
+  Exclude:
+    - 'spec/curlybars/rendering_support_spec.rb'
+    - 'spec/integration/node/each_else_spec.rb'
+
 Style/ClassAndModuleChildren:
   Exclude:
     - spec/dummy/**/*
@@ -39,15 +51,13 @@ Style/SymbolProc:
 # Configured cops
 #
 
-Style/EmptyMethod:
-  EnforcedStyle: expanded
-
-Style/Alias:
-  EnforcedStyle: prefer_alias_method
-
 # Align ends correctly.
 Lint/EndAlignment:
   AlignWith: variable
+
+# Use alias instead of alias_method.
+Style/Alias:
+  EnforcedStyle: prefer_alias_method
 
 # Align the elements of a hash literal if they span more than one line.
 Style/AlignHash:
@@ -60,6 +70,10 @@ Style/AlignParameters:
 # Indentation of when in a case/when/[else/]end.
 Style/CaseIndentation:
   IndentWhenRelativeTo: end
+
+# Checks the formatting of empty method definitions.
+Style/EmptyMethod:
+  EnforcedStyle: expanded
 
 # Checks the indentation of the first parameter in a method call.
 Style/FirstParameterIndentation:
@@ -109,6 +123,21 @@ Metrics/ParameterLists:
   Enabled: false
 
 Metrics/PerceivedComplexity:
+  Enabled: false
+
+RSpec/DescribeClass:
+  Enabled: false
+
+RSpec/DescribedClass:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/InstanceVariable:
+  Enabled: false
+
+RSpec/VerifiedDoubles:
   Enabled: false
 
 Style/AlignArray:
