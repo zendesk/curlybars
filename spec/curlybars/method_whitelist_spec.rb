@@ -2,7 +2,7 @@ describe Curlybars::MethodWhitelist do
   let(:dummy_class) { Class.new { extend Curlybars::MethodWhitelist } }
 
   describe "#allowed_methods" do
-    it "should return an empty array as default" do
+    it "returns an empty array as default" do
       expect(dummy_class.new.allowed_methods).to eq([])
     end
   end
@@ -17,7 +17,7 @@ describe Curlybars::MethodWhitelist do
       end
     end
 
-    it "should set the allowed methods" do
+    it "sets the allowed methods" do
       expect(dummy_class.new.allowed_methods).to eq([:cook, :link, :article])
     end
 
@@ -66,11 +66,11 @@ describe Curlybars::MethodWhitelist do
       stub_const("Helpers", helpers)
     end
 
-    it "should allow methods from inheritance and composition" do
+    it "allows methods from inheritance and composition" do
       expect(post_presenter.new.allowed_methods).to eq([:cook, :link, :form, :wave])
     end
 
-    it "should return a dependency_tree with inheritance and composition" do
+    it "returns a dependency_tree with inheritance and composition" do
       expect(post_presenter.dependency_tree).
         to eq(
           cook: nil,
@@ -82,28 +82,28 @@ describe Curlybars::MethodWhitelist do
   end
 
   describe ".methods_schema" do
-    it "should setup a schema propagating nil" do
+    it "setups a schema propagating nil" do
       stub_const("LinkPresenter", Class.new { extend Curlybars::MethodWhitelist })
       dummy_class.class_eval { allow_methods :cook }
 
       expect(dummy_class.methods_schema).to eq(cook: nil)
     end
 
-    it "should setup a schema any random type" do
+    it "setups a schema any random type" do
       stub_const("LinkPresenter", Class.new { extend Curlybars::MethodWhitelist })
       dummy_class.class_eval { allow_methods something: :foobar }
 
       expect(dummy_class.methods_schema).to eq(something: :foobar)
     end
 
-    it "should setup a schema propagating the return type of the method" do
+    it "setups a schema propagating the return type of the method" do
       stub_const("ArticlePresenter", Class.new { extend Curlybars::MethodWhitelist })
       dummy_class.class_eval { allow_methods article: ArticlePresenter }
 
       expect(dummy_class.methods_schema).to eq(article: ArticlePresenter)
     end
 
-    it "should setup a schema propagating a collection" do
+    it "setups a schema propagating a collection" do
       stub_const("LinkPresenter", Class.new { extend Curlybars::MethodWhitelist })
       dummy_class.class_eval { allow_methods links: [LinkPresenter] }
 
@@ -131,7 +131,7 @@ describe Curlybars::MethodWhitelist do
       end
     end
 
-    it "should return a dependencies tree" do
+    it "returns a dependencies tree" do
       expect(dummy_class.dependency_tree).
         to eq(
           links: [{ url: nil }],

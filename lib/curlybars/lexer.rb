@@ -12,7 +12,7 @@ module Curlybars
 
     # This accomodates the edge case of identifiers containing all numbers
     # and dashes
-    IDENTIFIER = '[0-9A-Za-z_\-][0-9\w\-]*'
+    IDENTIFIER = '[0-9A-Za-z_\-][0-9\w\-]*'.freeze
 
     r(/\\{/) { [:TEXT, '{'] }
     r(/\\/) { [:TEXT, '\\'] }

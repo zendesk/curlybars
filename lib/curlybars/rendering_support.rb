@@ -151,7 +151,7 @@ module Curlybars
     attr_reader :contexts, :variables, :cached_calls, :file_name, :global_helpers, :start_time, :timeout
 
     def arguments_for_signature(helper, arguments, options)
-      return [] if helper.parameters.length == 0
+      return [] if helper.parameters.empty?
 
       number_of_parameters_available_for_arguments = helper.parameters.length - 1
       arguments_that_can_fit = arguments.first(number_of_parameters_available_for_arguments)
