@@ -159,7 +159,7 @@ DEPENDENCIES
   redcarpet
   rspec-rails (~> 3.5)
   rubocop (~> 0.46.0)
-  rubocop-rspec
+  rubocop-rspec (~> 1.10.0)
   ruby-beautify (~> 0.97)
   wwtd (>= 0.5.3)
   yard

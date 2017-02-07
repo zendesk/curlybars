@@ -189,19 +189,21 @@ describe Curlybars::RenderingSupport do
 
     it "(cache miss) calls the method if not cached already" do
       meth = presenter.method(:meth)
-
-      expect(meth).to receive(:call).exactly(1).times
+      allow(meth).to receive(:call)
 
       rendering.cached_call(meth)
+
+      expect(meth).to have_received(:call).once
     end
 
     it "(cache hit) avoids to call a method for more than one time" do
       meth = presenter.method(:meth)
-
-      expect(meth).to receive(:call).exactly(1).times
+      allow(meth).to receive(:call)
 
       rendering.cached_call(meth)
       rendering.cached_call(meth)
+
+      expect(meth).to have_received(:call).once
     end
 
     it "the returned cached value is the same as the uncached one" do

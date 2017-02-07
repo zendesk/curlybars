@@ -102,18 +102,6 @@ describe "{{path}}" do
       HTML
     end
 
-    it "understands `../this` as the outer presenter" do
-      template = Curlybars.compile(<<-HBS)
-        {{#with user.avatar}}
-          {{../context}}
-        {{/with}}
-      HBS
-
-      expect(eval(template)).to resemble(<<-HTML)
-        root_context
-      HTML
-    end
-
     it "understands `length` as allowed method on a collection" do
       template = Curlybars.compile(<<-HBS)
         {{array_of_users.length}}
