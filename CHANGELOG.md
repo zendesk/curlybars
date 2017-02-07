@@ -1,8 +1,12 @@
 ### Unreleased
 
+### Curlybars 0.9.5 (February 7, 2017)
+
+* Loosen dependency restrictions on FFI and RLTK.
+
 ### Curlybars 0.9.4 (December 22, 2016)
 
-Change `DependencyTracker.call` to returns array, for compatibility with Rails 5.0.
+* Change `DependencyTracker.call` to returns array, for compatibility with Rails 5.0.
 
 ### Curlybars 0.9.0 (April 29, 2015)
 
