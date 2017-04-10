@@ -83,7 +83,7 @@ module Curlybars
         next context if meth == 'this'
         next context.count if meth == 'length' && presenter_collection?(context)
         raise_if_not_traversable(context, meth, position)
-        outcome = context.public_send(meth)
+        outcome = instrument(context.method(meth)) { context.public_send(meth) }
         return -> {} if outcome.nil?
         outcome
       end
@@ -100,7 +100,7 @@ module Curlybars
 
     def cached_call(meth)
       return cached_calls[meth] if cached_calls.key? meth
-      cached_calls[meth] = meth.call
+      instrument(meth) { cached_calls[meth] = meth.call }
     end
 
     def call(helper, helper_path, helper_position, arguments, options, &block)
@@ -116,7 +116,9 @@ module Curlybars
         raise Curlybars::Error::Render.new('invalid_helper_signature', message, helper_position)
       end
 
-      helper.call(*arguments_for_signature(helper, arguments, options), &block)
+      instrument(helper) do
+        helper.call(*arguments_for_signature(helper, arguments, options), &block)
+      end
     end
 
     def position(line_number, line_offset)
@@ -149,6 +151,14 @@ module Curlybars
     private
 
     attr_reader :contexts, :variables, :cached_calls, :file_name, :global_helpers, :start_time, :timeout
+
+    def instrument(meth, &block)
+      # Instruments only callables that give enough details (eg. methods)
+      return yield unless meth.respond_to?(:name) && meth.respond_to?(:owner)
+
+      payload = { presenter: meth.owner, method: meth.name }
+      ActiveSupport::Notifications.instrument("call_to_presenter.curlybars", payload, &block)
+    end
 
     def arguments_for_signature(helper, arguments, options)
       return [] if helper.parameters.empty?
