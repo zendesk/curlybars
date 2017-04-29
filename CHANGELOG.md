@@ -1,5 +1,8 @@
 ### Unreleased
 
+* Drop support for Rails 4.1.
+* Add support for Rails 5.1.
+
 ### Curlybars 0.9.5 (February 7, 2017)
 
 * Loosen dependency restrictions on FFI and RLTK.
