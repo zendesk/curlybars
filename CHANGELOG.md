@@ -1,5 +1,7 @@
 ### Unreleased
 
+### Curlybars 0.9.7 (April 29, 2017)
+
 * Drop support for Rails 4.1.
 * Add support for Rails 5.1.
 
