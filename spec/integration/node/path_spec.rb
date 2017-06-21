@@ -219,20 +219,43 @@ describe "{{path}}" do
     end
 
     describe "with errors" do
-      let(:source) { "{{unallowed_path}}" }
-
       it "raises with errors" do
         dependency_tree = {}
-        errors = Curlybars.validate(dependency_tree, source)
+        errors = Curlybars.validate(dependency_tree, "{{unallowed_path}}")
 
         expect(errors).not_to be_empty
       end
 
       it "raises with metadata" do
         dependency_tree = {}
-        errors = Curlybars.validate(dependency_tree, source)
+        errors = Curlybars.validate(dependency_tree, "{{unallowed_path}}")
 
         expect(errors.first.metadata).to eq(path: "unallowed_path", step: :unallowed_path)
+      end
+
+      describe "raises exact location of unallowed steps" do
+        let(:dependency_tree) { { ok: { allowed: { ok: nil } } } }
+
+        it "when in a compacted form" do
+          source = "{{ok.unallowed.ok}}"
+          errors = Curlybars.validate(dependency_tree, source)
+
+          expect(errors.first.position).to eq(Curlybars::Position.new(nil, 1, 5, 12))
+        end
+
+        it "with `this` keyword" do
+          source = "{{ok.this.unallowed.ok}}"
+          errors = Curlybars.validate(dependency_tree, source)
+
+          expect(errors.first.position).to eq(Curlybars::Position.new(nil, 1, 10, 12))
+        end
+
+        it "with some spacing" do
+          source = "   {{ ok.unallowed.ok    }}  "
+          errors = Curlybars.validate(dependency_tree, source)
+
+          expect(errors.first.position).to eq(Curlybars::Position.new(nil, 1, 9, 12))
+        end
       end
     end
   end
