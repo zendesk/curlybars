@@ -1,5 +1,10 @@
 ### Unreleased
 
+### Curlybars 0.9.8 (June 22, 2017)
+
+* Embed length of validation error in position object
+* BUGFIX: return a Curlybars::Position instance during validation
+
 ### Curlybars 0.9.7 (April 29, 2017)
 
 * Drop support for Rails 4.1.
