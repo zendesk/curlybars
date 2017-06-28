@@ -233,6 +233,13 @@ describe "{{path}}" do
         expect(errors.first.metadata).to eq(path: "unallowed_path", step: :unallowed_path)
       end
 
+      it "raises with length 0 when the error has no length" do
+        dependency_tree = {}
+        errors = Curlybars.validate(dependency_tree, "{{ok}")
+
+        expect(errors.first.position).to eq(Curlybars::Position.new(nil, 1, 4, 0))
+      end
+
       describe "raises exact location of unallowed steps" do
         let(:dependency_tree) { { ok: { allowed: { ok: nil } } } }
 
