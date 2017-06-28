@@ -1,5 +1,7 @@
 ### Unreleased
 
+### Curlybars 0.9.9 (July 28, 2017)
+
 * BUGFIX: Error position has 0 as length default value (before was nil)
 
 ### Curlybars 0.9.8 (June 22, 2017)

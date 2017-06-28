@@ -1,7 +1,7 @@
 PATH
   remote: ..
   specs:
-    curlybars (0.9.8)
+    curlybars (0.9.9)
       actionpack (>= 4.2, < 5.2)
       ffi
       rltk
@@ -190,4 +190,4 @@ DEPENDENCIES
   yard-tomdoc
 
 BUNDLED WITH
-   1.14.6
+   1.15.1
