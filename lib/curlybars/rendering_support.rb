@@ -107,6 +107,7 @@ module Curlybars
       parameters = helper.parameters
       parameter_types = parameters.map(&:first)
 
+      # parameters has value [[:rest]] when the presenter is using method_missing to catch all calls
       has_invalid_parameters = parameter_types.map { |type| type != :req }.any? && parameter_types != [:rest]
       if has_invalid_parameters
         source_location = helper.source_location
