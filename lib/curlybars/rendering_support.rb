@@ -105,8 +105,9 @@ module Curlybars
 
     def call(helper, helper_path, helper_position, arguments, options, &block)
       parameters = helper.parameters
+      parameter_types = parameters.map(&:first)
 
-      has_invalid_parameters = parameters.map(&:first).map { |type| type != :req }.any?
+      has_invalid_parameters = parameter_types.map { |type| type != :req }.any? && parameter_types != [:rest]
       if has_invalid_parameters
         source_location = helper.source_location
 
