@@ -108,8 +108,10 @@ module Curlybars
 
       has_invalid_parameters = parameters.map(&:first).map { |type| type != :req }.any?
       if has_invalid_parameters
-        file_path = helper.source_location.first
-        line_number = helper.source_location.last
+        source_location = helper.source_location
+
+        file_path = source_location ? source_location.first : "n/a"
+        line_number = source_location ? helper.source_location.last : "n/a"
 
         message = "#{file_path}:#{line_number} - `#{helper_path}` bad signature "
         message << "for #{helper} - helpers must have only required parameters"
