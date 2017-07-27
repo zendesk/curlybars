@@ -105,11 +105,15 @@ module Curlybars
 
     def call(helper, helper_path, helper_position, arguments, options, &block)
       parameters = helper.parameters
+      parameter_types = parameters.map(&:first)
 
-      has_invalid_parameters = parameters.map(&:first).map { |type| type != :req }.any?
+      # parameters has value [[:rest]] when the presenter is using method_missing to catch all calls
+      has_invalid_parameters = parameter_types.map { |type| type != :req }.any? && parameter_types != [:rest]
       if has_invalid_parameters
-        file_path = helper.source_location.first
-        line_number = helper.source_location.last
+        source_location = helper.source_location
+
+        file_path = source_location ? source_location.first : "n/a"
+        line_number = source_location ? helper.source_location.last : "n/a"
 
         message = "#{file_path}:#{line_number} - `#{helper_path}` bad signature "
         message << "for #{helper} - helpers must have only required parameters"
@@ -162,6 +166,7 @@ module Curlybars
 
     def arguments_for_signature(helper, arguments, options)
       return [] if helper.parameters.empty?
+      return arguments if helper.parameters.map(&:first) == [:rest]
 
       number_of_parameters_available_for_arguments = helper.parameters.length - 1
       arguments_that_can_fit = arguments.first(number_of_parameters_available_for_arguments)

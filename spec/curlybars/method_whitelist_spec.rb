@@ -109,10 +109,22 @@ describe Curlybars::MethodWhitelist do
 
       expect(dummy_class.methods_schema).to eq(links: [LinkPresenter])
     end
+
+    it "supports procs in schema" do
+      dummy_class.class_eval { allow_methods settings: ->() { { color_1: nil } } }
+
+      expect(dummy_class.methods_schema).to eq(settings: { color_1: nil })
+    end
+
+    it "supports procs with arguments in schema" do
+      dummy_class.class_eval { allow_methods settings: ->(name) { Hash[name, nil] } }
+
+      expect(dummy_class.methods_schema(:background_color)).to eq(settings: { background_color: nil })
+    end
   end
 
   describe ".dependency_tree" do
-    before do
+    it "returns a dependencies tree" do
       link_presenter = Class.new do
         extend Curlybars::MethodWhitelist
         allow_methods :url
@@ -129,13 +141,27 @@ describe Curlybars::MethodWhitelist do
       dummy_class.class_eval do
         allow_methods links: [LinkPresenter], article: ArticlePresenter
       end
-    end
 
-    it "returns a dependencies tree" do
       expect(dummy_class.dependency_tree).
         to eq(
           links: [{ url: nil }],
-          article: { title: nil, body: nil }
+          article: {
+            title: nil,
+            body: nil
+          }
+        )
+    end
+
+    it "propagates arguments" do
+      dummy_class.class_eval do
+        allow_methods label: ->(label) { Hash[label, nil] }
+      end
+
+      expect(dummy_class.dependency_tree(:some_label)).
+        to eq(
+          label: {
+            some_label: nil
+          }
         )
     end
   end
