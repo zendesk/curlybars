@@ -1,7 +1,7 @@
 PATH
   remote: ..
   specs:
-    curlybars (0.9.9)
+    curlybars (0.9.10)
       actionpack (>= 4.2, < 5.2)
       ffi
       rltk
