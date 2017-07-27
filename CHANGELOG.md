@@ -1,6 +1,10 @@
 ### Unreleased
 
-### Curlybars 0.9.9 (July 28, 2017)
+### Curlybars 0.9.10 (July 27, 2017)
+
+* Support defining allow_methods at runtime
+
+### Curlybars 0.9.9 (June 28, 2017)
 
 * BUGFIX: Error position has 0 as length default value (before was nil)
 
