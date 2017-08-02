@@ -88,8 +88,7 @@ describe "{{helper context key=value}}" do
         {{this_method_yields}}
       HBS
 
-      expect(eval(template)).to resemble(<<-HTML)
-      HTML
+      expect(eval(template)).to resemble("")
     end
 
     it "doesn't render if the path returns a presenter" do
@@ -97,8 +96,7 @@ describe "{{helper context key=value}}" do
         {{user}}
       HBS
 
-      expect(eval(template)).to resemble(<<-HTML)
-      HTML
+      expect(eval(template)).to resemble("")
     end
 
     it "doesn't render if the path returns a collection of presenters" do
@@ -106,8 +104,7 @@ describe "{{helper context key=value}}" do
         {{array_of_users}}
       HBS
 
-      expect(eval(template)).to resemble(<<-HTML)
-      HTML
+      expect(eval(template)).to resemble("")
     end
   end
 

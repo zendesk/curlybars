@@ -7,11 +7,11 @@ describe Curlybars::SafeBuffer do
 
   describe '#is_a?' do
     it "is a String" do
-      expect(Curlybars::SafeBuffer.new.is_a?(String)).to be_truthy
+      expect(Curlybars::SafeBuffer.new).to be_a(String)
     end
 
     it "is a ActiveSupport::SafeBuffer" do
-      expect(Curlybars::SafeBuffer.new.is_a?(ActiveSupport::SafeBuffer)).to be_truthy
+      expect(Curlybars::SafeBuffer.new).to be_a(ActiveSupport::SafeBuffer)
     end
   end
 

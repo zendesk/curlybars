@@ -30,8 +30,7 @@ describe "{{#each collection}}...{{/each}}" do
         {{/each}}
       HBS
 
-      expect(eval(template)).to resemble(<<-HTML)
-      HTML
+      expect(eval(template)).to resemble("")
     end
 
     it "allows empty each_template" do
@@ -42,8 +41,7 @@ describe "{{#each collection}}...{{/each}}" do
         {{#each non_empty_collection}}{{/each}}
       HBS
 
-      expect(eval(template)).to resemble(<<-HTML)
-      HTML
+      expect(eval(template)).to resemble("")
     end
 
     it "uses each_template when collection is a not empty enumerable" do
@@ -122,8 +120,7 @@ describe "{{#each collection}}...{{/each}}" do
         {{/each}}
       HBS
 
-      expect(eval(template)).to resemble(<<-HTML)
-      HTML
+      expect(eval(template)).to resemble("")
     end
 
     it "gives access to `@index` variable" do

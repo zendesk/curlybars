@@ -36,8 +36,7 @@ describe "{{#with presenter}}...{{/with}}" do
         {{#with user}}{{/with}}
       HBS
 
-      expect(eval(template)).to resemble(<<-HTML)
-      HTML
+      expect(eval(template)).to resemble("")
     end
 
     it "renders the else templte if the context is nil" do
@@ -61,8 +60,7 @@ describe "{{#with presenter}}...{{/with}}" do
         {{/with}}
       HBS
 
-      expect(eval(template)).to resemble(<<-HTML)
-      HTML
+      expect(eval(template)).to resemble("")
     end
 
     it "raises an exception if the parameter is not a context type object" do
