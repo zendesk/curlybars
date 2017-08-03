@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.description = "A view layer for your Rails apps that separates
     structure and logic, using Handlebars templates.\n
     Strongly inspired by Curly Template gem by Daniel Schierbeck"
-  s.license     = "apache2"
+  s.license     = "Apache License Version 2.0"
 
   s.authors  = [
     "Libo Cannici",
