@@ -74,7 +74,7 @@ module Curlybars
               elsif step == :length && (sub_tree.is_a?(Array) && sub_tree.first.is_a?(Hash))
                 next nil # :length is synthesised leaf
               elsif !(sub_tree.is_a?(Hash) && sub_tree.key?(step))
-                message = "not possible to access `#{step}` in `#{path}`"
+                message = step.to_s == path ? "'#{path}' does not exist" : "not possible to access `#{step}` in `#{path}`"
                 raise Curlybars::Error::Validate.new('unallowed_path', message, position, offset_adjustment, path: path, step: step)
               end
 

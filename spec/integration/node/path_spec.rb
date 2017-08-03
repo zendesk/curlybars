@@ -240,6 +240,24 @@ describe "{{path}}" do
         expect(errors.first.position).to eq(Curlybars::Position.new(nil, 1, 4, 0))
       end
 
+      describe "raises correct error message" do
+        let(:dependency_tree) { { ok: nil } }
+
+        it "when path contains several parts" do
+          source = "{{ok.unallowed.ok}}"
+          errors = Curlybars.validate(dependency_tree, source)
+
+          expect(errors.first.message).to eq("not possible to access `unallowed` in `ok.unallowed.ok`")
+        end
+
+        it "when path contains one part" do
+          source = "{{unallowed}}"
+          errors = Curlybars.validate(dependency_tree, source)
+
+          expect(errors.first.message).to eq("'unallowed' does not exist")
+        end
+      end
+
       describe "raises exact location of unallowed steps" do
         let(:dependency_tree) { { ok: { allowed: { ok: nil } } } }
 
