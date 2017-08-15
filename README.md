@@ -91,6 +91,8 @@ If we provide a Handlebars template at `app/views/invoices/show.html.hbs`, then 
 <h2>To: {{recipient.name}}</h2>
 ```
 
+The template in this example is only showing how it's possible to quickly put a simple view together, but there's much more to say about the language specification that is thoroughly covered in [docs/templates.md](docs/templates.md).
+
 As you can see, there are regular Handlebars paths within curlies (`{{` and `}}`). In a situation where we'd use Handlebars we would have to provide a context as well, so that for instance `recipient.name` can be resolved to an actual value to replace `{{recipient.name}}`. Curlybars provides a context in a similar way [Curly](https://github.com/zendesk/curly) does: namely, using presenters like the following one.
 
 ```ruby
