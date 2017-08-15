@@ -94,17 +94,3 @@ class RecipientPresenter
   end
 end
 ```
-
-## Namespacing
-
-By default Curlybars will follow the standard template name resolution (see above), but you also can define a global namespace for all your presenters, by initializing Curlybars as follows:
-
-```ruby
-# config/initializers/curlybars.rb
-
-Curlybars.configure do |config|
-  config.presenters_namespace = 'Experimental'
-end
-```
-
-In the invoice example, this will make Rails look up for `Experimental::Invoices::ShowPresenter` instead of `Invoices::ShowPresenter`.
