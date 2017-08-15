@@ -111,7 +111,7 @@ class Invoices::ShowPresenter < Curlybars::Presenter
   end
 
   def recipient
-    RecipientPresenter.new(@invoice.recipient);
+    RecipientPresenter.new(@invoice.recipient)
   end
 end
 ```
