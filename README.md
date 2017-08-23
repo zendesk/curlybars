@@ -124,6 +124,8 @@ When extending `Curlybars::Presenter`, we get access to a convenience method `.a
 
 `RecipientPresenter` would be a PORO presenter, and as such we only need to `extend Curlybars::MethodWhitelist` so that `allow_methods` can be used.
 
+You can find more about root presenters, PORO presenters and `Curlybars::MethodWhitelist` on [docs/presenters.md](docs/presenters.md).
+
 ```ruby
 # app/presenters/recipient_presenter.rb
 
