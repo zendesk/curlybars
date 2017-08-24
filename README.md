@@ -163,6 +163,8 @@ Curlybars.configure do |config|
 end
 ```
 
+More on configuration options can be found in [docs/configuration.md](docs/configuration.md).
+
 ## Contributing
 
 Contributing to Curlybars is fairly easy, as long as the following steps are followed:
