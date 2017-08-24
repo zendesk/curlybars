@@ -150,6 +150,8 @@ At this point, running the Rails app and going to the page configured to show th
 
 Besides data, presenters can also provide helper methods. A helper is a method that accepts arguments and/or options, and returns a value derivated from them. A detailed explanation about how helpers can be useful and which forms they come with, refer to [docs/helpers.md](docs/helpers.md).
 
+Errors can be raised when using Curlybars incorrectly, and you can refer to [docs/errors.md](docs/errors.md) for further details.
+
 ## Configuration
 
 Curlybars offers configuration options aimed to fine-tune runtime constraints, useful for when you need to make sure a page rendering is aborted when the size reaches a certain limit, or when it takes too long.
