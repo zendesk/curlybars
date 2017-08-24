@@ -148,6 +148,8 @@ On a side note, describing the accessible data via `.allow_methods` also allows 
 
 At this point, running the Rails app and going to the page configured to show the page of this example, would render the Handlebars template as expected, according to what the presenter will provide.
 
+Besides data, presenters can also provide helper methods. A helper is a method that accepts arguments and/or options, and returns a value derivated from them. A detailed explanation about how helpers can be useful and which forms they come with, refer to [docs/helpers.md](docs/helpers.md).
+
 ## Configuration
 
 Curlybars offers configuration options aimed to fine-tune runtime constraints, useful for when you need to make sure a page rendering is aborted when the size reaches a certain limit, or when it takes too long.
