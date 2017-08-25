@@ -5,9 +5,11 @@
 Curlybars is a Ruby implementation of a subset of Handlebars, where getting the context for rendering the template is based on the presenter approach taken in [Curly](https://github.com/zendesk/curly).
 
 ## Table of Contents
+
 1. [Overview](#overview)
 1. [Getting started](#getting-started)
 1. [Configuration](#configuration)
+1. [Further documentation](#further-documentation)
 1. [Contributing](#contributing)
 1. [Maintainers](#maintainers)
 1. [Copyright and License](#copyright-and-license)
@@ -166,6 +168,14 @@ end
 ```
 
 More on configuration options can be found in [docs/configuration.md](docs/configuration.md).
+
+## Further documentation
+
+1. [Templates](docs/templates.md)
+1. [Presenters](docs/presenters.md)
+1. [Helpers](docs/helpers.md)
+1. [Configuration](docs/configuration.md)
+1. [Errors](docs/errors.md)
 
 ## Contributing
 
