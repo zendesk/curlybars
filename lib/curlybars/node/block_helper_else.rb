@@ -14,6 +14,8 @@ module Curlybars
           "options.merge!(#{option.compile})"
         end.join("\n")
 
+        # NOTE: the following is a heredoc string, representing the ruby code fragment
+        # outputted by this node.
         <<-RUBY
           options = ::ActiveSupport::HashWithIndifferentAccess.new
           #{compiled_options}

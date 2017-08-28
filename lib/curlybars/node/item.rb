@@ -2,6 +2,8 @@ module Curlybars
   module Node
     Item = Struct.new(:item) do
       def compile
+        # NOTE: the following is a heredoc string, representing the ruby code fragment
+        # outputted by this node.
         <<-RUBY
           ::Module.new do
             def self.exec(contexts, rendering, variables, buffer)

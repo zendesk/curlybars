@@ -2,6 +2,8 @@ module Curlybars
   module Node
     Variable = Struct.new(:variable, :position) do
       def compile
+        # NOTE: the following is a heredoc string, representing the ruby code fragment
+        # outputted by this node.
         <<-RUBY
           -> {
             position = rendering.position(

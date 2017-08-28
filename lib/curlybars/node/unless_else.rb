@@ -2,6 +2,8 @@ module Curlybars
   module Node
     UnlessElse = Struct.new(:expression, :unless_template, :else_template) do
       def compile
+        # NOTE: the following is a heredoc string, representing the ruby code fragment
+        # outputted by this node.
         <<-RUBY
           unless rendering.to_bool(rendering.cached_call(#{expression.compile}))
             #{unless_template.compile}
