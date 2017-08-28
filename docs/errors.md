@@ -66,7 +66,7 @@ This exception is raised when a block helper is not closed properly, as in the f
 
 During the validation phase, a `Curlybars::Error::Validate` exception can be raised.
 
-### Id `alidate.closing_tag_mismatch`
+### Id `validate.closing_tag_mismatch`
 
 This exception occurs when a block helper is not closed properly. This means
 that each custom block helper must be closed by a tag with the same name. For instance:

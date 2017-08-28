@@ -94,3 +94,15 @@ class RecipientPresenter
   end
 end
 ```
+
+## Validation
+
+Rendering a template might incur into errors of various kinds. For instance, having a template with a malformed string (eg. `'string"` with different quotes) causes the lexer to raise an instance of `Curlybars::Error::Lex`, or an unallowed path would raise an instance of `Curlybars::Error::Render`.
+
+For many cases, accepting that those errors might arise is fine, but in other circumstances, though, it could be better if we can know what issues our templates have.
+
+Curlybars is shipped with a validation feature, accessible by `Curlybars.validate` or `Curlybars.valid?`. Both of those methods accept a template content, in the form of a string, and a root presenter class the template will be rendered with.
+
+If you are simply interested to know whether there will be errors upon rendering, then `Curlybars.valid?` can answer that question, but if you want to know what will exactly go wrong during compilation, then `Curlybars.validate` is what you're looking for.
+
+`Curlybars.validate` will return an array of `Curlybars::Error::Validate` errors, so getting an empty array simply means that no errors have been encountered. A comprehensive list of all the possible validation errors can be found in [docs/errors.md](errors.md).
