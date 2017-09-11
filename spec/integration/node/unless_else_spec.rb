@@ -77,8 +77,7 @@ describe "{{#unless}}...{{else}}...{{/unless}}" do
         {{#unless valid}}{{else}}{{/unless}}
       HBS
 
-      expect(eval(template)).to resemble(<<-HTML)
-      HTML
+      expect(eval(template)).to resemble("")
     end
   end
 

@@ -203,8 +203,7 @@ describe "{{#helper arg1 arg2 ... key=value ...}}...<{{else}}>...{{/helper}}" do
         {{/this_method_yields}}
       HBS
 
-      expect(eval(template)).to resemble(<<-HTML)
-      HTML
+      expect(eval(template)).to resemble("")
     end
 
     it "yield tolerated nil as pushed context" do

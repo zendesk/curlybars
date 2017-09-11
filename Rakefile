@@ -10,7 +10,7 @@ RSpec::Core::RakeTask.new(:spec)
 require 'rubocop/rake_task'
 desc 'Run RuboCop on the lib directory'
 RuboCop::RakeTask.new(:rubocop) do |task|
-  task.patterns = %w(Rakefile lib/**/*.rb spec/**/*.rb)
-  task.formatters = %w(progress)
+  task.patterns = %w[Rakefile lib/**/*.rb spec/**/*.rb]
+  task.formatters = %w[progress]
   task.fail_on_error = true
 end

@@ -20,8 +20,7 @@ describe "{{path}}" do
         {{return_nil.property}}
       HBS
 
-      expect(eval(template)).to resemble(<<-HTML)
-      HTML
+      expect(eval(template)).to resemble("")
     end
 
     it "{{../path}} is evaluated on the second to last context in the stack" do

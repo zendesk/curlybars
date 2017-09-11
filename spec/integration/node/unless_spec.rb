@@ -30,8 +30,7 @@ describe "{{#unless}}...{{/unless}}" do
         {{/unless}}
       HBS
 
-      expect(eval(template)).to resemble(<<-HTML)
-      HTML
+      expect(eval(template)).to resemble("")
     end
 
     it "works with nested unless blocks (double negative)" do
@@ -63,8 +62,7 @@ describe "{{#unless}}...{{/unless}}" do
         {{#unless valid}}{{/unless}}
       HBS
 
-      expect(eval(template)).to resemble(<<-HTML)
-      HTML
+      expect(eval(template)).to resemble("")
     end
 
     it "works with nested unless blocks (negative and positive)" do

@@ -14,10 +14,6 @@ Lint/EmptyWhen:
   Exclude:
     - lib/curlybars/node/path.rb
 
-Lint/Eval:
-  Exclude:
-    - spec/integration/**/*
-
 Performance/FixedSize:
   Exclude:
     - spec/**/*
@@ -34,6 +30,10 @@ RSpec/RepeatedDescription:
   Exclude:
     - 'spec/curlybars/rendering_support_spec.rb'
     - 'spec/integration/node/each_else_spec.rb'
+
+Security/Eval:
+  Exclude:
+    - spec/integration/**/*
 
 Style/ClassAndModuleChildren:
   Exclude:
@@ -55,49 +55,62 @@ Style/SymbolProc:
 # Configured cops
 #
 
+# Align the elements of a hash literal if they span more than one line.
+Layout/AlignHash:
+  EnforcedLastArgumentHashStyle: ignore_implicit
+
+# Align the parameters of a method call if they span more than one line.
+Layout/AlignParameters:
+  EnforcedStyle: with_fixed_indentation
+
+# Indentation of when in a case/when/[else/]end.
+Layout/CaseIndentation:
+  EnforcedStyle: end
+
+# Checks the indentation of the first parameter in a method call.
+Layout/FirstParameterIndentation:
+  EnforcedStyle: consistent
+
+# Checks the indentation of the first key in a hash literal.
+Layout/IndentHash:
+  EnforcedStyle: consistent
+
+# Checks indentation of binary operations that span more than one line.
+Layout/MultilineOperationIndentation:
+  EnforcedStyle: indented
+
 # Align ends correctly.
 Lint/EndAlignment:
-  AlignWith: variable
+  EnforcedStyleAlignWith: variable
+
+# Checks for consistent style of stub's return setting.
+RSpec/ReturnFromStub:
+  EnforcedStyle: block
 
 # Use alias instead of alias_method.
 Style/Alias:
   EnforcedStyle: prefer_alias_method
 
-# Align the elements of a hash literal if they span more than one line.
-Style/AlignHash:
-  EnforcedLastArgumentHashStyle: ignore_implicit
-
-# Align the parameters of a method call if they span more than one line.
-Style/AlignParameters:
-  EnforcedStyle: with_fixed_indentation
-
-# Indentation of when in a case/when/[else/]end.
-Style/CaseIndentation:
-  IndentWhenRelativeTo: end
-
 # Checks the formatting of empty method definitions.
 Style/EmptyMethod:
   EnforcedStyle: expanded
-
-# Checks the indentation of the first parameter in a method call.
-Style/FirstParameterIndentation:
-  EnforcedStyle: consistent
 
 # Enforce the use of Kernel#sprintf, Kernel#format or String#%.
 Style/FormatString:
   EnforcedStyle: percent
 
-# Checks the indentation of the first key in a hash literal.
-Style/IndentHash:
-  EnforcedStyle: consistent
-
-# Checks indentation of binary operations that span more than one line.
-Style/MultilineOperationIndentation:
-  EnforcedStyle: indented
-
 #
 # Disabled cops
 #
+
+Layout/AlignArray:
+  Enabled: false
+
+Layout/DotPosition:
+  Enabled: false
+
+Layout/SpaceInsideBlockBraces:
+  Enabled: false
 
 Lint/UnusedBlockArgument:
   Enabled: false
@@ -147,13 +160,7 @@ RSpec/InstanceVariable:
 RSpec/VerifiedDoubles:
   Enabled: false
 
-Style/AlignArray:
-  Enabled: false
-
 Style/Documentation:
-  Enabled: false
-
-Style/DotPosition:
   Enabled: false
 
 Style/EmptyLiteral:
@@ -180,10 +187,10 @@ Style/RaiseArgs:
 Style/SignalException:
   Enabled: false
 
-Style/SpaceInsideBlockBraces:
+Style/StringLiterals:
   Enabled: false
 
-Style/StringLiterals:
+Style/SymbolArray:
   Enabled: false
 
 Style/TrivialAccessors:

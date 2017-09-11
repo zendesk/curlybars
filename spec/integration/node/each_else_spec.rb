@@ -106,8 +106,7 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
         {{#each non_empty_collection}}{{else}}{{/each}}
       HBS
 
-      expect(eval(template)).to resemble(<<-HTML)
-      HTML
+      expect(eval(template)).to resemble("")
     end
 
     it "renders nothing if the context is nil" do
@@ -152,8 +151,6 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
   end
 
   describe "#validate" do
-    let(:presenter_class) { double(:presenter_class) }
-
     let(:presenter_class) { double(:presenter_class) }
 
     it "without errors" do

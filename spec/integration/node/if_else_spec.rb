@@ -77,8 +77,7 @@ describe "{{#if}}...{{else}}...{{/if}}" do
         {{#if valid}}{{else}}{{/if}}
       HBS
 
-      expect(eval(template)).to resemble(<<-HTML)
-      HTML
+      expect(eval(template)).to resemble("")
     end
   end
 

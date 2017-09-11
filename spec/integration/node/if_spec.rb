@@ -30,8 +30,7 @@ describe "{{#if}}...{{/if}}" do
         {{/if}}
       HBS
 
-      expect(eval(template)).to resemble(<<-HTML)
-      HTML
+      expect(eval(template)).to resemble("")
     end
 
     it "doesn't return positive branch when condition is empty array" do
@@ -44,8 +43,7 @@ describe "{{#if}}...{{/if}}" do
         {{/if}}
       HBS
 
-      expect(eval(template)).to resemble(<<-HTML)
-      HTML
+      expect(eval(template)).to resemble("")
     end
 
     it "works with nested `if blocks` (double positive)" do
@@ -97,8 +95,7 @@ describe "{{#if}}...{{/if}}" do
         {{#if valid}}{{/if}}
       HBS
 
-      expect(eval(template)).to resemble(<<-HTML)
-      HTML
+      expect(eval(template)).to resemble("")
     end
 
     it "allows usage of variables in condition" do

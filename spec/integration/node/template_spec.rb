@@ -24,8 +24,7 @@ describe "template" do
     it "can be empty" do
       template = Curlybars.compile('')
 
-      expect(eval(template)).to resemble(<<-HTML)
-      HTML
+      expect(eval(template)).to resemble("")
     end
 
     it "can contain a single curly" do

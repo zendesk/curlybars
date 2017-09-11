@@ -20,8 +20,7 @@ describe "{{> partial}}" do
         {{> return_nil}}
       HBS
 
-      expect(eval(template)).to resemble(<<-HTML)
-      HTML
+      expect(eval(template)).to resemble("")
     end
   end
 
