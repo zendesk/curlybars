@@ -83,6 +83,17 @@ module Curlybars
         end
       end
 
+      def cache_key
+        [
+          helper,
+          arguments,
+          options,
+          helper_template,
+          else_template,
+          helperclose
+        ].flatten.map(&:cache_key).push(self.class.name).join("/")
+      end
+
       private
 
       def check_open_and_close_elements(helper, helperclose, error_class)

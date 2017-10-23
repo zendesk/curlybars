@@ -86,6 +86,13 @@ module Curlybars
         end
       end
 
+      def cache_key
+        [
+          path,
+          self.class.name
+        ].join("/")
+      end
+
       private
 
       # TODO: extract me away

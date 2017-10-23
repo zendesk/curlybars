@@ -24,6 +24,7 @@ module Curlybars
     attr_accessor :custom_processors
     attr_accessor :compiler_transformers
     attr_accessor :global_helpers_provider_classes
+    attr_accessor :cache
 
     def initialize
       @presenters_namespace = ''
@@ -34,6 +35,7 @@ module Curlybars
       @custom_processors = []
       @compiler_transformers = []
       @global_helpers_provider_classes = []
+      @cache = ->(key, &block) { block.call }
     end
   end
 end

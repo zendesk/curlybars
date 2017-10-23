@@ -60,3 +60,9 @@ If a rendering takes longer than the configured threshold, then `Curlybars::Erro
 ## `global_helpers_provider_classes` (default `[]`)
 
 It is possible to register global helper provider classes via configuration. For more details about the meaning of global helpers, refer to [docs/helpers.md](helpers.md).
+
+## `cache` (default `->(cache_key, &block) { block.call }`
+
+To enable caching of PORO presenters with `{{#each}}`, set `cache` to a value that responds to `call` with one argument `cache_key` and a block. The callable is expected to return a cached value if the cache key is present, and otherwise call the block and store the result. To integrate with Rails, set this value to `Rails.cache.method(:fetch)`.
+
+By default, caching is not enabled and will simply always invoke the block.

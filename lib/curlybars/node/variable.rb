@@ -20,6 +20,13 @@ module Curlybars
       def validate_as_value(branches)
         # It is always a value.
       end
+
+      def cache_key
+        [
+          variable,
+          self.class.name
+        ].join("/")
+      end
     end
   end
 end

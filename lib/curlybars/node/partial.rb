@@ -10,6 +10,13 @@ module Curlybars
       def validate(branches)
         path.validate(branches, check_type: :partial)
       end
+
+      def cache_key
+        [
+          path.cache_key,
+          self.class.name
+        ].join("/")
+      end
     end
   end
 end

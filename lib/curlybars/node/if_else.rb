@@ -18,6 +18,14 @@ module Curlybars
           else_template.validate(branches)
         ]
       end
+
+      def cache_key
+        [
+          expression,
+          if_template,
+          else_template
+        ].map(&:cache_key).push(self.class.name).join("/")
+      end
     end
   end
 end

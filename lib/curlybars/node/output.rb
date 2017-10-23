@@ -10,6 +10,13 @@ module Curlybars
       def validate(branches)
         value.validate(branches)
       end
+
+      def cache_key
+        [
+          value.cache_key,
+          self.class.name
+        ].join("/")
+      end
     end
   end
 end

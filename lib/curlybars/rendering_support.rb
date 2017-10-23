@@ -1,6 +1,6 @@
 module Curlybars
   class RenderingSupport
-    def initialize(timeout, contexts, variables, file_name, global_helpers_providers = [])
+    def initialize(timeout, contexts, variables, file_name, global_helpers_providers = [], cache = ->(key, &block) { block.call })
       @timeout = timeout
       @start_time = Time.now
 
@@ -8,6 +8,7 @@ module Curlybars
       @variables = variables
       @file_name = file_name
       @cached_calls = {}
+      @cache = cache
 
       @global_helpers = {}
 
@@ -152,9 +153,24 @@ module Curlybars
       end
     end
 
+    def optional_presenter_cache(presenter, template_cache_key, buffer)
+      presenter_cache_key = presenter.respond_to?(:cache_key) ? presenter.cache_key : nil
+
+      if presenter_cache_key
+        cache_key = "#{presenter_cache_key}/#{template_cache_key}"
+
+        buffer << cache.call(cache_key) do
+          # Output from the block must be isolated from the main output buffer
+          yield SafeBuffer.new
+        end
+      else
+        yield buffer
+      end
+    end
+
     private
 
-    attr_reader :contexts, :variables, :cached_calls, :file_name, :global_helpers, :start_time, :timeout
+    attr_reader :contexts, :variables, :cached_calls, :file_name, :global_helpers, :start_time, :timeout, :cache
 
     def instrument(meth, &block)
       # Instruments only callables that give enough details (eg. methods)

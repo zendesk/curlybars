@@ -174,6 +174,10 @@ module Curlybars
       def validate(branches)
         [] # Nothing to validate.
       end
+
+      def cache_key
+        # Empty cache key.
+      end
     end.new
   end
 end
