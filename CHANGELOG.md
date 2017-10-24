@@ -1,5 +1,9 @@
 ### Unreleased
 
+### Curlybars 0.9.11 (July 27, 2017)
+
+* Add support for PORO presenter caching with {{#each}}
+
 ### Curlybars 0.9.10 (July 27, 2017)
 
 * Support defining allow_methods at runtime
