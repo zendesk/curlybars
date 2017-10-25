@@ -15,7 +15,8 @@ Gem::Specification.new do |s|
     "Cristian Planas",
     "Ilkka Oksanen",
     "Mauro Codella",
-    "Luís Almeida"
+    "Luís Almeida",
+    "Andreas Garnæs"
   ]
 
   s.email    = 'libo@zendesk.com'

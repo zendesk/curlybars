@@ -21,6 +21,10 @@ module Curlybars
       def validate(branches)
         items.map { |item| item.validate(branches) }
       end
+
+      def cache_key
+        Digest::MD5.hexdigest(items.map(&:cache_key).join("/"))
+      end
     end
   end
 end

@@ -10,7 +10,8 @@ module Curlybars
             contexts,
             variables,
             #{position.file_name.inspect},
-            global_helpers_providers
+            global_helpers_providers,
+            ::Curlybars.configuration.cache
           )
           buffer = ::Curlybars::SafeBuffer.new
           #{template.compile}

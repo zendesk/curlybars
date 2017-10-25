@@ -21,6 +21,7 @@ Performance/FixedSize:
 RSpec/MultipleExpectations:
   Exclude:
     - 'spec/curlybars/template_handler_spec.rb'
+    - 'spec/integration/cache_spec.rb'
 
 RSpec/NestedGroups:
   Exclude:

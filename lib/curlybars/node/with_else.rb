@@ -39,6 +39,14 @@ module Curlybars
       rescue Curlybars::Error::Validate => path_error
         path_error
       end
+
+      def cache_key
+        [
+          path,
+          with_template,
+          else_template
+        ].map(&:cache_key).push(self.class.name).join("/")
+      end
     end
   end
 end

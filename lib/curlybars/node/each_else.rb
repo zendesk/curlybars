@@ -7,19 +7,22 @@ module Curlybars
 
           if rendering.to_bool(collection)
             position = rendering.position(#{position.line_number}, #{position.line_offset})
+            template_cache_key = '#{each_template.cache_key}'
 
             collection = rendering.coerce_to_hash!(collection, #{path.path.inspect}, position)
             collection.each.with_index.map do |key_and_presenter, index|
               rendering.check_timeout!
               begin
-                contexts.push(key_and_presenter[1])
-                variables.push({
-                  index: index,
-                  key: key_and_presenter[0],
-                  first: index == 0,
-                  last: index == (collection.length - 1),
-                })
-                #{each_template.compile}
+                rendering.optional_presenter_cache(key_and_presenter[1], template_cache_key, buffer) do |buffer|
+                  contexts.push(key_and_presenter[1])
+                  variables.push({
+                    index: index,
+                    key: key_and_presenter[0],
+                    first: index == 0,
+                    last: index == (collection.length - 1),
+                  })
+                  #{each_template.compile}
+                end
               ensure
                 variables.pop
                 contexts.pop
@@ -50,6 +53,14 @@ module Curlybars
         ]
       rescue Curlybars::Error::Validate => path_error
         path_error
+      end
+
+      def cache_key
+        [
+          path,
+          each_template,
+          else_template
+        ].map(&:cache_key).push(self.class.name).join("/")
       end
     end
   end
