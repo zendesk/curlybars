@@ -1,6 +1,6 @@
 ### Unreleased
 
-### Curlybars 0.9.11 (July 27, 2017)
+### Curlybars 0.9.11 (October 25, 2017)
 
 * Add support for PORO presenter caching with {{#each}}
 
