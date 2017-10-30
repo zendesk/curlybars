@@ -106,5 +106,19 @@ describe "caching" do
         after
       HTML
     end
+
+    it "leaves variables and contexts in correct state after a cache hit" do
+      template = Curlybars.compile(<<-HBS)
+        {{#each array_of_users}}a{{/each}}
+        {{#each array_of_users}}a{{/each}}
+        {{context}}
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
+        a
+        a
+        root_context
+      HTML
+    end
   end
 end
