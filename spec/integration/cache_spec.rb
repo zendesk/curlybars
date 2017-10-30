@@ -92,5 +92,19 @@ describe "caching" do
         - Libo
       HTML
     end
+
+    it "works for empty templates" do
+      template = Curlybars.compile(<<-HBS)
+        before
+        {{#each array_of_users}}{{/each}}
+        {{#each array_of_users}}{{/each}}
+        after
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
+        before
+        after
+      HTML
+    end
   end
 end
