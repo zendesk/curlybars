@@ -12,6 +12,6 @@ class Article
   end
 
   def author
-    User.new("Nicolò")
+    User.new(3, "Nicolò")
   end
 end

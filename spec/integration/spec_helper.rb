@@ -146,7 +146,7 @@ module IntegrationTest
     private
 
     def current_user
-      User.new('Libo')
+      User.new(2, 'Libo')
     end
   end
 

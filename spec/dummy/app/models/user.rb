@@ -1,10 +1,8 @@
 class User
-  def initialize(first_name)
+  attr_reader :first_name, :id
+  def initialize(id, first_name)
+    @id = id
     @first_name = first_name
-  end
-
-  def first_name
-    @first_name
   end
 
   def created_at
