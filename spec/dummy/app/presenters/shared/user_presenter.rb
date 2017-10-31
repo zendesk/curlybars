@@ -28,4 +28,8 @@ class Shared::UserPresenter
   def context
     'user_context'
   end
+
+  def cache_key
+    @user.id
+  end
 end

@@ -4,6 +4,6 @@ module ApplicationHelper
   end
 
   def current_user
-    User.new("Admin")
+    User.new(1, "Admin")
   end
 end

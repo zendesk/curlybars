@@ -161,7 +161,9 @@ module Curlybars
 
         buffer << cache.call(cache_key) do
           # Output from the block must be isolated from the main output buffer
-          yield SafeBuffer.new
+          SafeBuffer.new.tap do |cache_buffer|
+            yield cache_buffer
+          end
         end
       else
         yield buffer
