@@ -1,5 +1,10 @@
 ### Unreleased
 
+### Curlybars 0.9.12 (October 30, 2017)
+
+* BUGFIX: Caching of {{#each}} for empty templates
+* BUGFIX: {{#each}} would leave contexts and variables in wrong state
+
 ### Curlybars 0.9.11 (October 25, 2017)
 
 * Add support for PORO presenter caching with {{#each}}
