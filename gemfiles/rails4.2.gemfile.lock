@@ -7,7 +7,7 @@ PATH
       rltk
 
 GEM
-  remote: http://rubygems.org/
+  remote: https://rubygems.org/
   specs:
     actionmailer (4.2.8)
       actionpack (= 4.2.8)
@@ -190,4 +190,4 @@ DEPENDENCIES
   yard-tomdoc
 
 BUNDLED WITH
-   1.15.1
+   1.16.0
