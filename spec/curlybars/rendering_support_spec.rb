@@ -160,7 +160,7 @@ describe Curlybars::RenderingSupport do
 
     it "returns a method that returns nil, if nil is returned from any method in the chain (except the latter)" do
       allow_all_methods(presenter)
-      allow(presenter).to receive(:returns_nil) { }
+      allow(presenter).to receive(:returns_nil) { nil }
 
       outcome = rendering.path('returns_nil.another_method', rendering.position(0, 1)).call
       expect(outcome).to be_nil
