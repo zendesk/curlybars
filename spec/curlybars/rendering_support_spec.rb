@@ -299,7 +299,7 @@ describe Curlybars::RenderingSupport do
     end
 
     it "raises Curlybars::Error::Render if the helper has at least an optional parameter" do
-      method = ->(one, two = :optional) { }
+      method = ->(one, two = :optional) {}
       arguments = [:arg1]
       options = { key: :value }
 
@@ -309,7 +309,7 @@ describe Curlybars::RenderingSupport do
     end
 
     it "raises Curlybars::Error::Render if the helper has at least a keyword parameter" do
-      method = ->(keyword:) { }
+      method = ->(keyword:) {}
       arguments = [:arg1]
       options = { key: :value }
 
@@ -319,7 +319,7 @@ describe Curlybars::RenderingSupport do
     end
 
     it "raises Curlybars::Error::Render if the helper has at least an optional keyword parameter" do
-      method = ->(keyword: :optional) { }
+      method = ->(keyword: :optional) {}
       arguments = [:arg1]
       options = { key: :value }
 

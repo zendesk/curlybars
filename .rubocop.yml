@@ -1,10 +1,10 @@
+inherit_from: .rubocop_todo.yml
+
 require:
   - rubocop-rspec
 
 AllCops:
   DisplayCopNames: true
-  Exclude:
-    - curlybars.gemspec
 
 #
 # Special cases
@@ -27,11 +27,6 @@ RSpec/NestedGroups:
   Exclude:
     - spec/**/*
 
-RSpec/RepeatedDescription:
-  Exclude:
-    - 'spec/curlybars/rendering_support_spec.rb'
-    - 'spec/integration/node/each_else_spec.rb'
-
 Security/Eval:
   Exclude:
     - spec/integration/**/*
@@ -39,18 +34,6 @@ Security/Eval:
 Style/ClassAndModuleChildren:
   Exclude:
     - spec/dummy/**/*
-
-Style/RegexpLiteral:
-  Exclude:
-    - lib/curlybars/lexer.rb
-
-Style/Semicolon:
-  Exclude:
-    - lib/curlybars/lexer.rb
-
-Style/SymbolProc:
-  Exclude:
-    - spec/spec_helper.rb
 
 #
 # Configured cops
@@ -104,13 +87,7 @@ Style/FormatString:
 # Disabled cops
 #
 
-Layout/AlignArray:
-  Enabled: false
-
 Layout/DotPosition:
-  Enabled: false
-
-Layout/SpaceInsideBlockBraces:
   Enabled: false
 
 Lint/UnusedBlockArgument:

@@ -1,5 +1,6 @@
 require 'rltk/lexer'
 
+# rubocop:disable Style/RegexpLiteral, Style/Semicolon
 module Curlybars
   class Lexer < RLTK::Lexer
     match_first

@@ -6,7 +6,7 @@ class User
   end
 
   def created_at
-    DateTime.iso8601('2015-02-03T13:25:06+00:00')
+    Time.iso8601('2015-02-03T13:25:06+00:00')
   end
 
   def avatar
