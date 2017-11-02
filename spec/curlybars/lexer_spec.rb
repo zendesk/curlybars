@@ -1,3 +1,4 @@
+# rubocop:disable Layout/AlignArray
 describe Curlybars::Lexer do
   describe "{{!-- ... --}}" do
     it "skips begin of block comment" do
@@ -52,7 +53,7 @@ describe Curlybars::Lexer do
     end
 
     it "returns the expressed integer" do
-      literal_token = lex("{{7}}").detect {|token| token.type == :LITERAL}
+      literal_token = lex("{{7}}").detect { |token| token.type == :LITERAL }
       expect(literal_token.value).to eq 7
     end
   end
@@ -67,7 +68,7 @@ describe Curlybars::Lexer do
     end
 
     it "returns the expressed boolean" do
-      literal_token = lex("{{true}}").detect {|token| token.type == :LITERAL}
+      literal_token = lex("{{true}}").detect { |token| token.type == :LITERAL }
       expect(literal_token.value).to be_truthy
     end
   end
@@ -78,7 +79,7 @@ describe Curlybars::Lexer do
     end
 
     it "returns the string between quotes" do
-      literal_token = lex("{{'string'}}").detect {|token| token.type == :LITERAL}
+      literal_token = lex("{{'string'}}").detect { |token| token.type == :LITERAL }
       expect(literal_token.value).to eq '"string"'
     end
 
@@ -97,7 +98,7 @@ describe Curlybars::Lexer do
     end
 
     it "returns the string between quotes" do
-      literal_token = lex('{{"string"}}').detect {|token| token.type == :LITERAL}
+      literal_token = lex('{{"string"}}').detect { |token| token.type == :LITERAL }
       expect(literal_token.value).to eq '"string"'
     end
 
@@ -116,12 +117,12 @@ describe Curlybars::Lexer do
     end
 
     it "returns the identifier after `@`" do
-      variable_token = lex('{{@var}}').detect {|token| token.type == :VARIABLE}
+      variable_token = lex('{{@var}}').detect { |token| token.type == :VARIABLE }
       expect(variable_token.value).to eq 'var'
     end
 
     it "returns the identifier after `@` also when using `../`" do
-      variable_token = lex('{{@../var}}').detect {|token| token.type == :VARIABLE}
+      variable_token = lex('{{@../var}}').detect { |token| token.type == :VARIABLE }
       expect(variable_token.value).to eq '../var'
     end
 
@@ -364,7 +365,7 @@ describe Curlybars::Lexer do
     end
 
     it "returns the original text" do
-      text_token = lex('\{').detect {|token| token.type == :TEXT}
+      text_token = lex('\{').detect { |token| token.type == :TEXT }
       expect(text_token.value).to eq '{'
     end
 
