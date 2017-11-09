@@ -2,6 +2,8 @@ module Curlybars
   module Node
     EachElse = Struct.new(:path, :each_template, :else_template, :position) do
       def compile
+        # NOTE: the following is a heredoc string, representing the ruby code fragment
+        # outputted by this node.
         <<-RUBY
           collection = rendering.cached_call(#{path.compile})
 

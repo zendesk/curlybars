@@ -2,6 +2,8 @@ module Curlybars
   module Node
     Literal = Struct.new(:literal) do
       def compile
+        # NOTE: the following is a heredoc string, representing the ruby code fragment
+        # outputted by this node.
         <<-RUBY
           ->() { #{literal} }
         RUBY

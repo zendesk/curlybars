@@ -2,6 +2,8 @@ module Curlybars
   module Node
     Boolean = Struct.new(:boolean) do
       def compile
+        # NOTE: the following is a heredoc string, representing the ruby code fragment
+        # outputted by this node.
         <<-RUBY
           ->() { #{boolean} }
         RUBY
