@@ -1,5 +1,7 @@
 ### Unreleased
 
+* Add support for Rails 5.2.
+
 ### Curlybars 1.0.0 (January 23, 2018)
 
 * Use Circle CI for testing.
