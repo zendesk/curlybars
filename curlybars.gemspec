@@ -22,8 +22,6 @@ Gem::Specification.new do |s|
   s.email    = 'libo@zendesk.com'
   s.homepage = 'https://github.com/zendesk/curlybars'
 
-  s.metadata['allowed_push_host'] = "https://gem.zdsys.com/gems/"
-
   s.require_paths = %w[lib]
 
   s.rdoc_options = ["--charset=UTF-8"]
