@@ -218,7 +218,7 @@ describe Curlybars::RenderingSupport do
 
   describe "#call" do
     it "calls with no arguments a method with no parameters" do
-      method = ->() { :return }
+      method = -> { :return }
       arguments = []
 
       output = rendering.call(method, "method", position, arguments, :options, &block)
@@ -226,7 +226,7 @@ describe Curlybars::RenderingSupport do
     end
 
     it "calls with one argument a method with no parameters, discarding the parameter" do
-      method = ->() { :return }
+      method = -> { :return }
       arguments = [:argument]
 
       output = rendering.call(method, "method", position, arguments, :options, &block)

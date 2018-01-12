@@ -58,3 +58,4 @@ module Curlybars
     r(/.*?(?=\\|{{|\z)/m) { |text| [:TEXT, text] }
   end
 end
+# rubocop:enable Style/RegexpLiteral, Style/Semicolon

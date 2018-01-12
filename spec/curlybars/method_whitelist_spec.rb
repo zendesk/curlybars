@@ -111,7 +111,7 @@ describe Curlybars::MethodWhitelist do
     end
 
     it "supports procs in schema" do
-      dummy_class.class_eval { allow_methods settings: ->() { { color_1: nil } } }
+      dummy_class.class_eval { allow_methods settings: -> { { color_1: nil } } }
 
       expect(dummy_class.methods_schema).to eq(settings: { color_1: nil })
     end
