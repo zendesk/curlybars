@@ -83,6 +83,10 @@ Style/EmptyMethod:
 Style/FormatString:
   EnforcedStyle: percent
 
+# Enforce using either `%<token>s` or `%{token}`
+Style/FormatStringToken:
+  EnforcedStyle: unannotated
+
 #
 # Disabled cops
 #
@@ -144,7 +148,13 @@ Style/Documentation:
 Style/EmptyLiteral:
   Enabled: false
 
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
 Style/GuardClause:
+  Enabled: false
+
+Style/IfUnlessModifier:
   Enabled: false
 
 Style/MethodMissing:
