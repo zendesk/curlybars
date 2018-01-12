@@ -1,4 +1,4 @@
-[![Build Status](https://magnum.travis-ci.com/zendesk/curlybars.svg?token=Fh9oDUV4oikq9kNCExpq&branch=master)](https://magnum.travis-ci.com/zendesk/curlybars)
+[![CircleCI](https://circleci.com/gh/zendesk/curlybars/tree/master.svg?style=svg)](https://circleci.com/gh/zendesk/curlybars/tree/master)
 
 # Curlybars
 

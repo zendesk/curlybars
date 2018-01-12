@@ -6,6 +6,9 @@ require:
 AllCops:
   DisplayCopNames: true
   TargetRubyVersion: 2.3
+  Exclude:
+    - gemfiles/vendor/**/*
+    - vendor/**/*
 
 #
 # Special cases
