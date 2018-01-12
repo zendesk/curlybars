@@ -1,5 +1,12 @@
 ### Unreleased
 
+### Curlybars 0.9.13 (January 11, 2018)
+
+* Fix the licence value in gemspec
+* Update some Rubocop config and code style
+* Remove unnecessary rspec config
+* Compatibility with Bundler v1.16.0
+
 ### Curlybars 0.9.12 (October 30, 2017)
 
 * BUGFIX: Caching of {{#each}} for empty templates
