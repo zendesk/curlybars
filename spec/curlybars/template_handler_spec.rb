@@ -140,7 +140,7 @@ describe Curlybars::TemplateHandler do
     expect(context.content_for(:foo)).to eq("bar")
   end
 
-  context "caching" do
+  describe "caching" do
     before do
       allow(template).to receive(:source) { "{{bar}}" }
       allow(context).to receive(:bar) { "BAR" }

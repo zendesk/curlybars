@@ -1,4 +1,3 @@
-# rubocop:disable Layout/AlignArray
 describe Curlybars::Lexer do
   describe "{{!-- ... --}}" do
     it "skips begin of block comment" do
@@ -181,6 +180,7 @@ describe Curlybars::Lexer do
     end
   end
 
+  # rubocop:disable Layout/AlignArray
   describe "{{#if path}}...{{else}}...{{/if}}" do
     it "is lexed" do
       expect(lex('{{#if path}} text {{else}} text {{/if}}')).to produce(
@@ -298,6 +298,7 @@ describe Curlybars::Lexer do
       )
     end
   end
+  # rubocop:enable Layout/AlignArray
 
   describe "{{#with path}}...{{/with}}" do
     it "is lexed" do

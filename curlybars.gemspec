@@ -37,8 +37,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency("railties", [">= 4.2", "< 5.2"])
   s.add_development_dependency("rake")
   s.add_development_dependency("rspec-rails", "~> 3.5")
-  s.add_development_dependency("rubocop", "~> 0.51.0")
-  s.add_development_dependency("rubocop-rspec", "~> 1.19.0")
+  s.add_development_dependency("rubocop", "~> 0.52.1")
+  s.add_development_dependency("rubocop-rspec", "~> 1.22.0")
   s.add_development_dependency("wwtd", ">= 0.5.3")
 
   s.files       = Dir.glob('lib/**/*.rb')
