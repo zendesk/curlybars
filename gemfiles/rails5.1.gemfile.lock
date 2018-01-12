@@ -61,9 +61,6 @@ GEM
     erubi (1.7.0)
     ffi (1.9.18)
     filigree (0.4.0)
-    genspec (0.3.2)
-      rspec (>= 2, < 4)
-      thor
     github-markup (1.6.2)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
@@ -117,10 +114,6 @@ GEM
     rltk (3.0.1)
       ffi (>= 1.0.0)
       filigree (>= 0.2.0)
-    rspec (3.7.0)
-      rspec-core (~> 3.7.0)
-      rspec-expectations (~> 3.7.0)
-      rspec-mocks (~> 3.7.0)
     rspec-core (3.7.1)
       rspec-support (~> 3.7.0)
     rspec-expectations (3.7.0)
@@ -180,7 +173,6 @@ DEPENDENCIES
   bundler
   byebug (~> 3.5)
   curlybars!
-  genspec
   github-markup
   rails
   railties (~> 5.1.0)
