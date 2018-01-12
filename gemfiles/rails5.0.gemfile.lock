@@ -140,7 +140,6 @@ GEM
       unicode-display_width (~> 1.0, >= 1.0.1)
     rubocop-rspec (1.22.0)
       rubocop (>= 0.52.1)
-    ruby-beautify (0.97.4)
     ruby-progressbar (1.9.0)
     slop (3.6.0)
     sprockets (3.7.1)
@@ -181,7 +180,6 @@ DEPENDENCIES
   rspec-rails (~> 3.5)
   rubocop (~> 0.52.1)
   rubocop-rspec (~> 1.22.0)
-  ruby-beautify (~> 0.97)
   wwtd (>= 0.5.3)
   yard
   yard-tomdoc
