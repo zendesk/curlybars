@@ -5,9 +5,9 @@ Gem::Specification.new do |s|
   s.version     = Curlybars::VERSION
 
   s.summary     = "Create your views using Handlebars templates!"
-  s.description = "A view layer for your Rails apps that separates
-    structure and logic, using Handlebars templates.\n
-    Strongly inspired by Curly Template gem by Daniel Schierbeck"
+  s.description = "A view layer for your Rails apps that separates " \
+    "structure and logic, using Handlebars templates.\n" \
+    "Strongly inspired by Curly Template gem by Daniel Schierbeck."
   s.license     = "Apache-2.0"
 
   s.authors = [
@@ -32,14 +32,11 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency("bundler")
   s.add_development_dependency("byebug", "~> 3.5")
-  s.add_development_dependency("genspec")
-  s.add_development_dependency("private_gem")
   s.add_development_dependency("railties", [">= 4.2", "< 5.2"])
   s.add_development_dependency("rake")
   s.add_development_dependency("rspec-rails", "~> 3.5")
   s.add_development_dependency("rubocop", "~> 0.52.1")
   s.add_development_dependency("rubocop-rspec", "~> 1.22.0")
-  s.add_development_dependency("wwtd", ">= 0.5.3")
 
   s.files       = Dir.glob('lib/**/*.rb')
   s.executables = Dir.glob('bin/**/*').map { |f| File.basename(f) }

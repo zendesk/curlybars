@@ -17,8 +17,3 @@ rdoc
 .DS_Store
 *.swp
 tags
-
-# YARD artifacts
-/.yardoc/
-/_yardoc/
-/doc/
