@@ -1,0 +1,69 @@
+version: 2
+
+rspec: &rspec_config
+  docker:
+    - image: circleci/ruby:2.4
+  steps:
+    - checkout
+    - run: cp -v $BUNDLE_GEMFILE.lock cache-keyfile
+    - restore_cache:
+        keys:
+          - curlybars-v2-{{ checksum "cache-keyfile" }}
+          - curlybars-v2-
+    - run: bundle install --path vendor/bundle
+    - run: cp -v $BUNDLE_GEMFILE.lock cache-keyfile
+    - save_cache:
+        key: curlybars-v2-{{ checksum "cache-keyfile" }}
+        paths:
+          - gemfiles/vendor/bundle
+    - run: rspec
+
+jobs:
+  rails-4.2:
+    <<: *rspec_config
+    environment:
+      - BUNDLE_GEMFILE: gemfiles/rails4.2.gemfile
+  rails-5.0:
+    <<: *rspec_config
+    environment:
+      - BUNDLE_GEMFILE: gemfiles/rails5.0.gemfile
+  rails-5.1:
+    <<: *rspec_config
+    environment:
+      - BUNDLE_GEMFILE: gemfiles/rails5.1.gemfile
+  rubocop:
+    docker:
+      - image: circleci/ruby:2.4
+    environment:
+      - BUNDLE_GEMFILE: gemfiles/rails5.1.gemfile
+    steps:
+      - checkout
+      - run: cp -v $BUNDLE_GEMFILE.lock cache-keyfile
+      - restore_cache:
+          keys:
+            - curlybars-v2-{{ checksum "cache-keyfile" }}
+            - curlybars-v2-
+      - run: bundle install --path vendor/bundle
+      - run: cp -v $BUNDLE_GEMFILE.lock cache-keyfile
+      - save_cache:
+          key: curlybars-v2-{{ checksum "cache-keyfile" }}
+          paths:
+            - gemfiles/vendor/bundle
+      - restore_cache:
+          keys:
+            - curlybars-rubocop-v1-{{ arch }}
+            - curlybars-rubocop-v1-
+      - run: rubocop
+      - save_cache:
+          key: curlybars-rubocop-v1-{{ arch }}
+          paths:
+            - ~/.cache/rubocop_cache
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - rails-4.2
+      - rails-5.0
+      - rails-5.1
+      - rubocop
