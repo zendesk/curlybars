@@ -5,9 +5,9 @@ Gem::Specification.new do |s|
   s.version     = Curlybars::VERSION
 
   s.summary     = "Create your views using Handlebars templates!"
-  s.description = "A view layer for your Rails apps that separates
-    structure and logic, using Handlebars templates.\n
-    Strongly inspired by Curly Template gem by Daniel Schierbeck"
+  s.description = "A view layer for your Rails apps that separates " \
+    "structure and logic, using Handlebars templates.\n" \
+    "Strongly inspired by Curly Template gem by Daniel Schierbeck."
   s.license     = "Apache-2.0"
 
   s.authors = [
