@@ -1,5 +1,4 @@
 require 'bundler/setup'
-require 'private_gem/tasks'
 require 'wwtd/tasks'
 
 task default: [:spec, :rubocop]

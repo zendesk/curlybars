@@ -85,9 +85,6 @@ GEM
     parser (2.4.0.2)
       ast (~> 2.3)
     powerpack (0.1.1)
-    private_gem (1.1.3)
-      bundler (~> 1.7)
-      thor
     rack (2.0.3)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -185,7 +182,6 @@ DEPENDENCIES
   curlybars!
   genspec
   github-markup
-  private_gem
   rails
   railties (~> 5.0.0)
   rake
