@@ -5,6 +5,7 @@ require:
 
 AllCops:
   DisplayCopNames: true
+  TargetRubyVersion: 2.3
 
 #
 # Special cases
