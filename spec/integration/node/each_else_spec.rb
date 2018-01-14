@@ -22,7 +22,7 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
       HTML
     end
 
-    it "uses else_template when collection is not empty" do
+    it "uses else_template when collection is empty" do
       allow(presenter).to receive(:allows_method?).with(:empty_collection) { true }
       allow(presenter).to receive(:empty_collection) { [] }
 
@@ -39,7 +39,7 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
       HTML
     end
 
-    it "uses each_template when collection is not empty" do
+    it "renders {{path}} when collection is not empty" do
       path_presenter_class = Class.new(Curlybars::Presenter) do
         presents :path
         allow_methods :path
