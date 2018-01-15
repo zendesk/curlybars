@@ -76,7 +76,7 @@ describe Curlybars::RenderingSupport do
       expect(rendering.path('method', rendering.position(0, 1))).to eq :method
     end
 
-    it "returns the method in the current context" do
+    it "returns the sub presenter method in the current context" do
       sub = double(:sub_presenter)
       allow_all_methods(sub)
       allow(sub).to receive(:method) { :method }
