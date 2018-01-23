@@ -1,5 +1,11 @@
 ### Unreleased
 
+### Curlybars 1.0.0 (January 23, 2018)
+
+* Use Circle CI for testing.
+* Remove unneeded gem dependencies.
+* Fix outstanding RuboCop issues.
+
 ### Curlybars 0.9.13 (January 11, 2018)
 
 * Fix the licence value in gemspec

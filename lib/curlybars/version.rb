@@ -1,3 +1,3 @@
 module Curlybars
-  VERSION = '0.9.13'.freeze
+  VERSION = '1.0.0'.freeze
 end
