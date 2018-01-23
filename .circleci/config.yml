@@ -49,15 +49,7 @@ jobs:
           key: curlybars-v2-{{ checksum "cache-keyfile" }}
           paths:
             - gemfiles/vendor/bundle
-      - restore_cache:
-          keys:
-            - curlybars-rubocop-v1-{{ arch }}
-            - curlybars-rubocop-v1-
       - run: rubocop
-      - save_cache:
-          key: curlybars-rubocop-v1-{{ arch }}
-          paths:
-            - ~/.cache/rubocop_cache
 
 workflows:
   version: 2
