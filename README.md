@@ -196,6 +196,10 @@ This is the list of Curlybars maintainers, in no particular order:
 * Ilkka Oksanen ([@ilkkao](https://github.com/ilkkao))
 * Mauro Codella ([@codella](https://github.com/codella))
 
+## More information
+
+* [Announcement blog post](https://developerblog.zendesk.com/curlybars-is-now-open-source-98145f192cea)
+
 ## Copyright and License
 
 Copyright (c) 2017 Zendesk Inc.
