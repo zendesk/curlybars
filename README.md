@@ -14,7 +14,7 @@ Curlybars is a Ruby implementation of a subset of Handlebars, where getting the 
 1. [Maintainers](#maintainers)
 1. [Copyright and License](#copyright-and-license)
 
-## Getting started
+## Overview
 
 Curlybars is a templating engine for Ruby, and it integrates with Rails out of the box. In order to use it with Rails, at least a **root presenter** and a **template** must be provided for each view that is meant to be rendered via Curlybars.
 
