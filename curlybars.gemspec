@@ -26,13 +26,13 @@ Gem::Specification.new do |s|
 
   s.rdoc_options = ["--charset=UTF-8"]
 
-  s.add_dependency("actionpack", [">= 4.2", "< 5.2"])
+  s.add_dependency("actionpack", [">= 4.2", "< 6.0"])
   s.add_dependency("ffi")
   s.add_dependency("rltk")
 
   s.add_development_dependency("bundler")
   s.add_development_dependency("byebug", "~> 3.5")
-  s.add_development_dependency("railties", [">= 4.2", "< 5.2"])
+  s.add_development_dependency("railties", [">= 4.2", "< 6.0"])
   s.add_development_dependency("rake")
   s.add_development_dependency("rspec-rails", "~> 3.5")
   s.add_development_dependency("rubocop", "~> 0.52.1")
