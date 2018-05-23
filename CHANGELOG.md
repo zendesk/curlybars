@@ -1,5 +1,7 @@
 ### Unreleased
 
+### Curlybars 1.1.0 (May 23, 2018)
+
 * Add support for Rails 5.2.
 
 ### Curlybars 1.0.0 (January 23, 2018)
