@@ -6,12 +6,11 @@ module Curlybars
   class Railtie < Rails::Railtie
     initializer 'curlybars.initialize_template_handler' do
       ActionView::Template.register_template_handler(:hbs, Curlybars::TemplateHandler)
+      ActionView::DependencyTracker.register_tracker(:hbs, Curlybars::DependencyTracker)
     end
 
     initializer 'curlybars.set_cache' do
       Curlybars.cache = Rails.cache
     end
-
-    ActionView::DependencyTracker.register_tracker :hbs, Curlybars::DependencyTracker
   end
 end
