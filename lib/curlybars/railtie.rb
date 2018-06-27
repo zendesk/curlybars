@@ -1,5 +1,6 @@
 require 'curlybars/template_handler'
 require 'curlybars/dependency_tracker'
+require 'action_view/dependency_tracker'
 
 module Curlybars
   class Railtie < Rails::Railtie
@@ -11,12 +12,6 @@ module Curlybars
       Curlybars.cache = Rails.cache
     end
 
-    if defined?(CacheDigests::DependencyTracker)
-      CacheDigests::DependencyTracker.register_tracker :hbs, Curlybars::DependencyTracker
-    end
-
-    if defined?(ActionView::DependencyTracker)
-      ActionView::DependencyTracker.register_tracker :hbs, Curlybars::DependencyTracker
-    end
+    ActionView::DependencyTracker.register_tracker :hbs, Curlybars::DependencyTracker
   end
 end
