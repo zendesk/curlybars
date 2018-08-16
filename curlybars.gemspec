@@ -31,10 +31,10 @@ Gem::Specification.new do |s|
   s.add_dependency("rltk")
 
   s.add_development_dependency("bundler")
-  s.add_development_dependency("byebug", "~> 3.5")
+  s.add_development_dependency("byebug")
   s.add_development_dependency("railties", [">= 4.2", "< 6.0"])
   s.add_development_dependency("rake")
-  s.add_development_dependency("rspec-rails", "~> 3.5")
+  s.add_development_dependency("rspec-rails", "~> 3.8")
   s.add_development_dependency("rubocop", "~> 0.58.2")
   s.add_development_dependency("rubocop-rspec", "~> 1.28.0")
 
