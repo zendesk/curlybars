@@ -16,7 +16,7 @@ rspec: &rspec_config
         key: curlybars-v2-{{ checksum "cache-keyfile" }}
         paths:
           - gemfiles/vendor/bundle
-    - run: rspec
+    - run: bundle exec rspec
 
 jobs:
   rails-4.2:
@@ -53,7 +53,7 @@ jobs:
           key: curlybars-v2-{{ checksum "cache-keyfile" }}
           paths:
             - gemfiles/vendor/bundle
-      - run: rubocop
+      - run: bundle exec rubocop
 
 workflows:
   version: 2
