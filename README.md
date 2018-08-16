@@ -12,6 +12,7 @@ Curlybars is a Ruby implementation of a subset of Handlebars, where getting the 
 1. [Further documentation](#further-documentation)
 1. [Contributing](#contributing)
 1. [Maintainers](#maintainers)
+1. [Releasing](#releasing)
 1. [Copyright and License](#copyright-and-license)
 
 ## Overview
@@ -195,6 +196,14 @@ This is the list of Curlybars maintainers, in no particular order:
 * Liborio Cannici ([@libo](https://github.com/libo))
 * Ilkka Oksanen ([@ilkkao](https://github.com/ilkkao))
 * Mauro Codella ([@codella](https://github.com/codella))
+
+## Releasing
+
+* `git checkout master && git pull`
+* Update changelog
+* Bump version in `lib/curlybars/version.rb`
+* Commit changes
+* `rake release`
 
 ## More information
 
