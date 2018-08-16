@@ -35,8 +35,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency("railties", [">= 4.2", "< 6.0"])
   s.add_development_dependency("rake")
   s.add_development_dependency("rspec-rails", "~> 3.5")
-  s.add_development_dependency("rubocop", "~> 0.52.1")
-  s.add_development_dependency("rubocop-rspec", "~> 1.22.0")
+  s.add_development_dependency("rubocop", "~> 0.58.2")
+  s.add_development_dependency("rubocop-rspec", "~> 1.28.0")
 
   s.files       = Dir.glob('lib/**/*.rb')
   s.executables = Dir.glob('bin/**/*').map { |f| File.basename(f) }
