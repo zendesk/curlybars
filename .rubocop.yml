@@ -16,14 +16,18 @@ Lint/EmptyWhen:
   Exclude:
     - lib/curlybars/node/path.rb
 
+Naming/UncommunicativeMethodParamName:
+  Exclude:
+    - spec/integration/spec_helper.rb
+
 Performance/FixedSize:
   Exclude:
     - spec/**/*
 
 RSpec/MultipleExpectations:
   Exclude:
-    - 'spec/curlybars/template_handler_spec.rb'
-    - 'spec/integration/cache_spec.rb'
+    - spec/curlybars/template_handler_spec.rb
+    - spec/integration/cache_spec.rb
 
 RSpec/NestedGroups:
   Exclude:
@@ -53,6 +57,10 @@ Layout/AlignParameters:
 Layout/CaseIndentation:
   EnforcedStyle: end
 
+# Align ends correctly.
+Layout/EndAlignment:
+  EnforcedStyleAlignWith: variable
+
 # Checks the indentation of the first parameter in a method call.
 Layout/FirstParameterIndentation:
   EnforcedStyle: consistent
@@ -64,10 +72,6 @@ Layout/IndentHash:
 # Checks indentation of binary operations that span more than one line.
 Layout/MultilineOperationIndentation:
   EnforcedStyle: indented
-
-# Align ends correctly.
-Lint/EndAlignment:
-  EnforcedStyleAlignWith: variable
 
 # Checks for consistent style of stub's return setting.
 RSpec/ReturnFromStub:
@@ -129,6 +133,9 @@ Metrics/ParameterLists:
 Metrics/PerceivedComplexity:
   Enabled: false
 
+Naming/MemoizedInstanceVariableName:
+  Enabled: false
+
 RSpec/DescribeClass:
   Enabled: false
 
@@ -159,7 +166,7 @@ Style/GuardClause:
 Style/IfUnlessModifier:
   Enabled: false
 
-Style/MethodMissing:
+Style/MethodMissingSuper:
   Enabled: false
 
 Style/Next:
