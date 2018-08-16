@@ -6,8 +6,8 @@ describe "{{#if}}...{{/if}}" do
     let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
     it "returns positive branch when condition is true" do
-      allow(presenter).to receive(:allows_method?).with(:valid) { true }
-      allow(presenter).to receive(:valid) { true }
+      allow(presenter).to receive(:allows_method?).with(:valid).and_return(true)
+      allow(presenter).to receive(:valid).and_return(true)
 
       template = Curlybars.compile(<<-HBS)
         {{#if valid}}
@@ -21,8 +21,8 @@ describe "{{#if}}...{{/if}}" do
     end
 
     it "doesn't return positive branch when condition is false" do
-      allow(presenter).to receive(:allows_method?).with(:valid) { true }
-      allow(presenter).to receive(:valid) { false }
+      allow(presenter).to receive(:allows_method?).with(:valid).and_return(true)
+      allow(presenter).to receive(:valid).and_return(false)
 
       template = Curlybars.compile(<<-HBS)
         {{#if valid}}
@@ -34,8 +34,8 @@ describe "{{#if}}...{{/if}}" do
     end
 
     it "doesn't return positive branch when condition is empty array" do
-      allow(presenter).to receive(:allows_method?).with(:collection) { true }
-      allow(presenter).to receive(:collection) { [] }
+      allow(presenter).to receive(:allows_method?).with(:collection).and_return(true)
+      allow(presenter).to receive(:collection).and_return([])
 
       template = Curlybars.compile(<<-HBS)
         {{#if collection}}
@@ -47,10 +47,10 @@ describe "{{#if}}...{{/if}}" do
     end
 
     it "works with nested `if blocks` (double positive)" do
-      allow(presenter).to receive(:allows_method?).with(:valid) { true }
-      allow(presenter).to receive(:allows_method?).with(:visible) { true }
-      allow(presenter).to receive(:valid) { true }
-      allow(presenter).to receive(:visible) { true }
+      allow(presenter).to receive(:allows_method?).with(:valid).and_return(true)
+      allow(presenter).to receive(:allows_method?).with(:visible).and_return(true)
+      allow(presenter).to receive(:valid).and_return(true)
+      allow(presenter).to receive(:visible).and_return(true)
 
       template = Curlybars.compile(<<-HBS)
         {{#if valid}}
@@ -68,10 +68,10 @@ describe "{{#if}}...{{/if}}" do
     end
 
     it "works with nested `if blocks` (positive and negative)" do
-      allow(presenter).to receive(:allows_method?).with(:valid) { true }
-      allow(presenter).to receive(:allows_method?).with(:visible) { true }
-      allow(presenter).to receive(:valid) { true }
-      allow(presenter).to receive(:visible) { false }
+      allow(presenter).to receive(:allows_method?).with(:valid).and_return(true)
+      allow(presenter).to receive(:allows_method?).with(:visible).and_return(true)
+      allow(presenter).to receive(:valid).and_return(true)
+      allow(presenter).to receive(:visible).and_return(false)
 
       template = Curlybars.compile(<<-HBS)
         {{#if valid}}
@@ -88,8 +88,8 @@ describe "{{#if}}...{{/if}}" do
     end
 
     it "allows empty if_template" do
-      allow(presenter).to receive(:allows_method?).with(:valid) { true }
-      allow(presenter).to receive(:valid) { true }
+      allow(presenter).to receive(:allows_method?).with(:valid).and_return(true)
+      allow(presenter).to receive(:valid).and_return(true)
 
       template = Curlybars.compile(<<-HBS)
         {{#if valid}}{{/if}}

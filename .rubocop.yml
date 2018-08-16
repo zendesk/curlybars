@@ -73,10 +73,6 @@ Layout/IndentHash:
 Layout/MultilineOperationIndentation:
   EnforcedStyle: indented
 
-# Checks for consistent style of stub's return setting.
-RSpec/ReturnFromStub:
-  EnforcedStyle: block
-
 # Use alias instead of alias_method.
 Style/Alias:
   EnforcedStyle: prefer_alias_method

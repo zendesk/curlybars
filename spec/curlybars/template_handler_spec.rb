@@ -113,44 +113,44 @@ describe Curlybars::TemplateHandler do
   end
 
   it "passes in the presenter context to the presenter class" do
-    allow(context).to receive(:bar) { "BAR" }
-    allow(template).to receive(:source) { "{{bar}}" }
+    allow(context).to receive(:bar).and_return("BAR")
+    allow(template).to receive(:source).and_return("{{bar}}")
     expect(output).to eq("BAR")
   end
 
   it "fails if there's no matching presenter class" do
-    allow(template).to receive(:virtual_path) { "missing" }
-    allow(template).to receive(:source) { " FOO " }
+    allow(template).to receive(:virtual_path).and_return("missing")
+    allow(template).to receive(:source).and_return(" FOO ")
     expect { output }.to raise_exception(Curlybars::Error::Presenter::NotFound)
   end
 
   it "allows calling public methods on the presenter" do
-    allow(template).to receive(:source) { "{{foo}}" }
+    allow(template).to receive(:source).and_return("{{foo}}")
     expect(output).to eq("FOO")
   end
 
   it "marks its output as HTML safe" do
-    allow(template).to receive(:source) { "{{foo}}" }
+    allow(template).to receive(:source).and_return("{{foo}}")
     expect(output).to be_html_safe
   end
 
   it "calls the #setup! method before rendering the view" do
-    allow(template).to receive(:source) { "{{foo}}" }
+    allow(template).to receive(:source).and_return("{{foo}}")
     output
     expect(context.content_for(:foo)).to eq("bar")
   end
 
   describe "caching" do
     before do
-      allow(template).to receive(:source) { "{{bar}}" }
-      allow(context).to receive(:bar) { "BAR" }
+      allow(template).to receive(:source).and_return("{{bar}}")
+      allow(context).to receive(:bar).and_return("BAR")
     end
 
     it "caches the result with the #cache_key from the presenter" do
       context.assigns[:cache_key] = "x"
       expect(output).to eq("BAR")
 
-      allow(context).to receive(:bar) { "BAZ" }
+      allow(context).to receive(:bar).and_return("BAZ")
       expect(output).to eq("BAR")
 
       context.assigns[:cache_key] = "y"
@@ -161,7 +161,7 @@ describe Curlybars::TemplateHandler do
       context.assigns[:cache_key] = nil
       expect(output).to eq("BAR")
 
-      allow(context).to receive(:bar) { "BAZ" }
+      allow(context).to receive(:bar).and_return("BAZ")
       expect(output).to eq("BAZ")
     end
 
@@ -169,13 +169,13 @@ describe Curlybars::TemplateHandler do
       # Make sure caching is enabled
       context.assigns[:cache_key] = "x"
 
-      allow(presenter_class).to receive(:cache_key) { "foo" }
+      allow(presenter_class).to receive(:cache_key).and_return("foo")
 
       expect(output).to eq("BAR")
 
-      allow(presenter_class).to receive(:cache_key) { "bar" }
+      allow(presenter_class).to receive(:cache_key).and_return("bar")
 
-      allow(context).to receive(:bar) { "FOOBAR" }
+      allow(context).to receive(:bar).and_return("FOOBAR")
       expect(output).to eq("FOOBAR")
     end
 
@@ -185,7 +185,7 @@ describe Curlybars::TemplateHandler do
 
       expect(output).to eq("BAR")
 
-      allow(context).to receive(:bar) { "FOO" }
+      allow(context).to receive(:bar).and_return("FOO")
 
       # Cached fragment has not yet expired.
       context.advance_clock(41)
@@ -202,7 +202,7 @@ describe Curlybars::TemplateHandler do
 
       expect(output).to eq("BAR")
 
-      allow(context).to receive(:bar) { "FOO" }
+      allow(context).to receive(:bar).and_return("FOO")
 
       # Cached fragment has not yet expired.
       context.advance_clock(41)

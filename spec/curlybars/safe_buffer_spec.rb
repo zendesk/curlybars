@@ -17,7 +17,7 @@ describe Curlybars::SafeBuffer do
 
   describe "#concat" do
     it "accepts when (buffer length + the existing output lenght) <= output_limit" do
-      allow(configuration).to receive(:output_limit) { 10 }
+      allow(configuration).to receive(:output_limit).and_return(10)
 
       buffer = Curlybars::SafeBuffer.new('*' * 5)
 
@@ -27,7 +27,7 @@ describe Curlybars::SafeBuffer do
     end
 
     it "raises when (buffer length + the existing output lenght) > output_limit" do
-      allow(configuration).to receive(:output_limit) { 10 }
+      allow(configuration).to receive(:output_limit).and_return(10)
       buffer = Curlybars::SafeBuffer.new('*' * 10)
 
       expect do
@@ -36,7 +36,7 @@ describe Curlybars::SafeBuffer do
     end
 
     it "raises when buffer length > output_limit" do
-      allow(configuration).to receive(:output_limit) { 10 }
+      allow(configuration).to receive(:output_limit).and_return(10)
 
       expect do
         Curlybars::SafeBuffer.new.concat('*' * 11)

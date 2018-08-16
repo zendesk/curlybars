@@ -71,7 +71,7 @@ describe Curlybars::RenderingSupport do
   describe "#path" do
     it "returns the method in the current context" do
       allow_all_methods(presenter)
-      allow(presenter).to receive(:method) { :method }
+      allow(presenter).to receive(:method).and_return(:method)
 
       expect(rendering.path('method', rendering.position(0, 1))).to eq :method
     end
@@ -79,7 +79,7 @@ describe Curlybars::RenderingSupport do
     it "returns the sub presenter method in the current context" do
       sub = double(:sub_presenter)
       allow_all_methods(sub)
-      allow(sub).to receive(:method) { :method }
+      allow(sub).to receive(:method).and_return(:method)
 
       allow_all_methods(presenter)
       allow(presenter).to receive(:sub) { sub }
@@ -100,7 +100,7 @@ describe Curlybars::RenderingSupport do
 
     it "raises an exception when the method is not allowed" do
       disallow_all_methods(presenter)
-      allow(presenter).to receive(:forbidden_method) { :forbidden_method }
+      allow(presenter).to receive(:forbidden_method).and_return(:forbidden_method)
 
       expect do
         rendering.path('forbidden_method', rendering.position(0, 1))
@@ -109,7 +109,7 @@ describe Curlybars::RenderingSupport do
 
     it "exposes the unallowed method in the exception payload" do
       disallow_all_methods(presenter)
-      allow(presenter).to receive(:forbidden_method) { :forbidden_method }
+      allow(presenter).to receive(:forbidden_method).and_return(:forbidden_method)
 
       begin
         rendering.path('forbidden_method', rendering.position(0, 1))
@@ -130,10 +130,10 @@ describe Curlybars::RenderingSupport do
     it "refers to the second to last presenter in the stack when using `../`" do
       sub = double(:sub_presenter)
       allow_all_methods(sub)
-      allow(sub).to receive(:method) { :sub_method }
+      allow(sub).to receive(:method).and_return(:sub_method)
 
       allow_all_methods(presenter)
-      allow(presenter).to receive(:method) { :root_method }
+      allow(presenter).to receive(:method).and_return(:root_method)
 
       contexts.push(sub)
 
@@ -143,14 +143,14 @@ describe Curlybars::RenderingSupport do
     it "refers to the third to last presenter in the stack when using `../../`" do
       sub_sub = double(:sub_presenter)
       allow_all_methods(sub_sub)
-      allow(sub_sub).to receive(:method) { :sub_sub_method }
+      allow(sub_sub).to receive(:method).and_return(:sub_sub_method)
 
       sub = double(:sub_presenter)
       allow_all_methods(sub)
-      allow(sub).to receive(:method) { :sub_method }
+      allow(sub).to receive(:method).and_return(:sub_method)
 
       allow_all_methods(presenter)
-      allow(presenter).to receive(:method) { :root_method }
+      allow(presenter).to receive(:method).and_return(:root_method)
 
       contexts.push(sub)
       contexts.push(sub_sub)
@@ -160,7 +160,7 @@ describe Curlybars::RenderingSupport do
 
     it "returns a method that returns nil, if nil is returned from any method in the chain (except the latter)" do
       allow_all_methods(presenter)
-      allow(presenter).to receive(:returns_nil) { nil }
+      allow(presenter).to receive(:returns_nil).and_return(nil)
 
       outcome = rendering.path('returns_nil.another_method', rendering.position(0, 1)).call
       expect(outcome).to be_nil
@@ -417,10 +417,10 @@ describe Curlybars::RenderingSupport do
   private
 
   def allow_all_methods(presenter)
-    allow(presenter).to receive(:allows_method?) { true }
+    allow(presenter).to receive(:allows_method?).and_return(true)
   end
 
   def disallow_all_methods(presenter)
-    allow(presenter).to receive(:allows_method?) { false }
+    allow(presenter).to receive(:allows_method?).and_return(false)
   end
 end

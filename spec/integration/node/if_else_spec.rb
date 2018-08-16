@@ -6,8 +6,8 @@ describe "{{#if}}...{{else}}...{{/if}}" do
     let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
     it "renders the if_template" do
-      allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:return_true) { true }
-      allow(presenter).to receive(:return_true) { true }
+      allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:return_true).and_return(true)
+      allow(presenter).to receive(:return_true).and_return(true)
 
       template = Curlybars.compile(<<-HBS)
         {{#if return_true}}
@@ -23,8 +23,8 @@ describe "{{#if}}...{{else}}...{{/if}}" do
     end
 
     it "renders the else_template" do
-      allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:return_false) { true }
-      allow(presenter).to receive(:return_false) { false }
+      allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:return_false).and_return(true)
+      allow(presenter).to receive(:return_false).and_return(false)
 
       template = Curlybars.compile(<<-HBS)
         {{#if return_false}}
@@ -40,8 +40,8 @@ describe "{{#if}}...{{else}}...{{/if}}" do
     end
 
     it "allows empty if_template" do
-      allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid) { true }
-      allow(presenter).to receive(:valid) { false }
+      allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid).and_return(true)
+      allow(presenter).to receive(:valid).and_return(false)
 
       template = Curlybars.compile(<<-HBS)
       {{#if valid}}{{else}}
@@ -55,8 +55,8 @@ describe "{{#if}}...{{else}}...{{/if}}" do
     end
 
     it "allows empty else_template" do
-      allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid) { true }
-      allow(presenter).to receive(:valid) { true }
+      allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid).and_return(true)
+      allow(presenter).to receive(:valid).and_return(true)
 
       template = Curlybars.compile(<<-HBS)
         {{#if valid}}
@@ -70,8 +70,8 @@ describe "{{#if}}...{{else}}...{{/if}}" do
     end
 
     it "allows empty if_template and else_template" do
-      allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid) { true }
-      allow(presenter).to receive(:valid) { true }
+      allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:valid).and_return(true)
+      allow(presenter).to receive(:valid).and_return(true)
 
       template = Curlybars.compile(<<-HBS)
         {{#if valid}}{{else}}{{/if}}

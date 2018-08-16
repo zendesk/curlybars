@@ -6,7 +6,7 @@ describe "{{#each collection}}...{{/each}}" do
     let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
     it "uses each_template when collection is not empty" do
-      allow(presenter).to receive(:allows_method?).with(:non_empty_collection) { true }
+      allow(presenter).to receive(:allows_method?).with(:non_empty_collection).and_return(true)
       allow(presenter).to receive(:non_empty_collection) { [presenter] }
 
       template = Curlybars.compile(<<-HBS)
@@ -21,8 +21,8 @@ describe "{{#each collection}}...{{/each}}" do
     end
 
     it "doesn't use each_template when collection is empty" do
-      allow(presenter).to receive(:allows_method?).with(:empty_collection) { true }
-      allow(presenter).to receive(:empty_collection) { [] }
+      allow(presenter).to receive(:allows_method?).with(:empty_collection).and_return(true)
+      allow(presenter).to receive(:empty_collection).and_return([])
 
       template = Curlybars.compile(<<-HBS)
         {{#each empty_collection}}
@@ -34,7 +34,7 @@ describe "{{#each collection}}...{{/each}}" do
     end
 
     it "allows empty each_template" do
-      allow(presenter).to receive(:allows_method?).with(:non_empty_collection) { true }
+      allow(presenter).to receive(:allows_method?).with(:non_empty_collection).and_return(true)
       allow(presenter).to receive(:non_empty_collection) { [presenter] }
 
       template = Curlybars.compile(<<-HBS)
@@ -56,7 +56,7 @@ describe "{{#each collection}}...{{/each}}" do
       a_path_presenter = path_presenter_class.new(nil, path: 'a_path')
       another_path_presenter = path_presenter_class.new(nil, path: 'another_path')
 
-      allow(presenter).to receive(:allows_method?).with(:non_empty_collection) { true }
+      allow(presenter).to receive(:allows_method?).with(:non_empty_collection).and_return(true)
       allow(presenter).to receive(:non_empty_collection) { [a_path_presenter, another_path_presenter] }
 
       template = Curlybars.compile(<<-HBS)
@@ -83,7 +83,7 @@ describe "{{#each collection}}...{{/each}}" do
       a_path_presenter = path_presenter_class.new(nil, path: 'a_path')
       another_path_presenter = path_presenter_class.new(nil, path: 'another_path')
 
-      allow(presenter).to receive(:allows_method?).with(:non_empty_hash) { true }
+      allow(presenter).to receive(:allows_method?).with(:non_empty_hash).and_return(true)
       allow(presenter).to receive(:non_empty_hash) do
         { first: a_path_presenter, second: another_path_presenter }
       end
@@ -101,8 +101,8 @@ describe "{{#each collection}}...{{/each}}" do
     end
 
     it "raises an error if the context is not an array-like object" do
-      allow(presenter).to receive(:allows_method?).with(:not_a_collection) { true }
-      allow(presenter).to receive(:not_a_collection) { "string" }
+      allow(presenter).to receive(:allows_method?).with(:not_a_collection).and_return(true)
+      allow(presenter).to receive(:not_a_collection).and_return("string")
 
       template = Curlybars.compile(<<-HBS)
         {{#each not_a_collection}}{{/each}}
@@ -206,7 +206,7 @@ describe "{{#each collection}}...{{/each}}" do
       a_path_presenter = path_presenter_class.new(nil, path: 'a_path')
       another_path_presenter = path_presenter_class.new(nil, path: 'another_path')
 
-      allow(presenter).to receive(:allows_method?).with(:non_empty_hash) { true }
+      allow(presenter).to receive(:allows_method?).with(:non_empty_hash).and_return(true)
       allow(presenter).to receive(:non_empty_hash) do
         { first: a_path_presenter, second: another_path_presenter }
       end
@@ -224,8 +224,8 @@ describe "{{#each collection}}...{{/each}}" do
     end
 
     it "raises an error if the objects inside of the context array are not presenters" do
-      allow(presenter).to receive(:allows_method?).with(:not_a_presenter_collection) { true }
-      allow(presenter).to receive(:not_a_presenter_collection) { [:an_element] }
+      allow(presenter).to receive(:allows_method?).with(:not_a_presenter_collection).and_return(true)
+      allow(presenter).to receive(:not_a_presenter_collection).and_return([:an_element])
 
       template = Curlybars.compile(<<-HBS)
         {{#each not_a_presenter_collection}}{{/each}}
