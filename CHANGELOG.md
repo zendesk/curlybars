@@ -1,5 +1,9 @@
 ### Unreleased
 
+### Curlybars 1.1.1 (Aug 16, 2018)
+
+* Disallow helpers in if conditions
+
 ### Curlybars 1.1.0 (May 23, 2018)
 
 * Add support for Rails 5.2.
