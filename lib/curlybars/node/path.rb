@@ -127,6 +127,10 @@ module Curlybars
           return if helper?(branches)
           message = "`#{path}` cannot resolve to a helper"
           raise Curlybars::Error::Validate.new('not_a_helper', message, position)
+        when :not_helper
+          return unless helper?(branches)
+          message = "`#{path}` resolves to a helper"
+          raise Curlybars::Error::Validate.new('is_a_helper', message, position)
         when :anything
         else
           raise "invalid type `#{check_type}`"

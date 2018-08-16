@@ -139,5 +139,17 @@ describe "{{#if}}...{{/if}}" do
 
       expect(errors).not_to be_empty
     end
+
+    it "validates with errors the helper as condition" do
+      dependency_tree = { helper: :helper }
+
+      source = <<-HBS
+        {{#if helper}}{{/if}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors).not_to be_empty
+    end
   end
 end
