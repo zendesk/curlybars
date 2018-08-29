@@ -84,6 +84,18 @@ describe "{{#if}}...{{else}}...{{/if}}" do
   describe "#validate" do
     let(:presenter_class) { double(:presenter_class) }
 
+    it "validates without errors the literal condition" do
+      dependency_tree = {}
+
+      source = <<-HBS
+        {{#if 42}}{{else}}{{/if}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors).to be_empty
+    end
+
     it "validates with errors the condition" do
       dependency_tree = {}
 
