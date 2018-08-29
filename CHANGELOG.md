@@ -1,5 +1,9 @@
 ### Unreleased
 
+### Curlybars 1.1.2 (Aug 29, 2018)
+
+* BUGFIX: Literals and variables in if statement condition validate correctly
+
 ### Curlybars 1.1.1 (Aug 16, 2018)
 
 * Disallow helpers in if conditions
