@@ -27,6 +27,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
 
   s.add_dependency("actionpack", [">= 4.2", "< 6.0"])
+  s.add_dependency("activesupport", [">= 4.2", "< 6.0"])
   s.add_dependency("ffi")
   s.add_dependency("rltk")
 

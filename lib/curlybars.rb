@@ -1,3 +1,5 @@
+require 'digest'
+require 'active_support/cache'
 require 'curlybars/version'
 
 # Curlybars is a view system based on Curly that uses Handlebars syntax.
@@ -23,12 +25,16 @@ module Curlybars
     #
     # Returns a String containing the Ruby code.
     def compile(source, identifier = nil)
-      transformers = Curlybars.configuration.compiler_transformers
-      transformed_source = transformers.inject(source) do |memo, transformer|
-        transformer.transform(memo, identifier)
-      end
+      cache_key = ["Curlybars.compile", identifier, Digest::SHA256.hexdigest(source)]
 
-      ast(transformed_source, identifier, run_processors: true).compile
+      cache.fetch(cache_key) do
+        transformers = Curlybars.configuration.compiler_transformers
+        transformed_source = transformers.inject(source) do |memo, transformer|
+          transformer.transform(memo, identifier)
+        end
+
+        ast(transformed_source, identifier, run_processors: true).compile
+      end
     end
 
     # Validates the source against a presenter.
@@ -65,6 +71,12 @@ module Curlybars
       errors = validate(presenter_class, source, identifier, **options)
       errors.empty?
     end
+
+    def cache
+      @cache ||= ActiveSupport::Cache::MemoryStore.new
+    end
+
+    attr_writer :cache
 
     private
 
