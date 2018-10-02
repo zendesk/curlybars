@@ -1,5 +1,9 @@
 ### Unreleased
 
+### Curlybars 1.1.3 (Oct 2, 2018)
+
+* Cache Curlybars compilations
+
 ### Curlybars 1.1.2 (Aug 29, 2018)
 
 * BUGFIX: Literals and variables in if statement condition validate correctly
