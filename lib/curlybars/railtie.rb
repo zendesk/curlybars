@@ -7,6 +7,10 @@ module Curlybars
       ActionView::Template.register_template_handler(:hbs, Curlybars::TemplateHandler)
     end
 
+    initializer 'curlybars.set_cache' do
+      Curlybars.cache = Rails.cache
+    end
+
     if defined?(CacheDigests::DependencyTracker)
       CacheDigests::DependencyTracker.register_tracker :hbs, Curlybars::DependencyTracker
     end
