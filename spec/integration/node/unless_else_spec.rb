@@ -6,8 +6,8 @@ describe "{{#unless}}...{{else}}...{{/unless}}" do
     let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
     it "renders the unless_template" do
-      allow(presenter).to receive(:allows_method?).with(:condition) { true }
-      allow(presenter).to receive(:condition) { false }
+      allow(presenter).to receive(:allows_method?).with(:condition).and_return(true)
+      allow(presenter).to receive(:condition).and_return(false)
 
       template = Curlybars.compile(<<-HBS)
         {{#unless condition}}
@@ -23,8 +23,8 @@ describe "{{#unless}}...{{else}}...{{/unless}}" do
     end
 
     it "renders the else_template" do
-      allow(presenter).to receive(:allows_method?).with(:condition) { true }
-      allow(presenter).to receive(:condition) { true }
+      allow(presenter).to receive(:allows_method?).with(:condition).and_return(true)
+      allow(presenter).to receive(:condition).and_return(true)
 
       template = Curlybars.compile(<<-HBS)
         {{#unless condition}}
@@ -40,8 +40,8 @@ describe "{{#unless}}...{{else}}...{{/unless}}" do
     end
 
     it "allows empty else_template" do
-      allow(presenter).to receive(:allows_method?).with(:valid) { true }
-      allow(presenter).to receive(:valid) { false }
+      allow(presenter).to receive(:allows_method?).with(:valid).and_return(true)
+      allow(presenter).to receive(:valid).and_return(false)
 
       template = Curlybars.compile(<<-HBS)
         {{#unless valid}}
@@ -55,8 +55,8 @@ describe "{{#unless}}...{{else}}...{{/unless}}" do
     end
 
     it "allows empty unless_template" do
-      allow(presenter).to receive(:allows_method?).with(:valid) { true }
-      allow(presenter).to receive(:valid) { true }
+      allow(presenter).to receive(:allows_method?).with(:valid).and_return(true)
+      allow(presenter).to receive(:valid).and_return(true)
 
       template = Curlybars.compile(<<-HBS)
         {{#unless valid}}{{else}}
@@ -70,8 +70,8 @@ describe "{{#unless}}...{{else}}...{{/unless}}" do
     end
 
     it "allows empty unless_template and else_template" do
-      allow(presenter).to receive(:allows_method?).with(:valid) { true }
-      allow(presenter).to receive(:valid) { false }
+      allow(presenter).to receive(:allows_method?).with(:valid).and_return(true)
+      allow(presenter).to receive(:valid).and_return(false)
 
       template = Curlybars.compile(<<-HBS)
         {{#unless valid}}{{else}}{{/unless}}

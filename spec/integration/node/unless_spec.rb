@@ -6,8 +6,8 @@ describe "{{#unless}}...{{/unless}}" do
     let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
     it "returns unless_template when condition is false" do
-      allow(presenter).to receive(:allows_method?).with(:condition) { true }
-      allow(presenter).to receive(:condition) { false }
+      allow(presenter).to receive(:allows_method?).with(:condition).and_return(true)
+      allow(presenter).to receive(:condition).and_return(false)
 
       template = Curlybars.compile(<<-HBS)
         {{#unless condition}}
@@ -21,8 +21,8 @@ describe "{{#unless}}...{{/unless}}" do
     end
 
     it "doesn't return unless_template when condition is true" do
-      allow(presenter).to receive(:allows_method?).with(:condition) { true }
-      allow(presenter).to receive(:condition) { true }
+      allow(presenter).to receive(:allows_method?).with(:condition).and_return(true)
+      allow(presenter).to receive(:condition).and_return(true)
 
       template = Curlybars.compile(<<-HBS)
         {{#unless condition}}
@@ -34,10 +34,10 @@ describe "{{#unless}}...{{/unless}}" do
     end
 
     it "works with nested unless blocks (double negative)" do
-      allow(presenter).to receive(:allows_method?).with(:first_condition) { true }
-      allow(presenter).to receive(:allows_method?).with(:second_condition) { true }
-      allow(presenter).to receive(:first_condition) { false }
-      allow(presenter).to receive(:second_condition) { false }
+      allow(presenter).to receive(:allows_method?).with(:first_condition).and_return(true)
+      allow(presenter).to receive(:allows_method?).with(:second_condition).and_return(true)
+      allow(presenter).to receive(:first_condition).and_return(false)
+      allow(presenter).to receive(:second_condition).and_return(false)
 
       template = Curlybars.compile(<<-HBS)
         {{#unless first_condition}}
@@ -55,8 +55,8 @@ describe "{{#unless}}...{{/unless}}" do
     end
 
     it "allows empty unless_template" do
-      allow(presenter).to receive(:allows_method?).with(:valid) { true }
-      allow(presenter).to receive(:valid) { true }
+      allow(presenter).to receive(:allows_method?).with(:valid).and_return(true)
+      allow(presenter).to receive(:valid).and_return(true)
 
       template = Curlybars.compile(<<-HBS)
         {{#unless valid}}{{/unless}}
@@ -66,10 +66,10 @@ describe "{{#unless}}...{{/unless}}" do
     end
 
     it "works with nested unless blocks (negative and positive)" do
-      allow(presenter).to receive(:allows_method?).with(:first_condition) { true }
-      allow(presenter).to receive(:allows_method?).with(:second_condition) { true }
-      allow(presenter).to receive(:first_condition) { false }
-      allow(presenter).to receive(:second_condition) { true }
+      allow(presenter).to receive(:allows_method?).with(:first_condition).and_return(true)
+      allow(presenter).to receive(:allows_method?).with(:second_condition).and_return(true)
+      allow(presenter).to receive(:first_condition).and_return(false)
+      allow(presenter).to receive(:second_condition).and_return(true)
 
       template = Curlybars.compile(<<-HBS)
         {{#unless first_condition}}
