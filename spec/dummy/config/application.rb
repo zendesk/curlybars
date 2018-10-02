@@ -7,5 +7,6 @@ require "curlybars"
 
 module Dummy
   class Application < Rails::Application
+    config.cache_store = :memory_store
   end
 end
