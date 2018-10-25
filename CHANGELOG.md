@@ -1,5 +1,10 @@
 ### Unreleased
 
+### Curlybars 1.1.4 (Oct 25, 2018)
+
+* Drop support for CacheDigests
+* Testing improvements
+
 ### Curlybars 1.1.3 (Oct 2, 2018)
 
 * Cache Curlybars compilations
