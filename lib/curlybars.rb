@@ -28,12 +28,7 @@ module Curlybars
       cache_key = ["Curlybars.compile", identifier, Digest::SHA256.hexdigest(source)]
 
       cache.fetch(cache_key) do
-        transformers = Curlybars.configuration.compiler_transformers
-        transformed_source = transformers.inject(source) do |memo, transformer|
-          transformer.transform(memo, identifier)
-        end
-
-        ast(transformed_source, identifier, run_processors: true).compile
+        ast(transformed_source(source), identifier, run_processors: true).compile
       end
     end
 
@@ -72,6 +67,16 @@ module Curlybars
       errors.empty?
     end
 
+    # Visit nodes in the AST.
+    #
+    # visitor - An instance of a subclass of `Curlybars::Visitor`.
+    # source - The source HBS String used to generate an AST.
+    # identifier - The the file name of the template being checked (defaults to `nil`).
+    def visit(visitor, source, identifier = nil)
+      tree = ast(transformed_source(source), identifier, run_processors: true)
+      visitor.accept(tree)
+    end
+
     def cache
       @cache ||= ActiveSupport::Cache::MemoryStore.new
     end
@@ -79,6 +84,13 @@ module Curlybars
     attr_writer :cache
 
     private
+
+    def transformed_source(source)
+      transformers = Curlybars.configuration.compiler_transformers
+      transformers.inject(source) do |memo, transformer|
+        transformer.transform(memo, identifier)
+      end
+    end
 
     def ast(source, identifier, run_processors:)
       tokens = Curlybars::Lexer.lex(source, identifier)
@@ -118,3 +130,4 @@ require 'curlybars/template_handler'
 require 'curlybars/railtie' if defined?(Rails)
 require 'curlybars/presenter'
 require 'curlybars/method_whitelist'
+require 'curlybars/visitor'
