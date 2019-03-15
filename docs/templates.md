@@ -325,3 +325,48 @@ There are {{recipient.entries.length}} entries in this invoice.
 {{/each}}
 </ul>
 ```
+
+## Analysis
+
+Curlybars exposes a `.visit` method for traversing a template's parse tree. This can be used to analyze templates without actually rendering them.
+
+For example, we may want to find out whether `{{description}}` is present in the following template:
+
+
+```hbs
+There are {{recipient.entries.length}} entries in this invoice.
+
+<ul>
+{{#each recipient.entries}}
+  <li>{{description}} -- ${{amount}}</li>
+{{/each}}
+</ul>
+```
+
+We can define an AST visitor to test this:
+
+```ruby
+class DescriptionVisitor < Curlybars::Visitor
+  def visit_path(node)
+    if node.path == 'description'
+      self.context = true
+    end
+    super
+  end
+end
+
+source = <<-HBS
+  There are {{recipient.entries.length}} entries in this invoice.
+
+  <ul>
+  {{#each recipient.entries}}
+    <li>{{description}} -- ${{amount}}</li>
+  {{/each}}
+  </ul>
+HBS
+
+contains_description = Curlybars.visit(DescriptionVisitor.new(false), source)
+contains_description == true # true
+```
+
+The spec for visitors includes more examples of the AST nodes that can be inspected this way.
