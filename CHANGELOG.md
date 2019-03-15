@@ -1,5 +1,9 @@
 ### Unreleased
 
+### Curlybars 1.2.0 (March 15, 2019)
+
+* Add support for traversing Curlybars AST via `Curlybars.visit`
+
 ### Curlybars 1.1.4 (Oct 25, 2018)
 
 * Drop support for CacheDigests
