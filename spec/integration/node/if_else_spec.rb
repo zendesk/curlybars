@@ -137,5 +137,20 @@ describe "{{#if}}...{{else}}...{{/if}}" do
 
       expect(errors).not_to be_empty
     end
+
+    it "validates errors the nested else_template when out of context" do
+      dependency_tree = { condition: nil }
+
+      source = <<-HBS
+        {{#if ../condition}}
+        {{else}}
+          {{unallowed_method}}
+        {{/if}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors).not_to be_empty
+    end
   end
 end
