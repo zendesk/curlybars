@@ -139,7 +139,7 @@ describe "{{path}}" do
       expect(errors).to be_empty
     end
 
-    it "without errors when it goes out of context" do
+    it "gives errors errors when it goes out of context" do
       dependency_tree = {}
 
       source = <<-HBS
@@ -148,7 +148,7 @@ describe "{{path}}" do
 
       errors = Curlybars.validate(dependency_tree, source)
 
-      expect(errors).to be_empty
+      expect(errors).not_to be_empty
     end
 
     it "without errors using `this`" do
