@@ -16,6 +16,8 @@ module Curlybars
 
       def validate(branches)
         item.validate(branches)
+      rescue Curlybars::Error::Validate => path_error
+        path_error
       end
 
       def cache_key

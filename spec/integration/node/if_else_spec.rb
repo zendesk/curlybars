@@ -144,13 +144,29 @@ describe "{{#if}}...{{else}}...{{/if}}" do
       source = <<-HBS
         {{#if ../condition}}
         {{else}}
-          {{unallowed_method}}
+          {{unallowed_ELSE_method}}
         {{/if}}
       HBS
 
       errors = Curlybars.validate(dependency_tree, source)
 
-      expect(errors).not_to be_empty
+      expect(errors.count).to eq(2)
+    end
+
+    it "gives all possible errors found in validation" do
+      dependency_tree = { condition: nil }
+
+      source = <<-HBS
+        {{#if ../condition}}
+          {{unallowed_IF_method}}
+        {{else}}
+          {{unallowed_ELSE_method}}
+        {{/if}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors.count).to eq(3)
     end
   end
 end

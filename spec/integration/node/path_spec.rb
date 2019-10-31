@@ -258,15 +258,15 @@ describe "{{path}}" do
       end
 
       it "with errors when going outside of scope" do
-        dependency_tree = { ok: { unallowed: { ok: nil } } }
+        dependency_tree = { ok: { ok: { ok: nil } } }
 
         source = <<~HBS
-          {{../ok.unallowed.ok}}
+          {{../ok.ok.ok}}
         HBS
 
         errors = Curlybars.validate(dependency_tree, source)
 
-        expect(errors.first.message).to eq("'../ok.unallowed.ok' goes out of scope")
+        expect(errors.first.message).to eq("'../ok.ok.ok' goes out of scope")
       end
 
       describe "raises exact location of unallowed steps" do

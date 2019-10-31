@@ -62,7 +62,7 @@ module Curlybars
           base_tree_position = branches.length - backward_steps_on_branches
           base_tree_index = base_tree_position - 1
 
-          raise Curlybars::Error::Validate.new('unallowed_path', "'#{path}' goes out of scope", position) unless base_tree_index >= 0
+          raise Curlybars::Error::Validate.new('unallowed_path', "'#{path}' goes out of scope", position) if base_tree_index < 0
 
           base_tree = branches[base_tree_index]
 
