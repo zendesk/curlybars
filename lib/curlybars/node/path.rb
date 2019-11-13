@@ -60,10 +60,10 @@ module Curlybars
           path_split_by_slashes = path.split('/')
           backward_steps_on_branches = path_split_by_slashes.count - 1
           base_tree_position = branches.length - backward_steps_on_branches
-
-          throw :skip_item_validation unless base_tree_position > 0
-
           base_tree_index = base_tree_position - 1
+
+          raise Curlybars::Error::Validate.new('unallowed_path', "'#{path}' goes out of scope", position) if base_tree_index < 0
+
           base_tree = branches[base_tree_index]
 
           dotted_path_side = path_split_by_slashes.last

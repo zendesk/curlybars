@@ -15,9 +15,9 @@ module Curlybars
       end
 
       def validate(branches)
-        catch(:skip_item_validation) do
-          item.validate(branches)
-        end
+        item.validate(branches)
+      rescue Curlybars::Error::Validate => path_error
+        path_error
       end
 
       def cache_key
