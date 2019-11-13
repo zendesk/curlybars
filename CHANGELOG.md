@@ -1,5 +1,8 @@
 ### Unreleased
 
+### Curlybars 1.2.1 (November 13, 2019)
+* Validate out of scope access
+
 ### Curlybars 1.2.0 (March 15, 2019)
 
 * Add support for traversing Curlybars AST via `Curlybars.visit`
