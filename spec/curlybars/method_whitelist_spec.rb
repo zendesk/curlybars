@@ -38,7 +38,7 @@ describe Curlybars::MethodWhitelist do
       expect(dummy_class.new.allowed_methods).to eq([:cook, :link, :article])
     end
 
-    it "supports contextual methods" do
+    it "supports adding more methods for validation" do
       dummy_class.class_eval do
         allow_methods do |context, allow_method|
           if context.foo?
@@ -47,7 +47,7 @@ describe Curlybars::MethodWhitelist do
         end
       end
 
-      aggregate_failures do
+      aggregate_failures "test both allowed_methods and allows_method?" do
         expect(dummy_class.new.allowed_methods).to eq([:bar])
         expect(dummy_class.new.allows_method?(:bar)).to eq(true)
       end
