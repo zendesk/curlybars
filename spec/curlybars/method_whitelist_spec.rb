@@ -7,6 +7,10 @@ describe Curlybars::MethodWhitelist do
       def foo?
         true
       end
+
+      def qux?
+        false
+      end
     end
   end
 
@@ -14,6 +18,10 @@ describe Curlybars::MethodWhitelist do
     Class.new do
       def foo?
         true
+      end
+
+      def qux?
+        false
       end
     end
   end
@@ -43,6 +51,10 @@ describe Curlybars::MethodWhitelist do
         allow_methods do |context, allow_method|
           if context.foo?
             allow_method.call(:bar)
+          end
+
+          if context.qux?
+            allow_method.call(:quux)
           end
         end
       end
