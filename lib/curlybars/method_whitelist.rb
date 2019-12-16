@@ -1,6 +1,6 @@
 module Curlybars
   module MethodWhitelist
-    def allow_methods(*methods, **methods_with_type, &contextual_methods)
+    def allow_methods(*methods_without_type, **methods_with_type, &contextual_block)
       methods_with_type_validator = lambda do |methods_to_validate|
         methods_to_validate.each do |(method_name, type)|
           if type.is_a?(Array)
@@ -14,34 +14,36 @@ module Curlybars
       methods_with_type_validator.call(methods_with_type)
 
       define_method(:allowed_methods) do
-        methods_list = methods + methods_with_type.keys
+        methods_list = methods_without_type + methods_with_type.keys
 
         # Adds methods to the list of allowed methods
         method_adder = lambda do |*more_methods, **more_methods_with_type|
           methods_with_type_validator.call(more_methods_with_type)
+
           methods_list += more_methods
           methods_list += more_methods_with_type.keys
         end
 
-        contextual_methods&.call(self, method_adder)
+        contextual_block&.call(self, method_adder)
 
         defined?(super) ? super() + methods_list : methods_list
       end
 
       define_singleton_method(:methods_schema) do |context = nil|
-        all_methods = methods
+        all_methods_without_type = methods_without_type
         all_methods_with_type = methods_with_type
 
         # Adds methods to the schema
-        schema_adder = lambda do |*more_methods, **more_methods_with_type|
+        schema_adder = lambda do |*more_methods_without_type, **more_methods_with_type|
           methods_with_type_validator.call(more_methods_with_type)
-          all_methods += more_methods
+
+          all_methods_without_type += more_methods_without_type
           all_methods_with_type = all_methods_with_type.merge(more_methods_with_type)
         end
 
-        contextual_methods&.call(context, schema_adder)
+        contextual_block&.call(context, schema_adder)
 
-        schema = all_methods.each_with_object({}) do |method, memo|
+        schema = all_methods_without_type.each_with_object({}) do |method, memo|
           memo[method] = nil
         end
 
