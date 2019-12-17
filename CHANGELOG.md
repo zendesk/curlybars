@@ -1,5 +1,8 @@
 ### Unreleased
 
+### Curlybars 1.3.0 (December 17, 2019)
+* Allow context-based method whitelisting
+
 ### Curlybars 1.2.1 (November 13, 2019)
 * Validate out of scope access
 
