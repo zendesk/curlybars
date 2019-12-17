@@ -1,5 +1,30 @@
 describe Curlybars::MethodWhitelist do
-  let(:dummy_class) { Class.new { extend Curlybars::MethodWhitelist } }
+  let(:dummy_class) do
+    Class.new do
+      extend Curlybars::MethodWhitelist
+
+      # A method available in the context
+      def foo?
+        true
+      end
+
+      def qux?
+        false
+      end
+    end
+  end
+
+  let(:validation_context_class) do
+    Class.new do
+      def foo?
+        true
+      end
+
+      def qux?
+        false
+      end
+    end
+  end
 
   describe "#allowed_methods" do
     it "returns an empty array as default" do
@@ -19,6 +44,25 @@ describe Curlybars::MethodWhitelist do
 
     it "sets the allowed methods" do
       expect(dummy_class.new.allowed_methods).to eq([:cook, :link, :article])
+    end
+
+    it "supports adding more methods for validation" do
+      dummy_class.class_eval do
+        allow_methods do |context, allow_method|
+          if context.foo?
+            allow_method.call(:bar)
+          end
+
+          if context.qux?
+            allow_method.call(:quux)
+          end
+        end
+      end
+
+      aggregate_failures "test both allowed_methods and allows_method?" do
+        expect(dummy_class.new.allowed_methods).to eq([:bar])
+        expect(dummy_class.new.allows_method?(:bar)).to eq(true)
+      end
     end
 
     it "raises when collection is not of presenters" do
@@ -79,6 +123,68 @@ describe Curlybars::MethodWhitelist do
           wave: nil
         )
     end
+
+    context "with context dependent methods" do
+      let(:base_presenter) do
+        stub_const("LinkPresenter", Class.new)
+
+        Class.new do
+          extend Curlybars::MethodWhitelist
+          allow_methods :cook, link: LinkPresenter do |context, allow_method|
+            if context.foo?
+              allow_method.call(:bar)
+            end
+          end
+
+          def foo?
+            true
+          end
+        end
+      end
+
+      let(:helpers) do
+        Module.new do
+          extend Curlybars::MethodWhitelist
+          allow_methods :form do |context, allow_method|
+            if context.foo?
+              allow_method.call(foo_bar: :helper)
+            end
+          end
+
+          def foo?
+            true
+          end
+        end
+      end
+
+      let(:post_presenter) do
+        Class.new(base_presenter) do
+          extend Curlybars::MethodWhitelist
+          include Helpers
+          allow_methods :wave
+        end
+      end
+
+      before do
+        stub_const("Helpers", helpers)
+      end
+
+      it "allows context methods from inheritance and composition" do
+        expect(post_presenter.new.allowed_methods).to eq([:cook, :link, :bar, :form, :foo_bar, :wave])
+      end
+
+      it "returns a dependency_tree with inheritance and composition with context" do
+        expect(post_presenter.dependency_tree(validation_context_class.new)).
+          to eq(
+            cook: nil,
+            link: LinkPresenter,
+            form: nil,
+            wave: nil,
+            bar: nil,
+            foo_bar: :helper
+          )
+      end
+    end
   end
 
   describe ".methods_schema" do
@@ -110,16 +216,22 @@ describe Curlybars::MethodWhitelist do
       expect(dummy_class.methods_schema).to eq(links: [LinkPresenter])
     end
 
-    it "supports procs in schema" do
-      dummy_class.class_eval { allow_methods settings: -> { { color_1: nil } } }
+    it "supports procs with context in schema" do
+      dummy_class.class_eval { allow_methods settings: ->(context) { context.foo? ? Hash[:background_color, nil] : nil } }
 
-      expect(dummy_class.methods_schema).to eq(settings: { color_1: nil })
+      expect(dummy_class.methods_schema(validation_context_class.new)).to eq(settings: { background_color: nil })
     end
 
-    it "supports procs with arguments in schema" do
-      dummy_class.class_eval { allow_methods settings: ->(name) { Hash[name, nil] } }
+    it "supports context methods" do
+      dummy_class.class_eval do
+        allow_methods do |context, allow_method|
+          if context.foo?
+            allow_method.call(:bar)
+          end
+        end
+      end
 
-      expect(dummy_class.methods_schema(:background_color)).to eq(settings: { background_color: nil })
+      expect(dummy_class.methods_schema(validation_context_class.new)).to eq(bar: nil)
     end
   end
 
