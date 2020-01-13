@@ -14,19 +14,21 @@ module Curlybars
       methods_with_type_validator.call(methods_with_type)
 
       define_method(:allowed_methods) do
-        methods_list = methods_without_type + methods_with_type.keys
+        @method_whitelist_allowed_methods ||= begin
+          methods_list = methods_without_type + methods_with_type.keys
 
-        # Adds methods to the list of allowed methods
-        method_adder = lambda do |*more_methods, **more_methods_with_type|
-          methods_with_type_validator.call(more_methods_with_type)
+          # Adds methods to the list of allowed methods
+          method_adder = lambda do |*more_methods, **more_methods_with_type|
+            methods_with_type_validator.call(more_methods_with_type)
 
-          methods_list += more_methods
-          methods_list += more_methods_with_type.keys
+            methods_list += more_methods
+            methods_list += more_methods_with_type.keys
+          end
+
+          contextual_block&.call(self, method_adder)
+
+          defined?(super) ? super() + methods_list : methods_list
         end
-
-        contextual_block&.call(self, method_adder)
-
-        defined?(super) ? super() + methods_list : methods_list
       end
 
       define_singleton_method(:methods_schema) do |context = nil|
