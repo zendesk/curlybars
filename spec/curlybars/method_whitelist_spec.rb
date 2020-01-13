@@ -16,6 +16,8 @@ describe Curlybars::MethodWhitelist do
 
   let(:validation_context_class) do
     Class.new do
+      attr_accessor :invocation_count
+
       def foo?
         true
       end
@@ -130,10 +132,15 @@ describe Curlybars::MethodWhitelist do
 
         Class.new do
           extend Curlybars::MethodWhitelist
+          attr_accessor :invocation_count
+
           allow_methods :cook, link: LinkPresenter do |context, allow_method|
             if context.foo?
               allow_method.call(:bar)
             end
+
+            context.invocation_count ||= 0
+            context.invocation_count += 1
           end
 
           def foo?
@@ -171,6 +178,14 @@ describe Curlybars::MethodWhitelist do
 
       it "allows context methods from inheritance and composition" do
         expect(post_presenter.new.allowed_methods).to eq([:cook, :link, :bar, :form, :foo_bar, :wave])
+      end
+
+      it "only invokes the context block once" do
+        presenter = post_presenter.new
+
+        10.times { presenter.allowed_methods }
+
+        expect(presenter.invocation_count).to eq(1)
       end
 
       it "returns a dependency_tree with inheritance and composition with context" do
