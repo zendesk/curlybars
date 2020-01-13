@@ -16,7 +16,7 @@ describe Curlybars::MethodWhitelist do
 
   let(:validation_context_class) do
     Class.new do
-      attr_accessor :invocation_count # To test memoization
+      attr_accessor :invocation_count
 
       def foo?
         true
@@ -132,14 +132,13 @@ describe Curlybars::MethodWhitelist do
 
         Class.new do
           extend Curlybars::MethodWhitelist
-          attr_accessor :invocation_count # To test memoization
+          attr_accessor :invocation_count
 
           allow_methods :cook, link: LinkPresenter do |context, allow_method|
             if context.foo?
               allow_method.call(:bar)
             end
 
-            # To test memoization
             context.invocation_count ||= 0
             context.invocation_count += 1
           end
