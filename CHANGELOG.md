@@ -1,5 +1,8 @@
 ### Unreleased
 
+### Curlybars 1.3.1 (January 13, 2019)
+* Memoize allowed_methods
+
 ### Curlybars 1.3.0 (December 17, 2019)
 * Allow context-based method whitelisting
 
