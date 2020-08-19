@@ -32,6 +32,9 @@ module Curlybars
     r(/{{/) { push_state :curly; :START }
     r(/}}/, :curly) { pop_state; :END }
 
+    r(/\(/, :curly) { push_state :curly; :LPAREN }
+    r(/\)/, :curly) { pop_state; :RPAREN }
+
     r(/#/, :curly) { :HASH }
     r(/\//, :curly) { :SLASH }
     r(/>/, :curly) { :GT }

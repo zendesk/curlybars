@@ -160,6 +160,28 @@ describe Curlybars::Lexer do
     end
   end
 
+  describe "{{path (path context options)}}" do
+    it "is lexed with path, context and options" do
+      expect(lex('{{path (path context key=value)}}')).to produce [:START, :PATH, :LPAREN, :PATH, :PATH, :KEY, :PATH, :RPAREN, :END]
+    end
+
+    it "is lexed without options" do
+      expect(lex('{{path (path context)}}')).to produce [:START, :PATH, :LPAREN, :PATH, :PATH, :RPAREN, :END]
+    end
+
+    it "is lexed without context" do
+      expect(lex('{{path (path key=value)}}')).to produce [:START, :PATH, :LPAREN, :PATH, :KEY, :PATH, :RPAREN, :END]
+    end
+
+    it "is lexed without context and options" do
+      expect(lex('{{path (path)}}')).to produce [:START, :PATH, :LPAREN, :PATH, :RPAREN, :END]
+    end
+
+    it "is lexed with a nested subexpression" do
+      expect(lex('{{path (path (path context key=value) key=value)}}')).to produce [:START, :PATH, :LPAREN, :PATH, :LPAREN, :PATH, :PATH, :KEY, :PATH, :RPAREN, :KEY, :PATH, :RPAREN, :END]
+    end
+  end
+
   describe "{{#if path}}...{{/if}}" do
     it "is lexed" do
       expect(lex('{{#if path}} text {{/if}}')).to produce(

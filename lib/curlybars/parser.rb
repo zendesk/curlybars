@@ -155,6 +155,7 @@ module Curlybars
     production(:expression) do
       clause('value') { |value| value }
       clause('path') { |path| path }
+      clause('subexpression') { |subexpression| subexpression }
     end
 
     production(:value) do
@@ -163,6 +164,9 @@ module Curlybars
     end
 
     production(:path, 'PATH') { |path| Node::Path.new(path, pos(0)) }
+
+    production(:subexpression, 'LPAREN .path .expressions? .options? RPAREN') do |helper, arguments, options|
+    end
 
     finalize
 
