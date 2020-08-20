@@ -1,4 +1,5 @@
 require 'integration/support/matcher'
+require 'integration/presenters'
 
 module IntegrationTest
   module Helpers
@@ -45,7 +46,7 @@ module IntegrationTest
     allow_methods :print_current_context, :render_fn, :render_inverse, :user, :new_comment_form, :valid, :visible, :return_true,
       :return_false, :beautify, :form, :date, :asset, :integer, :boolean, :echo, :just_yield, :print_args_and_options,
       :return_nil, :this_method_yields, :this_method_yields, :context, :two_elements,
-      :yield_custom_variable, :print, :array_of_users, :'-a-path-',
+      :yield_custom_variable, :print, :array_of_users, :'-a-path-', :article, :articles,
       partial: :partial
 
     def print(argument, _)
@@ -54,6 +55,19 @@ module IntegrationTest
 
     def array_of_users
       [user]
+    end
+
+    def article
+      Shared::ArticlePresenter.new(Article.new)
+    end
+
+    def articles
+      [
+        Shared::ArticlePresenter.new(Article.new(id: 1, title: "A1", author: current_user)),
+        Shared::ArticlePresenter.new(Article.new(id: 1, title: "A2", author: current_user)),
+        Shared::ArticlePresenter.new(Article.new(id: 1, title: "B1", author: current_user)),
+        Shared::ArticlePresenter.new(Article.new(id: 1, title: "B2", author: current_user))
+      ]
     end
 
     def user
@@ -153,9 +167,68 @@ module IntegrationTest
   class GlobalHelperProvider
     extend Curlybars::MethodWhitelist
 
-    allow_methods :global_helper
+    allow_methods :global_helper, :extract, :filter, :join,
+      :foo, :bar, :equal, :concat, :dash, :input, :t, :calc
 
     def initialize(context = nil)
+    end
+
+    def calc(left, op, right, _)
+      return unless left.is_a? Numeric
+      return unless right.is_a? Numeric
+
+      raise "Invalid operation: #{op}" unless %w[+ - * / ** > >= < <= ==].include?(op)
+
+      eval <<-RUBY, binding, __FILE__, __LINE__ + 1
+        #{left} #{op} #{right}
+      RUBY
+    end
+
+    def concat(left, right, _)
+      "#{left}#{right}"
+    end
+
+    def dash(left, right, _)
+      "#{left}-#{right}"
+    end
+
+    def foo(argument, _)
+      "#{argument}#{argument}"
+    end
+
+    def bar(_, _)
+      "LOL"
+    end
+
+    def equal(left, right, _)
+      left == right
+    end
+
+    def input(_, options)
+      label = options[:"aria-label"]
+      placeholder = options[:placeholder]
+
+      "<input aria-label=\"#{label}\" placeholder=\"#{placeholder}\" />"
+    end
+
+    def t(argument, _)
+      argument.html_safe
+    end
+
+    def filter(collection, options)
+      collection.select do |item|
+        item.public_send(options[:on]).starts_with?(options[:starts_with])
+      end
+    end
+
+    def join(collection, options)
+      collection
+        .map(&options[:attribute].to_sym)
+        .join(options[:separator])
+    end
+
+    def extract(item, options)
+      item.public_send(options[:attribute])
     end
 
     def global_helper(argument, options)
