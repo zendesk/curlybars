@@ -326,6 +326,32 @@ There are {{recipient.entries.length}} entries in this invoice.
 </ul>
 ```
 
+## Subexpressions
+
+Curlybars, similarly to [Handlebars](https://handlebarsjs.com/guide/expressions.html#subexpressions), offers support for subexpressions, which allows you to invoke multiple helpers within a single expression, and pass in the results of inner helper invocations as arguments to outer helpers. Subexpressions are delimited by parentheses.
+
+Let's explore some of the use cases subexpressions open up.
+
+### Nested subexpressions and collections
+
+```hbs
+{{#each (first (filter collection on="attribute" op="equals" value="value") 5)}}
+  <div><!-- Presents the item of collection --></div>
+{{/each}}
+```
+
+Assume a collection called `collection` and helpers `first` and `filter`. This template renders the first 5 items of `collection` whose `attribute` equals to `value`.
+
+### Conditionals
+
+```hbs
+{{#if (eval collection.length "==" 0)}}
+  <div>Empty collection.</div>
+{{else}}
+  <div>Your collection has {{collection.length}} items</div>
+{{/if}}
+```
+
 ## Analysis
 
 Curlybars exposes a `.visit` method for traversing a template's parse tree. This can be used to analyze templates without actually rendering them.
