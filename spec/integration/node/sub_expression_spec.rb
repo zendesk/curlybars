@@ -166,7 +166,7 @@ describe "{{(helper arg1 arg2 ... key=value ...)}}" do
         HBS
 
         expect(eval(template)).to resemble(<<-HTML)
-          val is foo!, true and bar!
+          val is bat!, true and bar!
         HTML
       end
     end

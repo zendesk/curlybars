@@ -4,7 +4,7 @@ class BazPresenter
   allow_methods :bat, :bar
 
   def bat
-    "foo!"
+    "bat!"
   end
 
   def bar
