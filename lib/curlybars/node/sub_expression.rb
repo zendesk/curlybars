@@ -39,7 +39,21 @@ module Curlybars
       end
 
       def validate(branches, check_type: :anything)
-        # Nothing to validate here.
+        if helper.leaf?(branches)
+          if arguments.any? || options.any?
+            message = "#{helper.path} doesn't accept any arguments or options"
+            Curlybars::Error::Validate.new('invalid_signature', message, helper.position)
+          end
+        elsif helper.helper?(branches)
+          [
+            helper.validate(branches),
+            arguments.map { |argument| argument.validate_as_value(branches) },
+            options.map { |option| option.validate(branches) }
+          ]
+        else
+          message = "#{helper.path} must be allowed as helper or leaf"
+          Curlybars::Error::Validate.new('invalid_subexpression_helper', message, helper.position)
+        end
       end
 
       def cache_key

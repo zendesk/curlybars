@@ -235,4 +235,168 @@ describe "{{(helper arg1 arg2 ... key=value ...)}}" do
       end
     end
   end
+
+  describe "#validate" do
+    let(:presenter_class) { double(:presenter_class) }
+
+    before do
+      allow(Curlybars.configuration).to receive(:global_helpers_provider_classes).and_return([IntegrationTest::GlobalHelperProvider])
+    end
+
+    it "without errors when global helper" do
+      dependency_tree = {}
+
+      source = <<-HBS
+        {{#if (global_helper)}} ... {{/if}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors).to be_empty
+    end
+
+    it "without errors when invoking a leaf" do
+      dependency_tree = { name: nil }
+
+      source = <<-HBS
+        {{#if (name)}} ... {{/if}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors).to be_empty
+    end
+
+    it "without errors if argument is a leaf" do
+      dependency_tree = { helper: :helper, argument: nil }
+
+      source = <<-HBS
+        {{#if (helper argument)}} ... {{/if}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors).to be_empty
+    end
+
+    it "without errors if argument is a literal" do
+      dependency_tree = { helper: :helper }
+
+      source = <<-HBS
+        {{#if (helper 'argument')}} ... {{/if}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors).to be_empty
+    end
+
+    it "without errors if argument is a variable" do
+      dependency_tree = { helper: :helper }
+
+      source = <<-HBS
+        {{#if (helper @var)}} ... {{/if}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors).to be_empty
+    end
+
+    it "without errors if option is a leaf" do
+      dependency_tree = { helper: :helper, argument: nil }
+
+      source = <<-HBS
+        {{#if (helper option=argument)}} ... {{/if}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors).to be_empty
+    end
+
+    it "without errors if option is a literal" do
+      dependency_tree = { helper: :helper }
+
+      source = <<-HBS
+        {{#if (helper option='argument')}} ... {{/if}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors).to be_empty
+    end
+
+    it "without errors if option is a variable" do
+      dependency_tree = { helper: :helper }
+
+      source = <<-HBS
+        {{#if (helper option=@var)}} ... {{/if}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors).to be_empty
+    end
+
+    it "with errors when helper does not exist" do
+      dependency_tree = {}
+
+      source = <<-HBS
+        {{#if (helper)}} ... {{/if}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors).not_to be_empty
+    end
+
+    it "with errors when invoking a leaf with arguments" do
+      dependency_tree = { name: nil }
+
+      source = <<-HBS
+        {{#if (name 'argument')}} ... {{/if}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors).not_to be_empty
+    end
+
+    it "with errors when invoking a leaf with options" do
+      dependency_tree = { name: nil }
+
+      source = <<-HBS
+        {{#if (name option='value')}} ... {{/if}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors).not_to be_empty
+    end
+
+    it "with errors if argument is not a value" do
+      dependency_tree = { helper: :helper, not_a_value: {} }
+
+      source = <<-HBS
+        {{#if (helper not_a_value)}} ... {{/if}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors).not_to be_empty
+    end
+
+    it "with errors if option is not a value" do
+      dependency_tree = { helper: :helper, not_a_value: {} }
+
+      source = <<-HBS
+        {{#if (helper option=not_a_value)}} ... {{/if}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors).not_to be_empty
+    end
+  end
 end
