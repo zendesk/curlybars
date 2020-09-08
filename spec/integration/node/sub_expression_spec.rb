@@ -255,7 +255,7 @@ describe "{{(helper arg1 arg2 ... key=value ...)}}" do
       expect(errors).to be_empty
     end
 
-    it "without errors when invoking a leaf" do
+    it "with errors when invoking a leaf" do
       dependency_tree = { name: nil }
 
       source = <<-HBS
@@ -264,7 +264,7 @@ describe "{{(helper arg1 arg2 ... key=value ...)}}" do
 
       errors = Curlybars.validate(dependency_tree, source)
 
-      expect(errors).to be_empty
+      expect(errors).not_to be_empty
     end
 
     it "without errors if argument is a leaf" do
