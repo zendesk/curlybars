@@ -303,6 +303,18 @@ describe "{{(helper arg1 arg2 ... key=value ...)}}" do
       expect(errors).to be_empty
     end
 
+    it "without errors if argument is another subexpression" do
+      dependency_tree = { helper: :helper }
+
+      source = <<-HBS
+        {{#if (helper (helper option='argument'))}} ... {{/if}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors).to be_empty
+    end
+
     it "without errors if option is a leaf" do
       dependency_tree = { helper: :helper, argument: nil }
 
@@ -332,6 +344,18 @@ describe "{{(helper arg1 arg2 ... key=value ...)}}" do
 
       source = <<-HBS
         {{#if (helper option=@var)}} ... {{/if}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors).to be_empty
+    end
+
+    it "without errors if option is another subexpression" do
+      dependency_tree = { helper: :helper }
+
+      source = <<-HBS
+        {{#if (helper option=(helper))}} ... {{/if}}
       HBS
 
       errors = Curlybars.validate(dependency_tree, source)

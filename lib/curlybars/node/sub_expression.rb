@@ -38,6 +38,10 @@ module Curlybars
         RUBY
       end
 
+      def validate_as_value(branches, check_type: :anything)
+        validate(branches, check_type: check_type)
+      end
+
       def validate(branches, check_type: :anything)
         if helper.helper?(branches)
           [
