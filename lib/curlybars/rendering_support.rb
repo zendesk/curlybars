@@ -101,7 +101,7 @@ module Curlybars
 
     def cached_call(meth)
       return cached_calls[meth] if cached_calls.key? meth
-      instrument(meth) { cached_calls[meth] = meth.call }
+      instrument(meth) { cached_calls[meth] = meth.call(*arguments_for_signature(meth, [], {})) }
     end
 
     def call(helper, helper_path, helper_position, arguments, options, &block)
