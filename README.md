@@ -191,11 +191,7 @@ Contributing to Curlybars is fairly easy, as long as the following steps are fol
 
 ## Maintainers
 
-This is the list of Curlybars maintainers, in no particular order:
-
-* Liborio Cannici ([@libo](https://github.com/libo))
-* Ilkka Oksanen ([@ilkkao](https://github.com/ilkkao))
-* Mauro Codella ([@codella](https://github.com/codella))
+This project is maintained by @zendesk/vikings
 
 ## Releasing
 

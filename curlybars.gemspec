@@ -16,10 +16,11 @@ Gem::Specification.new do |s|
     "Ilkka Oksanen",
     "Mauro Codella",
     "Luís Almeida",
-    "Andreas Garnæs"
+    "Andreas Garnæs",
+    "Augusto Silva"
   ]
 
-  s.email    = 'libo@zendesk.com'
+  s.email    = 'vikings@zendesk.com'
   s.homepage = 'https://github.com/zendesk/curlybars'
 
   s.require_paths = %w[lib]

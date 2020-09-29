@@ -1,6 +1,9 @@
 ### Unreleased
 
-### Curlybars 1.3.1 (January 13, 2019)
+### Curlybars 1.4.0 (September 29, 2020)
+* Allow arg-less helpers in if/unless conditions
+
+### Curlybars 1.3.1 (January 13, 2020)
 * Memoize allowed_methods
 
 ### Curlybars 1.3.0 (December 17, 2019)
