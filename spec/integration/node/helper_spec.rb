@@ -15,6 +15,18 @@ describe "{{helper context key=value}}" do
       HTML
     end
 
+    it "calls a helper without arguments in an if statement" do
+      template = Curlybars.compile(<<-HBS)
+        {{#if print_args_and_options}}
+          {{print_args_and_options 'first' 'second'}}
+        {{/if}}
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
+        first, second, key=
+      HTML
+    end
+
     it "passes two arguments and options" do
       template = Curlybars.compile(<<-HBS)
         {{print_args_and_options 'first' 'second' key='value'}}

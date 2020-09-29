@@ -15,7 +15,7 @@ module Curlybars
 
       def validate(branches)
         [
-          expression.validate(branches, check_type: :not_helper),
+          expression.validate(branches),
           unless_template.validate(branches),
           else_template.validate(branches)
         ]

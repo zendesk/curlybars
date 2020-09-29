@@ -96,7 +96,7 @@ describe "{{#unless}}...{{else}}...{{/unless}}" do
       expect(errors).not_to be_empty
     end
 
-    it "validates with errors the helper as condition" do
+    it "validates without errors when using a helper in the condition" do
       dependency_tree = { helper: :helper }
 
       source = <<-HBS
@@ -105,7 +105,7 @@ describe "{{#unless}}...{{else}}...{{/unless}}" do
 
       errors = Curlybars.validate(dependency_tree, source)
 
-      expect(errors).not_to be_empty
+      expect(errors).to be_empty
     end
 
     it "validates with errors the nested unless_template" do
