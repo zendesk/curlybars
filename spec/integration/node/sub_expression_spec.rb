@@ -422,5 +422,17 @@ describe "{{(helper arg1 arg2 ... key=value ...)}}" do
 
       expect(errors).not_to be_empty
     end
+
+    it "without errors when invoking a helper with the result of a subexpression" do
+      dependency_tree = { join: :helper, filter: :helper, articles: nil }
+
+      source = <<-HBS
+        {{join (filter articles on='title' starts_with="A") attribute='title' separator='-'}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors).to be_empty
+    end
   end
 end
