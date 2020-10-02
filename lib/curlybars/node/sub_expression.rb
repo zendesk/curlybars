@@ -43,16 +43,11 @@ module Curlybars
       end
 
       def validate(branches, check_type: :anything)
-        if helper.helper?(branches)
-          [
-            helper.validate(branches),
-            arguments.map { |argument| argument.validate_as_value(branches) },
-            options.map { |option| option.validate(branches) }
-          ]
-        else
-          message = "#{helper.path} must be allowed as a helper"
-          Curlybars::Error::Validate.new('invalid_subexpression_helper', message, helper.position)
-        end
+        [
+          helper.validate(branches, check_type: :helper),
+          arguments.map { |argument| argument.validate_as_value(branches) },
+          options.map { |option| option.validate(branches) }
+        ]
       end
 
       def cache_key
