@@ -400,7 +400,7 @@ describe "{{(helper arg1 arg2 ... key=value ...)}}" do
     end
 
     it "with errors if argument is not a value" do
-      dependency_tree = { helper: :helper, not_a_value: {} }
+      dependency_tree = { helper: :helper }
 
       source = <<-HBS
         {{#if (helper not_a_value)}} ... {{/if}}
@@ -412,7 +412,7 @@ describe "{{(helper arg1 arg2 ... key=value ...)}}" do
     end
 
     it "with errors if option is not a value" do
-      dependency_tree = { helper: :helper, not_a_value: {} }
+      dependency_tree = { helper: :helper }
 
       source = <<-HBS
         {{#if (helper option=not_a_value)}} ... {{/if}}
