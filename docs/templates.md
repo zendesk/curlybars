@@ -328,19 +328,13 @@ There are {{recipient.entries.length}} entries in this invoice.
 
 ## Subexpressions
 
-Curlybars, similarly to [Handlebars](https://handlebarsjs.com/guide/expressions.html#subexpressions), offers support for subexpressions, which allows you to invoke multiple helpers within a single expression, and pass in the results of inner helper invocations as arguments to outer helpers. Subexpressions are delimited by parentheses.
+Curlybars offers limited support for [subexpressions](https://handlebarsjs.com/guide/expressions.html#subexpressions), which allows you to invoke multiple helpers within a single expression, and pass in the results of inner helper invocations as arguments to outer helpers. Subexpressions are delimited by parentheses.
 
-Let's explore some of the use cases subexpressions open up.
-
-### Nested subexpressions and collections
+### Nested subexpressions
 
 ```hbs
-{{#each (first (filter collection on="attribute" op="equals" value="value") 5)}}
-  <div><!-- Presents the item of collection --></div>
-{{/each}}
+{{search placeholder=(lowercasecase (dc "search_text"))}}
 ```
-
-Assume a collection called `collection` and helpers `first` and `filter`. This template renders the first 5 items of `collection` whose `attribute` equals to `value`.
 
 ### Conditionals
 
@@ -351,6 +345,10 @@ Assume a collection called `collection` and helpers `first` and `filter`. This t
   <div>Your collection has {{collection.length}} items</div>
 {{/if}}
 ```
+
+### Each
+
+Subexpressions in `each` statements are currently *not* supported.
 
 ## Analysis
 
