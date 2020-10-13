@@ -333,7 +333,7 @@ Curlybars offers limited support for [subexpressions](https://handlebarsjs.com/g
 ### Nested subexpressions
 
 ```hbs
-{{search placeholder=(lowercasecase (dc "search_text"))}}
+{{search placeholder=(lowercase (dc "search_text"))}}
 ```
 
 ### Conditionals
