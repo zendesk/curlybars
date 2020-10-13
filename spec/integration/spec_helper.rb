@@ -167,7 +167,7 @@ module IntegrationTest
   class GlobalHelperProvider
     extend Curlybars::MethodWhitelist
 
-    allow_methods :global_helper, :extract, :filter, :join,
+    allow_methods :global_helper, :extract, :join,
       :foo, :bar, :equal, :concat, :dash, :input, :t, :calc
 
     def initialize(context = nil)
@@ -213,12 +213,6 @@ module IntegrationTest
 
     def t(argument, _)
       argument.html_safe
-    end
-
-    def filter(collection, options)
-      collection.select do |item|
-        item.public_send(options[:on]).starts_with?(options[:starts_with])
-      end
     end
 
     def join(collection, options)

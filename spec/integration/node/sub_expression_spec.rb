@@ -46,16 +46,6 @@ describe "{{(helper arg1 arg2 ... key=value ...)}}" do
       HTML
     end
 
-    it "can handle collections as arguments" do
-      template = Curlybars.compile(<<-HBS)
-        {{join (filter articles on='title' starts_with="A") attribute='title' separator='-'}}
-      HBS
-
-      expect(eval(template)).to resemble(<<-HTML)
-        A1-A2
-      HTML
-    end
-
     it "does not accept subexpressions in the root" do
       expect do
         Curlybars.compile(<<-HBS)
@@ -424,10 +414,10 @@ describe "{{(helper arg1 arg2 ... key=value ...)}}" do
     end
 
     it "without errors when invoking a helper with the result of a subexpression" do
-      dependency_tree = { join: :helper, filter: :helper, articles: nil }
+      dependency_tree = { join: :helper, uppercase: :helper, article: nil }
 
       source = <<-HBS
-        {{join (filter articles on='title' starts_with="A") attribute='title' separator='-'}}
+        {{join (uppercase article) attribute='title' separator='-'}}
       HBS
 
       errors = Curlybars.validate(dependency_tree, source)
