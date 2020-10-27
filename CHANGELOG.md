@@ -1,5 +1,8 @@
 ### Unreleased
 
+### Curlybars 1.5.0 (October 27, 2020)
+* Add basic language support subexpressions (save for `#each`)
+
 ### Curlybars 1.4.0 (September 29, 2020)
 * Allow arg-less helpers in if/unless conditions
 

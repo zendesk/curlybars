@@ -1,17 +1,11 @@
 class Article
-  def title
-    "The Prince"
-  end
+  attr_reader :id, :title, :comment, :body, :author
 
-  def comment
-    "<script>alert('bad')</script>"
-  end
-
-  def body
-    "This is <strong>important</strong>!"
-  end
-
-  def author
-    User.new(3, "Nicolò")
+  def initialize(id: nil, title: nil, comment: nil, body: nil, author: nil)
+    @id = id || 1
+    @title = title || "The Prince"
+    @comment = comment || "<script>alert('bad')</script>"
+    @body = body || "This is <strong>important</strong>!"
+    @author = author || User.new(3, "Nicolò")
   end
 end

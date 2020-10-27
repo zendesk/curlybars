@@ -15,6 +15,7 @@ require 'curlybars/node/block_helper_else'
 require 'curlybars/node/option'
 require 'curlybars/node/partial'
 require 'curlybars/node/output'
+require 'curlybars/node/sub_expression'
 
 module Curlybars
   class Parser < RLTK::Parser
@@ -155,6 +156,7 @@ module Curlybars
     production(:expression) do
       clause('value') { |value| value }
       clause('path') { |path| path }
+      clause('subexpression') { |subexpression| subexpression }
     end
 
     production(:value) do
@@ -163,6 +165,15 @@ module Curlybars
     end
 
     production(:path, 'PATH') { |path| Node::Path.new(path, pos(0)) }
+
+    production(:subexpression, 'LPAREN .path .expressions? .options? RPAREN') do |helper, arguments, options|
+      Node::SubExpression.new(
+        helper,
+        arguments || [],
+        options || [],
+        pos(0)
+      )
+    end
 
     finalize
 
