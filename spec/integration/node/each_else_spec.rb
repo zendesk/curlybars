@@ -120,6 +120,20 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
       expect(eval(template)).to resemble("")
     end
 
+    it "renders nothing if the context is nil" do
+      template = Curlybars.compile(<<-HBS)
+        {{#each return_nil}}
+          each_template
+        {{else}}
+          else_template
+        {{/each}}
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
+        else_template
+      HTML
+    end
+
     it "allows subexpressions" do
       presenter_class.class_eval do
         allow_methods non_empty_collection: [ArticlePresenter]
@@ -178,20 +192,6 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
       HBS
 
       expect(eval(template)).to resemble("http://example.comhttp://example.com")
-    end
-
-    it "renders nothing if the context is nil" do
-      template = Curlybars.compile(<<-HBS)
-        {{#each return_nil}}
-          each_template
-        {{else}}
-          else_template
-        {{/each}}
-      HBS
-
-      expect(eval(template)).to resemble(<<-HTML)
-        else_template
-      HTML
     end
 
     it "raises an error if the context is not an array-like object" do
