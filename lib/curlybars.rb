@@ -45,14 +45,48 @@ module Curlybars
       )
 
       errors = begin
+        ast_res = ast(source, identifier, run_processors: options[:run_processors])
+        generic_helper_nodes = find_generic_helper_nodes(source, dependency_tree)
+        inferred_subtree = generic_helper_nodes.entries.map do |path, node|
+          [path, dependency_tree[node.arguments.first.path.to_sym]]
+        end.to_h
+        dependency_tree.update(inferred_subtree)
         branches = [dependency_tree]
-        ast(source, identifier, run_processors: options[:run_processors]).validate(branches)
+        ast_res.validate(branches)
       rescue Curlybars::Error::Base => ast_error
         [ast_error]
       end
       errors.flatten!
       errors.compact!
       errors
+    end
+
+    def generic_paths(dependency_tree)
+      generic_methods = dependency_tree.entries.filter do |_, type|
+        type.is_a?(Array) &&
+          type.first == :helper &&
+          type.last.is_a?(Array) &&
+          type.last.first == {}
+      end
+      generic_methods.map { |path, _| path }
+    end
+
+    def find_generic_helper_nodes(source, dependency_tree)
+      generic_helper_visitor = Class.new(Curlybars::Visitor) do
+        attr_reader :generic_paths
+
+        def initialize(context, generic_paths)
+          super(context)
+          @generic_paths = generic_paths
+        end
+
+        def visit_sub_expression(node)
+          path = node.helper.path.to_sym
+          context.update(path => node) if generic_paths.include?(path)
+          super(node)
+        end
+      end.new({}, generic_paths(dependency_tree))
+      Curlybars.visit(generic_helper_visitor, source)
     end
 
     # Check if the source is valid for a given presenter.

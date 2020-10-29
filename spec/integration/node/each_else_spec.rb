@@ -1,6 +1,16 @@
 describe "{{#each collection}}...{{else}}...{{/each}}" do
   let(:global_helpers_providers) { [] }
 
+  ArticlePresenter = Class.new do
+    extend Curlybars::MethodWhitelist
+
+    allow_methods :url
+
+    def url
+      "http://example.com"
+    end
+  end
+
   describe "#compile" do
     let(:post) { double("post") }
     let(:presenter_class) { IntegrationTest::Presenter }
@@ -111,8 +121,13 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
     end
 
     it "allows subexpressions" do
-      allow(presenter).to receive(:allows_method?).with(:non_empty_collection).and_return(true)
-      allow(presenter).to receive(:non_empty_collection) { [presenter] }
+      presenter_class.class_eval do
+        allow_methods non_empty_collection: [ArticlePresenter]
+
+        def non_empty_collection
+          [ArticlePresenter.new]
+        end
+      end
 
       template = Curlybars.compile(<<-HBS)
         {{#each (non_empty_collection)}}left{{else}}right{{/each}}
@@ -122,18 +137,13 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
     end
 
     it "allows subexpressions with collection helpers" do
-      CollectionPresenter = Class.new do
-        extend Curlybars::MethodWhitelist
+      presenter_class.class_eval do
+        allow_methods collection_helper: [:helper, [ArticlePresenter]]
 
-        allow_methods :url
-
-        def url
-          "http://example.com"
+        def collection_helper
+          [ArticlePresenter.new]
         end
       end
-      presenter_class.class_eval { allow_methods collection_helper: [:helper, [CollectionPresenter]] }
-
-      allow(presenter).to receive(:collection_helper) { [CollectionPresenter.new] }
 
       template = Curlybars.compile(<<-HBS)
         {{#each (collection_helper)}}
@@ -144,6 +154,30 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
       HBS
 
       expect(eval(template)).to resemble("http://example.com")
+    end
+
+    it "allows subexpressions with generic collection helpers" do
+      presenter_class.class_eval do
+        allow_methods articles: [ArticlePresenter], refl: [:helper, [Curlybars::Presenter]]
+
+        def refl(collection, _options)
+          collection
+        end
+
+        def articles
+          [ArticlePresenter.new, ArticlePresenter.new]
+        end
+      end
+
+      template = Curlybars.compile(<<-HBS)
+        {{#each (refl articles)}}
+          {{url}}
+        {{else}}
+          right
+        {{/each}}
+      HBS
+
+      expect(eval(template)).to resemble("http://example.comhttp://example.com")
     end
 
     it "renders nothing if the context is nil" do
@@ -263,6 +297,25 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
 
         source = <<-HBS
           {{#each (a_collection_helper)}}
+            {{url}}
+          {{else}}
+            right
+          {{/each}}
+        HBS
+
+        errors = Curlybars.validate(dependency_tree, source)
+
+        expect(errors).to be_empty
+      end
+
+      it "without errors when called with a generic collection helper" do
+        dependency_tree = {
+          refl: [:helper, [{}]],
+          articles: [{ url: nil }]
+        }
+
+        source = <<-HBS
+          {{#each (refl articles)}}
             {{url}}
           {{else}}
             right
