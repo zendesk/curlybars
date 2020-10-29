@@ -109,6 +109,17 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
       expect(eval(template)).to resemble("")
     end
 
+    it "allows subexpressions" do
+      allow(presenter).to receive(:allows_method?).with(:non_empty_collection).and_return(true)
+      allow(presenter).to receive(:non_empty_collection) { [presenter] }
+
+      template = Curlybars.compile(<<-HBS)
+        {{#each (non_empty_collection)}}left{{else}}right{{/each}}
+      HBS
+
+      expect(eval(template)).to resemble("left")
+    end
+
     it "renders nothing if the context is nil" do
       template = Curlybars.compile(<<-HBS)
         {{#each return_nil}}
@@ -197,6 +208,20 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
       errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).not_to be_empty
+    end
+
+    describe "with subexpressions" do
+      it "without errors when called with a presenter collection" do
+        dependency_tree = { a_presenter_collection: [{}] }
+
+        source = <<-HBS
+          {{#each (a_presenter_collection)}} {{else}} {{/each}}
+        HBS
+
+        errors = Curlybars.validate(dependency_tree, source)
+
+        expect(errors).to be_empty
+      end
     end
   end
 end

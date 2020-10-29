@@ -112,12 +112,26 @@ module Curlybars
         Node::EachElse.new(path, each_template || VOID, VOID, pos(0))
       end
 
+      clause('START HASH EACH .subexpression END
+              .template?
+            START SLASH EACH END') do |subexpression, each_template|
+        Node::EachElse.new(subexpression, each_template || VOID, VOID, pos(0))
+      end
+
       clause('START HASH EACH .path END
                .template?
              START ELSE END
                .template?
              START SLASH EACH END') do |path, each_template, else_template|
         Node::EachElse.new(path, each_template || VOID, else_template || VOID, pos(0))
+      end
+
+      clause('START HASH EACH .subexpression END
+               .template?
+             START ELSE END
+               .template?
+             START SLASH EACH END') do |subexpression, each_template, else_template|
+        Node::EachElse.new(subexpression, each_template || VOID, else_template || VOID, pos(0))
       end
 
       clause('START HASH WITH .path END

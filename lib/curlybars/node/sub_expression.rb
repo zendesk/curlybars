@@ -1,6 +1,10 @@
 module Curlybars
   module Node
     SubExpression = Struct.new(:helper, :arguments, :options, :position) do
+      def subexpression?
+        true
+      end
+
       def compile
         compiled_arguments = arguments.map do |argument|
           "arguments.push(rendering.cached_call(#{argument.compile}))"

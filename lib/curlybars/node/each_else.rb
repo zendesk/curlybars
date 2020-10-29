@@ -5,13 +5,13 @@ module Curlybars
         # NOTE: the following is a heredoc string, representing the ruby code fragment
         # outputted by this node.
         <<-RUBY
-          collection = rendering.cached_call(#{path.compile})
+          collection = rendering.cached_call(#{collection_path.compile})
 
           if rendering.to_bool(collection)
             position = rendering.position(#{position.line_number}, #{position.line_offset})
             template_cache_key = '#{each_template.cache_key}'
 
-            collection = rendering.coerce_to_hash!(collection, #{path.path.inspect}, position)
+            collection = rendering.coerce_to_hash!(collection, #{collection_path.path.inspect}, position)
             collection.each.with_index.map do |key_and_presenter, index|
               rendering.check_timeout!
               rendering.optional_presenter_cache(key_and_presenter[1], template_cache_key, buffer) do |buffer|
@@ -37,7 +37,7 @@ module Curlybars
       end
 
       def validate(branches)
-        resolved = path.resolve_and_check!(branches, check_type: :presenter_collection)
+        resolved = collection_path.resolve_and_check!(branches, check_type: :presenter_collection)
         sub_tree = resolved.first
 
         each_template_errors = begin
@@ -55,6 +55,10 @@ module Curlybars
         ]
       rescue Curlybars::Error::Validate => path_error
         path_error
+      end
+
+      def collection_path
+        path.subexpression? ? path.helper : path
       end
 
       def cache_key

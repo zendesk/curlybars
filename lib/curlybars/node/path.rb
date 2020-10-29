@@ -53,6 +53,10 @@ module Curlybars
         resolve(branches) == :helper
       end
 
+      def subexpression?
+        false
+      end
+
       def resolve(branches)
         @value ||= begin
           return :helper if global_helpers_dependency_tree.key?(path.to_sym)
