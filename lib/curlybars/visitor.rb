@@ -75,6 +75,12 @@ module Curlybars
     def visit_string(_node)
     end
 
+    def visit_sub_expression(node)
+      visit(node.helper)
+      node.arguments.each { |argument| visit(argument) }
+      node.options.each { |option| visit(option) }
+    end
+
     def visit_template(node)
       node.items.each { |item| visit(item) }
     end

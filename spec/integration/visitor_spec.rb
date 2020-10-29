@@ -4,6 +4,8 @@ describe "visitor" do
       {{#print_args_and_options 'first' 'second' key='value'}}
       {{/print_args_and_options}}
 
+      {{calc (calc 1 "+" 2) "*" 3}}
+
       {{#render_inverse}}
         fn
       {{else}}
@@ -53,7 +55,7 @@ describe "visitor" do
     it "visits BlockHelperElse nodes" do
       visitor = counting_visitor_for(Curlybars::Node::BlockHelperElse)
       output = Curlybars.visit(visitor, source)
-      expect(output).to eq(4)
+      expect(output).to eq(5)
     end
 
     it "visits EachElse nodes" do
@@ -71,13 +73,13 @@ describe "visitor" do
     it "visits Item nodes" do
       visitor = counting_visitor_for(Curlybars::Node::Item)
       output = Curlybars.visit(visitor, source)
-      expect(output).to eq(42)
+      expect(output).to eq(44)
     end
 
     it "visits Literal nodes" do
       visitor = counting_visitor_for(Curlybars::Node::Literal)
       output = Curlybars.visit(visitor, source)
-      expect(output).to eq(3)
+      expect(output).to eq(8)
     end
 
     it "visits Option nodes" do
@@ -95,11 +97,17 @@ describe "visitor" do
     it "visits Path nodes" do
       visitor = counting_visitor_for(Curlybars::Node::Path)
       output = Curlybars.visit(visitor, source)
-      expect(output).to eq(13)
+      expect(output).to eq(15)
     end
 
     it "visits Root nodes" do
       visitor = counting_visitor_for(Curlybars::Node::Root)
+      output = Curlybars.visit(visitor, source)
+      expect(output).to eq(1)
+    end
+
+    it "visits SubExpression nodes" do
+      visitor = counting_visitor_for(Curlybars::Node::SubExpression)
       output = Curlybars.visit(visitor, source)
       expect(output).to eq(1)
     end
@@ -113,7 +121,7 @@ describe "visitor" do
     it "visits Text nodes" do
       visitor = counting_visitor_for(Curlybars::Node::Text)
       output = Curlybars.visit(visitor, source)
-      expect(output).to eq(28)
+      expect(output).to eq(29)
     end
 
     it "visits UnlessElse nodes" do
