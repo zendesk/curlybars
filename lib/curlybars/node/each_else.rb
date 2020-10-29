@@ -37,7 +37,8 @@ module Curlybars
       end
 
       def validate(branches)
-        resolved = collection_path.resolve_and_check!(branches, check_type: :presenter_collection)
+        resolved = collection_path.resolve_and_check!(branches, check_type: :collectionlike)
+        resolved = resolved.first == :helper ? resolved.last : resolved
         sub_tree = resolved.first
 
         each_template_errors = begin

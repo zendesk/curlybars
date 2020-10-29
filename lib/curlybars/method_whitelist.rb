@@ -5,6 +5,9 @@ module Curlybars
       methods_with_type_validator = lambda do |methods_to_validate|
         methods_to_validate.each do |(method_name, type)|
           if type.is_a?(Array)
+            # allow collection helpers
+            next if type.size == 2 && type.first == :helper && type.last.first.respond_to?(:dependency_tree)
+
             if type.size != 1 || !type.first.respond_to?(:dependency_tree)
               raise "Invalid allowed method syntax for `#{method_name}`. Collections must be of one presenter class"
             end

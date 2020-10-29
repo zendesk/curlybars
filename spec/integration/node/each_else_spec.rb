@@ -3,7 +3,8 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
 
   describe "#compile" do
     let(:post) { double("post") }
-    let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
+    let(:presenter_class) { IntegrationTest::Presenter }
+    let(:presenter) { presenter_class.new(double("view_context"), post: post) }
 
     it "uses each_template when collection is not empty" do
       allow(presenter).to receive(:allows_method?).with(:non_empty_collection).and_return(true)
@@ -120,6 +121,31 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
       expect(eval(template)).to resemble("left")
     end
 
+    it "allows subexpressions with collection helpers" do
+      CollectionPresenter = Class.new do
+        extend Curlybars::MethodWhitelist
+
+        allow_methods :url
+
+        def url
+          "http://example.com"
+        end
+      end
+      presenter_class.class_eval { allow_methods collection_helper: [:helper, [CollectionPresenter]] }
+
+      allow(presenter).to receive(:collection_helper) { [CollectionPresenter.new] }
+
+      template = Curlybars.compile(<<-HBS)
+        {{#each (collection_helper)}}
+          {{url}}
+        {{else}}
+          right
+        {{/each}}
+      HBS
+
+      expect(eval(template)).to resemble("http://example.com")
+    end
+
     it "renders nothing if the context is nil" do
       template = Curlybars.compile(<<-HBS)
         {{#each return_nil}}
@@ -216,6 +242,31 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
 
         source = <<-HBS
           {{#each (a_presenter_collection)}} {{else}} {{/each}}
+        HBS
+
+        errors = Curlybars.validate(dependency_tree, source)
+
+        expect(errors).to be_empty
+      end
+
+      it "without errors when called with a collection helper" do
+        CollectionPresenter = Class.new do
+          extend Curlybars::MethodWhitelist
+
+          allow_methods :url
+
+          def url
+            "http://example.com"
+          end
+        end
+        dependency_tree = { a_collection_helper: [:helper, [{ url: nil }]] }
+
+        source = <<-HBS
+          {{#each (a_collection_helper)}}
+            {{url}}
+          {{else}}
+            right
+          {{/each}}
         HBS
 
         errors = Curlybars.validate(dependency_tree, source)

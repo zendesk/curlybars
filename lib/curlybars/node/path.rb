@@ -35,9 +35,12 @@ module Curlybars
         resolve(branches).is_a?(Hash)
       end
 
-      def presenter_collection?(branches)
-        value = resolve(branches)
+      def collection_value?(value)
         value.is_a?(Array) && value.first.is_a?(Hash)
+      end
+
+      def presenter_collection?(branches)
+        collection_value?(resolve(branches))
       end
 
       def leaf?(branches)
@@ -51,6 +54,17 @@ module Curlybars
 
       def helper?(branches)
         resolve(branches) == :helper
+      end
+
+      def collection_helper?(branches)
+        value = resolve(branches)
+        value.is_a?(Array) &&
+          value.first == :helper &&
+          collection_value?(value.last)
+      end
+
+      def collectionlike?(branches)
+        presenter_collection?(branches) || collection_helper?(branches)
       end
 
       def subexpression?
@@ -116,6 +130,10 @@ module Curlybars
 
           message = "`#{path}` must resolve to a presenter"
           raise Curlybars::Error::Validate.new('not_a_presenter', message, position)
+        when :collectionlike
+          return if collectionlike?(branches)
+          message = "`#{path}` must resolve to a collection of presenters"
+          raise Curlybars::Error::Validate.new('not_collectionlike', message, position)
         when :presenter_collection
           return if presenter_collection?(branches)
 
