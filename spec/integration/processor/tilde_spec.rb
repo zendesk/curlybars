@@ -32,7 +32,7 @@ describe "tilde operator" do
 
       Curlybars.validate(presenter.dependency_tree, "source", run_processors: false)
 
-      expect(Curlybars::Processor::Tilde).to have_received(:process!)
+      expect(Curlybars::Processor::Tilde).to have_received(:process!).twice
     end
   end
 end
