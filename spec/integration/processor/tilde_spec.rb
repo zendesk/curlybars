@@ -30,7 +30,7 @@ describe "tilde operator" do
     it "runs even when 'run_processors' flag is set to false" do
       allow(Curlybars::Processor::Tilde).to receive(:process!)
 
-      Curlybars.validate(presenter, "source", run_processors: false)
+      Curlybars.validate(presenter.dependency_tree, "source", run_processors: false)
 
       expect(Curlybars::Processor::Tilde).to have_received(:process!)
     end

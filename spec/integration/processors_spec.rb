@@ -9,19 +9,19 @@ describe "processors" do
 
   describe "validation" do
     it "are run by default" do
-      Curlybars.validate(presenter, "source")
+      Curlybars.validate(presenter.dependency_tree, "source")
 
       expect(processor).to have_received(:process!)
     end
 
-    it "are not run when run_processors is true" do
-      Curlybars.validate(presenter, "source", run_processors: true)
+    it "are run when run_processors is true" do
+      Curlybars.validate(presenter.dependency_tree, "source", run_processors: true)
 
       expect(processor).to have_received(:process!)
     end
 
     it "are not run when run_processors is false" do
-      Curlybars.validate(presenter, "source", run_processors: false)
+      Curlybars.validate(presenter.dependency_tree, "source", run_processors: false)
 
       expect(processor).not_to have_received(:process!)
     end
