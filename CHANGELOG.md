@@ -1,5 +1,8 @@
 ### Unreleased
 
+### Curlybars 1.5.1 (November 02, 2020)
+* Add missing visitor for the subexpression node
+
 ### Curlybars 1.5.0 (October 27, 2020)
 * Add basic language support subexpressions (save for `#each`)
 
