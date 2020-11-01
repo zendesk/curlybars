@@ -62,7 +62,7 @@ module Curlybars
     end
 
     def generic_paths(dependency_tree)
-      generic_methods = dependency_tree.entries.filter do |_, type|
+      generic_methods = dependency_tree.entries.select do |_, type|
         type.is_a?(Array) &&
           type.first == :helper &&
           type.last.is_a?(Array) &&
