@@ -5,7 +5,7 @@ module Curlybars
         # NOTE: the following is a heredoc string, representing the ruby code fragment
         # outputted by this node.
         <<-RUBY
-          collection = rendering.cached_call(#{path.compile})
+          collection = rendering.cached_call(#{collection_path.compile})
 
           if rendering.to_bool(collection)
             position = rendering.position(#{position.line_number}, #{position.line_offset})

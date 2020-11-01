@@ -135,13 +135,8 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
     end
 
     it "allows subexpressions" do
-      presenter_class.class_eval do
-        allow_methods non_empty_collection: [ArticlePresenter]
-
-        def non_empty_collection
-          [ArticlePresenter.new]
-        end
-      end
+      allow(presenter).to receive(:allows_method?).with(:non_empty_collection).and_return(true)
+      allow(presenter).to receive(:non_empty_collection) { [ArticlePresenter.new] }
 
       template = Curlybars.compile(<<-HBS)
         {{#each (non_empty_collection)}}left{{else}}right{{/each}}
@@ -151,13 +146,8 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
     end
 
     it "allows subexpressions with collection helpers" do
-      presenter_class.class_eval do
-        allow_methods collection_helper: [:helper, [ArticlePresenter]]
-
-        def collection_helper
-          [ArticlePresenter.new]
-        end
-      end
+      allow(presenter).to receive(:allows_method?).with(:collection_helper).and_return(true)
+      allow(presenter).to receive(:collection_helper) { [ArticlePresenter.new] }
 
       template = Curlybars.compile(<<-HBS)
         {{#each (collection_helper)}}
@@ -171,17 +161,11 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
     end
 
     it "allows subexpressions with generic collection helpers" do
-      presenter_class.class_eval do
-        allow_methods articles: [ArticlePresenter], refl: [:helper, [Curlybars::Presenter]]
-
-        def refl(collection, _options)
-          collection
-        end
-
-        def articles
-          [ArticlePresenter.new, ArticlePresenter.new]
-        end
-      end
+      articles = [ArticlePresenter.new, ArticlePresenter.new]
+      allow(presenter).to receive(:allows_method?).with(:articles).and_return(true)
+      allow(presenter).to receive(:allows_method?).with(:refl).and_return(true)
+      allow(presenter).to receive(:articles) { articles }
+      allow(presenter).to receive(:refl).and_return(articles)
 
       template = Curlybars.compile(<<-HBS)
         {{#each (refl articles)}}
