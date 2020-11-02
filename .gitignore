@@ -11,6 +11,7 @@
 mkmf.log
 *.gem
 *.rbc
+.byebug_history
 .config
 rdoc
 .ruby-version
