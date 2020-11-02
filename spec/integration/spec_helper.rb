@@ -168,7 +168,8 @@ module IntegrationTest
     extend Curlybars::MethodWhitelist
 
     allow_methods :global_helper, :extract, :join,
-      :foo, :bar, :equal, :concat, :dash, :input, :t, :calc
+      :foo, :bar, :equal, :concat, :dash, :input, :t, :calc,
+      slice: [:helper, [Curlybars::Presenter]]
 
     def initialize(context = nil)
     end
@@ -182,6 +183,10 @@ module IntegrationTest
       eval <<-RUBY, binding, __FILE__, __LINE__ + 1
         #{left} #{op} #{right}
       RUBY
+    end
+
+    def slice(collection, start, length, _)
+      collection[start, length]
     end
 
     def concat(left, right, _)

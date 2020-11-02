@@ -73,7 +73,12 @@ module Curlybars
 
       def resolve(branches)
         @value ||= begin
-          return :helper if global_helpers_dependency_tree.key?(path.to_sym)
+          if Curlybars.global_helpers_dependency_tree.key?(path.to_sym)
+            dep_node = Curlybars.global_helpers_dependency_tree[path.to_sym]
+
+            return :helper if dep_node.nil?
+            return dep_node
+          end
 
           path_split_by_slashes = path.split('/')
           backward_steps_on_branches = path_split_by_slashes.count - 1

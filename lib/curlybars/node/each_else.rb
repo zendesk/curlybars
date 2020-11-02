@@ -37,12 +37,8 @@ module Curlybars
       end
 
       def validate(branches)
-        resolved = collection_path.resolve_and_check!(branches, check_type: :collectionlike)
-        resolved = resolved.first == :helper ? resolved.last : resolved
-        sub_tree = resolved.first
-
         each_template_errors = begin
-          branches.push(sub_tree)
+          branches.push(resolve_sub_tree(branches))
           each_template.validate(branches)
         ensure
           branches.pop
@@ -56,6 +52,16 @@ module Curlybars
         ]
       rescue Curlybars::Error::Validate => path_error
         path_error
+      end
+
+      def resolve_sub_tree(branches)
+        resolved = collection_path.resolve_and_check!(branches, check_type: :collectionlike)
+
+        return resolved.first unless resolved.first == :helper
+        return resolved.last.first unless resolved.last.first == {}
+
+        resolved = Curlybars::TypeInferrer.infer_from_node(path, branches.inject({}, :merge))
+        resolved.first
       end
 
       def collection_path

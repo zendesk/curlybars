@@ -84,7 +84,11 @@ module Curlybars
           memo[method_name] = if type.respond_to?(:dependency_tree)
             type.dependency_tree(context)
           elsif type.is_a?(Array)
-            [type.first.dependency_tree(context)]
+            if type.first == :helper
+              [type.first, [type.last.first.dependency_tree(context)]]
+            else
+              [type.first.dependency_tree(context)]
+            end
           else
             type
           end

@@ -255,6 +255,10 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
     end
 
     describe "with subexpressions" do
+      before do
+        Curlybars.instance_variable_set(:@global_helpers_dependency_tree, nil)
+      end
+
       it "without errors when called with a presenter collection" do
         dependency_tree = { a_presenter_collection: [{}] }
 
@@ -268,15 +272,6 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
       end
 
       it "without errors when called with a collection helper" do
-        CollectionPresenter = Class.new do
-          extend Curlybars::MethodWhitelist
-
-          allow_methods :url
-
-          def url
-            "http://example.com"
-          end
-        end
         dependency_tree = { a_collection_helper: [:helper, [{ url: nil }]] }
 
         source = <<-HBS
@@ -365,6 +360,66 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
           errors = Curlybars.validate(dependency_tree, source)
 
           expect(errors).not_to be_empty
+        end
+
+        describe "as a global helper" do
+          let(:global_helpers_provider_classes) { [IntegrationTest::GlobalHelperProvider] }
+
+          before do
+            allow(Curlybars.configuration).to receive(:global_helpers_provider_classes).and_return(global_helpers_provider_classes)
+          end
+
+          it "without errors when the first argument is a collection" do
+            dependency_tree = {
+              articles: [{ url: nil }]
+            }
+
+            source = <<-HBS
+              {{#each (slice articles 0 4)}}
+                {{url}}
+              {{else}}
+                right
+              {{/each}}
+            HBS
+
+            errors = Curlybars.validate(dependency_tree, source)
+
+            expect(errors).to be_empty
+          end
+
+          it "with errors when the first argument is not a collection" do
+            dependency_tree = {
+              articles: { url: nil }
+            }
+
+            source = <<-HBS
+              {{#each (slice articles 0 4)}}
+                {{url}}
+              {{else}}
+                right
+              {{/each}}
+            HBS
+
+            errors = Curlybars.validate(dependency_tree, source)
+
+            expect(errors).not_to be_empty
+          end
+
+          it "with errors when no argument is given" do
+            dependency_tree = {}
+
+            source = <<-HBS
+              {{#each (slice)}}
+                {{url}}
+              {{else}}
+                right
+              {{/each}}
+            HBS
+
+            errors = Curlybars.validate(dependency_tree, source)
+
+            expect(errors).not_to be_empty
+          end
         end
       end
     end
