@@ -45,25 +45,15 @@ module Curlybars
       )
 
       errors = begin
-        ast_res = ast(source, identifier, run_processors: options[:run_processors])
-        generic_helper_nodes = find_generic_helper_nodes(source, dependency_tree)
-        inferred_subtree = generic_helper_nodes.entries.map do |path, node|
-          [path, dependency_tree[node.arguments.first.path.to_sym]]
-        end.to_h
-        dependency_tree.update(inferred_subtree)
-        branches = [dependency_tree]
-        ast_res.validate(branches)
+        type_inferrer = Curlybars::TypeInferrer.new(source)
+        branches = [type_inferrer.infer_from(dependency_tree)]
+        ast(source, identifier, run_processors: options[:run_processors]).validate(branches)
       rescue Curlybars::Error::Base => ast_error
         [ast_error]
       end
       errors.flatten!
       errors.compact!
       errors
-    end
-
-    def find_generic_helper_nodes(source, dependency_tree)
-      generic_helper_visitor = Curlybars::Visitors::GenericHelperVisitor.new(dependency_tree)
-      Curlybars.visit(generic_helper_visitor, source)
     end
 
     # Check if the source is valid for a given presenter.
@@ -142,3 +132,4 @@ require 'curlybars/presenter'
 require 'curlybars/method_whitelist'
 require 'curlybars/visitor'
 require 'curlybars/visitors/generic_helper_visitor'
+require 'curlybars/type_inferrer'
