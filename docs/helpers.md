@@ -175,3 +175,60 @@ Curlybars.configure do |config|
   ]
 end
 ```
+
+### Collection Helpers
+
+Collection helpers are standard helpers returning a specific kind of collections. It can be specified via `allow_methods` as:
+
+```ruby
+class ArticlePresenter
+  extend Curlybars::MethodWhitelist
+
+  allow_methods transform_articles: [:helper, [ArticlePresenter]]
+
+  def transform_articles(articles, options)
+    articles.map { |article| transform_article(article) }
+  end
+end
+```
+
+Collection helpers are useful when manipulating collections in `#each` statements via [subexpressions](./templates.md#subexpressions):
+
+```hbs
+{{#each (slice (transform_articles articles) 0 4)}}
+  {{author.name}}
+{{/each}}
+```
+
+### Generic Collection Helpers
+
+Generic collection helpers are collection helpers that return a collection whose type is inferred from the first argument of the helper.
+Hence, all generic collection helpers have a required argument.
+It can be specified via `allow_methods` as:
+
+```ruby
+class Helpers::GlobalHelper
+  extend Curlybars::MethodWhitelist
+
+  allow_methods slice: [:helper, [Curlybars::Presenter]]
+
+  def slice(collection, start, length, _options)
+    collection.slice(start, length)
+  end
+end
+```
+
+Unlike regular helpers, generic collection helpers *must* be specified as such in the global helper provider class.
+These helpers are useful for implementing generic helpers for manipulating collections.
+For example, displaying the title and excerpt of the first four articles written by a specific author:
+
+```hbs
+{{#each (slice (filter articles on="author.name" equals="Libo") 0 4)}}
+  <section>
+    <h3>{{title}}</h3>
+    <div>{{excerpt body}}</div>
+  </section>
+{{/each}}
+```
+
+In the above example, both `slice` and `filter` will have a inferred return type of an `[ArticlePresenter]`.

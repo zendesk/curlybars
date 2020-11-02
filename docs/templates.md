@@ -348,7 +348,14 @@ Curlybars offers limited support for [subexpressions](https://handlebarsjs.com/g
 
 ### Each
 
-Subexpressions in `each` statements are currently *not* supported.
+```hbs
+{{#each (slice (filter articles on="author.name" equals="Libo") 0 4)}}
+  <section>
+    <h3>{{title}}</h3>
+    <div>{{excerpt body}}</div>
+  </section>
+{{/each}}
+```
 
 ## Analysis
 
