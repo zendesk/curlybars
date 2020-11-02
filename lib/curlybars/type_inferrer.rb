@@ -26,6 +26,8 @@ module Curlybars
       current_node = node
       intermediate_nodes = []
       while type.nil?
+        validate_helper!(current_node)
+
         intermediate_nodes << current_node
         inferrable_node = current_node.arguments.first
         if inferrable_node.is_a?(Curlybars::Node::SubExpression)
@@ -34,11 +36,33 @@ module Curlybars
         end
 
         type = dependency_tree[inferrable_node.path.to_sym]
+        break
       end
+
+      validate_type!(type, dependency_tree[path.to_sym].last, current_node)
 
       intermediate_nodes.each { |inode| @cache.update(inode.helper.path => type) }
 
       type
+    end
+
+    def validate_helper!(subexpression)
+      helper = subexpression.helper
+
+      if subexpression.arguments.empty?
+        raise Curlybars::Error::Validate.new('missing_path', "'#{helper.path}' requires a collection as its first argument", helper.position)
+      end
+    end
+
+    def validate_type!(type, expected_type, subexpression)
+      expected = expected_type.class
+      actual = type.class
+
+      unless actual == expected
+        unallowed_path = subexpression.arguments.first.path
+        position = subexpression.arguments.first.position
+        raise Curlybars::Error::Validate.new('unallowed_path', "'#{unallowed_path}' is not a collection", position)
+      end
     end
   end
 end

@@ -292,23 +292,80 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
         expect(errors).to be_empty
       end
 
-      it "without errors when called with a generic collection helper" do
-        dependency_tree = {
-          refl: [:helper, [{}]],
-          articles: [{ url: nil }]
-        }
+      context "with a generic collection helper" do
+        it "without errors when arguments are valid" do
+          dependency_tree = {
+            refl: [:helper, [{}]],
+            articles: [{ url: nil }]
+          }
 
-        source = <<-HBS
-          {{#each (refl articles)}}
-            {{url}}
-          {{else}}
-            right
-          {{/each}}
-        HBS
+          source = <<-HBS
+            {{#each (refl articles)}}
+              {{url}}
+            {{else}}
+              right
+            {{/each}}
+          HBS
 
-        errors = Curlybars.validate(dependency_tree, source)
+          errors = Curlybars.validate(dependency_tree, source)
 
-        expect(errors).to be_empty
+          expect(errors).to be_empty
+        end
+
+        it "with errors when the first argument is not a collection" do
+          dependency_tree = {
+            refl: [:helper, [{}]],
+            articles: { url: nil }
+          }
+
+          source = <<-HBS
+            {{#each (refl articles)}}
+              {{url}}
+            {{else}}
+              right
+            {{/each}}
+          HBS
+
+          errors = Curlybars.validate(dependency_tree, source)
+
+          expect(errors).not_to be_empty
+        end
+
+        it "with errors when the first argument is not defined" do
+          dependency_tree = {
+            refl: [:helper, [{}]]
+          }
+
+          source = <<-HBS
+            {{#each (refl articles)}}
+              {{url}}
+            {{else}}
+              right
+            {{/each}}
+          HBS
+
+          errors = Curlybars.validate(dependency_tree, source)
+
+          expect(errors).not_to be_empty
+        end
+
+        it "with errors when no argument is given" do
+          dependency_tree = {
+            refl: [:helper, [{}]]
+          }
+
+          source = <<-HBS
+            {{#each (refl)}}
+              {{url}}
+            {{else}}
+              right
+            {{/each}}
+          HBS
+
+          errors = Curlybars.validate(dependency_tree, source)
+
+          expect(errors).not_to be_empty
+        end
       end
     end
   end
