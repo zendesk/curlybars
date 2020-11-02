@@ -61,31 +61,8 @@ module Curlybars
       errors
     end
 
-    def generic_paths(dependency_tree)
-      generic_methods = dependency_tree.entries.select do |_, type|
-        type.is_a?(Array) &&
-          type.first == :helper &&
-          type.last.is_a?(Array) &&
-          type.last.first == {}
-      end
-      generic_methods.map { |path, _| path }
-    end
-
     def find_generic_helper_nodes(source, dependency_tree)
-      generic_helper_visitor = Class.new(Curlybars::Visitor) do
-        attr_reader :generic_paths
-
-        def initialize(context, generic_paths)
-          super(context)
-          @generic_paths = generic_paths
-        end
-
-        def visit_sub_expression(node)
-          path = node.helper.path.to_sym
-          context.update(path => node) if generic_paths.include?(path)
-          super(node)
-        end
-      end.new({}, generic_paths(dependency_tree))
+      generic_helper_visitor = Curlybars::Visitors::GenericHelperVisitor.new(dependency_tree)
       Curlybars.visit(generic_helper_visitor, source)
     end
 
@@ -164,3 +141,4 @@ require 'curlybars/railtie' if defined?(Rails)
 require 'curlybars/presenter'
 require 'curlybars/method_whitelist'
 require 'curlybars/visitor'
+require 'curlybars/visitors/generic_helper_visitor'
