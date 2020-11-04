@@ -120,14 +120,6 @@ module Curlybars
 
       private
 
-      # TODO: extract me away
-      def global_helpers_dependency_tree
-        @global_helpers_dependency_tree ||= begin
-          classes = Curlybars.configuration.global_helpers_provider_classes
-          classes.map(&:dependency_tree).inject({}, :merge)
-        end
-      end
-
       def check_type_of(branches, check_type)
         case check_type
         when :presenter

@@ -8,22 +8,22 @@ describe "processors" do
   end
 
   describe "validation" do
-    it "are run twice by default" do
+    it "are run by default" do
       Curlybars.validate(presenter.dependency_tree, "source")
 
-      expect(processor).to have_received(:process!).twice
+      expect(processor).to have_received(:process!)
     end
 
-    it "are run twice when run_processors is true" do
+    it "are run when run_processors is true" do
       Curlybars.validate(presenter.dependency_tree, "source", run_processors: true)
 
-      expect(processor).to have_received(:process!).twice
+      expect(processor).to have_received(:process!)
     end
 
-    it "are run once when run_processors is false" do
+    it "are not run when run_processors is false" do
       Curlybars.validate(presenter.dependency_tree, "source", run_processors: false)
 
-      expect(processor).to have_received(:process!).once
+      expect(processor).not_to have_received(:process!)
     end
   end
 end
