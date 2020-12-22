@@ -82,8 +82,6 @@ describe "{{#unless}}...{{else}}...{{/unless}}" do
   end
 
   describe "#validate" do
-    let(:presenter_class) { double(:presenter_class) }
-
     it "validates with errors the condition" do
       dependency_tree = {}
 

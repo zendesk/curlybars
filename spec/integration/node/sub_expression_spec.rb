@@ -227,8 +227,6 @@ describe "{{(helper arg1 arg2 ... key=value ...)}}" do
   end
 
   describe "#validate" do
-    let(:presenter_class) { double(:presenter_class) }
-
     before do
       allow(Curlybars.configuration).to receive(:global_helpers_provider_classes).and_return([IntegrationTest::GlobalHelperProvider])
     end

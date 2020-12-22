@@ -75,8 +75,6 @@ describe "{{#with presenter}}...{{/with}}" do
   end
 
   describe "#validate" do
-    let(:presenter_class) { double(:presenter_class) }
-
     it "without errors" do
       dependency_tree = { a_presenter: {} }
 
