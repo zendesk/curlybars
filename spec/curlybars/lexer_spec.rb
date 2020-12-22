@@ -37,6 +37,7 @@ describe Curlybars::Lexer do
     it "is resilient to whitespaces" do
       expect(lex('{{! }}')).to produce []
     end
+
     it "is resilient to newlines" do
       expect(lex("{{!\n}}")).to produce []
     end
@@ -202,7 +203,7 @@ describe Curlybars::Lexer do
     end
   end
 
-  # rubocop:disable Layout/AlignArray
+  # rubocop:disable Layout/ArrayAlignment
   describe "{{#if path}}...{{else}}...{{/if}}" do
     it "is lexed" do
       expect(lex('{{#if path}} text {{else}} text {{/if}}')).to produce(
@@ -320,7 +321,7 @@ describe Curlybars::Lexer do
       )
     end
   end
-  # rubocop:enable Layout/AlignArray
+  # rubocop:enable Layout/ArrayAlignment
 
   describe "{{#with path}}...{{/with}}" do
     it "is lexed" do

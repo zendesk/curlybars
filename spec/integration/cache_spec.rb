@@ -1,29 +1,31 @@
 describe "caching" do
-  class DummyCache
-    attr_reader :reads, :hits
+  let(:dummy_cache) do
+    Class.new do
+      attr_reader :reads, :hits
 
-    def initialize
-      @store = {}
-      @reads = 0
-      @hits = 0
-    end
+      def initialize
+        @store = {}
+        @reads = 0
+        @hits = 0
+      end
 
-    def fetch(key)
-      @reads += 1
-      if @store.key?(key)
-        @hits += 1
-        @store[key]
-      else
-        value = yield
-        @store[key] = value
-        value
+      def fetch(key)
+        @reads += 1
+        if @store.key?(key)
+          @hits += 1
+          @store[key]
+        else
+          value = yield
+          @store[key] = value
+          value
+        end
       end
     end
   end
 
   let(:global_helpers_providers) { [] }
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context")) }
-  let(:cache) { DummyCache.new }
+  let(:cache) { dummy_cache.new }
 
   before do
     Curlybars.configure do |config|

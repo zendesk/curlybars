@@ -109,26 +109,32 @@ module Curlybars
         case check_type
         when :presenter
           return if presenter?(branches)
+
           message = "`#{path}` must resolve to a presenter"
           raise Curlybars::Error::Validate.new('not_a_presenter', message, position)
         when :presenter_collection
           return if presenter_collection?(branches)
+
           message = "`#{path}` must resolve to a collection of presenters"
           raise Curlybars::Error::Validate.new('not_a_presenter_collection', message, position)
         when :leaf
           return if leaf?(branches)
+
           message = "`#{path}` cannot resolve to a component"
           raise Curlybars::Error::Validate.new('not_a_leaf', message, position)
         when :partial
           return if partial?(branches)
+
           message = "`#{path}` cannot resolve to a partial"
           raise Curlybars::Error::Validate.new('not_a_partial', message, position)
         when :helper
           return if helper?(branches)
+
           message = "`#{path}` cannot resolve to a helper"
           raise Curlybars::Error::Validate.new('not_a_helper', message, position)
         when :not_helper
           return unless helper?(branches)
+
           message = "`#{path}` resolves to a helper"
           raise Curlybars::Error::Validate.new('is_a_helper', message, position)
         when :anything

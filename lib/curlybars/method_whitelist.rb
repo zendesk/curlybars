@@ -1,5 +1,6 @@
 module Curlybars
   module MethodWhitelist
+    # rubocop:disable Style/SoleNestedConditional
     def allow_methods(*methods_without_type, **methods_with_type, &contextual_block)
       methods_with_type_validator = lambda do |methods_to_validate|
         methods_to_validate.each do |(method_name, type)|
@@ -49,8 +50,8 @@ module Curlybars
           memo[method] = nil
         end
 
-        methods_with_type_resolved = all_methods_with_type.each_with_object({}) do |(method_name, type), memo|
-          memo[method_name] = if type.respond_to?(:call)
+        methods_with_type_resolved = all_methods_with_type.transform_values do |type|
+          if type.respond_to?(:call)
             type.call(context)
           else
             type
@@ -65,6 +66,7 @@ module Curlybars
         # Included modules
         included_modules.each do |mod|
           next unless mod.respond_to?(:methods_schema)
+
           schema.merge!(mod.methods_schema(context))
         end
 
@@ -90,6 +92,7 @@ module Curlybars
         allowed_methods.include?(method)
       end
     end
+    # rubocop:enable Style/SoleNestedConditional
 
     def self.extended(base)
       # define a default of no method allowed

@@ -100,6 +100,7 @@ module Curlybars
 
       def check_open_and_close_elements(helper, helperclose, error_class)
         return unless helper.path != helperclose.path
+
         message = "block `#{helper.path}` cannot be closed by `#{helperclose.path}`"
         raise error_class.new('closing_tag_mismatch', message, helperclose.position)
       end

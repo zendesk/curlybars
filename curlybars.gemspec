@@ -27,6 +27,8 @@ Gem::Specification.new do |s|
 
   s.rdoc_options = ["--charset=UTF-8"]
 
+  s.required_ruby_version = ">= 2.4"
+
   s.add_dependency("actionpack", [">= 4.2", "< 6.0"])
   s.add_dependency("activesupport", [">= 4.2", "< 6.0"])
   s.add_dependency("ffi")
@@ -37,8 +39,10 @@ Gem::Specification.new do |s|
   s.add_development_dependency("railties", [">= 4.2", "< 6.0"])
   s.add_development_dependency("rake")
   s.add_development_dependency("rspec-rails", "~> 3.8")
-  s.add_development_dependency("rubocop", "~> 0.58.2")
-  s.add_development_dependency("rubocop-rspec", "~> 1.28.0")
+  s.add_development_dependency("rubocop", "~> 1.6.0")
+  s.add_development_dependency("rubocop-performance", "~> 1.9.0")
+  s.add_development_dependency("rubocop-rake", "~> 0.5.0")
+  s.add_development_dependency("rubocop-rspec", "~> 2.1.0")
 
   s.files       = Dir.glob('lib/**/*.rb')
   s.executables = Dir.glob('bin/**/*').map { |f| File.basename(f) }

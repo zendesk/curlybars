@@ -1,9 +1,11 @@
 require:
+  - rubocop-performance
+  - rubocop-rake
   - rubocop-rspec
 
 AllCops:
   DisplayCopNames: true
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.4
   Exclude:
     - gemfiles/vendor/**/*
     - vendor/**/*
@@ -16,7 +18,7 @@ Lint/EmptyWhen:
   Exclude:
     - lib/curlybars/node/path.rb
 
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   Exclude:
     - spec/integration/spec_helper.rb
 
@@ -45,12 +47,8 @@ Style/ClassAndModuleChildren:
 # Configured cops
 #
 
-# Align the elements of a hash literal if they span more than one line.
-Layout/AlignHash:
-  EnforcedLastArgumentHashStyle: ignore_implicit
-
-# Align the parameters of a method call if they span more than one line.
-Layout/AlignParameters:
+# Align the arguments of a method call if they span more than one line.
+Layout/ArgumentAlignment:
   EnforcedStyle: with_fixed_indentation
 
 # Indentation of when in a case/when/[else/]end.
@@ -62,16 +60,24 @@ Layout/EndAlignment:
   EnforcedStyleAlignWith: variable
 
 # Checks the indentation of the first parameter in a method call.
-Layout/FirstParameterIndentation:
+Layout/FirstArgumentIndentation:
   EnforcedStyle: consistent
 
 # Checks the indentation of the first key in a hash literal.
-Layout/IndentHash:
+Layout/FirstHashElementIndentation:
   EnforcedStyle: consistent
+
+# Align the elements of a hash literal if they span more than one line.
+Layout/HashAlignment:
+  EnforcedLastArgumentHashStyle: ignore_implicit
 
 # Checks indentation of binary operations that span more than one line.
 Layout/MultilineOperationIndentation:
   EnforcedStyle: indented
+
+# Align the parameters of a method call if they span more than one line.
+Layout/ParameterAlignment:
+  EnforcedStyle: with_fixed_indentation
 
 # Use alias instead of alias_method.
 Style/Alias:
@@ -96,6 +102,15 @@ Style/FormatStringToken:
 Layout/DotPosition:
   Enabled: false
 
+Layout/LineLength:
+  Enabled: false
+
+Lint/MissingSuper:
+  Enabled: false
+
+Lint/StructNewOverride:
+  Enabled: false
+
 Lint/UnusedBlockArgument:
   Enabled: false
 
@@ -114,9 +129,6 @@ Metrics/ClassLength:
 Metrics/CyclomaticComplexity:
   Enabled: false
 
-Metrics/LineLength:
-  Enabled: false
-
 Metrics/ModuleLength:
   Enabled: false
 
@@ -130,6 +142,9 @@ Metrics/PerceivedComplexity:
   Enabled: false
 
 Naming/MemoizedInstanceVariableName:
+  Enabled: false
+
+Naming/RescuedExceptionsVariableName:
   Enabled: false
 
 RSpec/DescribeClass:
@@ -153,6 +168,9 @@ Style/Documentation:
 Style/EmptyLiteral:
   Enabled: false
 
+Style/ExplicitBlockArgument:
+  Enabled: false
+
 Style/FrozenStringLiteralComment:
   Enabled: false
 
@@ -160,9 +178,6 @@ Style/GuardClause:
   Enabled: false
 
 Style/IfUnlessModifier:
-  Enabled: false
-
-Style/MethodMissingSuper:
   Enabled: false
 
 Style/Next:
