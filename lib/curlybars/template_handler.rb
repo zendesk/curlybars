@@ -13,9 +13,17 @@ module Curlybars
       # template - The ActionView::Template template that should be compiled.
       #
       # Returns a String containing the Ruby code representing the template.
-      def call(template)
-        instrument(template) do
-          compile(template)
+      if ActionView::VERSION::MAJOR < 6
+        def call(template)
+          instrument(template) do
+            compile_for_actionview5(template)
+          end
+        end
+      else
+        def call(template, source)
+          instrument(template) do
+            compile(template, source)
+          end
         end
       end
 
@@ -43,9 +51,13 @@ module Curlybars
 
       private
 
-      def compile(template)
+      def compile_for_actionview5(template)
+        compile(template, template.source)
+      end
+
+      def compile(template, source)
         # Template is empty, so there's no need to initialize a presenter.
-        return %("") if template.source.empty?
+        return %("") if source.empty?
 
         path = template.virtual_path
         presenter_class = Curlybars::Presenter.presenter_for_path(path)
@@ -55,7 +67,7 @@ module Curlybars
         # For security reason, we strip the encoding directive in order to avoid
         # potential issues when rendering the template in another character
         # encoding.
-        safe_source = template.source.gsub(/\A#{ActionView::ENCODING_FLAG}/, '')
+        safe_source = source.gsub(/\A#{ActionView::ENCODING_FLAG}/, '')
 
         source = Curlybars.compile(safe_source, template.identifier)
 
