@@ -23,12 +23,14 @@ module Curlybars
     def check_timeout!
       return unless timeout.present?
       return unless (Time.now - start_time) > timeout
+
       message = "Rendering took too long (> #{timeout} seconds)"
       raise ::Curlybars::Error::Render.new('timeout', message, nil)
     end
 
     def check_context_is_presenter(context, path, position)
       return if presenter?(context)
+
       message = "`#{path}` is not a context type object"
       raise Curlybars::Error::Render.new('context_is_not_a_presenter', message, position)
     end
@@ -83,9 +85,11 @@ module Curlybars
       resolved = chain.inject(base_context) do |context, meth|
         next context if meth == 'this'
         next context.count if meth == 'length' && presenter_collection?(context)
+
         raise_if_not_traversable(context, meth, position)
         outcome = instrument(context.method(meth)) { context.public_send(meth) }
         return -> {} if outcome.nil?
+
         outcome
       end
 
@@ -101,6 +105,7 @@ module Curlybars
 
     def cached_call(meth)
       return cached_calls[meth] if cached_calls.key? meth
+
       instrument(meth) { cached_calls[meth] = meth.call(*arguments_for_signature(meth, [], {})) }
     end
 
@@ -202,6 +207,7 @@ module Curlybars
 
     def check_context_allows_method(context, meth, position)
       return if context.allows_method?(meth.to_sym)
+
       message = "`#{meth}` is not available - "
       message += "add `allow_methods :#{meth}` to #{context.class} to allow this path"
       raise Curlybars::Error::Render.new('unallowed_path', message, position, meth: meth.to_sym)
@@ -209,12 +215,14 @@ module Curlybars
 
     def check_context_has_method(context, meth, position)
       return if context.respond_to?(meth.to_sym)
+
       message = "`#{meth}` is not available in #{context.class}"
       raise Curlybars::Error::Render.new('unallowed_path', message, position)
     end
 
     def check_traverse_not_too_deep(traverse, position)
       return unless traverse.count('.') > Curlybars.configuration.traversing_limit
+
       message = "`#{traverse}` too deep"
       raise Curlybars::Error::Render.new('traverse_too_deep', message, position)
     end

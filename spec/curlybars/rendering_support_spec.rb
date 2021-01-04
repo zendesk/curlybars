@@ -1,3 +1,4 @@
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 describe Curlybars::RenderingSupport do
   let(:file_name) { '/app/views/template.hbs' }
   let(:presenter) { double(:presenter, allows_method?: true, meth: :value) }
@@ -7,7 +8,6 @@ describe Curlybars::RenderingSupport do
   let(:position) do
     double(:position, file_name: 'template.hbs', line_number: 1, line_offset: 0)
   end
-  let(:block) { -> {} }
 
   describe "#check_timeout!" do
     it "skips checking if timeout is nil" do
@@ -179,14 +179,6 @@ describe Curlybars::RenderingSupport do
   end
 
   describe "#cached_call" do
-    before do
-      class APresenter
-        def meth
-          :value
-        end
-      end
-    end
-
     it "(cache miss) calls the method if not cached already" do
       meth = presenter.method(:meth)
       allow(meth).to receive(:call)
@@ -217,6 +209,8 @@ describe Curlybars::RenderingSupport do
   end
 
   describe "#call" do
+    let(:block) { -> {} }
+
     it "calls with no arguments a method with no parameters" do
       method = -> { :return }
       arguments = []
@@ -424,3 +418,4 @@ describe Curlybars::RenderingSupport do
     allow(presenter).to receive(:allows_method?).and_return(false)
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

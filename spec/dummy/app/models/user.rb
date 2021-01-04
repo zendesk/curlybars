@@ -1,5 +1,6 @@
 class User
   attr_reader :first_name, :id
+
   def initialize(id, first_name)
     @id = id
     @first_name = first_name

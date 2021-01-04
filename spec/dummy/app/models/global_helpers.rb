@@ -1,5 +1,6 @@
 class GlobalHelpers
   attr_reader :context
+
   extend Curlybars::MethodWhitelist
 
   allow_methods :current_user_name, :current_account_name
