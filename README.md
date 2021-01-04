@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/zendesk/curlybars/tree/master.svg?style=svg)](https://circleci.com/gh/zendesk/curlybars/tree/master)
+[![Build Status](https://github.com/zendesk/curlybars/workflows/CI/badge.svg)](https://github.com/zendesk/curlybars/actions?query=workflow%3ACI)
 
 # Curlybars
 

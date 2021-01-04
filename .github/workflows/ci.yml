@@ -1,0 +1,34 @@
+name: CI
+
+on: push
+
+jobs:
+  specs-and-rubocop:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        ruby-version:
+          - 2.4
+        gemfile:
+          - rails4.2
+          - rails5.0
+          - rails5.1
+          - rails5.2
+        task:
+          - rspec
+        include:
+          - ruby-version: 2.5
+            gemfile: rails5.2
+            task: rubocop
+    env:
+      BUNDLE_GEMFILE: gemfiles/${{ matrix.gemfile }}.gemfile
+    steps:
+      - uses: zendesk/checkout@v2
+      - name: Set up Ruby
+        uses: zendesk/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+          bundler-cache: true
+      - name: ${{ matrix.task }}
+        run: bundle exec ${{ matrix.task }}

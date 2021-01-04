@@ -1,4 +1,5 @@
 ### Unreleased
+* Use GitHub Actions for testing.
 
 ### Curlybars 1.5.1 (November 02, 2020)
 * Add missing visitor for the subexpression node
