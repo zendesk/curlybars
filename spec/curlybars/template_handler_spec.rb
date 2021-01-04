@@ -100,12 +100,10 @@ describe Curlybars::TemplateHandler do
   end
 
   it "strips the `# encoding: *` directive away from the template" do
-    allow(template).to receive(:source) do
-      <<-TEMPLATE.strip_heredoc
-        # encoding: utf-8"
-        first line
-      TEMPLATE
-    end
+    output = render(<<-TEMPLATE.strip_heredoc)
+      # encoding: utf-8"
+      first line
+    TEMPLATE
     expect(output).to eq(<<-TEMPLATE.strip_heredoc)
 
       first line
@@ -114,55 +112,54 @@ describe Curlybars::TemplateHandler do
 
   it "passes in the presenter context to the presenter class" do
     allow(context).to receive(:bar).and_return("BAR")
-    allow(template).to receive(:source).and_return("{{bar}}")
+    output = render("{{bar}}")
     expect(output).to eq("BAR")
   end
 
   it "fails if there's no matching presenter class" do
     allow(template).to receive(:virtual_path).and_return("missing")
-    allow(template).to receive(:source).and_return(" FOO ")
-    expect { output }.to raise_exception(Curlybars::Error::Presenter::NotFound)
+    expect { render(" FOO ") }.to raise_exception(Curlybars::Error::Presenter::NotFound)
   end
 
   it "allows calling public methods on the presenter" do
-    allow(template).to receive(:source).and_return("{{foo}}")
+    output = render("{{foo}}")
     expect(output).to eq("FOO")
   end
 
   it "marks its output as HTML safe" do
-    allow(template).to receive(:source).and_return("{{foo}}")
+    output = render("{{foo}}")
     expect(output).to be_html_safe
   end
 
   it "calls the #setup! method before rendering the view" do
-    allow(template).to receive(:source).and_return("{{foo}}")
-    output
+    render("{{foo}}")
     expect(context.content_for(:foo)).to eq("bar")
   end
 
   describe "caching" do
     before do
-      allow(template).to receive(:source).and_return("{{bar}}")
       allow(context).to receive(:bar).and_return("BAR")
     end
 
+    let(:output) { -> { render("{{bar}}") } }
+
     it "caches the result with the #cache_key from the presenter" do
       context.assigns[:cache_key] = "x"
-      expect(output).to eq("BAR")
+      expect(output.call).to eq("BAR")
 
       allow(context).to receive(:bar).and_return("BAZ")
-      expect(output).to eq("BAR")
+      expect(output.call).to eq("BAR")
 
       context.assigns[:cache_key] = "y"
-      expect(output).to eq("BAZ")
+      expect(output.call).to eq("BAZ")
     end
 
     it "doesn't cache when the cache key is nil" do
       context.assigns[:cache_key] = nil
-      expect(output).to eq("BAR")
+      expect(output.call).to eq("BAR")
 
       allow(context).to receive(:bar).and_return("BAZ")
-      expect(output).to eq("BAZ")
+      expect(output.call).to eq("BAZ")
     end
 
     it "adds the presenter class' cache key to the instance's cache key" do
@@ -171,51 +168,53 @@ describe Curlybars::TemplateHandler do
 
       allow(presenter_class).to receive(:cache_key).and_return("foo")
 
-      expect(output).to eq("BAR")
+      expect(output.call).to eq("BAR")
 
       allow(presenter_class).to receive(:cache_key).and_return("bar")
 
       allow(context).to receive(:bar).and_return("FOOBAR")
-      expect(output).to eq("FOOBAR")
+      expect(output.call).to eq("FOOBAR")
     end
 
     it "expires the cache keys after #cache_duration" do
       context.assigns[:cache_key] = "x"
       context.assigns[:cache_duration] = 42
 
-      expect(output).to eq("BAR")
+      expect(output.call).to eq("BAR")
 
       allow(context).to receive(:bar).and_return("FOO")
 
       # Cached fragment has not yet expired.
       context.advance_clock(41)
-      expect(output).to eq("BAR")
+      expect(output.call).to eq("BAR")
 
       # Now it has! Huzzah!
       context.advance_clock(1)
-      expect(output).to eq("FOO")
+      expect(output.call).to eq("FOO")
     end
 
     it "passes #cache_options to the cache backend" do
       context.assigns[:cache_key] = "x"
       context.assigns[:cache_options] = { expires_in: 42 }
 
-      expect(output).to eq("BAR")
+      expect(output.call).to eq("BAR")
 
       allow(context).to receive(:bar).and_return("FOO")
 
       # Cached fragment has not yet expired.
       context.advance_clock(41)
-      expect(output).to eq("BAR")
+      expect(output.call).to eq("BAR")
 
       # Now it has! Huzzah!
       context.advance_clock(1)
-      expect(output).to eq("FOO")
+      expect(output.call).to eq("FOO")
     end
   end
 
-  def output
+  def render(source)
+    allow(template).to receive(:source).and_return(source)
     code = Curlybars::TemplateHandler.call(template)
+
     context.reset!
     context.instance_eval(code)
   end
