@@ -230,8 +230,6 @@ describe "{{#helper arg1 arg2 ... key=value ...}}...<{{else}}>...{{/helper}}" do
   end
 
   describe "#validate" do
-    let(:presenter_class) { double(:presenter_class) }
-
     it "without errors when global helper" do
       allow(Curlybars.configuration).to receive(:global_helpers_provider_classes).and_return([IntegrationTest::GlobalHelperProvider])
 

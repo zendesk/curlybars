@@ -123,8 +123,6 @@ describe "{{path}}" do
   end
 
   describe "#validate" do
-    let(:presenter_class) { double(:presenter_class) }
-
     it "without errors" do
       dependency_tree = { sub_context: {}, outer_field: nil }
 

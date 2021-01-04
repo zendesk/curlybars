@@ -25,8 +25,6 @@ describe "{{> partial}}" do
   end
 
   describe "#validate" do
-    let(:presenter_class) { double(:presenter_class) }
-
     it "validates the path with errors" do
       dependency_tree = {}
 

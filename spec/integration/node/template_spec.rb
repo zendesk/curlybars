@@ -53,8 +53,6 @@ describe "template" do
   end
 
   describe "#validate" do
-    let(:presenter_class) { double(:presenter_class) }
-
     it "without errors" do
       dependency_tree = { presenter: { field: nil } }
 
