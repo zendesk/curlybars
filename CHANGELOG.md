@@ -1,5 +1,6 @@
 ### Unreleased
 * Use GitHub Actions for testing.
+* Add support for Rails 6.0 and 6.1.
 
 ### Curlybars 1.5.1 (November 02, 2020)
 * Add missing visitor for the subexpression node
