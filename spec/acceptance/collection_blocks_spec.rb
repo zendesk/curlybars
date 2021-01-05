@@ -8,7 +8,7 @@ describe "Collection blocks", type: :request do
   example "Rendering collections" do
     get '/categories'
 
-    expect(body).to eq(<<-HTML.strip_heredoc)
+    expect(body).to eq(<<~HTML)
       <html>
       <head>
         <title>Dummy app</title>

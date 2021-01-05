@@ -100,11 +100,11 @@ describe Curlybars::TemplateHandler do
   end
 
   it "strips the `# encoding: *` directive away from the template" do
-    output = render(<<-TEMPLATE.strip_heredoc)
+    output = render(<<~TEMPLATE)
       # encoding: utf-8"
       first line
     TEMPLATE
-    expect(output).to eq(<<-TEMPLATE.strip_heredoc)
+    expect(output).to eq(<<~TEMPLATE)
 
       first line
     TEMPLATE

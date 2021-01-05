@@ -10,7 +10,7 @@ RSpec::Matchers.define(:resemble) do |expected|
   end
 
   failure_message do |actual|
-    <<-MESSAGE.strip_heredoc
+    <<~MESSAGE
       Expected
 
         `#{actual}`
@@ -22,7 +22,7 @@ RSpec::Matchers.define(:resemble) do |expected|
   end
 
   failure_message_when_negated do |actual|
-    <<-MESSAGE.strip_heredoc
+    <<~MESSAGE
       Expected
 
         `#{actual}`
