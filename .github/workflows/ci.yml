@@ -7,9 +7,14 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
         ruby-version:
-          - 2.4
+          - '2.4'
+          - '2.5'
+          - '2.6'
+          - '2.7'
+          - '3.0'
         gemfile:
           - rails4.2
           - rails5.0
@@ -17,8 +22,13 @@ jobs:
           - rails5.2
         task:
           - rspec
+        exclude:
+          - ruby-version: '2.7'
+            gemfile: rails4.2
+          - ruby-version: '3.0'
+            gemfile: rails4.2
         include:
-          - ruby-version: 2.5
+          - ruby-version: '2.5'
             gemfile: rails5.2
             task: rubocop
     env:
