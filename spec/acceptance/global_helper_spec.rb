@@ -9,7 +9,7 @@ describe "Collection blocks", type: :request do
   example "Render a global helper" do
     get '/welcome'
 
-    expect(body).to eq(<<-HTML.strip_heredoc)
+    expect(body).to eq(<<~HTML)
       <html>
       <head>
         <title>Dummy app</title>

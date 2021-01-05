@@ -14,7 +14,7 @@ RSpec::Matchers.define(:produce) do |expected|
   end
 
   failure_message do |actual|
-    <<-MESSAGE.strip_heredoc
+    <<~MESSAGE
       Expected
 
         #{normalize(actual.map(&:type))}
@@ -26,7 +26,7 @@ RSpec::Matchers.define(:produce) do |expected|
   end
 
   failure_message_when_negated do |actual|
-    <<-MESSAGE.strip_heredoc
+    <<~MESSAGE
       Expected
 
         #{normalize(actual)}

@@ -12,7 +12,7 @@ module IntegrationTest
     end
 
     def date(context, options)
-      html = <<-HTML.strip_heredoc
+      html = <<~HTML
         <time datetime="#{context.strftime('%FT%H:%M:%SZ')}" class="#{options[:class]}">
           #{context.strftime('%B%e, %Y %H:%M')}
         </time>
@@ -28,7 +28,7 @@ module IntegrationTest
 
     def input(context, options)
       type = options.fetch(:title, 'text')
-      html = <<-HTML.strip_heredoc
+      html = <<~HTML
         <input name="#{context.name}" id="#{context.id}" type="#{type}" class="#{options['class']}" value="#{context.value}">
       HTML
 
