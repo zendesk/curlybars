@@ -210,7 +210,7 @@ It can be specified via `allow_methods` as:
 class Helpers::GlobalHelper
   extend Curlybars::MethodWhitelist
 
-  allow_methods slice: [:helper, [Curlybars::Presenter]]
+  allow_methods slice: [:helper, [Curlybars::Generic]]
 
   def slice(collection, start, length, _options)
     collection.slice(start, length)

@@ -169,7 +169,7 @@ module IntegrationTest
 
     allow_methods :global_helper, :extract, :join,
       :foo, :bar, :equal, :concat, :dash, :input, :t, :calc,
-      slice: [:helper, [Curlybars::Presenter]]
+      slice: [:helper, [Curlybars::Generic]]
 
     def initialize(context = nil)
     end
