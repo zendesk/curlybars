@@ -46,7 +46,9 @@ module IntegrationTest
     allow_methods :print_current_context, :render_fn, :render_inverse, :user, :new_comment_form, :valid, :visible, :return_true,
       :return_false, :beautify, :form, :date, :asset, :integer, :boolean, :echo, :just_yield, :print_args_and_options,
       :return_nil, :this_method_yields, :this_method_yields, :context, :two_elements,
-      :yield_custom_variable, :print, :array_of_users, :'-a-path-', :article, :articles,
+      :yield_custom_variable, :print, :array_of_users, :'-a-path-', :article,
+      articles: [Shared::ArticlePresenter],
+      reverse_articles: [:helper, [Shared::ArticlePresenter]],
       partial: :partial
 
     def print(argument, _)
@@ -68,6 +70,10 @@ module IntegrationTest
         Shared::ArticlePresenter.new(Article.new(id: 1, title: "B1", author: current_user)),
         Shared::ArticlePresenter.new(Article.new(id: 1, title: "B2", author: current_user))
       ]
+    end
+
+    def reverse_articles
+      articles.reverse
     end
 
     def user
@@ -169,7 +175,8 @@ module IntegrationTest
 
     allow_methods :global_helper, :extract, :join,
       :foo, :bar, :equal, :concat, :dash, :input, :t, :calc,
-      slice: [:helper, [Curlybars::Generic]]
+      slice: [:helper, [Curlybars::Generic]],
+      refl: [:helper, Curlybars::Generic]
 
     def initialize(context = nil)
     end
@@ -187,6 +194,10 @@ module IntegrationTest
 
     def slice(collection, start, length, _)
       collection[start, length]
+    end
+
+    def refl(object, _)
+      object
     end
 
     def concat(left, right, _)

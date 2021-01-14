@@ -1,15 +1,5 @@
 describe "{{#each collection}}...{{else}}...{{/each}}" do
-  let(:global_helpers_providers) { [] }
-
-  ArticlePresenter = Class.new do
-    extend Curlybars::MethodWhitelist
-
-    allow_methods :url
-
-    def url
-      "http://example.com"
-    end
-  end
+  let(:global_helpers_providers) { [IntegrationTest::GlobalHelperProvider.new] }
 
   describe "#compile" do
     let(:post) { double("post") }
@@ -135,47 +125,38 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
     end
 
     it "allows subexpressions" do
-      allow(presenter).to receive(:allows_method?).with(:non_empty_collection).and_return(true)
-      allow(presenter).to receive(:non_empty_collection) { [ArticlePresenter.new] }
-
       template = Curlybars.compile(<<-HBS)
-        {{#each (non_empty_collection)}}left{{else}}right{{/each}}
+        {{#each (articles)}}left{{else}}right{{/each}}
       HBS
 
-      expect(eval(template)).to resemble("left")
+      expected = "left" * presenter.articles.size
+      expect(eval(template)).to resemble(expected)
     end
 
     it "allows subexpressions with collection helpers" do
-      allow(presenter).to receive(:allows_method?).with(:collection_helper).and_return(true)
-      allow(presenter).to receive(:collection_helper) { [ArticlePresenter.new] }
-
       template = Curlybars.compile(<<-HBS)
-        {{#each (collection_helper)}}
-          {{url}}
+        {{#each (reverse_articles)}}
+          {{title}}
         {{else}}
           right
         {{/each}}
       HBS
 
-      expect(eval(template)).to resemble("http://example.com")
+      expected = presenter.reverse_articles.inject("") { |res, a| res + a.title }
+      expect(eval(template)).to resemble(expected)
     end
 
     it "allows subexpressions with generic collection helpers" do
-      articles = [ArticlePresenter.new, ArticlePresenter.new]
-      allow(presenter).to receive(:allows_method?).with(:articles).and_return(true)
-      allow(presenter).to receive(:allows_method?).with(:refl).and_return(true)
-      allow(presenter).to receive(:articles) { articles }
-      allow(presenter).to receive(:refl).and_return(articles)
-
       template = Curlybars.compile(<<-HBS)
         {{#each (refl articles)}}
-          {{url}}
+          {{title}}
         {{else}}
           right
         {{/each}}
       HBS
 
-      expect(eval(template)).to resemble("http://example.comhttp://example.com")
+      expected = presenter.articles.inject("") { |res, a| res + a.title }
+      expect(eval(template)).to resemble(expected)
     end
 
     it "raises an error if the context is not an array-like object" do
