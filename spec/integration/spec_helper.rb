@@ -175,8 +175,9 @@ module IntegrationTest
 
     allow_methods :global_helper, :extract, :join,
       :foo, :bar, :equal, :concat, :dash, :input, :t, :calc,
+      refl: [:helper, Curlybars::Generic],
       slice: [:helper, [Curlybars::Generic]],
-      refl: [:helper, Curlybars::Generic]
+      translate: [:helper, Curlybars::Generic]
 
     def initialize(context = nil)
     end
@@ -198,6 +199,10 @@ module IntegrationTest
 
     def refl(object, _)
       object
+    end
+
+    def translate(object, locale, _)
+      object.translate(locale)
     end
 
     def concat(left, right, _)

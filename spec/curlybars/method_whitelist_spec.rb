@@ -36,16 +36,20 @@ describe Curlybars::MethodWhitelist do
 
   describe ".allow_methods" do
     before do
-      link_presenter = Class.new
-      article_presenter = Class.new
+      link_presenter = Class.new { extend Curlybars::MethodWhitelist }
+      article_presenter = Class.new { extend Curlybars::MethodWhitelist }
 
       dummy_class.class_eval do
-        allow_methods :cook, link: link_presenter, article: article_presenter
+        allow_methods :cook, link: link_presenter, article: article_presenter,
+                      translate_article: [:helper, article_presenter],
+                      reverse_articles: [:helper, [article_presenter]],
+                      translate: [:helper, Curlybars::Generic],
+                      slice: [:helper, [Curlybars::Generic]]
       end
     end
 
     it "sets the allowed methods" do
-      expect(dummy_class.new.allowed_methods).to eq([:cook, :link, :article])
+      expect(dummy_class.new.allowed_methods).to eq([:cook, :link, :article, :translate_article, :reverse_articles, :translate, :slice])
     end
 
     it "supports adding more methods for validation" do

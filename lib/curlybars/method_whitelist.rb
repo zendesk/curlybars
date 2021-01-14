@@ -5,7 +5,7 @@ module Curlybars
       methods_with_type_validator = lambda do |methods_to_validate|
         methods_to_validate.each do |(method_name, type)|
           if type.is_a?(Array)
-            next if collection_helper?(type)
+            next if generic_or_collection_helper?(type)
 
             if type.size != 1 || !type.first.respond_to?(:dependency_tree)
               raise "Invalid allowed method syntax for `#{method_name}`. Collections must be of one presenter class"
@@ -84,7 +84,11 @@ module Curlybars
             type.dependency_tree(context)
           elsif type.is_a?(Array)
             if type.first == :helper
-              [type.first, [type.last.first.dependency_tree(context)]]
+              if type.last.is_a?(Array)
+                [:helper, [type.last.first.dependency_tree(context)]]
+              else
+                [:helper, type.last.dependency_tree(context)]
+              end
             else
               [type.first.dependency_tree(context)]
             end
@@ -107,11 +111,13 @@ module Curlybars
 
     private
 
-    def collection_helper?(type)
+    def generic_or_collection_helper?(type)
       return false unless type.size == 2
       return false unless type.first == :helper
+      return true if type.last.respond_to?(:dependency_tree)
+      return false unless type.last.is_a?(Array) && type.last.size == 1
 
-      type.last.size == 1 && type.last.first.respond_to?(:dependency_tree)
+      type.last.first.respond_to?(:dependency_tree)
     end
   end
 end

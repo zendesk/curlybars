@@ -63,29 +63,37 @@ module Curlybars
 
         type = node.resolve_and_check!(branches, check_type: check_type)
 
-        if generic_collection_helper?(type)
-          return infer_generic_collection_helper_type!(branches)
-        end
+        if helper?(type)
+          if generic_helper?(type)
+            is_collection = type.last.is_a?(Array)
+            return infer_generic_helper_type!(branches, is_collection: is_collection)
+          end
 
-        return type.last if collection_helper?(type)
+          return type.last
+        end
 
         type
       end
 
-      def collection_helper?(type)
-        type.is_a?(Array) && type.first == :helper && type.last.is_a?(Array)
+      def generic_helper?(type)
+        return false unless type.is_a?(Array)
+        return false unless type.size == 2
+        return false unless type.first == :helper
+
+        type.last == [{}] || type.last == {}
       end
 
-      def generic_collection_helper?(type)
-        collection_helper?(type) && type.last.first == {}
+      def helper?(type)
+        type.first == :helper
       end
 
-      def infer_generic_collection_helper_type!(branches)
+      def infer_generic_helper_type!(branches, is_collection:)
         if arguments.empty?
           raise Curlybars::Error::Validate.new('missing_path', "'#{helper.path}' requires a collection as its first argument", helper.position)
         end
 
-        arguments.first.resolve_and_check!(branches, check_type: :presenter_collection)
+        check_type = is_collection ? :presenter_collection : :presenter
+        arguments.first.resolve_and_check!(branches, check_type: check_type)
       end
 
       def cache_key

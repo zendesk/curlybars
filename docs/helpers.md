@@ -176,6 +176,30 @@ Curlybars.configure do |config|
 end
 ```
 
+### Object Helpers
+
+Object helpers are standard helpers returning a specific type of object. It can be specified via `allow_methods` as:
+
+```ruby
+class ArticlePresenter
+  extend Curlybars::MethodWhitelist
+
+  allow_methods translate_article: [:helper, ArticlePresenter]
+
+  def transform_articles(locale)
+    ArticlePresenter.new(Article.translate(article, locale))
+  end
+end
+```
+
+Object helpers are useful when manipulating objects in `#with` statements via [subexpressions](./templates.md#subexpressions):
+
+```hbs
+{{#with (translate_article "en-US")}}
+  {{author.name}}
+{{/with}}
+```
+
 ### Collection Helpers
 
 Collection helpers are standard helpers returning a specific kind of collections. It can be specified via `allow_methods` as:
@@ -200,6 +224,39 @@ Collection helpers are useful when manipulating collections in `#each` statement
 {{/each}}
 ```
 
+### Generic Object Helpers
+
+Generic object helpers are object helpers that return an object whose type is inferred from the first argument of the helper.
+Hence, all generic object helpers have a required argument.
+It can be specified via `allow_methods` as:
+
+```ruby
+class Helpers::GlobalHelper
+  extend Curlybars::MethodWhitelist
+
+  allow_methods translate: [:helper, [Curlybars::Generic]]
+
+  def translate(object, locale, _options)
+    object.translate(locale)
+  end
+end
+```
+
+Unlike regular helpers, generic object helpers *must* explicitly state their full allow method signature in the global helper provider class.
+These helpers are useful for implementing generic helpers for manipulating objects.
+For example, translating any object:
+
+```hbs
+{{#with (translate article "en-US")}}
+  <section>
+    <h3>{{title}}</h3>
+    <div>{{excerpt body}}</div>
+  </section>
+{{/each}}
+```
+
+In the above example, `translate` will have an inferred return type of `ArticlePresenter`.
+
 ### Generic Collection Helpers
 
 Generic collection helpers are collection helpers that return a collection whose type is inferred from the first argument of the helper.
@@ -218,7 +275,7 @@ class Helpers::GlobalHelper
 end
 ```
 
-Unlike regular helpers, generic collection helpers *must* be specified as such in the global helper provider class.
+Unlike regular helpers, generic collection helpers *must* explicitly state their full allow method signature in the global helper provider class.
 These helpers are useful for implementing generic helpers for manipulating collections.
 For example, displaying the title and excerpt of the first four articles written by a specific author:
 
@@ -231,4 +288,4 @@ For example, displaying the title and excerpt of the first four articles written
 {{/each}}
 ```
 
-In the above example, both `slice` and `filter` will have a inferred return type of an `[ArticlePresenter]`.
+In the above example, both `slice` and `filter` will have an inferred return type of `[ArticlePresenter]`.

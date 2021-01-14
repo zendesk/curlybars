@@ -35,6 +35,10 @@ module Curlybars
         resolve(branches).is_a?(Hash)
       end
 
+      def presenter_value?(value)
+        value.is_a?(Hash)
+      end
+
       def collection_value?(value)
         value.is_a?(Array) && value.first.is_a?(Hash)
       end
@@ -56,7 +60,14 @@ module Curlybars
         resolve(branches) == :helper
       end
 
-      def collection_helper?(branches)
+      def generic_helper?(branches)
+        value = resolve(branches)
+        value.is_a?(Array) &&
+          value.first == :helper &&
+          presenter_value?(value.last)
+      end
+
+      def generic_collection_helper?(branches)
         value = resolve(branches)
         value.is_a?(Array) &&
           value.first == :helper &&
@@ -64,7 +75,11 @@ module Curlybars
       end
 
       def collectionlike?(branches)
-        presenter_collection?(branches) || collection_helper?(branches)
+        presenter_collection?(branches) || generic_collection_helper?(branches)
+      end
+
+      def presenterlike?(branches)
+        presenter?(branches) || generic_helper?(branches)
       end
 
       def subexpression?
@@ -77,6 +92,7 @@ module Curlybars
             dep_node = Curlybars.global_helpers_dependency_tree[path.to_sym]
 
             return :helper if dep_node.nil?
+
             return dep_node
           end
 
@@ -127,8 +143,14 @@ module Curlybars
 
           message = "`#{path}` must resolve to a presenter"
           raise Curlybars::Error::Validate.new('not_a_presenter', message, position)
+        when :presenterlike
+          return if presenterlike?(branches)
+
+          message = "`#{path}` must resolve to a presenter"
+          raise Curlybars::Error::Validate.new('not_presenterlike', message, position)
         when :collectionlike
           return if collectionlike?(branches)
+
           message = "`#{path}` must resolve to a collection of presenters"
           raise Curlybars::Error::Validate.new('not_collectionlike', message, position)
         when :presenter_collection
