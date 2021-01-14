@@ -9,7 +9,7 @@ module Curlybars
 
           if rendering.to_bool(compiled_path)
             position = rendering.position(#{position.line_number}, #{position.line_offset})
-            rendering.check_context_is_presenter(compiled_path, #{path.path.inspect}, position)
+            rendering.check_context_is_presenter(compiled_path, #{presenter_path.path.inspect}, position)
 
             contexts.push(compiled_path)
             begin
@@ -24,7 +24,7 @@ module Curlybars
       end
 
       def validate(branches)
-        sub_tree = path.resolve_and_check!(branches, check_type: :presenter)
+        sub_tree = path.resolve_and_check!(branches, check_type: :presenterlike)
         with_template_errors = begin
           branches.push(sub_tree)
           with_template.validate(branches)
@@ -40,6 +40,10 @@ module Curlybars
         ]
       rescue Curlybars::Error::Validate => path_error
         path_error
+      end
+
+      def presenter_path
+        path.subexpression? ? path.helper : path
       end
 
       def cache_key

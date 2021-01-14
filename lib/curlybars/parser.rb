@@ -140,12 +140,26 @@ module Curlybars
         Node::WithElse.new(path, with_template || VOID, VOID, pos(0))
       end
 
+      clause('START HASH WITH .subexpression END
+              .template?
+            START SLASH WITH END') do |subexpression, with_template|
+        Node::WithElse.new(subexpression, with_template || VOID, VOID, pos(0))
+      end
+
       clause('START HASH WITH .path END
                .template?
              START ELSE END
                .template?
              START SLASH WITH END') do |path, with_template, else_template|
         Node::WithElse.new(path, with_template || VOID, else_template || VOID, pos(0))
+      end
+
+      clause('START HASH WITH .subexpression END
+              .template?
+            START ELSE END
+              .template?
+            START SLASH WITH END') do |subexpression, with_template, else_template|
+        Node::WithElse.new(subexpression, with_template || VOID, else_template || VOID, pos(0))
       end
 
       clause('START GT .path END') do |path|
