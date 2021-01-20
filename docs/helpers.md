@@ -176,9 +176,9 @@ Curlybars.configure do |config|
 end
 ```
 
-### Object Helpers
+### Presenter Helpers
 
-Object helpers are standard helpers returning a specific type of object. It can be specified via `allow_methods` as:
+Presenter helpers are standard helpers returning a specific type of a presenter. It can be specified via `allow_methods` as:
 
 ```ruby
 class ArticlePresenter
@@ -192,7 +192,7 @@ class ArticlePresenter
 end
 ```
 
-Object helpers are useful when manipulating objects in `#with` statements via [subexpressions](./templates.md#subexpressions):
+Presenter helpers are useful when manipulating presented objects in `#with` statements via [subexpressions](./templates.md#subexpressions):
 
 ```hbs
 {{#with (translate_article "en-US")}}
@@ -224,10 +224,10 @@ Collection helpers are useful when manipulating collections in `#each` statement
 {{/each}}
 ```
 
-### Generic Object Helpers
+### Generic Presenter Helpers
 
-Generic object helpers are object helpers that return an object whose type is inferred from the first argument of the helper.
-Hence, all generic object helpers have a required argument.
+Generic presenter helpers are presenter helpers that return a presenter whose type is inferred from the first argument of the helper.
+Hence, all generic presenter helpers have a required argument.
 It can be specified via `allow_methods` as:
 
 ```ruby
@@ -236,8 +236,8 @@ class Helpers::GlobalHelper
 
   allow_methods translate: Curlybars::Generic
 
-  def translate(object, locale, _options)
-    object.translate(locale)
+  def translate(presenter, locale, _options)
+    presenter.translate(locale)
   end
 end
 ```
@@ -251,7 +251,7 @@ class CustomPresenter
 end
 ```
 
-These helpers are useful for implementing generic helpers for manipulating objects.
+These helpers are useful for implementing generic helpers for manipulating presented objects.
 For example, translating any object:
 
 ```hbs
