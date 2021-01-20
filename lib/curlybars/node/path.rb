@@ -93,7 +93,7 @@ module Curlybars
 
             return :helper if dep_node.nil?
 
-            return dep_node
+            return [:helper, dep_node]
           end
 
           path_split_by_slashes = path.split('/')

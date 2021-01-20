@@ -234,7 +234,7 @@ It can be specified via `allow_methods` as:
 class Helpers::GlobalHelper
   extend Curlybars::MethodWhitelist
 
-  allow_methods translate: [:helper, [Curlybars::Generic]]
+  allow_methods translate: Curlybars::Generic
 
   def translate(object, locale, _options)
     object.translate(locale)
@@ -242,7 +242,15 @@ class Helpers::GlobalHelper
 end
 ```
 
-Unlike regular helpers, generic object helpers *must* explicitly state their full allow method signature in the global helper provider class.
+They can also be defined in root and PORO presenters like so:
+```rb
+class CustomPresenter
+  extend Curlybars::MethodWhitelist
+
+  allow_methods do_something: [:helper, Curlybars::Generic]
+end
+```
+
 These helpers are useful for implementing generic helpers for manipulating objects.
 For example, translating any object:
 
@@ -267,7 +275,7 @@ It can be specified via `allow_methods` as:
 class Helpers::GlobalHelper
   extend Curlybars::MethodWhitelist
 
-  allow_methods slice: [:helper, [Curlybars::Generic]]
+  allow_methods slice: [Curlybars::Generic]
 
   def slice(collection, start, length, _options)
     collection.slice(start, length)
@@ -275,7 +283,15 @@ class Helpers::GlobalHelper
 end
 ```
 
-Unlike regular helpers, generic collection helpers *must* explicitly state their full allow method signature in the global helper provider class.
+They can also be defined in root and PORO presenters like so:
+```rb
+class CustomPresenter
+  extend Curlybars::MethodWhitelist
+
+  allow_methods do_something: [:helper, [Curlybars::Generic]]
+end
+```
+
 These helpers are useful for implementing generic helpers for manipulating collections.
 For example, displaying the title and excerpt of the first four articles written by a specific author:
 
