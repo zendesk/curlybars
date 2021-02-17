@@ -1,5 +1,9 @@
 ### Unreleased
 
+### Curlybars 1.7.0 (February 17, 2021)
+* Add language support for subexpressions in `#each` and `#with`
+* Introduce the concept of generic object and collection helpers
+
 ### Curlybars 1.6.0 (January 05, 2021)
 * Use GitHub Actions for testing.
 * Add support for Rails 6.0 and 6.1.
