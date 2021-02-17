@@ -77,6 +77,13 @@ module Curlybars
       visitor.accept(tree)
     end
 
+    def global_helpers_dependency_tree
+      @global_helpers_dependency_tree ||= begin
+        classes = Curlybars.configuration.global_helpers_provider_classes
+        classes.map(&:dependency_tree).inject({}, :merge)
+      end
+    end
+
     def cache
       @cache ||= ActiveSupport::Cache::MemoryStore.new
     end
@@ -117,6 +124,7 @@ require 'curlybars/configuration'
 require 'curlybars/rendering_support'
 require 'curlybars/parser'
 require 'curlybars/position'
+require 'curlybars/generic'
 require 'curlybars/lexer'
 require 'curlybars/processor/token_factory'
 require 'curlybars/processor/tilde'

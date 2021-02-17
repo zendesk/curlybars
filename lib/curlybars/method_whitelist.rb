@@ -1,10 +1,11 @@
 module Curlybars
   module MethodWhitelist
-    # rubocop:disable Style/SoleNestedConditional
     def allow_methods(*methods_without_type, **methods_with_type, &contextual_block)
       methods_with_type_validator = lambda do |methods_to_validate|
         methods_to_validate.each do |(method_name, type)|
           if type.is_a?(Array)
+            next if generic_or_collection_helper?(type)
+
             if type.size != 1 || !type.first.respond_to?(:dependency_tree)
               raise "Invalid allowed method syntax for `#{method_name}`. Collections must be of one presenter class"
             end
@@ -81,7 +82,15 @@ module Curlybars
           memo[method_name] = if type.respond_to?(:dependency_tree)
             type.dependency_tree(context)
           elsif type.is_a?(Array)
-            [type.first.dependency_tree(context)]
+            if type.first == :helper
+              if type.last.is_a?(Array)
+                [:helper, [type.last.first.dependency_tree(context)]]
+              else
+                [:helper, type.last.dependency_tree(context)]
+              end
+            else
+              [type.first.dependency_tree(context)]
+            end
           else
             type
           end
@@ -92,11 +101,21 @@ module Curlybars
         allowed_methods.include?(method)
       end
     end
-    # rubocop:enable Style/SoleNestedConditional
 
     def self.extended(base)
       # define a default of no method allowed
       base.allow_methods
+    end
+
+    private
+
+    def generic_or_collection_helper?(type)
+      return false unless type.size == 2
+      return false unless type.first == :helper
+      return true if type.last.respond_to?(:dependency_tree)
+      return false unless type.last.is_a?(Array) && type.last.size == 1
+
+      type.last.first.respond_to?(:dependency_tree)
     end
   end
 end

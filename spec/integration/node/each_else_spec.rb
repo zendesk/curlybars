@@ -1,9 +1,10 @@
 describe "{{#each collection}}...{{else}}...{{/each}}" do
-  let(:global_helpers_providers) { [] }
+  let(:global_helpers_providers) { [IntegrationTest::GlobalHelperProvider.new] }
 
   describe "#compile" do
     let(:post) { double("post") }
-    let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
+    let(:presenter_class) { IntegrationTest::Presenter }
+    let(:presenter) { presenter_class.new(double("view_context"), post: post) }
 
     it "uses each_template when collection is not empty" do
       allow(presenter).to receive(:allows_method?).with(:non_empty_collection).and_return(true)
@@ -123,6 +124,41 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
       HTML
     end
 
+    it "allows subexpressions" do
+      template = Curlybars.compile(<<-HBS)
+        {{#each (articles)}}left{{else}}right{{/each}}
+      HBS
+
+      expected = "left" * presenter.articles.size
+      expect(eval(template)).to resemble(expected)
+    end
+
+    it "allows subexpressions with collection helpers" do
+      template = Curlybars.compile(<<-HBS)
+        {{#each (reverse_articles)}}
+          {{title}}
+        {{else}}
+          right
+        {{/each}}
+      HBS
+
+      expected = presenter.reverse_articles.inject("") { |res, a| res + a.title }
+      expect(eval(template)).to resemble(expected)
+    end
+
+    it "allows subexpressions with generic collection helpers" do
+      template = Curlybars.compile(<<-HBS)
+        {{#each (refl articles)}}
+          {{title}}
+        {{else}}
+          right
+        {{/each}}
+      HBS
+
+      expected = presenter.articles.inject("") { |res, a| res + a.title }
+      expect(eval(template)).to resemble(expected)
+    end
+
     it "raises an error if the context is not an array-like object" do
       allow(IntegrationTest::Presenter).to receive(:allows_method?).with(:not_a_collection).and_return(true)
       allow(presenter).to receive(:not_a_collection).and_return("string")
@@ -197,6 +233,176 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
       errors = Curlybars.validate(dependency_tree, source)
 
       expect(errors).not_to be_empty
+    end
+
+    describe "with subexpressions" do
+      before do
+        Curlybars.instance_variable_set(:@global_helpers_dependency_tree, nil)
+      end
+
+      it "without errors when called with a presenter collection" do
+        dependency_tree = { a_presenter_collection: [{}] }
+
+        source = <<-HBS
+          {{#each (a_presenter_collection)}} {{else}} {{/each}}
+        HBS
+
+        errors = Curlybars.validate(dependency_tree, source)
+
+        expect(errors).to be_empty
+      end
+
+      it "without errors when called with a collection helper" do
+        dependency_tree = { a_collection_helper: [:helper, [{ url: nil }]] }
+
+        source = <<-HBS
+          {{#each (a_collection_helper)}}
+            {{url}}
+          {{else}}
+            right
+          {{/each}}
+        HBS
+
+        errors = Curlybars.validate(dependency_tree, source)
+
+        expect(errors).to be_empty
+      end
+
+      context "with a generic collection helper" do
+        it "without errors when arguments are valid" do
+          dependency_tree = {
+            refl: [:helper, [{}]],
+            articles: [{ url: nil }]
+          }
+
+          source = <<-HBS
+            {{#each (refl articles)}}
+              {{url}}
+            {{else}}
+              right
+            {{/each}}
+          HBS
+
+          errors = Curlybars.validate(dependency_tree, source)
+
+          expect(errors).to be_empty
+        end
+
+        it "with errors when the first argument is not a collection" do
+          dependency_tree = {
+            refl: [:helper, [{}]],
+            articles: { url: nil }
+          }
+
+          source = <<-HBS
+            {{#each (refl articles)}}
+              {{url}}
+            {{else}}
+              right
+            {{/each}}
+          HBS
+
+          errors = Curlybars.validate(dependency_tree, source)
+
+          expect(errors).not_to be_empty
+        end
+
+        it "with errors when the first argument is not defined" do
+          dependency_tree = {
+            refl: [:helper, [{}]]
+          }
+
+          source = <<-HBS
+            {{#each (refl articles)}}
+              {{url}}
+            {{else}}
+              right
+            {{/each}}
+          HBS
+
+          errors = Curlybars.validate(dependency_tree, source)
+
+          expect(errors).not_to be_empty
+        end
+
+        it "with errors when no argument is given" do
+          dependency_tree = {
+            refl: [:helper, [{}]]
+          }
+
+          source = <<-HBS
+            {{#each (refl)}}
+              {{url}}
+            {{else}}
+              right
+            {{/each}}
+          HBS
+
+          errors = Curlybars.validate(dependency_tree, source)
+
+          expect(errors).not_to be_empty
+        end
+
+        describe "as a global helper" do
+          let(:global_helpers_provider_classes) { [IntegrationTest::GlobalHelperProvider] }
+
+          before do
+            allow(Curlybars.configuration).to receive(:global_helpers_provider_classes).and_return(global_helpers_provider_classes)
+          end
+
+          it "without errors when the first argument is a collection" do
+            dependency_tree = {
+              articles: [{ url: nil }]
+            }
+
+            source = <<-HBS
+              {{#each (slice articles 0 4)}}
+                {{url}}
+              {{else}}
+                right
+              {{/each}}
+            HBS
+
+            errors = Curlybars.validate(dependency_tree, source)
+
+            expect(errors).to be_empty
+          end
+
+          it "with errors when the first argument is not a collection" do
+            dependency_tree = {
+              articles: { url: nil }
+            }
+
+            source = <<-HBS
+              {{#each (slice articles 0 4)}}
+                {{url}}
+              {{else}}
+                right
+              {{/each}}
+            HBS
+
+            errors = Curlybars.validate(dependency_tree, source)
+
+            expect(errors).not_to be_empty
+          end
+
+          it "with errors when no argument is given" do
+            dependency_tree = {}
+
+            source = <<-HBS
+              {{#each (slice)}}
+                {{url}}
+              {{else}}
+                right
+              {{/each}}
+            HBS
+
+            errors = Curlybars.validate(dependency_tree, source)
+
+            expect(errors).not_to be_empty
+          end
+        end
+      end
     end
   end
 end

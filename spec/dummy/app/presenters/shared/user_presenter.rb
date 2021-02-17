@@ -29,6 +29,10 @@ class Shared::UserPresenter
     'user_context'
   end
 
+  def translate(locale)
+    Shared::UserPresenter.new(User.translate(user, locale))
+  end
+
   def cache_key
     @user.id
   end

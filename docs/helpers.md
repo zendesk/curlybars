@@ -175,3 +175,133 @@ Curlybars.configure do |config|
   ]
 end
 ```
+
+### Presenter Helpers
+
+Presenter helpers are standard helpers returning a specific type of a presenter. It can be specified via `allow_methods` as:
+
+```ruby
+class ArticlePresenter
+  extend Curlybars::MethodWhitelist
+
+  allow_methods translate_article: [:helper, ArticlePresenter]
+
+  def transform_articles(locale)
+    ArticlePresenter.new(Article.translate(article, locale))
+  end
+end
+```
+
+Presenter helpers are useful when manipulating presented objects in `#with` statements via [subexpressions](./templates.md#subexpressions):
+
+```hbs
+{{#with (translate_article "en-US")}}
+  {{author.name}}
+{{/with}}
+```
+
+### Collection Helpers
+
+Collection helpers are standard helpers returning a specific kind of collections. It can be specified via `allow_methods` as:
+
+```ruby
+class ArticlePresenter
+  extend Curlybars::MethodWhitelist
+
+  allow_methods transform_articles: [:helper, [ArticlePresenter]]
+
+  def transform_articles(articles, options)
+    articles.map { |article| transform_article(article) }
+  end
+end
+```
+
+Collection helpers are useful when manipulating collections in `#each` statements via [subexpressions](./templates.md#subexpressions):
+
+```hbs
+{{#each (slice (transform_articles articles) 0 4)}}
+  {{author.name}}
+{{/each}}
+```
+
+### Generic Presenter Helpers
+
+Generic presenter helpers are presenter helpers that return a presenter whose type is inferred from the first argument of the helper.
+Hence, all generic presenter helpers have a required argument.
+It can be specified via `allow_methods` as:
+
+```ruby
+class Helpers::GlobalHelper
+  extend Curlybars::MethodWhitelist
+
+  allow_methods translate: Curlybars::Generic
+
+  def translate(presenter, locale, _options)
+    presenter.translate(locale)
+  end
+end
+```
+
+They can also be defined in root and PORO presenters like so:
+```rb
+class CustomPresenter
+  extend Curlybars::MethodWhitelist
+
+  allow_methods do_something: [:helper, Curlybars::Generic]
+end
+```
+
+These helpers are useful for implementing generic helpers for manipulating presented objects.
+For example, translating any object:
+
+```hbs
+{{#with (translate article "en-US")}}
+  <section>
+    <h3>{{title}}</h3>
+    <div>{{excerpt body}}</div>
+  </section>
+{{/each}}
+```
+
+In the above example, `translate` will have an inferred return type of `ArticlePresenter`.
+
+### Generic Collection Helpers
+
+Generic collection helpers are collection helpers that return a collection whose type is inferred from the first argument of the helper.
+Hence, all generic collection helpers have a required argument.
+It can be specified via `allow_methods` as:
+
+```ruby
+class Helpers::GlobalHelper
+  extend Curlybars::MethodWhitelist
+
+  allow_methods slice: [Curlybars::Generic]
+
+  def slice(collection, start, length, _options)
+    collection.slice(start, length)
+  end
+end
+```
+
+They can also be defined in root and PORO presenters like so:
+```rb
+class CustomPresenter
+  extend Curlybars::MethodWhitelist
+
+  allow_methods do_something: [:helper, [Curlybars::Generic]]
+end
+```
+
+These helpers are useful for implementing generic helpers for manipulating collections.
+For example, displaying the title and excerpt of the first four articles written by a specific author:
+
+```hbs
+{{#each (slice (filter articles on="author.name" equals="Libo") 0 4)}}
+  <section>
+    <h3>{{title}}</h3>
+    <div>{{excerpt body}}</div>
+  </section>
+{{/each}}
+```
+
+In the above example, both `slice` and `filter` will have an inferred return type of `[ArticlePresenter]`.

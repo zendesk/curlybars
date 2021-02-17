@@ -35,9 +35,16 @@ module Curlybars
         resolve(branches).is_a?(Hash)
       end
 
-      def presenter_collection?(branches)
-        value = resolve(branches)
+      def presenter_value?(value)
+        value.is_a?(Hash)
+      end
+
+      def collection_value?(value)
         value.is_a?(Array) && value.first.is_a?(Hash)
+      end
+
+      def presenter_collection?(branches)
+        collection_value?(resolve(branches))
       end
 
       def leaf?(branches)
@@ -53,9 +60,41 @@ module Curlybars
         resolve(branches) == :helper
       end
 
+      def generic_helper?(branches)
+        value = resolve(branches)
+        value.is_a?(Array) &&
+          value.first == :helper &&
+          presenter_value?(value.last)
+      end
+
+      def generic_collection_helper?(branches)
+        value = resolve(branches)
+        value.is_a?(Array) &&
+          value.first == :helper &&
+          collection_value?(value.last)
+      end
+
+      def collectionlike?(branches)
+        presenter_collection?(branches) || generic_collection_helper?(branches)
+      end
+
+      def presenterlike?(branches)
+        presenter?(branches) || generic_helper?(branches)
+      end
+
+      def subexpression?
+        false
+      end
+
       def resolve(branches)
         @value ||= begin
-          return :helper if global_helpers_dependency_tree.key?(path.to_sym)
+          if Curlybars.global_helpers_dependency_tree.key?(path.to_sym)
+            dep_node = Curlybars.global_helpers_dependency_tree[path.to_sym]
+
+            return :helper if dep_node.nil?
+
+            return [:helper, dep_node]
+          end
 
           path_split_by_slashes = path.split('/')
           backward_steps_on_branches = path_split_by_slashes.count - 1
@@ -97,14 +136,6 @@ module Curlybars
 
       private
 
-      # TODO: extract me away
-      def global_helpers_dependency_tree
-        @global_helpers_dependency_tree ||= begin
-          classes = Curlybars.configuration.global_helpers_provider_classes
-          classes.map(&:dependency_tree).inject({}, :merge)
-        end
-      end
-
       def check_type_of(branches, check_type)
         case check_type
         when :presenter
@@ -112,6 +143,16 @@ module Curlybars
 
           message = "`#{path}` must resolve to a presenter"
           raise Curlybars::Error::Validate.new('not_a_presenter', message, position)
+        when :presenterlike
+          return if presenterlike?(branches)
+
+          message = "`#{path}` must resolve to a presenter"
+          raise Curlybars::Error::Validate.new('not_presenterlike', message, position)
+        when :collectionlike
+          return if collectionlike?(branches)
+
+          message = "`#{path}` must resolve to a collection of presenters"
+          raise Curlybars::Error::Validate.new('not_collectionlike', message, position)
         when :presenter_collection
           return if presenter_collection?(branches)
 
