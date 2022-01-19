@@ -46,6 +46,4 @@ Gem::Specification.new do |s|
   s.add_development_dependency("rubocop-rspec", "~> 2.1.0")
 
   s.files       = Dir.glob('lib/**/*.rb')
-  s.executables = Dir.glob('bin/**/*').map { |f| File.basename(f) }
-  s.test_files  = Dir.glob('spec/**/*_spec.rb')
 end
