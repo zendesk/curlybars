@@ -7,7 +7,7 @@ module IntegrationTest
     allow_methods :item
 
     def initialize(item)
-      @item = ItemPresenter.new(item)
+      @item = ItemPresenter.new(field: item[:field], placeholder: item[:placeholder])
     end
   end
 end
