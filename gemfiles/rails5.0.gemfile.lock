@@ -2,8 +2,8 @@ PATH
   remote: ..
   specs:
     curlybars (1.7.0)
-      actionpack (>= 4.2, < 6.2)
-      activesupport (>= 4.2, < 6.2)
+      actionpack (>= 4.2, < 7.1)
+      activesupport (>= 4.2, < 7.1)
       ffi
       rltk
 
@@ -115,6 +115,7 @@ GEM
     unicode-display_width (1.7.0)
 
 PLATFORMS
+  ruby
   x86_64-darwin-19
   x86_64-linux
 
@@ -132,4 +133,4 @@ DEPENDENCIES
   rubocop-rspec (~> 2.1.0)
 
 BUNDLED WITH
-   2.2.8
+   2.3.19

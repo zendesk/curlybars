@@ -11,6 +11,7 @@ jobs:
         ruby-version:
           - 2.4
           - 2.6
+          - 2.7
         gemfile:
           - rails4.2
           - rails5.0
@@ -18,6 +19,7 @@ jobs:
           - rails5.2
           - rails6.0
           - rails6.1
+          - rails7.0
         task:
           - rspec
         exclude:
@@ -27,6 +29,12 @@ jobs:
             gemfile: rails6.1
           - ruby-version: 2.6
             gemfile: rails4.2
+          - ruby-version: 2.7
+            gemfile: rails4.2
+          - ruby-version: 2.4
+            gemfile: rails7.0
+          - ruby-version: 2.6
+            gemfile: rails7.0
         include:
           - ruby-version: 2.5
             gemfile: rails5.2
