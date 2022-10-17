@@ -1,4 +1,6 @@
 ### Unreleased
+* Add testing with Ruby 2.7
+* Add support for Rails 7.0
 
 ### Curlybars 1.7.0 (February 17, 2021)
 * Add language support for subexpressions in `#each` and `#with`
