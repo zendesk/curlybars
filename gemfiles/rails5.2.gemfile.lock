@@ -1,7 +1,7 @@
 PATH
   remote: ..
   specs:
-    curlybars (1.7.0)
+    curlybars (1.8.0)
       actionpack (>= 4.2, < 7.1)
       activesupport (>= 4.2, < 7.1)
       ffi
@@ -35,7 +35,7 @@ GEM
     crass (1.0.6)
     diff-lcs (1.4.4)
     erubi (1.10.0)
-    ffi (1.14.2)
+    ffi (1.15.5)
     filigree (0.4.1)
     i18n (1.8.5)
       concurrent-ruby (~> 1.0)
@@ -133,4 +133,4 @@ DEPENDENCIES
   rubocop-rspec (~> 2.1.0)
 
 BUNDLED WITH
-   2.3.19
+   2.3.22
