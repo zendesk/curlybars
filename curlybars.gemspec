@@ -45,5 +45,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency("rubocop-rake", "~> 0.5.0")
   s.add_development_dependency("rubocop-rspec", "~> 2.1.0")
 
-  s.files       = Dir.glob('lib/**/*.rb')
+  s.files = Dir.glob('lib/**/*.rb')
 end
