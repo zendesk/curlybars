@@ -50,6 +50,21 @@ jobs:
           bundler-cache: true
       - run: bundle exec rspec
 
+  specs_successful:
+    name: Specs passing?
+    needs: specs
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          if ${{ needs.specs.result == 'success' }}
+          then
+            echo "All specs pass"
+          else
+            echo "Some specs failed"
+            false
+          fi
+
   rubocop:
     runs-on: ubuntu-latest
     steps:
