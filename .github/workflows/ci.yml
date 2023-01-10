@@ -18,7 +18,6 @@ jobs:
           - "3.0"
           - "3.1"
         gemfile:
-          - rails4.2
           - rails5.0
           - rails5.1
           - rails5.2
@@ -26,15 +25,11 @@ jobs:
           - rails6.1
           - rails7.0
         exclude:
-          - {ruby-version: "2.6", gemfile: rails4.2}
-          - {ruby-version: "2.7", gemfile: rails4.2}
           - {ruby-version: "2.6", gemfile: rails7.0}
-          - {ruby-version: "3.0", gemfile: rails4.2}
           - {ruby-version: "3.0", gemfile: rails5.0}
           - {ruby-version: "3.0", gemfile: rails5.1}
           - {ruby-version: "3.0", gemfile: rails5.2}
           - {ruby-version: "3.0", gemfile: rails6.0}
-          - {ruby-version: "3.1", gemfile: rails4.2}
           - {ruby-version: "3.1", gemfile: rails5.0}
           - {ruby-version: "3.1", gemfile: rails5.1}
           - {ruby-version: "3.1", gemfile: rails5.2}
