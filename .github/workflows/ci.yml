@@ -13,7 +13,6 @@ jobs:
     strategy:
       matrix:
         ruby-version:
-          - 2.4
           - 2.6
           - 2.7
         gemfile:
@@ -27,10 +26,6 @@ jobs:
         task:
           - rspec
         exclude:
-          - ruby-version: 2.4
-            gemfile: rails6.0
-          - ruby-version: 2.4
-            gemfile: rails6.1
           - ruby-version: 2.6
             gemfile: rails4.2
           - ruby-version: 2.7
@@ -40,7 +35,7 @@ jobs:
           - ruby-version: 2.6
             gemfile: rails7.0
         include:
-          - ruby-version: 2.5
+          - ruby-version: 2.7
             gemfile: rails5.2
             task: rubocop
           - ruby-version: 3.0
