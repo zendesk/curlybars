@@ -109,20 +109,18 @@ module Curlybars
 
           offset_adjustment = 0
           dotted_path_side.split(/\./).map(&:to_sym).inject(base_tree) do |sub_tree, step|
-            begin
-              if step == :this
-                next sub_tree
-              elsif step == :length && (sub_tree.is_a?(Array) && sub_tree.first.is_a?(Hash))
-                next nil # :length is synthesised leaf
-              elsif !(sub_tree.is_a?(Hash) && sub_tree.key?(step))
-                message = step.to_s == path ? "'#{path}' does not exist" : "not possible to access `#{step}` in `#{path}`"
-                raise Curlybars::Error::Validate.new('unallowed_path', message, position, offset_adjustment, path: path, step: step)
-              end
-
-              sub_tree[step]
-            ensure
-              offset_adjustment += step.length + 1 # '1' is the length of the dot
+            if step == :this
+              next sub_tree
+            elsif step == :length && (sub_tree.is_a?(Array) && sub_tree.first.is_a?(Hash))
+              next nil # :length is synthesised leaf
+            elsif !(sub_tree.is_a?(Hash) && sub_tree.key?(step))
+              message = step.to_s == path ? "'#{path}' does not exist" : "not possible to access `#{step}` in `#{path}`"
+              raise Curlybars::Error::Validate.new('unallowed_path', message, position, offset_adjustment, path: path, step: step)
             end
+
+            sub_tree[step]
+          ensure
+            offset_adjustment += step.length + 1 # '1' is the length of the dot
           end
         end
       end
