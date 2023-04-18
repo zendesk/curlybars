@@ -43,10 +43,6 @@ module Curlybars
 
       private
 
-      def compile_for_actionview5(template)
-        compile(template, template.source)
-      end
-
       def compile(template, source)
         # Template is empty, so there's no need to initialize a presenter.
         return %("") if source.empty?
