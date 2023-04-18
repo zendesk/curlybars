@@ -28,16 +28,16 @@ Gem::Specification.new do |s|
 
   s.rdoc_options = ["--charset=UTF-8"]
 
-  s.required_ruby_version = ">= 2.6"
+  s.required_ruby_version = ">= 3.0"
 
-  s.add_dependency("actionpack", [">= 5.0", "< 7.1"])
-  s.add_dependency("activesupport", [">= 5.0", "< 7.1"])
+  s.add_dependency("actionpack", [">= 6.0", "< 7.1"])
+  s.add_dependency("activesupport", [">= 6.0", "< 7.1"])
   s.add_dependency("ffi")
   s.add_dependency("rltk")
 
   s.add_development_dependency("bundler")
   s.add_development_dependency("byebug")
-  s.add_development_dependency("railties", [">= 5.0", "< 7.1"])
+  s.add_development_dependency("railties", [">= 6.0", "< 7.1"])
   s.add_development_dependency("rake")
   s.add_development_dependency("rspec-rails", "~> 3.8")
   s.add_development_dependency("rubocop", "~> 1.6.0")
