@@ -1,7 +1,10 @@
 ### Unreleased
 
-* Remove support for Rails 4.2
-* Remove support for Ruby 2.4 and 2.5.
+### Curlybars 1.9.0
+
+* Remove support for Rails < 6.0
+* Remove support for Ruby < 3.0
+* Test with Ruby 3.2
 
 ### Curlybars 1.8.0 (November 9, 2022)
 * Add testing with Ruby 2.7, 3.0 & 3.1

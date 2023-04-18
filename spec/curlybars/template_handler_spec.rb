@@ -212,12 +212,7 @@ describe Curlybars::TemplateHandler do
   end
 
   def render(source)
-    if ActionView::VERSION::MAJOR < 6
-      allow(template).to receive(:source).and_return(source)
-      code = Curlybars::TemplateHandler.call(template)
-    else
-      code = Curlybars::TemplateHandler.call(template, source)
-    end
+    code = Curlybars::TemplateHandler.call(template, source)
 
     context.reset!
     context.instance_eval(code)
