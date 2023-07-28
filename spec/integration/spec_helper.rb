@@ -172,9 +172,11 @@ module IntegrationTest
 
   class GlobalHelperProvider
     extend Curlybars::MethodWhitelist
+    include ActionView::Helpers::OutputSafetyHelper
 
     allow_methods :global_helper, :extract, :join,
       :foo, :bar, :equal, :concat, :dash, :input, :t, :calc,
+      json: Curlybars::Generic,
       refl: Curlybars::Generic,
       slice: [Curlybars::Generic],
       translate: Curlybars::Generic
@@ -248,6 +250,10 @@ module IntegrationTest
 
     def global_helper(argument, options)
       "#{argument} - option:#{options[:option]}"
+    end
+
+    def json(value, _)
+      raw(value.to_json)
     end
   end
 end
