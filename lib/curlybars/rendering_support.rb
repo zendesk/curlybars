@@ -1,5 +1,7 @@
 module Curlybars
   class RenderingSupport
+    include ActionView::Helpers::OutputSafetyHelper
+
     def initialize(timeout, contexts, variables, file_name, global_helpers_providers = [], cache = ->(key, &block) { block.call })
       @timeout = timeout
       @start_time = Time.now
@@ -85,6 +87,7 @@ module Curlybars
       resolved = chain.inject(base_context) do |context, meth|
         next context if meth == 'this'
         next context.count if meth == 'length' && presenter_collection?(context)
+        next context.to_json if meth == 'to_json'
 
         raise_if_not_traversable(context, meth, position)
         outcome = instrument(context.method(meth)) { context.public_send(meth) }
@@ -97,6 +100,10 @@ module Curlybars
 
       if method_to_return == 'length' && presenter_collection?(resolved)
         return -> { resolved.count }
+      end
+
+      if method_to_return == 'to_json'
+        return -> { raw resolved.to_json }
       end
 
       raise_if_not_traversable(resolved, method_to_return, position)

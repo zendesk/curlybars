@@ -111,6 +111,8 @@ module Curlybars
           dotted_path_side.split(/\./).map(&:to_sym).inject(base_tree) do |sub_tree, step|
             if step == :this
               next sub_tree
+            elsif step == :to_json
+              next nil  # :to_json is synthesised leaf
             elsif step == :length && (sub_tree.is_a?(Array) && sub_tree.first.is_a?(Hash))
               next nil # :length is synthesised leaf
             elsif !(sub_tree.is_a?(Hash) && sub_tree.key?(step))

@@ -1,5 +1,6 @@
 require 'digest'
 require 'active_support/cache'
+require 'active_support/core_ext/object/json'
 require 'curlybars/version'
 
 # Curlybars is a view system based on Curly that uses Handlebars syntax.
