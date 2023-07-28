@@ -100,6 +100,18 @@ module Curlybars
       define_method(:allows_method?) do |method|
         allowed_methods.include?(method)
       end
+
+      define_method(:as_json) do
+        allowed_methods.each_with_object({}) do |method, hash|
+          unless self.method(method).arity > 0
+            hash[method] = send(method).as_json
+          end
+        end
+      end
+  
+      define_method(:to_json) do
+        as_json.to_json
+      end
     end
 
     def self.extended(base)
