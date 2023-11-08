@@ -14,6 +14,7 @@ require 'curlybars/node/with_else'
 require 'curlybars/node/block_helper_else'
 require 'curlybars/node/option'
 require 'curlybars/node/partial'
+require 'curlybars/node/json'
 require 'curlybars/node/output'
 require 'curlybars/node/sub_expression'
 
@@ -160,6 +161,10 @@ module Curlybars
               .template?
             START SLASH WITH END') do |subexpression, with_template, else_template|
         Node::WithElse.new(subexpression, with_template || VOID, else_template || VOID, pos(0))
+      end
+
+      clause('START JSON .path END') do |path|
+        Node::Json.new(path)
       end
 
       clause('START GT .path END') do |path|
