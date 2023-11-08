@@ -45,6 +45,8 @@ module Curlybars
     r(/with\b/, :curly) { :WITH }
     r(/else\b/, :curly) { :ELSE }
 
+    r(/json\b/, :curly) { :JSON }
+
     r(/true/, :curly) { [:LITERAL, true] }
     r(/false/, :curly) { [:LITERAL, false] }
     r(/[-+]?\d+/, :curly) { |integer| [:LITERAL, integer.to_i] }
