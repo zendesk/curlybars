@@ -30,14 +30,14 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = ">= 3.0"
 
-  s.add_dependency("actionpack", [">= 6.0", "< 7.1"])
-  s.add_dependency("activesupport", [">= 6.0", "< 7.1"])
+  s.add_dependency("actionpack", ">= 6.0", "< 7.2")
+  s.add_dependency("activesupport", ">= 6.0", "< 7.2")
   s.add_dependency("ffi")
   s.add_dependency("rltk")
 
   s.add_development_dependency("bundler")
   s.add_development_dependency("byebug")
-  s.add_development_dependency("railties", [">= 6.0", "< 7.1"])
+  s.add_development_dependency("railties", ">= 6.0", "< 7.2")
   s.add_development_dependency("rake")
   s.add_development_dependency("rspec-rails")
   s.add_development_dependency("rubocop", "~> 1.57")
