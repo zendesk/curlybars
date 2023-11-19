@@ -61,7 +61,8 @@ module Curlybars
       scope = variables.first(variables_position).reverse.find do |vars|
         vars.key? variable
       end
-      return scope[variable] if scope
+
+      scope[variable] if scope
     end
 
     def path(path, position)
