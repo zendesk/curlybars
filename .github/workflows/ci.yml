@@ -4,7 +4,7 @@ on:
   pull_request:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   specs:
@@ -20,12 +20,13 @@ jobs:
           - rails6.0
           - rails6.1
           - rails7.0
+          - rails7.1
     env:
       BUNDLE_GEMFILE: gemfiles/${{ matrix.gemfile }}.gemfile
     steps:
-      - uses: zendesk/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Ruby
-        uses: zendesk/setup-ruby@v1
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: true
@@ -49,9 +50,9 @@ jobs:
   rubocop:
     runs-on: ubuntu-latest
     steps:
-      - uses: zendesk/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Ruby
-        uses: zendesk/setup-ruby@v1
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.0"
           bundler-cache: true

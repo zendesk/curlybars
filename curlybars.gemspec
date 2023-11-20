@@ -30,20 +30,20 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = ">= 3.0"
 
-  s.add_dependency("actionpack", [">= 6.0", "< 7.1"])
-  s.add_dependency("activesupport", [">= 6.0", "< 7.1"])
+  s.add_dependency("actionpack", ">= 6.0", "< 7.2")
+  s.add_dependency("activesupport", ">= 6.0", "< 7.2")
   s.add_dependency("ffi")
   s.add_dependency("rltk")
 
   s.add_development_dependency("bundler")
   s.add_development_dependency("byebug")
-  s.add_development_dependency("railties", [">= 6.0", "< 7.1"])
+  s.add_development_dependency("railties", ">= 6.0", "< 7.2")
   s.add_development_dependency("rake")
-  s.add_development_dependency("rspec-rails", "~> 3.8")
-  s.add_development_dependency("rubocop", "~> 1.6.0")
-  s.add_development_dependency("rubocop-performance", "~> 1.9.0")
-  s.add_development_dependency("rubocop-rake", "~> 0.5.0")
-  s.add_development_dependency("rubocop-rspec", "~> 2.1.0")
+  s.add_development_dependency("rspec-rails")
+  s.add_development_dependency("rubocop", "~> 1.57")
+  s.add_development_dependency("rubocop-performance", "~> 1.19")
+  s.add_development_dependency("rubocop-rake", "~> 0.6")
+  s.add_development_dependency("rubocop-rspec", "~> 2.25")
 
   s.files = Dir.glob('lib/**/*.rb')
 end

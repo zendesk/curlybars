@@ -41,10 +41,10 @@ describe Curlybars::MethodWhitelist do
 
       dummy_class.class_eval do
         allow_methods :cook, link: link_presenter, article: article_presenter,
-                      translate_article: [:helper, article_presenter],
-                      reverse_articles: [:helper, [article_presenter]],
-                      translate: [:helper, Curlybars::Generic],
-                      slice: [:helper, [Curlybars::Generic]]
+          translate_article: [:helper, article_presenter],
+          reverse_articles: [:helper, [article_presenter]],
+          translate: [:helper, Curlybars::Generic],
+          slice: [:helper, [Curlybars::Generic]]
       end
     end
 
