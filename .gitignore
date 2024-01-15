@@ -1,5 +1,4 @@
 /.bundle/
-/Gemfile.lock
 /coverage/
 /pkg/
 /spec/reports/
