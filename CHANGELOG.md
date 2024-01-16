@@ -1,5 +1,10 @@
 ### Unreleased
 
+### Curlybars 1.10.0
+
+* Add support for Rails 7.1.
+* Test with Ruby 3.3.
+
 ### Curlybars 1.9.0
 
 * Remove support for Rails < 6.0
