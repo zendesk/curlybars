@@ -101,16 +101,24 @@ module Curlybars
         allowed_methods.include?(method)
       end
 
-      define_method(:as_json) do
-        allowed_methods.each_with_object({}) do |method, hash|
+      define_method(:as_json) do |cache = {}|
+        return @__as_json if defined?(@__as_json)
+
+        @__as_json ||= allowed_methods.each_with_object({}) do |method, hash|
           unless self.method(method).arity > 0
-            hash[method] = send(method).as_json
+            value = send(method)
+            cache_key = value.object_id
+
+            if cache.key?(cache_key)
+              hash[method] = cache[cache_key]
+            else
+              cache[cache_key] = "[circular reference]"
+              json_value = value.as_json(cache)
+              cache[cache_key] = json_value
+              hash[method] = json_value unless value == self
+            end
           end
         end
-      end
-  
-      define_method(:to_json) do
-        as_json.to_json
       end
     end
 
