@@ -182,5 +182,51 @@ describe "{{helper context key=value}}" do
         expect(errors).to be_empty
       end
     end
+
+    describe "generic helper" do
+      it "without errors with no argumemt" do
+        dependency_tree = {
+          json: [:helper, {}]
+        }
+
+        source = <<-HBS
+          {{json}}
+        HBS
+
+        errors = Curlybars.validate(dependency_tree, source)
+
+        expect(errors).to be_empty
+      end
+
+      it "without errors with an object as argument" do
+        dependency_tree = {
+          json: [:helper, {}],
+          article: { title: nil }
+        }
+
+        source = <<-HBS
+          {{json article}}
+        HBS
+
+        errors = Curlybars.validate(dependency_tree, source)
+
+        expect(errors).to be_empty
+      end
+
+      it "without errors with a collection as argument" do
+        dependency_tree = {
+          json: [:helper, {}],
+          articles: [{ title: nil }]
+        }
+
+        source = <<-HBS
+          {{json articles}}
+        HBS
+
+        errors = Curlybars.validate(dependency_tree, source)
+
+        expect(errors).to be_empty
+      end
+    end
   end
 end
