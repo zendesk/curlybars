@@ -79,6 +79,13 @@ module Curlybars
             arguments.map { |argument| argument.validate_as_value(branches) },
             options.map { |option| option.validate(branches) }
           ]
+        elsif helper.generic_helper?(branches)
+          [
+            helper_template.validate(branches),
+            else_template.validate(branches),
+            arguments.map { |argument| argument.validate(branches, check_type: :anything) },
+            options.map { |option| option.validate(branches) }
+          ]
         else
           message = "#{helper.path} must be allowed as helper or leaf"
           Curlybars::Error::Validate.new('invalid_block_helper', message, helper.position)
