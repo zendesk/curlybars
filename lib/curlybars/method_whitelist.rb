@@ -107,7 +107,7 @@ module Curlybars
         @__as_json ||= allowed_methods.each_with_object({}) do |method, hash|
           unless self.method(method).arity > 0
             value = send(method)
-            hash[method] = value == self ? "[circular reference]" : value.as_json
+            hash[method] = value.instance_of?(self.class) && value == self ? "[circular reference]" : value.as_json
           end
         end
       end
