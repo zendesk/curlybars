@@ -52,6 +52,104 @@ describe "{{json arg1}}" do
       expect(eval(template)).to resemble(expected_output)
     end
 
+    it "renders a script tag using the json helper when rendering a normal helper" do
+      template = Curlybars.compile(<<-HBS)
+        <script>
+          const bar = {{json bar}}
+        </script>
+      HBS
+
+      expected_output = <<-HTML
+        <script>
+          const bar = "LOL"
+        </script>
+      HTML
+
+      expect(eval(template)).to resemble(expected_output)
+    end
+
+    describe "subexpressions" do
+      it "serializes the result of inline subexpressions that receive an object" do
+        template = Curlybars.compile(<<-HBS)
+          <script>
+            const user = {{json (translate user "en-DK")}}
+          </script>
+        HBS
+
+        expected_output = <<-HTML
+          <script>
+            const user = {"first_name":"Libo","created_at":"2015-02-03T13:25:06.000+00:00","avatar":{"url":"http://example.com/foo.png?locale=en-DK"},"context":"user_context","me":"[circular reference]"}
+          </script>
+        HTML
+
+        expect(eval(template)).to resemble(expected_output)
+      end
+
+      it "serializes the result of inline subexpressions that receive a nested object" do
+        template = Curlybars.compile(<<-HBS)
+          <script>
+            const author = {{json (translate article.author "en-DK")}}
+          </script>
+        HBS
+
+        expected_output = <<-HTML
+          <script>
+            const author = {"first_name":"Nicolò","created_at":"2015-02-03T13:25:06.000+00:00","avatar":{"url":"http://example.com/foo.png?locale=en-DK"},"context":"user_context","me":"[circular reference]"}
+          </script>
+        HTML
+
+        expect(eval(template)).to resemble(expected_output)
+      end
+
+      it "serializes the result of inline subexpressions" do
+        template = Curlybars.compile(<<-HBS)
+          <script>
+            const three = {{json (calc 1 "+" 2)}}
+          </script>
+        HBS
+
+        expected_output = <<-HTML
+          <script>
+            const three = 3
+          </script>
+        HTML
+
+        expect(eval(template)).to resemble(expected_output)
+      end
+
+      it "serializes the result of nested inline subexpressions" do
+        template = Curlybars.compile(<<-HBS)
+          <script>
+            const nine = {{json (calc (calc 1 "+" 2) "*" 3)}}
+          </script>
+        HBS
+
+        expected_output = <<-HTML
+          <script>
+            const nine = 9
+          </script>
+        HTML
+
+        expect(eval(template)).to resemble(expected_output)
+      end
+
+      it "serialize the result of normal helpers" do
+        template = Curlybars.compile(<<-HBS)
+          <script>
+            const bar = {{json (bar)}}
+          </script>
+        HBS
+
+        expected_output = <<-HTML
+          <script>
+            const bar = "LOL"
+          </script>
+        HTML
+
+        expect(eval(template)).to resemble(expected_output)
+      end
+    end
+
     describe "validation" do
       it "validates unallowed methods" do
         template = Curlybars.compile(<<-HBS)
