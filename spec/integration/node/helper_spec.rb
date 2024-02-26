@@ -184,20 +184,6 @@ describe "{{helper context key=value}}" do
     end
 
     describe "generic helper" do
-      it "without errors with no argumemt" do
-        dependency_tree = {
-          json: [:helper, {}]
-        }
-
-        source = <<-HBS
-          {{json}}
-        HBS
-
-        errors = Curlybars.validate(dependency_tree, source)
-
-        expect(errors).to be_empty
-      end
-
       it "without errors with an object as argument" do
         dependency_tree = {
           json: [:helper, {}],
@@ -265,6 +251,20 @@ describe "{{helper context key=value}}" do
 
         source = <<-HBS
           {{json article.unallowed_method}}
+        HBS
+
+        errors = Curlybars.validate(dependency_tree, source)
+
+        expect(errors).not_to be_empty
+      end
+
+      it "raises when used with no argumemts" do
+        dependency_tree = {
+          json: [:helper, {}]
+        }
+
+        source = <<-HBS
+          {{json}}
         HBS
 
         errors = Curlybars.validate(dependency_tree, source)

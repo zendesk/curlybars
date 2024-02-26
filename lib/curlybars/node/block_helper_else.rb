@@ -80,12 +80,17 @@ module Curlybars
             options.map { |option| option.validate(branches) }
           ]
         elsif helper.generic_helper?(branches)
-          [
-            helper_template.validate(branches),
-            else_template.validate(branches),
-            arguments.map { |argument| argument.validate(branches, check_type: :anything) },
-            options.map { |option| option.validate(branches) }
-          ]
+          if arguments.empty?
+            message = "#{helper.path} requires an argument"
+            Curlybars::Error::Validate.new('invalid_signature', message, helper.position)
+          else
+            [
+              helper_template.validate(branches),
+              else_template.validate(branches),
+              arguments.map { |argument| argument.validate(branches, check_type: :anything) },
+              options.map { |option| option.validate(branches) }
+            ]
+          end
         else
           message = "#{helper.path} must be allowed as helper or leaf"
           Curlybars::Error::Validate.new('invalid_block_helper', message, helper.position)

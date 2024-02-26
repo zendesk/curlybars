@@ -53,22 +53,6 @@ describe "{{json arg1}}" do
     end
 
     describe "validation" do
-      it "allows no arguments" do
-        template = Curlybars.compile(<<-HBS)
-          <script>
-            const articles = {{json}}
-          </script>
-        HBS
-
-        expected_output = <<-HTML
-          <script>
-            const articles = null
-          </script>
-        HTML
-
-        expect(eval(template)).to resemble(expected_output)
-      end
-
       it "validates unallowed methods" do
         template = Curlybars.compile(<<-HBS)
           <script>
