@@ -100,6 +100,17 @@ module Curlybars
       define_method(:allows_method?) do |method|
         allowed_methods.include?(method)
       end
+
+      define_method(:as_json) do |*args|
+        return @__as_json if defined?(@__as_json)
+
+        @__as_json ||= allowed_methods.each_with_object({}) do |method, hash|
+          unless self.method(method).arity > 0
+            value = send(method)
+            hash[method] = value.equal?(self) ? "[circular reference]" : value.as_json
+          end
+        end
+      end
     end
 
     def self.extended(base)

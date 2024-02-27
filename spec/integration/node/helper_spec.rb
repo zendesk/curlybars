@@ -182,5 +182,95 @@ describe "{{helper context key=value}}" do
         expect(errors).to be_empty
       end
     end
+
+    describe "generic helper" do
+      it "without errors with an object as argument" do
+        dependency_tree = {
+          json: [:helper, {}],
+          article: { title: nil }
+        }
+
+        source = <<-HBS
+          {{json article}}
+        HBS
+
+        errors = Curlybars.validate(dependency_tree, source)
+
+        expect(errors).to be_empty
+      end
+
+      it "without errors with a collection as argument" do
+        dependency_tree = {
+          json: [:helper, {}],
+          articles: [{ title: nil }]
+        }
+
+        source = <<-HBS
+          {{json articles}}
+        HBS
+
+        errors = Curlybars.validate(dependency_tree, source)
+
+        expect(errors).to be_empty
+      end
+
+      it "without errors with a string as argument" do
+        dependency_tree = {
+          json: [:helper, {}],
+          article: { title: "Article title" }
+        }
+
+        source = <<-HBS
+          {{json article.title}}
+        HBS
+
+        errors = Curlybars.validate(dependency_tree, source)
+
+        expect(errors).to be_empty
+      end
+
+      it "raises when using unallowed methods as argument" do
+        dependency_tree = {
+          json: [:helper, {}]
+        }
+
+        source = <<-HBS
+          {{json unallowed_method}}
+        HBS
+
+        errors = Curlybars.validate(dependency_tree, source)
+
+        expect(errors).not_to be_empty
+      end
+
+      it "raises when using a nested unallowed method as argument" do
+        dependency_tree = {
+          json: [:helper, {}],
+          article: { title: nil }
+        }
+
+        source = <<-HBS
+          {{json article.unallowed_method}}
+        HBS
+
+        errors = Curlybars.validate(dependency_tree, source)
+
+        expect(errors).not_to be_empty
+      end
+
+      it "raises when used with no argumemts" do
+        dependency_tree = {
+          json: [:helper, {}]
+        }
+
+        source = <<-HBS
+          {{json}}
+        HBS
+
+        errors = Curlybars.validate(dependency_tree, source)
+
+        expect(errors).not_to be_empty
+      end
+    end
   end
 end
