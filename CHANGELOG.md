@@ -1,5 +1,11 @@
 ### Unreleased
 
+### Curlybars 1.11.0
+
+* Add support for `as_json`
+* Add support for inline generic helper validation
+* Enable a `json` serialization generic helper
+
 ### Curlybars 1.10.0
 
 * Add support for Rails 7.1.
