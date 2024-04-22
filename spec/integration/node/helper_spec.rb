@@ -271,6 +271,34 @@ describe "{{helper context key=value}}" do
 
         expect(errors).not_to be_empty
       end
+
+      it "raises when used with this as an argumemt" do
+        dependency_tree = {
+          json: [:helper, {}]
+        }
+
+        source = <<-HBS
+          {{json this}}
+        HBS
+
+        errors = Curlybars.validate(dependency_tree, source)
+
+        expect(errors).not_to be_empty
+      end
+
+      it "raises when used with a dotted expression that could resolve to this" do
+        dependency_tree = {
+          article: { title: nil, json: [:helper, {}] }
+        }
+
+        source = <<-HBS
+          {{#with article}} {{json ../this}} {{/with}}
+        HBS
+
+        errors = Curlybars.validate(dependency_tree, source)
+
+        expect(errors).not_to be_empty
+      end
     end
   end
 end

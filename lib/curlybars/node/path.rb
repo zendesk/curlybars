@@ -86,6 +86,12 @@ module Curlybars
         false
       end
 
+      def this?
+        last_path_step = path.split('/').last
+
+        last_path_step.to_sym == :this
+      end
+
       def resolve(branches)
         @value ||= begin
           if Curlybars.global_helpers_dependency_tree.key?(path.to_sym)
@@ -177,6 +183,10 @@ module Curlybars
           message = "`#{path}` resolves to a helper"
           raise Curlybars::Error::Validate.new('is_a_helper', message, position)
         when :anything
+          return unless this?
+
+          message = "`#{path}` cannot resolve to a `this` expression"
+          raise Curlybars::Error::Validate.new('is_this', message, position)
         else
           raise "invalid type `#{check_type}`"
         end
