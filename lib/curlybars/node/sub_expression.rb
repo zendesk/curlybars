@@ -32,6 +32,8 @@ module Curlybars
                 helper_position = rendering.position(#{helper.position.line_number},
                   #{helper.position.line_offset})
 
+                options[:fn] = -> {}
+                options[:inverse] = -> {}
                 options[:this] = contexts.last
 
                 rendering.call(helper, #{helper.path.inspect}, helper_position,

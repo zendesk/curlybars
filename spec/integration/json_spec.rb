@@ -148,6 +148,38 @@ describe "{{json arg1}}" do
 
         expect(eval(template)).to resemble(expected_output)
       end
+
+      it "renders null for options[:fn]" do
+        template = Curlybars.compile(<<-HBS)
+          <script>
+            const bar = {{json (render_fn)}}
+          </script>
+        HBS
+
+        expected_output = <<-HTML
+          <script>
+            const bar = null
+          </script>
+        HTML
+
+        expect(eval(template)).to resemble(expected_output)
+      end
+
+      it "renders null for options[:inverse]" do
+        template = Curlybars.compile(<<-HBS)
+          <script>
+            const bar = {{json (render_inverse)}}
+          </script>
+        HBS
+
+        expected_output = <<-HTML
+          <script>
+            const bar = null
+          </script>
+        HTML
+
+        expect(eval(template)).to resemble(expected_output)
+      end
     end
 
     describe "validation" do
