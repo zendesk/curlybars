@@ -2,8 +2,8 @@ PATH
   remote: ..
   specs:
     curlybars (1.11.0)
-      actionpack (>= 6.0, < 7.2)
-      activesupport (>= 6.0, < 7.2)
+      actionpack (>= 6.0)
+      activesupport (>= 6.0)
       ffi
       rltk
 

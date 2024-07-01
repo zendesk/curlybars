@@ -1,5 +1,6 @@
 /.bundle/
 /coverage/
+/gemfiles/rails_main.gemfile.lock
 /pkg/
 /spec/reports/
 /tmp/
