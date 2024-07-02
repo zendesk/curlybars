@@ -8,5 +8,6 @@ require "curlybars"
 module Dummy
   class Application < Rails::Application
     config.cache_store = :memory_store
+    config.active_support.to_time_preserves_timezone = :zone
   end
 end
