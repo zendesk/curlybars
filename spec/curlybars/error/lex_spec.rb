@@ -4,7 +4,7 @@ describe Curlybars::Error::Lex do
   let(:source) { "first_line\n0123456789\nthird_line" }
 
   let(:exception) do
-    OpenStruct.new(line_number: 2, line_offset: 2)
+    Struct.new(:line_number, :line_offset).new(2, 2)
   end
 
   it "creates an exception with a meaningful message" do

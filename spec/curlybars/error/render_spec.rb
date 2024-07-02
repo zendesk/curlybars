@@ -1,12 +1,12 @@
 describe Curlybars::Error::Render do
   let(:position) do
-    OpenStruct.new(
-      line_number: 2,
-      line_offset: 3,
-      stream_offset: 14,
-      length: 3,
-      file_name: 'template.hbs'
-    )
+    Struct.new(
+      :line_number,
+      :line_offset,
+      :stream_offset,
+      :length,
+      :file_name
+    ).new(2, 3, 14, 3, 'template.hbs')
   end
 
   it "prefixes the id with `render.`" do

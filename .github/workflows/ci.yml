@@ -22,6 +22,8 @@ jobs:
           - rails6.1
           - rails7.0
           - rails7.1
+        include:
+          - {ruby-version: "3.3", gemfile: rails_main}
     env:
       BUNDLE_GEMFILE: gemfiles/${{ matrix.gemfile }}.gemfile
     steps:
