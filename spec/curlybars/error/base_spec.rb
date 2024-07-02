@@ -1,6 +1,6 @@
 describe Curlybars::Error::Base do
   let(:position) do
-    OpenStruct.new(line_number: 1, line_offset: 0)
+    Struct.new(:line_number, :line_offset, :file_name).new(1, 0, nil)
   end
 
   it "creates an exception with the given message" do

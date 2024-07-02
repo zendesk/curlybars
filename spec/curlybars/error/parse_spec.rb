@@ -3,12 +3,12 @@ describe Curlybars::Error::Parse do
 
   describe "with current token not being EOS" do
     let(:position) do
-      OpenStruct.new(
-        line_number: 2,
-        line_offset: 3,
-        length: 3,
-        file_name: 'template.hbs'
-      )
+      Struct.new(
+        :line_number,
+        :line_offset,
+        :length,
+        :file_name
+      ).new(2, 3, 3, 'template.hbs')
     end
 
     let(:exception) do

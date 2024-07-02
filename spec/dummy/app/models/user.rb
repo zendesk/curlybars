@@ -15,7 +15,7 @@ class User
     base_url = "http://example.com/foo.png"
     url = @locale.nil? ? base_url : base_url + "?locale=#{@locale}"
 
-    OpenStruct.new(url: url)
+    Struct.new(:url).new(url)
   end
 
   def self.translate(user, locale)
