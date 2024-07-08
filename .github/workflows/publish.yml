@@ -2,11 +2,23 @@ name: Publish Gem
 
 on:
   push:
-    tags: v*
+    branches: main
+    paths: lib/curlybars/version.rb
+  workflow_dispatch:
 
 jobs:
-  call-workflow:
-    uses: zendesk/gw/.github/workflows/ruby-gem-publication.yml@main
-    secrets:
-      RUBY_GEMS_API_KEY: ${{ secrets.RUBY_GEMS_API_KEY }}
-      RUBY_GEMS_TOTP_DEVICE: ${{ secrets.RUBY_GEMS_TOTP_DEVICE }}
+  push:
+    runs-on: ubuntu-latest
+    environment: rubygems-publish
+    permissions:
+      id-token: write
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - uses: rubygems/release-gem@v1
+        with:
+          await-release: false
