@@ -1,5 +1,9 @@
 ### Unreleased
 
+### Curlybars 1.12.0
+
+* Removes upper limit on Rails, tests with Rails main.
+
 ### Curlybars 1.11.0
 
 * Add support for `as_json`
