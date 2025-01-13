@@ -4,3 +4,4 @@ gemspec path: "../"
 
 gem "actionpack", github: "rails/rails", branch: "main"
 gem "railties", github: "rails/rails", branch: "main"
+eval_gemfile "common.rb"
