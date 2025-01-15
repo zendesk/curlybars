@@ -49,8 +49,7 @@ describe "{{#if}}...{{/if}}" do
     it "works with nested `if blocks` (double positive)" do
       allow(presenter).to receive(:allows_method?).with(:valid).and_return(true)
       allow(presenter).to receive(:allows_method?).with(:visible).and_return(true)
-      allow(presenter).to receive(:valid).and_return(true)
-      allow(presenter).to receive(:visible).and_return(true)
+      allow(presenter).to receive_messages(valid: true, visible: true)
 
       template = Curlybars.compile(<<-HBS)
         {{#if valid}}
@@ -70,8 +69,7 @@ describe "{{#if}}...{{/if}}" do
     it "works with nested `if blocks` (positive and negative)" do
       allow(presenter).to receive(:allows_method?).with(:valid).and_return(true)
       allow(presenter).to receive(:allows_method?).with(:visible).and_return(true)
-      allow(presenter).to receive(:valid).and_return(true)
-      allow(presenter).to receive(:visible).and_return(false)
+      allow(presenter).to receive_messages(valid: true, visible: false)
 
       template = Curlybars.compile(<<-HBS)
         {{#if valid}}

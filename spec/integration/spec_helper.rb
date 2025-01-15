@@ -159,7 +159,7 @@ module IntegrationTest
       options[:this].context
     end
 
-    define_method('-a-path-') do
+    define_method(:'-a-path-') do
       'a path, whose name contains underscores'
     end
 
@@ -185,14 +185,12 @@ module IntegrationTest
     end
 
     def calc(left, op, right, _)
-      return unless left.is_a? Numeric
-      return unless right.is_a? Numeric
+      return unless left.is_a?(Numeric)
+      return unless right.is_a?(Numeric)
 
       raise "Invalid operation: #{op}" unless %w[+ - * / ** > >= < <= ==].include?(op)
 
-      eval <<-RUBY, binding, __FILE__, __LINE__ + 1
-        #{left} #{op} #{right}
-      RUBY
+      left.public_send(op, right)
     end
 
     def slice(collection, start, length, _)
@@ -228,7 +226,7 @@ module IntegrationTest
     end
 
     def input(_, options)
-      label = options[:"aria-label"]
+      label = options[:'aria-label']
       placeholder = options[:placeholder]
 
       "<input aria-label=\"#{label}\" placeholder=\"#{placeholder}\" />"

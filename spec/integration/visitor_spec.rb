@@ -145,7 +145,7 @@ describe "visitor" do
 
   def counting_visitor_for(klass)
     Class.new(Curlybars::Visitor) do
-      define_method "visit_#{klass.name.demodulize.underscore}" do |node|
+      define_method :"visit_#{klass.name.demodulize.underscore}" do |node|
         self.context += 1
         super(node)
       end

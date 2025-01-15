@@ -43,6 +43,9 @@ module Curlybars
 
       private
 
+      LEADING_ENCODING_REGEXP = /\A#{ActionView::ENCODING_FLAG}/
+      private_constant :LEADING_ENCODING_REGEXP
+
       def compile(template, source)
         # Template is empty, so there's no need to initialize a presenter.
         return %("") if source.empty?
@@ -55,7 +58,7 @@ module Curlybars
         # For security reason, we strip the encoding directive in order to avoid
         # potential issues when rendering the template in another character
         # encoding.
-        safe_source = source.gsub(/\A#{ActionView::ENCODING_FLAG}/, '')
+        safe_source = source.sub(LEADING_ENCODING_REGEXP, '')
 
         source = Curlybars.compile(safe_source, template.identifier)
 

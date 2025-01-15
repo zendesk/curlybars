@@ -14,7 +14,7 @@ describe Curlybars::Error::Base do
   it "doesn't change the backtrace for nil position.file_name" do
     exception = Curlybars::Error::Base.new('id', 'message', position)
 
-    expect(exception.backtrace).to be nil
+    expect(exception.backtrace).to be_nil
   end
 
   it "sets the right backtrace for non-nil position.file_name" do
@@ -22,7 +22,7 @@ describe Curlybars::Error::Base do
 
     exception = Curlybars::Error::Base.new('id', 'message', position)
 
-    expect(exception.backtrace).not_to be nil
+    expect(exception.backtrace).not_to be_nil
   end
 
   it "sets the position as an instance varaible" do

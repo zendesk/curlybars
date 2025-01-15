@@ -342,41 +342,53 @@ describe Curlybars::RenderingSupport do
 
   describe "#check_context_is_hash_or_enum_of_presenters" do
     it "doesn't raise an exception when argument is an empty enumerable" do
-      collection = []
-      rendering.check_context_is_hash_or_enum_of_presenters(collection, 'path', position)
+      expect do
+        collection = []
+        rendering.check_context_is_hash_or_enum_of_presenters(collection, 'path', position)
+      end.not_to raise_error
     end
 
     it "doesn't raise an exception when argument is an empty hash" do
-      collection = {}
-      rendering.check_context_is_hash_or_enum_of_presenters(collection, nil, position)
+      expect do
+        collection = {}
+        rendering.check_context_is_hash_or_enum_of_presenters(collection, nil, position)
+      end.not_to raise_error
     end
 
     it "doesn't raise an exception when argument is an enumerable of presenters" do
-      collection = [presenter]
-      rendering.check_context_is_hash_or_enum_of_presenters(collection, 'path', position)
+      expect do
+        collection = [presenter]
+        rendering.check_context_is_hash_or_enum_of_presenters(collection, 'path', position)
+      end.not_to raise_error
     end
 
     it "doesn't raise an exception when argument is a hash of presenters" do
-      collection = { presenter: presenter }
-      rendering.check_context_is_hash_or_enum_of_presenters(collection, 'path', position)
+      expect do
+        collection = { presenter: presenter }
+        rendering.check_context_is_hash_or_enum_of_presenters(collection, 'path', position)
+      end.not_to raise_error
     end
 
-    it "raises when it is not an hash or an enumerable" do
+    it "raises when argument is not an hash or an enumerable" do
       expect do
-        rendering.check_context_is_hash_or_enum_of_presenters(:not_a_presenter, 'path', position)
+        collection = :not_a_presenter
+        rendering.check_context_is_hash_or_enum_of_presenters(collection, 'path', position)
       end.to raise_error(Curlybars::Error::Render)
     end
 
-    it "raises when it is not an hash or an enumerable of presenters" do
+    it "raises when argument is not an hash or an enumerable of presenters" do
       expect do
-        rendering.check_context_is_hash_or_enum_of_presenters([:not_a_presenter], 'path', position)
+        collection = [:not_a_presenter]
+        rendering.check_context_is_hash_or_enum_of_presenters(collection, 'path', position)
       end.to raise_error(Curlybars::Error::Render)
     end
   end
 
   describe "#check_context_is_presenter" do
     it "doesn't raise an exception when argument is a presenter" do
-      rendering.check_context_is_presenter(presenter, 'path', position)
+      expect do
+        rendering.check_context_is_presenter(presenter, 'path', position)
+      end.not_to raise_error
     end
 
     it "raises when it is not a presenter" do
