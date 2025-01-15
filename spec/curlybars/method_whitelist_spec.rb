@@ -67,7 +67,7 @@ describe Curlybars::MethodWhitelist do
 
       aggregate_failures "test both allowed_methods and allows_method?" do
         expect(dummy_class.new.allowed_methods).to eq([:bar])
-        expect(dummy_class.new.allows_method?(:bar)).to eq(true)
+        expect(dummy_class.new.allows_method?(:bar)).to be(true)
       end
     end
 
@@ -236,7 +236,7 @@ describe Curlybars::MethodWhitelist do
     end
 
     it "supports procs with context in schema" do
-      dummy_class.class_eval { allow_methods settings: ->(context) { context.foo? ? Hash[:background_color, nil] : nil } }
+      dummy_class.class_eval { allow_methods settings: ->(context) { context.foo? ? { background_color: nil } : nil } }
 
       expect(dummy_class.methods_schema(validation_context_class.new)).to eq(settings: { background_color: nil })
     end
@@ -285,7 +285,7 @@ describe Curlybars::MethodWhitelist do
 
     it "propagates arguments" do
       dummy_class.class_eval do
-        allow_methods label: ->(label) { Hash[label, nil] }
+        allow_methods label: ->(label) { { label => nil } }
       end
 
       expect(dummy_class.dependency_tree(:some_label)).

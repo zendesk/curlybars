@@ -36,8 +36,7 @@ describe "{{#unless}}...{{/unless}}" do
     it "works with nested unless blocks (double negative)" do
       allow(presenter).to receive(:allows_method?).with(:first_condition).and_return(true)
       allow(presenter).to receive(:allows_method?).with(:second_condition).and_return(true)
-      allow(presenter).to receive(:first_condition).and_return(false)
-      allow(presenter).to receive(:second_condition).and_return(false)
+      allow(presenter).to receive_messages(first_condition: false, second_condition: false)
 
       template = Curlybars.compile(<<-HBS)
         {{#unless first_condition}}
@@ -68,8 +67,7 @@ describe "{{#unless}}...{{/unless}}" do
     it "works with nested unless blocks (negative and positive)" do
       allow(presenter).to receive(:allows_method?).with(:first_condition).and_return(true)
       allow(presenter).to receive(:allows_method?).with(:second_condition).and_return(true)
-      allow(presenter).to receive(:first_condition).and_return(false)
-      allow(presenter).to receive(:second_condition).and_return(true)
+      allow(presenter).to receive_messages(first_condition: false, second_condition: true)
 
       template = Curlybars.compile(<<-HBS)
         {{#unless first_condition}}

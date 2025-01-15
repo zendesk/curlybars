@@ -2,5 +2,7 @@ source "https://rubygems.org"
 
 gemspec path: "../"
 
+eval_gemfile "common.rb"
+
 gem "actionpack", github: "rails/rails", branch: "main"
 gem "railties", github: "rails/rails", branch: "main"

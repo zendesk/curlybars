@@ -60,7 +60,7 @@ module Curlybars
           end
         end
 
-        instance_variable_set("@#{name}", value)
+        instance_variable_set(:"@#{name}", value)
       end
     end
 
@@ -276,8 +276,8 @@ module Curlybars
     # Delegates private method calls to the current view context.
     #
     # The view context, an instance of ActionView::Base, is set by Rails.
-    def method_missing(method, *args, **kwargs, &block)
-      @_context.public_send(method, *args, **kwargs, &block)
+    def method_missing(method, ...)
+      @_context.public_send(method, ...)
     end
 
     # Tells ruby (and developers) what methods we can accept.

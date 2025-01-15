@@ -140,15 +140,15 @@ module Curlybars
       check_context_is_hash_or_enum_of_presenters(collection, path, position)
       if collection.is_a?(Hash)
         collection
-      elsif collection.respond_to? :each_with_index
-        collection.each_with_index.map { |value, index| [index, value] }.to_h
+      elsif collection.respond_to?(:each_with_index)
+        collection.each_with_index.to_h { |value, index| [index, value] }
       else
         raise "Collection is not coerceable to hash"
       end
     end
 
     def presenter?(context)
-      context.respond_to? :allows_method?
+      context.respond_to?(:allows_method?)
     end
 
     def presenter_collection?(collection)

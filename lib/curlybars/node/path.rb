@@ -87,15 +87,12 @@ module Curlybars
       end
 
       def resolve(branches)
+        if !defined?(@value) && Curlybars.global_helpers_dependency_tree.key?(path.to_sym)
+          dep_node = Curlybars.global_helpers_dependency_tree[path.to_sym]
+          @value = dep_node.nil? ? :helper : [:helper, dep_node]
+        end
+
         @value ||= begin
-          if Curlybars.global_helpers_dependency_tree.key?(path.to_sym)
-            dep_node = Curlybars.global_helpers_dependency_tree[path.to_sym]
-
-            return :helper if dep_node.nil?
-
-            return [:helper, dep_node]
-          end
-
           path_split_by_slashes = path.split('/')
           backward_steps_on_branches = path_split_by_slashes.count - 1
           base_tree_position = branches.length - backward_steps_on_branches
@@ -108,7 +105,7 @@ module Curlybars
           dotted_path_side = path_split_by_slashes.last
 
           offset_adjustment = 0
-          dotted_path_side.split(/\./).map(&:to_sym).inject(base_tree) do |sub_tree, step|
+          dotted_path_side.split(".").map(&:to_sym).inject(base_tree) do |sub_tree, step|
             if step == :this
               next sub_tree
             elsif step == :length && (sub_tree.is_a?(Array) && sub_tree.first.is_a?(Hash))

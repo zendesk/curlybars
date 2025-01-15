@@ -51,10 +51,10 @@ module Curlybars
     r(/'(.*?)'/, :curly) { [:LITERAL, match[1].inspect] }
     r(/"(.*?)"/, :curly) { [:LITERAL, match[1].inspect] }
 
-    r(/@((?:\.\.\/)*#{IDENTIFIER})/, :curly) { |variable| [:VARIABLE, match[1]] }
+    r(/@((?:\.\.\/)*#{IDENTIFIER})/o, :curly) { |variable| [:VARIABLE, match[1]] }
 
-    r(/(#{IDENTIFIER})\s*=/, :curly) { [:KEY, match[1]] }
-    r(/(?:\.\.\/)*(?:#{IDENTIFIER}\.)*#{IDENTIFIER}/, :curly) { |name| [:PATH, name] }
+    r(/(#{IDENTIFIER})\s*=/o, :curly) { [:KEY, match[1]] }
+    r(/(?:\.\.\/)*(?:#{IDENTIFIER}\.)*#{IDENTIFIER}/o, :curly) { |name| [:PATH, name] }
 
     r(/\s/, :curly)
 

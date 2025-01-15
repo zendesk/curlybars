@@ -20,7 +20,7 @@ module Curlybars
       return unless class_name.start_with?('Curlybars::Node')
 
       method_name = class_name.demodulize.underscore
-      send("visit_#{method_name}", node)
+      send(:"visit_#{method_name}", node)
     end
 
     def visit_block_helper_else(node)
