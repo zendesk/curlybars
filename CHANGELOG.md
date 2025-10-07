@@ -1,5 +1,9 @@
 ### Unreleased
 
+### Curlybars 1.13.0
+
+* Add support for Rails 7.2.
+
 ### Curlybars 1.12.0
 
 * Removes upper limit on Rails, tests with Rails main.
