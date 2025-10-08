@@ -1,14 +1,14 @@
 class Dashboards::NewPresenter < Curlybars::Presenter
   presents :name
 
-  def form(&block)
-    form_for(:dashboard, &block)
+  def form(&)
+    form_for(:dashboard, &)
   end
 
   class FormPresenter < Curlybars::Presenter
     presents :form, :name
 
-    def name_field(&block)
+    def name_field(&)
       content_tag :div, class: "field" do
         yield
       end

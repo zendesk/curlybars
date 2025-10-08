@@ -180,12 +180,12 @@ module Curlybars
 
     attr_reader :contexts, :variables, :cached_calls, :file_name, :global_helpers, :start_time, :timeout, :cache
 
-    def instrument(meth, &block)
+    def instrument(meth, &)
       # Instruments only callables that give enough details (eg. methods)
       return yield unless meth.respond_to?(:name) && meth.respond_to?(:owner)
 
       payload = { presenter: meth.owner, method: meth.name }
-      ActiveSupport::Notifications.instrument("call_to_presenter.curlybars", payload, &block)
+      ActiveSupport::Notifications.instrument("call_to_presenter.curlybars", payload, &)
     end
 
     def arguments_for_signature(helper, arguments, options)

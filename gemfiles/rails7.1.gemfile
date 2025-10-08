@@ -1,8 +1,0 @@
-source "https://rubygems.org"
-
-gemspec path: "../"
-
-eval_gemfile "common.rb"
-
-gem "actionpack", "~> 7.1.0"
-gem "railties", "~> 7.1.0"
