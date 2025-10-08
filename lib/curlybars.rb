@@ -63,8 +63,8 @@ module Curlybars
     # identifier - The the file name of the template being checked (defaults to `nil`).
     #
     # Returns true if the template is valid, false otherwise.
-    def valid?(presenter_class, source, identifier = nil, **options)
-      errors = validate(presenter_class, source, identifier, **options)
+    def valid?(presenter_class, source, identifier = nil, **)
+      errors = validate(presenter_class, source, identifier, **)
       errors.empty?
     end
 

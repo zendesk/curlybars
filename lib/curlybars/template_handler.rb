@@ -87,9 +87,9 @@ module Curlybars
         RUBY
       end
 
-      def instrument(template, &block)
+      def instrument(template, &)
         payload = { path: template.virtual_path }
-        ActiveSupport::Notifications.instrument("compile.curlybars", payload, &block)
+        ActiveSupport::Notifications.instrument("compile.curlybars", payload, &)
       end
     end
   end

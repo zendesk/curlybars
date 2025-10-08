@@ -4,5 +4,5 @@ gemspec path: "../"
 
 eval_gemfile "common.rb"
 
-gem "actionpack", "~> 7.0.0"
-gem "railties", "~> 7.0.0"
+gem "actionpack", "~> 8.0.0"
+gem "railties", "~> 8.0.0"

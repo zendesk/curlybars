@@ -1,5 +1,9 @@
 ### Unreleased
 
+* Add testing for Rails 7.2 & 8.0.
+* Drop support for Rails < 7.2.
+* Drop support for Ruby < 3.2.
+
 ### Curlybars 1.12.0
 
 * Removes upper limit on Rails, tests with Rails main.
