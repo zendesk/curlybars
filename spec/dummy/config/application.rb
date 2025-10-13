@@ -8,7 +8,7 @@ require "curlybars"
 module Dummy
   class Application < Rails::Application
     config.cache_store = :memory_store
-    config.active_support.to_time_preserves_timezone = :zone
+    config.active_support.to_time_preserves_timezone = :zone if DateAndTime::Compatibility.respond_to?(:preserve_timezone)
     config.action_controller.escape_json_responses = false if ActionController::Base.respond_to?(:escape_json_responses)
   end
 end
