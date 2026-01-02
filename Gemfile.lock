@@ -52,7 +52,7 @@ GEM
     diff-lcs (1.5.1)
     drb (2.2.1)
     erubi (1.13.1)
-    ffi (1.17.1)
+    ffi (1.17.3)
     filigree (0.4.1)
     i18n (1.14.6)
       concurrent-ruby (~> 1.0)
@@ -67,8 +67,8 @@ GEM
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     mini_portile2 (2.8.9)
-    minitest (5.25.4)
-    nokogiri (1.18.9)
+    minitest (5.27.0)
+    nokogiri (1.19.0)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     parallel (1.26.3)
@@ -104,7 +104,7 @@ GEM
       tsort (>= 0.2)
       zeitwerk (~> 2.6)
     rainbow (3.1.1)
-    rake (13.2.1)
+    rake (13.3.1)
     rdoc (6.10.0)
       psych (>= 4.0.0)
     regexp_parser (2.10.0)
@@ -161,7 +161,7 @@ GEM
       concurrent-ruby (~> 1.0)
     unicode-display_width (3.1.4)
       unicode-emoji (~> 4.0, >= 4.0.4)
-    unicode-emoji (4.0.4)
+    unicode-emoji (4.2.0)
     uri (1.0.4)
     useragent (0.16.11)
     zeitwerk (2.6.18)
@@ -182,4 +182,4 @@ DEPENDENCIES
   rubocop-rspec_rails
 
 BUNDLED WITH
-   2.5.23
+  4.0.3
