@@ -33,6 +33,24 @@ module Curlybars
       end
     end
 
+    def ast(source, identifier, run_processors:)
+      tokens = Curlybars::Lexer.lex(source, identifier)
+
+      Curlybars::Processor::Tilde.process!(tokens, identifier)
+
+      if run_processors
+        Curlybars.configuration.custom_processors.each do |processor|
+          processor.process!(tokens, identifier)
+        end
+      end
+
+      Curlybars::Parser.parse(tokens)
+    rescue RLTK::LexingError => lexing_error
+      raise Curlybars::Error::Lex.new(source, identifier, lexing_error)
+    rescue RLTK::NotInLanguage => not_in_language_error
+      raise Curlybars::Error::Parse.new(source, not_in_language_error)
+    end
+
     # Validates the source against a presenter.
     #
     # dependency_tree - a presenter dependency tree as defined in Curlybars::MethodWhitelist
@@ -98,24 +116,6 @@ module Curlybars
       transformers.inject(source) do |memo, transformer|
         transformer.transform(memo, identifier)
       end
-    end
-
-    def ast(source, identifier, run_processors:)
-      tokens = Curlybars::Lexer.lex(source, identifier)
-
-      Curlybars::Processor::Tilde.process!(tokens, identifier)
-
-      if run_processors
-        Curlybars.configuration.custom_processors.each do |processor|
-          processor.process!(tokens, identifier)
-        end
-      end
-
-      Curlybars::Parser.parse(tokens)
-    rescue RLTK::LexingError => lexing_error
-      raise Curlybars::Error::Lex.new(source, identifier, lexing_error)
-    rescue RLTK::NotInLanguage => not_in_language_error
-      raise Curlybars::Error::Parse.new(source, not_in_language_error)
     end
   end
 end
