@@ -78,6 +78,20 @@ module Curlybars
       visitor.accept(tree)
     end
 
+    # Find all path nodes in the AST that resolve to a given path.
+    # Takes into account contextual scope from block helpers like #with, #each, etc.
+    #
+    # target_path - The path String to search for (e.g., "user.name" or "user.organizations.id").
+    # source - The source HBS String used to generate an AST.
+    # identifier - The the file name of the template being checked (defaults to `nil`).
+    #
+    # Returns an Array of Curlybars::Node::Path instances that match the target path.
+    def find(target_path, source, identifier = nil)
+      tree = ast(transformed_source(source), identifier, run_processors: true)
+      finder = Curlybars::PathFinder.new(tree)
+      finder.find(target_path)
+    end
+
     def global_helpers_dependency_tree
       @global_helpers_dependency_tree ||= begin
         classes = Curlybars.configuration.global_helpers_provider_classes
@@ -139,3 +153,4 @@ require 'curlybars/railtie' if defined?(Rails)
 require 'curlybars/presenter'
 require 'curlybars/method_whitelist'
 require 'curlybars/visitor'
+require 'curlybars/path_finder'
