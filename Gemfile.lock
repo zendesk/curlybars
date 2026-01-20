@@ -162,7 +162,7 @@ GEM
     unicode-display_width (3.1.4)
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.2.0)
-    uri (1.0.4)
+    uri (1.1.1)
     useragent (0.16.11)
     zeitwerk (2.6.18)
 
