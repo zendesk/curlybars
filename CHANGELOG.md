@@ -1,8 +1,11 @@
 ### Unreleased
 
+### Curlybars 1.13.0
+
 * Add testing for Rails 7.2 & 8.0.
 * Drop support for Rails < 7.2.
 * Drop support for Ruby < 3.2.
+* Add support for finding path nodes in the Curlybars AST via `Curlybars.find`
 
 ### Curlybars 1.12.0
 

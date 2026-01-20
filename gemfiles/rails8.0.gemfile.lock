@@ -1,7 +1,7 @@
 PATH
   remote: ..
   specs:
-    curlybars (1.12.0)
+    curlybars (1.13.0)
       actionpack (>= 7.2)
       activesupport (>= 7.2)
       ffi
