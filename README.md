@@ -195,11 +195,7 @@ This project is maintained by @zendesk/vikings
 
 ## Releasing
 
-* `git checkout master && git pull`
-* Update changelog
-* Bump version in `lib/curlybars/version.rb`
-* Commit changes
-* `rake release`
+See [Releasing a new version](CONTRIBUTING.md#releasing-a-new-version) in the contributing guide.
 
 ## More information
 
