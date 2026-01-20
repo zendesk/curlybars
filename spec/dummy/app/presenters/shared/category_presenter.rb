@@ -1,5 +1,6 @@
 class Shared::CategoryPresenter
   extend Curlybars::MethodWhitelist
+
   attr_reader :category
 
   allow_methods :title

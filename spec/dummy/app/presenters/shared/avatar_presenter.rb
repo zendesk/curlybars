@@ -1,5 +1,6 @@
 class Shared::AvatarPresenter
   extend Curlybars::MethodWhitelist
+
   attr_reader :avatar
 
   allow_methods :url

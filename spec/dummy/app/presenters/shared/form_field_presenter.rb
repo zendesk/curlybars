@@ -1,5 +1,6 @@
 class Shared::FormFieldPresenter
   extend Curlybars::MethodWhitelist
+
   attr_accessor :label, :value
 
   allow_methods :label, :value, :name, :id

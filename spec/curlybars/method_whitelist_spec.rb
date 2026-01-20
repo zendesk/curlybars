@@ -93,6 +93,7 @@ describe Curlybars::MethodWhitelist do
 
       Class.new do
         extend Curlybars::MethodWhitelist
+
         allow_methods :cook, link: LinkPresenter
       end
     end
@@ -100,6 +101,7 @@ describe Curlybars::MethodWhitelist do
     let(:helpers) do
       Module.new do
         extend Curlybars::MethodWhitelist
+
         allow_methods :form
       end
     end
@@ -108,6 +110,7 @@ describe Curlybars::MethodWhitelist do
       Class.new(base_presenter) do
         extend Curlybars::MethodWhitelist
         include Helpers
+
         allow_methods :wave
       end
     end
@@ -136,6 +139,7 @@ describe Curlybars::MethodWhitelist do
 
         Class.new do
           extend Curlybars::MethodWhitelist
+
           attr_accessor :invocation_count
 
           allow_methods :cook, link: LinkPresenter do |context, allow_method|
@@ -156,6 +160,7 @@ describe Curlybars::MethodWhitelist do
       let(:helpers) do
         Module.new do
           extend Curlybars::MethodWhitelist
+
           allow_methods :form do |context, allow_method|
             if context.foo?
               allow_method.call(foo_bar: :helper)
@@ -172,6 +177,7 @@ describe Curlybars::MethodWhitelist do
         Class.new(base_presenter) do
           extend Curlybars::MethodWhitelist
           include Helpers
+
           allow_methods :wave
         end
       end
@@ -258,11 +264,13 @@ describe Curlybars::MethodWhitelist do
     it "returns a dependencies tree" do
       link_presenter = Class.new do
         extend Curlybars::MethodWhitelist
+
         allow_methods :url
       end
 
       article_presenter = Class.new do
         extend Curlybars::MethodWhitelist
+
         allow_methods :title, :body
       end
 
