@@ -1,5 +1,6 @@
 class Shared::ArticlePresenter
   extend Curlybars::MethodWhitelist
+
   attr_reader :article
 
   allow_methods :title, :comment, :body, :author

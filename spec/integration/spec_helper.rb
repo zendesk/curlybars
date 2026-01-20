@@ -159,7 +159,7 @@ module IntegrationTest
       options[:this].context
     end
 
-    define_method(:'-a-path-') do
+    define_method(:'-a-path-') do # rubocop:disable Naming/MethodName
       'a path, whose name contains underscores'
     end
 
