@@ -294,6 +294,115 @@ describe "PathFinder" do
     end
   end
 
+  describe "role filter", :aggregate_failures do
+    # Each path is used in exactly the role(s) it makes sense for:
+    #   title    — output, argument, option  (a string value)
+    #   truncate — helper                    (a helper function)
+    #   visible  — condition                 (a boolean)
+    #   posts    — collection                (an array)
+    #   author   — scope                     (a presenter)
+    #   header   — partial                   (a partial template)
+    #   score    — argument via subexpression
+    let(:role_source) do
+      <<-HBS
+        {{title}}
+        {{truncate title}}
+        {{#if visible}}yes{{/if}}
+        {{#unless visible}}no{{/unless}}
+        {{#each posts}}{{body}}{{/each}}
+        {{#with author}}{{name}}{{/with}}
+        {{> header}}
+        {{truncate greeting key=title}}
+        {{calc (math score)}}
+      HBS
+    end
+
+    it "returns all matches when role is nil (backward compat)" do
+      matches = Curlybars.find("title", role_source)
+      # output + argument + option = 3
+      expect(matches.count).to eq(3)
+      expect(matches.map { |m| m.position.line_number }).to contain_exactly(1, 2, 8)
+    end
+
+    it "filters :output" do
+      matches = Curlybars.find("title", role_source, role: :output)
+      expect(matches.count).to eq(1)
+      expect(matches.first.position.line_number).to eq(1)
+    end
+
+    it "filters :helper" do
+      matches = Curlybars.find("truncate", role_source, role: :helper)
+      expect(matches.count).to eq(2)
+      expect(matches.map { |m| m.position.line_number }).to contain_exactly(2, 8)
+    end
+
+    it "filters :argument — positional arg" do
+      matches = Curlybars.find("title", role_source, role: :argument)
+      # {{truncate title}}
+      expect(matches.count).to eq(1)
+      expect(matches.first.position.line_number).to eq(2)
+    end
+
+    it "filters :argument — subexpression arg" do
+      matches = Curlybars.find("score", role_source, role: :argument)
+      # (math score)
+      expect(matches.count).to eq(1)
+      expect(matches.first.position.line_number).to eq(9)
+    end
+
+    it "filters :option" do
+      matches = Curlybars.find("title", role_source, role: :option)
+      # key=title
+      expect(matches.count).to eq(1)
+      expect(matches.first.position.line_number).to eq(8)
+    end
+
+    it "filters :condition" do
+      matches = Curlybars.find("visible", role_source, role: :condition)
+      # {{#if visible}} + {{#unless visible}}
+      expect(matches.count).to eq(2)
+      expect(matches.map { |m| m.position.line_number }).to contain_exactly(3, 4)
+    end
+
+    it "filters :collection" do
+      matches = Curlybars.find("posts", role_source, role: :collection)
+      expect(matches.count).to eq(1)
+      expect(matches.first.position.line_number).to eq(5)
+    end
+
+    it "filters :scope" do
+      matches = Curlybars.find("author", role_source, role: :scope)
+      expect(matches.count).to eq(1)
+      expect(matches.first.position.line_number).to eq(6)
+    end
+
+    it "filters :partial" do
+      matches = Curlybars.find("header", role_source, role: :partial)
+      expect(matches.count).to eq(1)
+      expect(matches.first.position.line_number).to eq(7)
+    end
+
+    it "accepts an array of roles" do
+      matches = Curlybars.find("title", role_source, role: [:argument, :option])
+      # argument + option = 2
+      expect(matches.count).to eq(2)
+      expect(matches.map { |m| m.position.line_number }).to contain_exactly(2, 8)
+    end
+
+    it "works with context changes" do
+      source = <<-HBS
+        {{#with user}}
+          {{name}}
+          {{#if active}}yes{{/if}}
+        {{/with}}
+      HBS
+      output_matches = Curlybars.find("user.name", source, role: :output)
+      condition_matches = Curlybars.find("user.active", source, role: :condition)
+      expect(output_matches.count).to eq(1)
+      expect(condition_matches.count).to eq(1)
+    end
+  end
+
   describe "regression tests" do
     let(:template) do
       <<-HBS
