@@ -1,5 +1,9 @@
 ### Unreleased
 
+### Curlybars 1.14.0
+
+* Add role filter option to `Curlybars.find` (`:output`, `:helper`, `:argument`, `:option`, `:condition`, `:collection`, `:scope`, `:partial`)
+
 ### Curlybars 1.13.0
 
 * Add testing for Rails 7.2 & 8.0.

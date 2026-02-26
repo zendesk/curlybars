@@ -84,12 +84,22 @@ module Curlybars
     # target_path - The path String to search for (e.g., "user.name" or "user.organizations.id").
     # source - The source HBS String used to generate an AST.
     # identifier - The the file name of the template being checked (defaults to `nil`).
+    # role - Optional Symbol or Array of Symbols to filter by syntactic role:
+    #          :output     - bare output value         {{title}}
+    #          :helper     - helper name               {{truncate …}}, {{#block …}}
+    #          :argument   - positional argument        {{truncate title}}, (math score)
+    #          :option     - keyword option value       key=title
+    #          :condition  - #if / #unless expression   {{#if visible}}
+    #          :collection - #each collection path      {{#each posts}}
+    #          :scope      - #with scope path           {{#with author}}
+    #          :partial    - partial name               {{> header}}
+    #        When nil (default), all roles match (backward compatible).
     #
     # Returns an Array of Curlybars::Node::Path instances that match the target path.
-    def find(target_path, source, identifier = nil)
+    def find(target_path, source, identifier = nil, role: nil)
       tree = ast(transformed_source(source), identifier, run_processors: true)
       finder = Curlybars::PathFinder.new(tree)
-      finder.find(target_path)
+      finder.find(target_path, role: role)
     end
 
     def global_helpers_dependency_tree
