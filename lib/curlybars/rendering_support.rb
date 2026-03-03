@@ -1,8 +1,8 @@
 module Curlybars
   class RenderingSupport
-    def initialize(timeout, contexts, variables, file_name, global_helpers_providers = [], cache = ->(key, &block) { block.call })
+    def initialize(timeout, contexts, variables, file_name, global_helpers_providers = [], cache = ->(key, &block) { block.call }, start_time = nil)
       @timeout = timeout
-      @start_time = Time.now
+      @start_time = start_time || Time.now
 
       @contexts = contexts
       @variables = variables
@@ -192,18 +192,22 @@ module Curlybars
       limit = ::Curlybars.configuration.partial_nesting_limit
       return "" if depth >= limit
 
+      previous_start_time = Thread.current[:curlybars_render_start_time]
+      Thread.current[:curlybars_render_start_time] = @start_time
+      Thread.current[:curlybars_partial_depth] = depth + 1
+
       compiled = ::Curlybars.compile(source, "partial:#{name}")
 
       klass = ::Curlybars.configuration.partial_presenter_class || ::Curlybars::PartialPresenter
-      presenter = klass.new(nil, options)
-      global_helpers_providers = @global_helpers_providers
+      presenter = klass.new(nil, options) # rubocop:disable Lint/UselessAssignment -- used by eval'd compiled template
+      global_helpers_providers = @global_helpers_providers # rubocop:disable Lint/UselessAssignment -- used by eval'd compiled template
 
-      Thread.current[:curlybars_partial_depth] = depth + 1
-      begin
-        eval(compiled).to_s
-      ensure
-        Thread.current[:curlybars_partial_depth] = depth
-      end
+      eval(compiled) # rubocop:disable Security/Eval -- eval is the established compilation pattern for the whole engine
+    rescue StandardError
+      "".html_safe
+    ensure
+      Thread.current[:curlybars_partial_depth] = depth
+      Thread.current[:curlybars_render_start_time] = previous_start_time
     end
 
     private

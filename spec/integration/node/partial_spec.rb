@@ -31,6 +31,7 @@ describe "{{> partial}}" do
 
     after do
       Thread.current[:curlybars_partial_depth] = nil
+      Thread.current[:curlybars_render_start_time] = nil
     end
 
     it "renders a resolved partial template" do
@@ -85,6 +86,111 @@ describe "{{> partial}}" do
       expect(eval(template)).to resemble(<<-HTML)
         partial
       HTML
+    end
+
+    # --- Object passing tests ---
+
+    it "passes a presenter as an option" do
+      template = Curlybars.compile(<<-HBS)
+        {{> user_card user=user}}
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
+        <span>Libo</span>
+      HTML
+    end
+
+    it "passes a presenter via `this` inside #with" do
+      template = Curlybars.compile(<<-HBS)
+        {{#with user}}{{> user_card user=this}}{{/with}}
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
+        <span>Libo</span>
+      HTML
+    end
+
+    it "supports deep traversal inside a partial" do
+      template = Curlybars.compile(<<-HBS)
+        {{> article_section article=article}}
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
+        <article>The Prince by Nicolò</article>
+      HTML
+    end
+
+    it "passes values from #each via option" do
+      template = Curlybars.compile(<<-HBS)
+        {{#each two_elements}}{{> simple_name name=first_name}}{{/each}}
+      HBS
+
+      expect(eval(template)).to resemble("LiboLibo")
+    end
+
+    it "passes a dotted path as an option" do
+      template = Curlybars.compile(<<-HBS)
+        {{> user_card user=article.author}}
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
+        <span>Nicolò</span>
+      HTML
+    end
+
+    it "passes a user presenter as comment option" do
+      template = Curlybars.compile(<<-HBS)
+        {{> comment_item comment=user}}
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
+        <li>Libo</li>
+      HTML
+    end
+
+    # --- Error protection tests ---
+
+    it "renders empty string when option is missing (no crash)" do
+      template = Curlybars.compile(<<-HBS)
+        {{> user_card}}
+      HBS
+
+      expect(eval(template)).to resemble("")
+    end
+
+    it "renders empty string for malformed partial source" do
+      template = Curlybars.compile(<<-HBS)
+        {{> malformed}}
+      HBS
+
+      expect(eval(template)).to resemble("")
+    end
+
+    it "renders empty string when referencing undefined data in partial" do
+      template = Curlybars.compile(<<-HBS)
+        {{> missing_ref}}
+      HBS
+
+      expect(eval(template)).to resemble("")
+    end
+
+    # --- Timeout propagation test ---
+
+    it "propagates parent start_time to child partials via thread-local" do
+      Curlybars.configuration.rendering_timeout = 10
+
+      template = Curlybars.compile(<<-HBS)
+        {{> card title="timeout"}}
+      HBS
+
+      # Inject an old start_time via thread-local; root.rb reads it and
+      # passes to RenderingSupport, which then propagates it to partials.
+      Thread.current[:curlybars_render_start_time] = Time.now - 20
+
+      expect { eval(template) }.to raise_error(Curlybars::Error::Render)
+    ensure
+      Thread.current[:curlybars_render_start_time] = nil
+      Curlybars.reset
     end
   end
 
