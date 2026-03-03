@@ -170,6 +170,24 @@ module IntegrationTest
     end
   end
 
+  class PartialResolvingProvider
+    extend Curlybars::MethodWhitelist
+
+    PARTIALS = {
+      'card' => '<div class="card">{{title}}</div>',
+      'nested_outer' => '{{> nested_inner}}',
+      'nested_inner' => 'inner',
+      'deeply_nested' => '{{> deeply_nested}}'
+    }.freeze
+
+    def initialize(context = nil)
+    end
+
+    def resolve_partial(name)
+      PARTIALS[name.to_s]
+    end
+  end
+
   class GlobalHelperProvider
     extend Curlybars::MethodWhitelist
     include ActionView::Helpers::OutputSafetyHelper

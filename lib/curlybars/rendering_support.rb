@@ -9,6 +9,7 @@ module Curlybars
       @file_name = file_name
       @cached_calls = {}
       @cache = cache
+      @global_helpers_providers = global_helpers_providers
 
       @global_helpers = {}
 
@@ -173,6 +174,35 @@ module Curlybars
         end
       else
         yield buffer
+      end
+    end
+
+    def resolve_partial(name)
+      @global_helpers_providers.each do |provider|
+        next unless provider.respond_to?(:resolve_partial)
+
+        source = provider.resolve_partial(name)
+        return source if source
+      end
+      nil
+    end
+
+    def render_partial(source, name, options)
+      depth = Thread.current[:curlybars_partial_depth].to_i
+      limit = ::Curlybars.configuration.partial_nesting_limit
+      return "" if depth >= limit
+
+      compiled = ::Curlybars.compile(source, "partial:#{name}")
+
+      klass = ::Curlybars.configuration.partial_presenter_class || ::Curlybars::PartialPresenter
+      presenter = klass.new(nil, options)
+      global_helpers_providers = @global_helpers_providers
+
+      Thread.current[:curlybars_partial_depth] = depth + 1
+      begin
+        eval(compiled).to_s
+      ensure
+        Thread.current[:curlybars_partial_depth] = depth
       end
     end
 

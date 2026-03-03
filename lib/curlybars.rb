@@ -162,5 +162,6 @@ require 'curlybars/template_handler'
 require 'curlybars/railtie' if defined?(Rails)
 require 'curlybars/presenter'
 require 'curlybars/method_whitelist'
+require 'curlybars/partial_presenter'
 require 'curlybars/visitor'
 require 'curlybars/path_finder'
