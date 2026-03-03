@@ -1,5 +1,7 @@
 ### Unreleased
 
+* Add runtime partial resolution via providers that implement `resolve_partial(name)`, with options and object passing
+
 ### Curlybars 1.14.0
 
 * Add role filter option to `Curlybars.find` (`:output`, `:helper`, `:argument`, `:option`, `:condition`, `:collection`, `:scope`, `:partial`)
