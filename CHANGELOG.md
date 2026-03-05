@@ -1,5 +1,9 @@
 ### Unreleased
 
+### Curlybars 1.15.0
+
+* Remove dependency on SortedSet, which doesn't work on Ruby 4.0. If you intend to use Curlybars with Ruby 4.0, you should *not* use an older version than v1.15.0.
+
 ### Curlybars 1.14.0
 
 * Add role filter option to `Curlybars.find` (`:output`, `:helper`, `:argument`, `:option`, `:condition`, `:collection`, `:scope`, `:partial`)
