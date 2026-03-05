@@ -24,7 +24,7 @@ module Curlybars
       def validate(branches)
         # Path validation is lenient — partials may be resolved at runtime
         # by a provider's resolve_partial method.
-        options.flat_map { |option| option.validate(branches) }
+        options.flat_map { |option| option.expression.validate(branches) }
       end
 
       def cache_key

@@ -218,5 +218,41 @@ describe "{{> partial}}" do
 
       expect(errors).to be_empty
     end
+
+    it "allows a presenter (Hash) as an option value" do
+      dependency_tree = { user: { first_name: nil } }
+
+      source = <<-HBS
+        {{> avatar user=user}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors).to be_empty
+    end
+
+    it "reports a single error when only one option path is out of scope" do
+      dependency_tree = { user: { first_name: nil } }
+
+      source = <<-HBS
+        {{> avatar user=user foo=nonexistent_xyzzy}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors.length).to eq(1)
+    end
+
+    it "identifies the out-of-scope path in the error message" do
+      dependency_tree = { user: { first_name: nil } }
+
+      source = <<-HBS
+        {{> avatar user=user foo=nonexistent_xyzzy}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors.first.message).to match(/nonexistent_xyzzy/)
+    end
   end
 end
