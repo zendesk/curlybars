@@ -66,3 +66,35 @@ It is possible to register global helper provider classes via configuration. For
 To enable caching of PORO presenters with `{{#each}}`, set `cache` to a value that responds to `call` with one argument `cache_key` and a block. The callable is expected to return a cached value if the cache key is present, and otherwise call the block and store the result. To integrate with Rails, set this value to `Rails.cache.method(:fetch)`.
 
 By default, caching is not enabled and will simply always invoke the block.
+
+## `partial_nesting_limit` (default `5`)
+
+Runtime-resolved partials can invoke other partials, creating nested rendering. To prevent infinite recursion, Curlybars limits the nesting depth. When the limit is reached, the partial renders as an empty string.
+
+```ruby
+Curlybars.configure do |config|
+  config.partial_nesting_limit = 3
+end
+```
+
+## `partial_presenter_class` (default `nil`)
+
+By default, runtime-resolved partials use `Curlybars::PartialPresenter` to expose passed options as template variables. You can provide a custom presenter class to add shared methods available to all partials. The class must accept `(context, data)` in its initializer.
+
+```ruby
+class BasePartialPresenter < Curlybars::PartialPresenter
+  extend Curlybars::MethodWhitelist
+
+  allow_methods :site_name
+
+  def site_name
+    "My Site"
+  end
+end
+
+Curlybars.configure do |config|
+  config.partial_presenter_class = BasePartialPresenter
+end
+```
+
+With this configuration, all runtime-resolved partials can use `{{site_name}}` in addition to any options passed to them.

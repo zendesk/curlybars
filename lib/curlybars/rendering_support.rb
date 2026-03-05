@@ -1,14 +1,15 @@
 module Curlybars
   class RenderingSupport
-    def initialize(timeout, contexts, variables, file_name, global_helpers_providers = [], cache = ->(key, &block) { block.call })
+    def initialize(timeout, contexts, variables, file_name, global_helpers_providers = [], cache = ->(key, &block) { block.call }, start_time = nil)
       @timeout = timeout
-      @start_time = Time.now
+      @start_time = start_time || Time.now
 
       @contexts = contexts
       @variables = variables
       @file_name = file_name
       @cached_calls = {}
       @cache = cache
+      @global_helpers_providers = global_helpers_providers
 
       @global_helpers = {}
 
@@ -174,6 +175,39 @@ module Curlybars
       else
         yield buffer
       end
+    end
+
+    def resolve_partial(name)
+      @global_helpers_providers.each do |provider|
+        next unless provider.respond_to?(:resolve_partial)
+
+        source = provider.resolve_partial(name)
+        return source if source
+      end
+      nil
+    end
+
+    def render_partial(source, name, options)
+      depth = Thread.current[:curlybars_partial_depth].to_i
+      limit = ::Curlybars.configuration.partial_nesting_limit
+      return "" if depth >= limit
+
+      previous_start_time = Thread.current[:curlybars_render_start_time]
+      Thread.current[:curlybars_render_start_time] = @start_time
+      Thread.current[:curlybars_partial_depth] = depth + 1
+
+      compiled = ::Curlybars.compile(source, "partial:#{name}")
+
+      klass = ::Curlybars.configuration.partial_presenter_class || ::Curlybars::PartialPresenter
+      presenter = klass.new(nil, options) # rubocop:disable Lint/UselessAssignment -- used by eval'd compiled template
+      global_helpers_providers = @global_helpers_providers # rubocop:disable Lint/UselessAssignment -- used by eval'd compiled template
+
+      eval(compiled) # rubocop:disable Security/Eval -- eval is the established compilation pattern for the whole engine
+    rescue StandardError
+      "".html_safe
+    ensure
+      Thread.current[:curlybars_partial_depth] = depth
+      Thread.current[:curlybars_render_start_time] = previous_start_time
     end
 
     private
