@@ -179,23 +179,23 @@ module Curlybars
       #   Posts::ShowPresenter.dependencies
       #   #=> ['posts/comment', 'posts/comment_form']
       #
-      # Returns a Set of String view paths.
+      # Returns an Array or sorted view paths.
       def dependencies
         # The base presenter doesn't have any dependencies.
-        return SortedSet.new if self == Curlybars::Presenter
+        return [] if self == Curlybars::Presenter
 
-        @dependencies ||= SortedSet.new
-        @dependencies.union(superclass.dependencies)
+        @dependencies ||= []
+        @dependencies = @dependencies.union(superclass.dependencies).uniq.sort
       end
 
-      # Indicate that the presenter depends a list of other views.
+      # Indicate that the presenter depends on a list of other views.
       #
-      # deps - A list of String view paths that the presenter depends on.
+      # dependencies - A list of String view paths that the presenter depends on.
       #
-      # Returns nothing.
+      # Returns updated Array of String view paths.
       def depends_on(*dependencies)
-        @dependencies ||= SortedSet.new
-        @dependencies.merge(dependencies)
+        @dependencies ||= []
+        @dependencies = @dependencies.union(dependencies).uniq.sort
       end
 
       # Get or set the version of the presenter.
