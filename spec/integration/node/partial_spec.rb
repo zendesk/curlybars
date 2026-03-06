@@ -176,6 +176,21 @@ describe "{{> partial}}" do
 
     # --- Timeout propagation test ---
 
+    it "propagates timeout error from nested partial (not swallowed)" do
+      Curlybars.configuration.rendering_timeout = 10
+
+      template = Curlybars.compile(<<-HBS)
+        {{> nested_outer}}
+      HBS
+
+      Thread.current[:curlybars_render_start_time] = Time.now - 20
+
+      expect { eval(template) }.to raise_error(Curlybars::Error::Render).with_message(/too long/)
+    ensure
+      Thread.current[:curlybars_render_start_time] = nil
+      Curlybars.reset
+    end
+
     it "propagates parent start_time to child partials via thread-local" do
       Curlybars.configuration.rendering_timeout = 10
 

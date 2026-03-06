@@ -57,6 +57,42 @@ describe Curlybars::PartialPresenter do
     end
   end
 
+  describe "existing methods are not overridden" do
+    let(:data) { { class: "hacked", send: "evil", title: "Safe" } }
+
+    it "does not override :class" do
+      expect(presenter.class).to eq(Curlybars::PartialPresenter)
+    end
+
+    it "does not override :send" do
+      expect(presenter.send(:class)).to eq(Curlybars::PartialPresenter)
+    end
+
+    it "still defines keys that don't collide" do
+      expect(presenter.title).to eq("Safe")
+    end
+
+    it "excludes :class from allowed_methods" do
+      expect(presenter.allowed_methods).not_to include(:class)
+    end
+
+    it "excludes :send from allowed_methods" do
+      expect(presenter.allowed_methods).not_to include(:send)
+    end
+
+    it "includes non-colliding keys in allowed_methods" do
+      expect(presenter.allowed_methods).to include(:title)
+    end
+
+    it "returns false for allows_method?(:class)" do
+      expect(presenter.allows_method?(:class)).to be false
+    end
+
+    it "returns false for allows_method?(:send)" do
+      expect(presenter.allows_method?(:send)).to be false
+    end
+  end
+
   describe "subclass with allow_methods" do
     let(:subclass) do
       Class.new(described_class) do
