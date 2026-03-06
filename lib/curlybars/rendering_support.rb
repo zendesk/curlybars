@@ -182,7 +182,10 @@ module Curlybars
         next unless provider.respond_to?(:resolve_partial)
 
         source = provider.resolve_partial(name)
-        return source if source
+        next unless source
+        raise TypeError, "resolve_partial must return a String, got #{source.class}" unless source.is_a?(String)
+
+        return source
       end
       nil
     end
@@ -198,11 +201,19 @@ module Curlybars
 
       compiled = ::Curlybars.compile(source, "partial:#{name}")
 
-      klass = ::Curlybars.configuration.partial_presenter_class || ::Curlybars::PartialPresenter
-      presenter = klass.new(nil, options) # rubocop:disable Lint/UselessAssignment -- used by eval'd compiled template
-      global_helpers_providers = @global_helpers_providers # rubocop:disable Lint/UselessAssignment -- used by eval'd compiled template
+      presenter_class = ::Curlybars.configuration.partial_presenter_class || ::Curlybars::PartialPresenter
 
-      eval(compiled) # rubocop:disable Security/Eval -- eval is the established compilation pattern for the whole engine
+      source = <<-RUBY
+        presenter = ::#{presenter_class}.new(nil, options)
+        global_helpers_providers = @global_helpers_providers
+        #{compiled}
+      RUBY
+
+      eval(source) # rubocop:disable Security/Eval -- eval is the established compilation pattern for the whole engine
+    rescue Curlybars::Error::Render => e
+      raise if e.id == 'render.timeout' || e.id == 'render.output_too_long'
+
+      "".html_safe
     rescue StandardError
       "".html_safe
     ensure
