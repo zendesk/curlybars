@@ -474,7 +474,11 @@ Partials can invoke other partials. For example, a `card` partial might include 
 
 ### Error protection
 
-Runtime-resolved partials are designed to fail silently. If the partial source is malformed, an option references an undefined variable, or any other error occurs during rendering, the partial returns an empty string rather than crashing the entire template.
+Runtime-resolved partials are designed to fail silently. If the partial source is malformed, an option references an undefined variable, or any other error occurs during rendering, the partial returns an empty string rather than crashing the entire template. Critical errors (timeouts and output-too-long) are still propagated so that safety limits remain enforced.
+
+### Compile-time validation
+
+Runtime-resolved partial names are not validated at compile time. If a partial name has a typo or no provider resolves it, the partial silently renders as an empty string at runtime. Use integration tests to verify that expected partials resolve correctly.
 
 ## Analysis
 

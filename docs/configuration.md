@@ -77,24 +77,4 @@ Curlybars.configure do |config|
 end
 ```
 
-## `partial_presenter_class` (default `nil`)
-
-By default, runtime-resolved partials use `Curlybars::PartialPresenter` to expose passed options as template variables. You can provide a custom presenter class to add shared methods available to all partials. The class must accept `(context, data)` in its initializer.
-
-```ruby
-class BasePartialPresenter < Curlybars::PartialPresenter
-  extend Curlybars::MethodWhitelist
-
-  allow_methods :site_name
-
-  def site_name
-    "My Site"
-  end
-end
-
-Curlybars.configure do |config|
-  config.partial_presenter_class = BasePartialPresenter
-end
-```
-
-With this configuration, all runtime-resolved partials can use `{{site_name}}` in addition to any options passed to them.
+**Security note:** Partial sources returned by `resolve_partial` are compiled through the full curlybars pipeline (lexer → parser → AST → code generation) before execution. This means they are subject to the same sandboxing as all other templates: method calls are gated by `allow_methods`, and safety limits (timeout, output size, nesting depth, traversal depth) apply equally.

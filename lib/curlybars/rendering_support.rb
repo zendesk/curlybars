@@ -201,10 +201,8 @@ module Curlybars
 
       compiled = ::Curlybars.compile(source, "partial:#{name}")
 
-      presenter_class = ::Curlybars.configuration.partial_presenter_class || ::Curlybars::PartialPresenter
-
       source = <<-RUBY
-        presenter = ::#{presenter_class}.new(nil, options)
+        presenter = ::Curlybars::PartialPresenter.new(nil, options)
         global_helpers_providers = @global_helpers_providers
         #{compiled}
       RUBY
