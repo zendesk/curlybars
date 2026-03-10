@@ -1,5 +1,6 @@
 describe "{{#with presenter}}...{{/with}}" do
   let(:global_helpers_providers) { [IntegrationTest::GlobalHelperProvider.new] }
+  let(:partial_provider) { nil }
 
   describe "#compile" do
     let(:post) { double("post") }

@@ -162,8 +162,8 @@ module Curlybars
         Node::WithElse.new(subexpression, with_template || VOID, else_template || VOID, pos(0))
       end
 
-      clause('START GT .path END') do |path|
-        Node::Partial.new(path)
+      clause('START GT .path .options? END') do |path, options|
+        Node::Partial.new(path, options || [], pos(0))
       end
     end
 
@@ -210,7 +210,7 @@ module Curlybars
         # Nothing to compile.
       end
 
-      def validate(branches)
+      def validate(branches, context: nil)
         [] # Nothing to validate.
       end
 

@@ -357,6 +357,131 @@ Curlybars offers limited support for [subexpressions](https://handlebarsjs.com/g
 {{/each}}
 ```
 
+## Partials
+
+Partials allow you to extract reusable template snippets and include them using the `{{> name}}` syntax. There are two ways to define partials: through presenter methods and through runtime resolution.
+
+### Presenter-based partials
+
+The simplest way to use a partial is to define it as a method on the presenter. Declare the method in `allow_methods` with the `:partial` role, and return the rendered content:
+
+```ruby
+class Invoices::ShowPresenter
+  extend Curlybars::MethodWhitelist
+
+  allow_methods partial: :partial
+end
+```
+
+```hbs
+{{> partial}}
+```
+
+### Runtime-resolved partials
+
+Sometimes you need partials that aren't tied to a specific presenter — for example, reusable UI components shared across multiple templates. Runtime resolution lets a dedicated provider supply template source strings that are compiled and rendered on the fly.
+
+Configure a partial provider class that implements `resolve_partial(name)`. The method receives the partial name as a string and returns either a template source string or `nil` to skip:
+
+```ruby
+class MyPartialProvider
+  PARTIALS = {
+    'card' => '<div class="card">{{title}}</div>',
+    'user_card' => '<span>{{user.first_name}}</span>',
+  }.freeze
+
+  def initialize(context)
+    @context = context
+  end
+
+  def resolve_partial(name)
+    PARTIALS[name.to_s]
+  end
+end
+```
+
+Register the provider via `partial_provider_class`:
+
+```ruby
+Curlybars.configure do |config|
+  config.partial_provider_class = MyPartialProvider
+end
+```
+
+Now you can use these partials in any template:
+
+```hbs
+{{> card title="Hello"}}
+```
+
+This renders:
+
+```html
+<div class="card">Hello</div>
+```
+
+If the provider returns `nil` for a partial name, Curlybars falls back to the presenter-based partial (the `allow_methods partial: :partial` approach).
+
+### Passing options
+
+Options passed to a partial become template variables inside it. Use the familiar `key=value` syntax:
+
+```hbs
+{{> card title="Hello" description="A short summary"}}
+```
+
+Inside the partial template, `{{title}}` and `{{description}}` resolve to the passed values.
+
+### Passing objects
+
+You can pass presenter objects as options too. This is useful for building reusable components that display structured data:
+
+```hbs
+{{> user_card user=user}}
+```
+
+Deep path traversal works as well:
+
+```hbs
+{{> article_section article=article}}
+```
+
+Where the partial template can access nested properties:
+
+```hbs
+<article>{{article.title}} by {{article.author.first_name}}</article>
+```
+
+Inside loops, use `this` to pass the current context:
+
+```hbs
+{{#each comments}}
+  {{> comment_item comment=this}}
+{{/each}}
+```
+
+### Using in loops
+
+Partials work naturally inside `each` blocks. Each iteration can pass loop-scoped values as options:
+
+```hbs
+{{#each items}}
+  {{> card name=first_name}}
+{{/each}}
+```
+
+### Nested partials
+
+Partials can invoke other partials. For example, a `card` partial might include a `user_card` partial inside it. Curlybars tracks nesting depth to prevent infinite recursion — by default, partials can nest up to 3 levels deep (configurable via `partial_nesting_limit`). When the limit is reached, the partial renders as an empty string.
+
+### Error protection
+
+Runtime-resolved partials are designed to fail silently. If the partial source is malformed, an option references an undefined variable, or any other error occurs during rendering, the partial returns an empty string rather than crashing the entire template. Critical errors (timeouts and output-too-long) are still propagated so that safety limits remain enforced.
+
+### Compile-time validation
+
+Runtime-resolved partial names are not validated at compile time. If a partial name has a typo or no provider resolves it, the partial silently renders as an empty string at runtime. Use integration tests to verify that expected partials resolve correctly.
+
 ## Analysis
 
 Curlybars exposes a `.visit` method for traversing a template's parse tree. This can be used to analyze templates without actually rendering them.

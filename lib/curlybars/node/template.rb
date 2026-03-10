@@ -20,8 +20,8 @@ module Curlybars
         RUBY
       end
 
-      def validate(branches)
-        items.map { |item| item.validate(branches) }
+      def validate(branches, context: nil)
+        items.map { |item| item.validate(branches, context: context) }
       end
 
       def cache_key

@@ -45,9 +45,14 @@ module Curlybars
         run_processors: true
       )
 
+      partial_resolver = options.delete(:partial_resolver)
+      validation_context = options.delete(:validation_context)
+
+      validation_context ||= ValidationContext.new(partial_resolver: partial_resolver) if partial_resolver
+
       errors = begin
         branches = [dependency_tree]
-        ast(source, identifier, run_processors: options[:run_processors]).validate(branches)
+        ast(source, identifier, run_processors: options[:run_processors]).validate(branches, context: validation_context)
       rescue Curlybars::Error::Base => ast_error
         [ast_error]
       end
@@ -159,8 +164,10 @@ require 'curlybars/error/compile'
 require 'curlybars/error/validate'
 require 'curlybars/error/render'
 require 'curlybars/template_handler'
+require 'curlybars/validation_context'
 require 'curlybars/railtie' if defined?(Rails)
 require 'curlybars/presenter'
 require 'curlybars/method_whitelist'
+require 'curlybars/partial_presenter'
 require 'curlybars/visitor'
 require 'curlybars/path_finder'

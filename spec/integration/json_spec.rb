@@ -1,5 +1,6 @@
 describe "{{json arg1}}" do
   let(:global_helpers_providers) { [IntegrationTest::GlobalHelperProvider.new] }
+  let(:partial_provider) { nil }
 
   describe "#compile" do
     let(:presenter) { IntegrationTest::Presenter.new(double("view_context")) }

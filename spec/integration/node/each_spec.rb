@@ -1,5 +1,6 @@
 describe "{{#each collection}}...{{/each}}" do
   let(:global_helpers_providers) { [] }
+  let(:partial_provider) { nil }
 
   describe "#compile" do
     let(:post) { double("post") }
