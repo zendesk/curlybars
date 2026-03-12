@@ -46,7 +46,7 @@ module Curlybars
         validate(branches, check_type: check_type)
       end
 
-      def validate(branches, check_type: :anything)
+      def validate(branches, check_type: :anything, context: nil)
         [
           helper.validate(branches, check_type: :helper),
           arguments.map { |argument| argument.validate_as_value(branches) },

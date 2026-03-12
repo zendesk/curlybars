@@ -72,6 +72,9 @@ module Curlybars
           provider_classes = ::Curlybars.configuration.global_helpers_provider_classes
           global_helpers_providers = provider_classes.map { |klass| klass.new(self) }
 
+          partial_provider_class = ::Curlybars.configuration.partial_provider_class
+          partial_provider = partial_provider_class&.new(self)
+
           presenter = ::#{presenter_class}.new(self, options)
           presenter.setup!
 

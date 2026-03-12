@@ -1,14 +1,17 @@
 module Curlybars
   class RenderingSupport
-    def initialize(timeout, contexts, variables, file_name, global_helpers_providers = [], cache = ->(key, &block) { block.call })
+    def initialize(timeout, contexts, variables, file_name, global_helpers_providers = [], cache = ->(key, &block) { block.call }, start_time = nil, depth = 0, partial_provider = nil)
       @timeout = timeout
-      @start_time = Time.now
+      @start_time = start_time || Time.now
+      @depth = depth
 
       @contexts = contexts
       @variables = variables
       @file_name = file_name
       @cached_calls = {}
       @cache = cache
+      @global_helpers_providers = global_helpers_providers
+      @partial_provider = partial_provider
 
       @global_helpers = {}
 
@@ -176,9 +179,42 @@ module Curlybars
       end
     end
 
+    def resolve_partial(name)
+      return nil unless @partial_provider
+
+      source = @partial_provider.resolve_partial(name)
+      return nil unless source
+
+      raise TypeError, "resolve_partial must return a String, got #{source.class}" unless source.is_a?(String)
+
+      source
+    end
+
+    def render_partial(source, name, options)
+      return "" if @depth >= ::Curlybars.configuration.partial_nesting_limit
+
+      compiled = ::Curlybars.compile(source, "partial:#{name}")
+
+      eval_source = <<-RUBY
+        rendering_context = { start_time: @start_time, depth: @depth + 1 }
+        presenter = ::Curlybars::PartialPresenter.new(nil, options)
+        global_helpers_providers = @global_helpers_providers
+        partial_provider = @partial_provider
+        #{compiled}
+      RUBY
+
+      eval(eval_source) # rubocop:disable Security/Eval -- eval is the established compilation pattern for the whole engine
+    rescue Curlybars::Error::Render => e
+      raise if e.id == 'render.timeout' || e.id == 'render.output_too_long'
+
+      "".html_safe
+    rescue StandardError
+      "".html_safe
+    end
+
     private
 
-    attr_reader :contexts, :variables, :cached_calls, :file_name, :global_helpers, :start_time, :timeout, :cache
+    attr_reader :contexts, :variables, :cached_calls, :file_name, :global_helpers, :start_time, :timeout, :cache, :depth, :partial_provider
 
     def instrument(meth, &)
       # Instruments only callables that give enough details (eg. methods)

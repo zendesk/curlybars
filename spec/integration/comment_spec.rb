@@ -2,6 +2,7 @@ describe "{{!-- --}} and {{! }}" do
   let(:post) { double("post") }
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
   let(:global_helpers_providers) { [] }
+  let(:partial_provider) { nil }
 
   it "ignores one line comment" do
     template = Curlybars.compile(<<-HBS)

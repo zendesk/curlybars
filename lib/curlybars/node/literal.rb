@@ -9,7 +9,7 @@ module Curlybars
         RUBY
       end
 
-      def validate(branches, check_type: :anything)
+      def validate(branches, check_type: :anything, context: nil)
         # Nothing to validate here.
       end
 
