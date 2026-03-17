@@ -7,13 +7,17 @@ module Curlybars
         <<-RUBY
           contexts = [presenter]
           variables = [{}]
+          has_rendering_context = defined?(rendering_context)
           rendering = ::Curlybars::RenderingSupport.new(
             ::Curlybars.configuration.rendering_timeout,
             contexts,
             variables,
             #{position.file_name.inspect},
             global_helpers_providers,
-            ::Curlybars.configuration.cache
+            ::Curlybars.configuration.cache,
+            has_rendering_context ? rendering_context[:start_time] : nil,
+            has_rendering_context ? rendering_context[:depth] : 0,
+            partial_provider
           )
           buffer = ::Curlybars::SafeBuffer.new
           #{template.compile}
@@ -21,8 +25,8 @@ module Curlybars
         RUBY
       end
 
-      def validate(branches)
-        template.validate(branches)
+      def validate(branches, context: nil)
+        template.validate(branches, context: context)
       end
     end
   end

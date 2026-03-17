@@ -24,6 +24,7 @@ describe "caching" do
   end
 
   let(:global_helpers_providers) { [] }
+  let(:partial_provider) { nil }
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context")) }
   let(:cache) { dummy_cache.new }
 

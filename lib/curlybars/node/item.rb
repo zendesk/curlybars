@@ -14,8 +14,8 @@ module Curlybars
         RUBY
       end
 
-      def validate(branches)
-        item.validate(branches)
+      def validate(branches, context: nil)
+        item.validate(branches, context: context)
       rescue Curlybars::Error::Validate => path_error
         path_error
       end

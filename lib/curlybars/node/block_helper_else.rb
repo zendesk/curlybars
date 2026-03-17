@@ -64,7 +64,7 @@ module Curlybars
         RUBY
       end
 
-      def validate(branches)
+      def validate(branches, context: nil)
         check_open_and_close_elements(helper, helperclose, Curlybars::Error::Validate)
 
         if helper.leaf?(branches)
@@ -74,8 +74,8 @@ module Curlybars
           end
         elsif helper.helper?(branches)
           [
-            helper_template.validate(branches),
-            else_template.validate(branches),
+            helper_template.validate(branches, context: context),
+            else_template.validate(branches, context: context),
             arguments.map { |argument| argument.validate_as_value(branches) },
             options.map { |option| option.validate(branches) }
           ]
@@ -85,8 +85,8 @@ module Curlybars
             Curlybars::Error::Validate.new('invalid_signature', message, helper.position)
           else
             [
-              helper_template.validate(branches),
-              else_template.validate(branches),
+              helper_template.validate(branches, context: context),
+              else_template.validate(branches, context: context),
               arguments.map { |argument| argument.validate(branches, check_type: :anything) },
               options.map { |option| option.validate(branches) }
             ]

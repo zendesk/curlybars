@@ -36,18 +36,18 @@ module Curlybars
         RUBY
       end
 
-      def validate(branches)
+      def validate(branches, context: nil)
         resolved = path.resolve_and_check!(branches, check_type: :collectionlike)
         sub_tree = resolved.first
 
         each_template_errors = begin
           branches.push(sub_tree)
-          each_template.validate(branches)
+          each_template.validate(branches, context: context)
         ensure
           branches.pop
         end
 
-        else_template_errors = else_template.validate(branches)
+        else_template_errors = else_template.validate(branches, context: context)
 
         [
           each_template_errors,
