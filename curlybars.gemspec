@@ -24,6 +24,8 @@ Gem::Specification.new do |s|
   s.email    = 'vikings@zendesk.com'
   s.homepage = 'https://github.com/zendesk/curlybars'
 
+  s.bindir        = "exe"
+  s.executables   = %w[curlybars-indent-lint]
   s.require_paths = %w[lib]
 
   s.rdoc_options = ["--charset=UTF-8"]

@@ -1,0 +1,181 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# A standalone indentation linter for Curlybars / Handlebars (.hbs) files.
+#
+# Usage:
+#   ruby bin/curlybars-indent-lint [--indent N] file1.hbs [file2.hbs ...]
+#
+# Exit codes:
+#   0 - no indentation issues found
+#   1 - indentation issues found
+#   2 - usage error
+
+require "optparse"
+
+LintWarning = Data.define(:file, :line, :message, :content)
+
+INDENT_SIZE_DEFAULT = 2
+
+def parse_args(argv)
+  indent_size = INDENT_SIZE_DEFAULT
+
+  parser = OptionParser.new do |opts|
+    opts.banner = "Usage: #{$PROGRAM_NAME} [--indent N] file1.hbs [file2.hbs ...]"
+
+    opts.on("--indent N", Integer, "Number of spaces per indentation level (default: #{INDENT_SIZE_DEFAULT})") do |n|
+      indent_size = n
+    end
+
+    opts.on("-h", "--help", "Show this help message") do
+      warn opts
+      exit 0
+    end
+  end
+
+  files = parser.parse(argv)
+
+  if files.empty?
+    warn "Error: no files given. Run with --help for usage."
+    exit 2
+  end
+
+  [indent_size, files]
+end
+
+# Matches a standalone block-opening tag on a line, e.g. {{#if condition}}
+BLOCK_OPEN  = /\{\{~?\s*#\s*\S+.*?\}\}/
+# Matches a standalone block-closing tag on a line, e.g. {{/if}}
+BLOCK_CLOSE = %r{\{\{~?\s*/\s*\S+\s*~?\}\}}
+# Matches an {{else}} tag
+BLOCK_ELSE  = /\{\{~?\s*else\b.*?~?\}\}/
+
+def classify_line(stripped)
+  has_open  = stripped.match?(BLOCK_OPEN)
+  has_close = stripped.match?(BLOCK_CLOSE)
+  has_else  = stripped.match?(BLOCK_ELSE)
+
+  # A line with both open and close (e.g. {{#if x}}...{{/if}}) is inline — treat as plain.
+  return :plain if has_open && has_close
+
+  return :else  if has_else
+  return :close if has_close
+  return :open  if has_open
+
+  :plain
+end
+
+def lint_file(path, indent_size)
+  source = File.read(path)
+  lines = source.lines
+  warnings = []
+
+  # Stack of [block_open_indent, block_content_indent] pairs.
+  # We track indentation relative to each block opener rather than
+  # enforcing absolute column positions, so the linter works correctly
+  # when Handlebars blocks are nested inside HTML.
+  indent_stack = []
+
+  lines.each_with_index do |line, index|
+    line_number = index + 1
+    raw = line.chomp
+
+    next if raw.strip.empty?
+
+    stripped = raw.lstrip
+    actual_indent = raw.length - stripped.length
+    kind = classify_line(stripped)
+
+    case kind
+    when :close
+      if indent_stack.empty?
+        warnings << LintWarning.new(
+          file: path, line: line_number, content: raw,
+          message: "unexpected closing tag (no matching opener)"
+        )
+      else
+        open_indent, _content_indent = indent_stack.pop
+        if actual_indent != open_indent
+          warnings << LintWarning.new(
+            file: path, line: line_number, content: raw,
+            message: "expected #{open_indent} spaces (to match opening tag), got #{actual_indent}"
+          )
+        end
+      end
+
+    when :else
+      if indent_stack.empty?
+        warnings << LintWarning.new(
+          file: path, line: line_number, content: raw,
+          message: "unexpected {{else}} (no matching opener)"
+        )
+      else
+        open_indent, _content_indent = indent_stack.pop
+        if actual_indent != open_indent
+          warnings << LintWarning.new(
+            file: path, line: line_number, content: raw,
+            message: "expected #{open_indent} spaces (to match opening tag), got #{actual_indent}"
+          )
+        end
+        # Reset the content indent for the else branch.
+        indent_stack.push([open_indent, open_indent + indent_size])
+      end
+
+    when :open
+      # The opening tag establishes the expected content indentation.
+      indent_stack.push([actual_indent, actual_indent + indent_size])
+
+    when :plain
+      unless indent_stack.empty?
+        open_indent, _content_indent = indent_stack.last
+        if actual_indent < open_indent
+          warnings << LintWarning.new(
+            file: path, line: line_number, content: raw,
+            message: "expected at least #{open_indent} spaces (inside block), got #{actual_indent}"
+          )
+        end
+      end
+    end
+  end
+
+  indent_stack.each do |open_indent, _| # rubocop:disable Style/HashEachMethods
+    warnings << LintWarning.new(file: path, line: nil,
+      message: "unclosed block (opened at indent #{open_indent})",
+      content: nil)
+  end
+
+  warnings
+end
+
+def main
+  indent_size, files = parse_args(ARGV)
+  warnings = []
+
+  files.each do |file|
+    unless File.exist?(file)
+      warn "#{file}: no such file"
+      next
+    end
+
+    warnings.concat(lint_file(file, indent_size))
+  end
+
+  warnings.each do |warning|
+    if warning.line
+      warn "#{warning.file}:#{warning.line}: #{warning.message}"
+      warn "  #{warning.content}\n"
+    else
+      warn "#{warning.file}: #{warning.message}\n"
+    end
+  end
+
+  if warnings.empty?
+    puts "No indentation issues found."
+    exit 0
+  else
+    puts "#{warnings.length} indentation issue(s) found."
+    exit 1
+  end
+end
+
+main if __FILE__ == $PROGRAM_NAME
