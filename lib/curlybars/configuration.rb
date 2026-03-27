@@ -16,7 +16,7 @@ module Curlybars
   end
 
   class Configuration
-    attr_accessor :presenters_namespace, :nesting_limit, :traversing_limit, :output_limit, :rendering_timeout, :custom_processors, :compiler_transformers, :global_helpers_provider_classes, :cache
+    attr_accessor :presenters_namespace, :nesting_limit, :traversing_limit, :output_limit, :rendering_timeout, :custom_processors, :compiler_transformers, :global_helpers_provider_classes, :cache, :partial_nesting_limit, :partial_provider_class
 
     def initialize
       @presenters_namespace = ''
@@ -28,6 +28,8 @@ module Curlybars
       @compiler_transformers = []
       @global_helpers_provider_classes = []
       @cache = ->(key, &block) { block.call }
+      @partial_nesting_limit = 3
+      @partial_provider_class = nil
     end
   end
 end

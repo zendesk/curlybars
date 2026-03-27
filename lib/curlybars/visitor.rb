@@ -63,6 +63,7 @@ module Curlybars
 
     def visit_partial(node)
       visit(node.path)
+      node.options.each { |opt| visit(opt) }
     end
 
     def visit_path(_node)
