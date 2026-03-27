@@ -1,6 +1,6 @@
 module Curlybars
   class RenderingSupport
-    def initialize(timeout, contexts, variables, file_name, global_helpers_providers = [], cache = ->(key, &block) { block.call }, start_time = nil, depth = 0, partial_provider = nil)
+    def initialize(timeout, contexts, variables, file_name, global_helpers_providers = [], cache = ->(key, &block) { block.call }, start_time: nil, depth: 0, partial_provider: nil)
       @timeout = timeout
       @start_time = start_time || Time.now
       @depth = depth
@@ -180,9 +180,9 @@ module Curlybars
     end
 
     def resolve_partial(name)
-      return nil unless @partial_provider
+      return nil unless partial_provider
 
-      source = @partial_provider.resolve_partial(name)
+      source = partial_provider.resolve_partial(name)
       return nil unless source
 
       raise TypeError, "resolve_partial must return a String, got #{source.class}" unless source.is_a?(String)
@@ -191,7 +191,7 @@ module Curlybars
     end
 
     def render_partial(source, name, options)
-      return "" if @depth >= ::Curlybars.configuration.partial_nesting_limit
+      return "" if depth >= ::Curlybars.configuration.partial_nesting_limit
 
       compiled = ::Curlybars.compile(source, "partial:#{name}")
 
@@ -207,9 +207,9 @@ module Curlybars
     rescue Curlybars::Error::Render => e
       raise if e.id == 'render.timeout' || e.id == 'render.output_too_long'
 
-      "".html_safe
+      ""
     rescue StandardError
-      "".html_safe
+      ""
     end
 
     private

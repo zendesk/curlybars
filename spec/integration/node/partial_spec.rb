@@ -140,6 +140,14 @@ describe "{{> partial}}" do
       HTML
     end
 
+    it "renders a resolved partial with no options" do
+      template = Curlybars.compile(<<-HBS)
+        {{> nested_inner}}
+      HBS
+
+      expect(eval(template)).to resemble("inner")
+    end
+
     it "renders empty string when option is missing (no crash)" do
       template = Curlybars.compile(<<-HBS)
         {{> user_card}}

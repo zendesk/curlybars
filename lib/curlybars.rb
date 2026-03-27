@@ -40,13 +40,10 @@ module Curlybars
     # identifier - The the file name of the template being validated (defaults to `nil`).
     #
     # Returns an array of Curlybars::Error::Validation
-    def validate(dependency_tree, source, identifier = nil, **options)
+    def validate(dependency_tree, source, identifier = nil, partial_resolver: nil, validation_context: nil, **options)
       options.reverse_merge!(
         run_processors: true
       )
-
-      partial_resolver = options.delete(:partial_resolver)
-      validation_context = options.delete(:validation_context)
 
       validation_context ||= ValidationContext.new(partial_resolver: partial_resolver) if partial_resolver
 
