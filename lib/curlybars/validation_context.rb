@@ -7,7 +7,7 @@ module Curlybars
       @depth = depth
     end
 
-    def within_depth_limit?
+    def valid?
       depth < Curlybars.configuration.partial_nesting_limit
     end
 

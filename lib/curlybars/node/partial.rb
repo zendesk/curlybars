@@ -45,7 +45,7 @@ module Curlybars
             end
           end
 
-          if context.within_depth_limit?
+          if context.valid?
             partial_errors = Curlybars.validate(
               options_tree,
               partial_source,
@@ -64,11 +64,9 @@ module Curlybars
 
       def cache_key
         [
-          path.cache_key,
-          options.map(&:cache_key).join("/"),
-          position&.file_name,
-          self.class.name
-        ].join("/")
+          path,
+          options
+        ].flatten.map(&:cache_key).push(position&.file_name, self.class.name).join("/")
       end
     end
   end

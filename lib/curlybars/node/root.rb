@@ -15,9 +15,9 @@ module Curlybars
             #{position.file_name.inspect},
             global_helpers_providers,
             ::Curlybars.configuration.cache,
-            has_rendering_context ? rendering_context[:start_time] : nil,
-            has_rendering_context ? rendering_context[:depth] : 0,
-            partial_provider
+            start_time: has_rendering_context ? rendering_context[:start_time] : nil,
+            depth: has_rendering_context ? rendering_context[:depth] : 0,
+            partial_provider: partial_provider
           )
           buffer = ::Curlybars::SafeBuffer.new
           #{template.compile}
