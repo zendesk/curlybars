@@ -1,8 +1,10 @@
-### Unreleased
+### Curlybars 1.16.0.pre
+
+* Add runtime partial resolution via providers that implement `resolve_partial(name)`, with options and object passing
 
 ### Curlybars 1.15.0
 
-* Remove dependency on SortedSet, which doesn't work on Ruby 4.0. If you intend to use Curlybars with Ruby 4.0, you should *not* use an older version than v1.15.0.
+* Remove dependency on SortedSet, which doesn't work on Ruby 4.0. If you intend to use Curlybars with Ruby 4.0, you should *not* use an older version than v1.15.
 
 ### Curlybars 1.14.0
 

@@ -1,5 +1,6 @@
 describe "{{#helper arg1 arg2 ... key=value ...}}...<{{else}}>...{{/helper}}" do
   let(:global_helpers_providers) { [IntegrationTest::GlobalHelperProvider.new] }
+  let(:partial_provider) { nil }
 
   describe "#compile" do
     let(:post) { double("post") }

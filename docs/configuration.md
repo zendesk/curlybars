@@ -66,3 +66,27 @@ It is possible to register global helper provider classes via configuration. For
 To enable caching of PORO presenters with `{{#each}}`, set `cache` to a value that responds to `call` with one argument `cache_key` and a block. The callable is expected to return a cached value if the cache key is present, and otherwise call the block and store the result. To integrate with Rails, set this value to `Rails.cache.method(:fetch)`.
 
 By default, caching is not enabled and will simply always invoke the block.
+
+## `partial_provider_class` (default `nil`)
+
+A class responsible for resolving runtime partials. When set, Curlybars will instantiate it with the view context and call `resolve_partial(name)` to look up partial template sources. The method should return a template source string or `nil` if the partial is not found.
+
+```ruby
+Curlybars.configure do |config|
+  config.partial_provider_class = MyPartialProvider
+end
+```
+
+If not set, runtime partial resolution is disabled and only presenter-based partials are available.
+
+## `partial_nesting_limit` (default `3`)
+
+Runtime-resolved partials can invoke other partials, creating nested rendering. To prevent infinite recursion, Curlybars limits the nesting depth. When the limit is reached, the partial renders as an empty string.
+
+```ruby
+Curlybars.configure do |config|
+  config.partial_nesting_limit = 3
+end
+```
+
+**Security note:** Partial sources returned by `resolve_partial` are compiled through the full curlybars pipeline (lexer → parser → AST → code generation) before execution. This means they are subject to the same sandboxing as all other templates: method calls are gated by `allow_methods`, and safety limits (timeout, output size, nesting depth, traversal depth) apply equally.

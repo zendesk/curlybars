@@ -13,11 +13,11 @@ module Curlybars
         RUBY
       end
 
-      def validate(branches)
+      def validate(branches, context: nil)
         [
           expression.validate(branches),
-          if_template.validate(branches),
-          else_template.validate(branches)
+          if_template.validate(branches, context: context),
+          else_template.validate(branches, context: context)
         ]
       end
 

@@ -16,7 +16,7 @@ module Curlybars
         validate(branches, check_type: :leaf)
       end
 
-      def validate(branches, check_type: :anything)
+      def validate(branches, check_type: :anything, context: nil)
         resolve_and_check!(branches, check_type: check_type)
         []
       rescue Curlybars::Error::Validate => path_error
