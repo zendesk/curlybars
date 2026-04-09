@@ -38,6 +38,29 @@ describe "caching" do
     Curlybars.reset
   end
 
+  describe "Curlybars.compile" do
+    it "invalidates cache when gem version changes" do
+      source = "{{#each array_of_users}}{{/each}}"
+
+      compile_cache = dummy_cache.new
+      Curlybars.cache = compile_cache
+
+      Curlybars.compile(source, "test_template")
+      expect(compile_cache.reads).to eq(1)
+      expect(compile_cache.hits).to eq(0)
+
+      Curlybars.compile(source, "test_template")
+      expect(compile_cache.reads).to eq(2)
+      expect(compile_cache.hits).to eq(1)
+
+      stub_const("Curlybars::VERSION", "99.0.0")
+
+      Curlybars.compile(source, "test_template")
+      expect(compile_cache.reads).to eq(3)
+      expect(compile_cache.hits).to eq(1)
+    end
+  end
+
   describe "{{#each}}" do
     it "invokes cache if presenter responds to #cache_key" do
       template = Curlybars.compile(<<-HBS)
