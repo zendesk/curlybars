@@ -437,6 +437,22 @@ describe "{{> partial}}" do
       expect(errors.first.position.file_name).to eq(:'partials/missing_ref')
     end
 
+    it "sets metadata[:included_from] to the call-site position of the partial", :aggregate_failures do
+      dependency_tree = {}
+
+      source = <<-HBS
+        {{> missing_ref}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source, :parent_template, partial_resolver: resolver)
+
+      expect(errors.length).to eq(1)
+      included_from = errors.first.metadata[:included_from]
+      expect(included_from).to be_a(Curlybars::Position)
+      expect(included_from.file_name).to eq(:parent_template)
+      expect(included_from.line_number).to eq(1)
+    end
+
     it "validates nested paths when a presenter is passed as an option" do
       dependency_tree = { user: { first_name: nil } }
 
