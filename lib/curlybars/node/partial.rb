@@ -53,6 +53,13 @@ module Curlybars
               validation_context: context.increment_depth,
               run_processors: false
             )
+            included_from = Curlybars::Position.new(
+              position.file_name,
+              position.line_number,
+              position.line_offset,
+              position.length
+            )
+            partial_errors.each { |e| e.metadata[:included_from] = included_from }
             errors.concat(partial_errors)
           end
         else
