@@ -26,7 +26,7 @@ module Curlybars
     #
     # Returns a String containing the Ruby code.
     def compile(source, identifier = nil)
-      cache_key = ["Curlybars.compile", identifier, Digest::SHA256.hexdigest(source)]
+      cache_key = ["Curlybars.compile", Curlybars::VERSION, identifier, Digest::SHA256.hexdigest(source)]
 
       cache.fetch(cache_key) do
         ast(transformed_source(source), identifier, run_processors: true).compile
