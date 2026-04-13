@@ -34,6 +34,15 @@ module Curlybars
         end
 
         if partial_source
+          if position.file_name == :"partials/#{path.path}"
+            errors << Curlybars::Error::Validate.new(
+              'self_referencing_partial',
+              "'#{path.path}' cannot reference itself",
+              position
+            )
+            return errors
+          end
+
           options_tree = options.each_with_object({}) do |option, tree|
             expr = option.expression
             tree[option.key.to_sym] = if expr.respond_to?(:resolve)

@@ -1,3 +1,7 @@
+### Unreleased
+
+* Reject self-referencing partials at validation time (e.g. `partials/faq` containing `{{> faq}}`)
+
 ### Curlybars 1.16.0.pre
 
 * Add runtime partial resolution via providers that implement `resolve_partial(name)`, with options and object passing

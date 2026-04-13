@@ -461,16 +461,34 @@ describe "{{> partial}}" do
       expect(errors).to be_empty
     end
 
-    it "prevents infinite recursion via depth limit" do
-      Curlybars.configuration.partial_nesting_limit = 3
-
+    it "reports an error for a self-referencing partial", :aggregate_failures do
       dependency_tree = {}
 
       source = <<-HBS
         {{> deeply_nested}}
       HBS
 
-      errors = Curlybars.validate(dependency_tree, source, partial_resolver: resolver)
+      errors = Curlybars.validate(dependency_tree, source, :parent_template, partial_resolver: resolver)
+
+      expect(errors.length).to eq(1)
+      expect(errors.first.message).to match(/deeply_nested.*cannot reference itself/)
+      expect(errors.first.position.file_name).to eq(:'partials/deeply_nested')
+    end
+
+    it "prevents infinite recursion of indirect cycles via depth limit" do
+      Curlybars.configuration.partial_nesting_limit = 3
+
+      cycle_resolver = lambda { |name|
+        { 'ping' => '{{> pong}}', 'pong' => '{{> ping}}' }[name]
+      }
+
+      dependency_tree = {}
+
+      source = <<-HBS
+        {{> ping}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source, partial_resolver: cycle_resolver)
 
       expect(errors).to be_empty
     ensure

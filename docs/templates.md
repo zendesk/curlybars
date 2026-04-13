@@ -474,6 +474,8 @@ Partials work naturally inside `each` blocks. Each iteration can pass loop-scope
 
 Partials can invoke other partials. For example, a `card` partial might include a `user_card` partial inside it. Curlybars tracks nesting depth to prevent infinite recursion — by default, partials can nest up to 3 levels deep (configurable via `partial_nesting_limit`). When the limit is reached, the partial renders as an empty string.
 
+A partial **cannot reference itself**. For example, a partial named `faq` that contains `{{> faq}}` will produce a validation error. Indirect cycles (e.g. `A` includes `B`, `B` includes `A`) are allowed up to the nesting depth limit.
+
 ### Error protection
 
 Runtime-resolved partials are designed to fail silently. If the partial source is malformed, an option references an undefined variable, or any other error occurs during rendering, the partial returns an empty string rather than crashing the entire template. Critical errors (timeouts and output-too-long) are still propagated so that safety limits remain enforced.
