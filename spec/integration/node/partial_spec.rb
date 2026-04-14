@@ -437,6 +437,60 @@ describe "{{> partial}}" do
       expect(errors.first.position.file_name).to eq(:'partials/missing_ref')
     end
 
+    it "sets metadata[:inclusion_chain] to an array with the call-site position", :aggregate_failures do
+      dependency_tree = {}
+
+      source = <<-HBS
+        {{> missing_ref}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source, :parent_template, partial_resolver: resolver)
+
+      expect(errors.length).to eq(1)
+      chain = errors.first.metadata[:inclusion_chain]
+      expect(chain).to be_an(Array)
+      expect(chain.length).to eq(1)
+      expect(chain.first).to be_a(Curlybars::Position)
+      expect(chain.first.file_name).to eq(:parent_template)
+      expect(chain.first.line_number).to eq(1)
+      expect(chain.first.line_offset).to eq(8)
+      expect(chain.first.length).to eq(17)
+    end
+
+    it "accumulates inclusion_chain through nested partials", :aggregate_failures do
+      nested_resolver = lambda { |name|
+        {
+          'outer' => '{{> inner}}',
+          'inner' => '{{subtitle}}'
+        }[name]
+      }
+
+      dependency_tree = {}
+
+      source = <<-HBS
+        {{> outer}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source, :top_template, partial_resolver: nested_resolver)
+
+      expect(errors.length).to eq(1)
+      expect(errors.first.position.file_name).to eq(:'partials/inner')
+
+      chain = errors.first.metadata[:inclusion_chain]
+      expect(chain).to be_an(Array)
+      expect(chain.length).to eq(2)
+      # innermost first: outer's call-site for {{> inner}}, then top's call-site for {{> outer}}
+      expect(chain[0].file_name).to eq(:'partials/outer')
+      expect(chain[0].line_number).to eq(1)
+      expect(chain[0].line_offset).to eq(0)
+      expect(chain[0].length).to eq(11)
+
+      expect(chain[1].file_name).to eq(:top_template)
+      expect(chain[1].line_number).to eq(1)
+      expect(chain[1].line_offset).to eq(8)
+      expect(chain[1].length).to eq(11)
+    end
+
     it "validates nested paths when a presenter is passed as an option" do
       dependency_tree = { user: { first_name: nil } }
 
