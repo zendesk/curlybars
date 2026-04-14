@@ -62,6 +62,15 @@ module Curlybars
               validation_context: context.increment_depth,
               run_processors: false
             )
+            inclusion_chain_entry = Curlybars::Position.new(
+              position.file_name,
+              position.line_number,
+              position.line_offset,
+              position.length
+            )
+            partial_errors.each do |e|
+              e.metadata[:inclusion_chain] = (e.metadata[:inclusion_chain] || []).push(inclusion_chain_entry)
+            end
             errors.concat(partial_errors)
           end
         else
