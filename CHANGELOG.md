@@ -1,10 +1,16 @@
 ### Unreleased
 
 * Reject self-referencing partials at validation time (e.g. `partials/faq` containing `{{> faq}}`)
+* Annotate partial validation errors with call-site positions via `metadata[:inclusion_chain]`
+
+### Curlybars 1.16.1.pre
+
+* Include gem version in compile cache key to prevent stale entries across upgrades
 
 ### Curlybars 1.16.0.pre
 
 * Add runtime partial resolution via providers that implement `resolve_partial(name)`, with options and object passing
+* Add standalone indentation linter for `.hbs` files
 
 ### Curlybars 1.15.0
 
