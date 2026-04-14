@@ -2,6 +2,7 @@
 
 * Reject self-referencing partials at validation time (e.g. `partials/faq` containing `{{> faq}}`)
 * Annotate partial validation errors with call-site positions via `metadata[:inclusion_chain]`
+* Raise `validate.partial_not_found` when a partial resolver is configured but the partial cannot be found
 
 ### Curlybars 1.16.1.pre
 
