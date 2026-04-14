@@ -561,7 +561,7 @@ describe "{{> partial}}" do
       expect(errors).to be_empty
     end
 
-    it "reports an error when resolver returns nil and path is not a partial in the tree", :aggregate_failures do
+    it "reports a partial_not_found error when resolver returns nil and path is not in the tree", :aggregate_failures do
       dependency_tree = { user: { first_name: nil } }
 
       source = <<-HBS
@@ -571,7 +571,8 @@ describe "{{> partial}}" do
       errors = Curlybars.validate(dependency_tree, source, partial_resolver: resolver)
 
       expect(errors.length).to eq(1)
-      expect(errors.first.message).to match(/partial/)
+      expect(errors.first.id).to eq('validate.partial_not_found')
+      expect(errors.first.message).to match(/unknown_partial.*could not be found/)
     end
 
     it "validates ../ in partial options inside #with" do

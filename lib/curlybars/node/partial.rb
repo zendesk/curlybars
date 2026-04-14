@@ -74,7 +74,16 @@ module Curlybars
             errors.concat(partial_errors)
           end
         else
-          errors.concat(Array(path.validate(branches, check_type: :partial)))
+          path_errors = Array(path.validate(branches, check_type: :partial))
+          if path_errors.any? && context&.partial_resolver
+            errors << Curlybars::Error::Validate.new(
+              'partial_not_found',
+              "'#{path.path}' partial could not be found",
+              position
+            )
+          else
+            errors.concat(path_errors)
+          end
         end
 
         errors
