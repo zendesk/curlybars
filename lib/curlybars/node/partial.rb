@@ -72,6 +72,12 @@ module Curlybars
               e.metadata[:inclusion_chain] = (e.metadata[:inclusion_chain] || []).push(inclusion_chain_entry)
             end
             errors.concat(partial_errors)
+          else
+            errors << Curlybars::Error::Validate.new(
+              'partial_nesting_limit_reached',
+              "'#{path.path}' exceeds the partial nesting limit of #{Curlybars.configuration.partial_nesting_limit}",
+              position
+            )
           end
         else
           path_errors = Array(path.validate(branches, check_type: :partial))

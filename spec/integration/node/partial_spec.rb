@@ -529,7 +529,7 @@ describe "{{> partial}}" do
       expect(errors.first.position.file_name).to eq(:'partials/deeply_nested')
     end
 
-    it "prevents infinite recursion of indirect cycles via depth limit" do
+    it "reports an error when infinite recursion is detected via depth limit", :aggregate_failures do
       Curlybars.configuration.partial_nesting_limit = 3
 
       cycle_resolver = lambda { |name|
@@ -544,7 +544,8 @@ describe "{{> partial}}" do
 
       errors = Curlybars.validate(dependency_tree, source, partial_resolver: cycle_resolver)
 
-      expect(errors).to be_empty
+      expect(errors).not_to be_empty
+      expect(errors.last.id).to eq('validate.partial_nesting_limit_reached')
     ensure
       Curlybars.reset
     end

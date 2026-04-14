@@ -81,7 +81,7 @@ If not set, runtime partial resolution is disabled and only presenter-based part
 
 ## `partial_nesting_limit` (default `3`)
 
-Runtime-resolved partials can invoke other partials, creating nested rendering. To prevent infinite recursion, Curlybars limits the nesting depth. When the limit is reached, the partial renders as an empty string.
+Runtime-resolved partials can invoke other partials, creating nested rendering. To prevent infinite recursion, Curlybars limits the nesting depth. When the limit is reached at runtime, the partial renders as an empty string. If the limit is exceeded during validation, a `Curlybars::Error::Validate` with id `validate.partial_nesting_limit_reached` is raised instead.
 
 ```ruby
 Curlybars.configure do |config|
