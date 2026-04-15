@@ -1,6 +1,6 @@
 ### Unreleased
 
-### Curlybars 1.16.2.pre
+### Curlybars 1.16.1.pre.2
 
 * Reject self-referencing partials at validation time (e.g. `partials/faq` containing `{{> faq}}`)
 * Annotate partial validation errors with call-site positions via `metadata[:inclusion_chain]`
