@@ -264,6 +264,44 @@ end
 {{name 'argument' option='value'}}
 ```
 
+### Id `validate.self_referencing_partial`
+
+This exception occurs when a partial references itself, which would cause infinite recursion.
+
+```hbs
+{{! assuming this template is partials/faq }}
+
+{{! this will raise the exception }}
+
+{{> faq}}
+```
+
+### Id `validate.partial_not_found`
+
+This exception occurs when a partial resolver is configured but the referenced partial cannot be found.
+
+```hbs
+{{! this will raise the exception if 'missing_partial' does not exist }}
+
+{{> missing_partial}}
+```
+
+### Id `validate.partial_nesting_limit_reached`
+
+This exception occurs when partial nesting depth exceeds the configured `partial_nesting_limit` (default `3`). See [configuration](configuration.md) for details.
+
+```hbs
+{{! assuming partial_nesting_limit is 2 }}
+
+{{! in partial_a: }}
+{{> partial_b}}
+
+{{! in partial_b: }}
+{{> partial_c}}
+
+{{! partial_c will trigger the exception }}
+```
+
 ### Id `validate.unallowed_path`
 
 This exception occurs when a path is not allowed, given the allowed method definition
