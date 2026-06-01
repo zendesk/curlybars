@@ -6,6 +6,7 @@ plugins:
 
 AllCops:
   NewCops: enable
+  TargetRubyVersion: 3.2
   Exclude:
     - gemfiles/vendor/**/*
     - vendor/**/*
