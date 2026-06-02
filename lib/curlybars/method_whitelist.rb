@@ -47,8 +47,8 @@ module Curlybars
 
         contextual_block&.call(context, schema_adder)
 
-        schema = all_methods_without_type.each_with_object({}) do |method, memo|
-          memo[method] = nil
+        schema = all_methods_without_type.to_h do |method|
+          [method, nil]
         end
 
         methods_with_type_resolved = all_methods_with_type.transform_values do |type|
