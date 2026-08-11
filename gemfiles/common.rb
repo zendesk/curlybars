@@ -1,5 +1,6 @@
 gem "bundler"
 gem "byebug"
+gem "parallel", "< 2" # if RUBY_VERSION < "3.3"
 gem "rake"
 gem "rspec-rails"
 gem "rubocop", "~> 1.57"
