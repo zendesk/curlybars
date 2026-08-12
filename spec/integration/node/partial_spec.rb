@@ -381,7 +381,7 @@ describe "{{> partial}}" do
 
       errors = Curlybars.validate(dependency_tree, source)
 
-      expect(errors.first.message).to match(/nonexistent_xyzzy/)
+      expect(errors.first.message).to include('nonexistent_xyzzy')
     end
   end
 
@@ -421,7 +421,7 @@ describe "{{> partial}}" do
       errors = Curlybars.validate(dependency_tree, source, partial_resolver: resolver)
 
       expect(errors.length).to eq(1)
-      expect(errors.first.message).to match(/subtitle/)
+      expect(errors.first.message).to include('subtitle')
     end
 
     it "sets position.file_name to the partial identifier on partial errors", :aggregate_failures do
