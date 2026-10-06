@@ -1,5 +1,11 @@
 ### Unreleased
 
+### Curlybars 1.16.1.pre.3
+
+* Add incremental serialization backstops to the `json` helper path: `as_json` now threads an optional
+  `SerializationGuard` enforcing a size budget (`output_limit`) and a recursion depth cap (`nesting_limit`).
+  Non-breaking — guardless `as_json` is unchanged. Adds `Curlybars.serialize`.
+
 ### Curlybars 1.16.1.pre.2
 
 * Reject self-referencing partials at validation time (e.g. `partials/faq` containing `{{> faq}}`)
