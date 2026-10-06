@@ -104,6 +104,14 @@ module Curlybars
       finder.find(target_path, role: role)
     end
 
+    def serialize(value)
+      guard = Curlybars::SerializationGuard.new(
+        budget: configuration.output_limit,
+        depth_limit: configuration.nesting_limit
+      )
+      value.to_json(curlybars_guard: guard)
+    end
+
     def global_helpers_dependency_tree
       @global_helpers_dependency_tree ||= begin
         classes = Curlybars.configuration.global_helpers_provider_classes
@@ -147,6 +155,7 @@ module Curlybars
 end
 
 require 'curlybars/safe_buffer'
+require 'curlybars/serialization_guard'
 require 'curlybars/configuration'
 require 'curlybars/rendering_support'
 require 'curlybars/parser'
