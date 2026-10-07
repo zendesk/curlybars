@@ -205,7 +205,7 @@ module Curlybars
 
       eval(eval_source) # rubocop:disable Security/Eval -- eval is the established compilation pattern for the whole engine
     rescue Curlybars::Error::Render => e
-      raise if e.id == 'render.timeout' || e.id == 'render.output_too_long'
+      raise if e.id == 'render.timeout' || e.id == 'render.output_too_long' || e.id == 'render.nesting_too_deep'
 
       ""
     rescue StandardError

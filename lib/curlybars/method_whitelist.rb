@@ -104,12 +104,19 @@ module Curlybars
       define_method(:as_json) do |*args|
         return @__as_json if defined?(@__as_json)
 
-        @__as_json ||= allowed_methods.each_with_object({}) do |method, hash|
+        guard = args.first.is_a?(Hash) ? args.first[:curlybars_guard] : nil
+        guard&.enter!
+
+        @__as_json = allowed_methods.each_with_object({}) do |method, hash|
           unless self.method(method).arity > 0
             value = send(method)
-            hash[method] = value.equal?(self) ? "[circular reference]" : value.as_json
+            serialized = value.equal?(self) ? "[circular reference]" : value.as_json(*args)
+            guard&.measure(serialized)
+            hash[method] = serialized
           end
         end
+      ensure
+        guard&.leave!
       end
     end
 

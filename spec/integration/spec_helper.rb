@@ -40,13 +40,20 @@ module IntegrationTest
     end
   end
 
+  class CyclicNode
+    extend Curlybars::MethodWhitelist
+
+    allow_methods :partner
+    attr_accessor :partner
+  end
+
   class Presenter < Curlybars::Presenter
     include Helpers
 
     allow_methods :print_current_context, :render_fn, :render_inverse, :user, :new_comment_form, :valid, :visible, :return_true,
       :return_false, :beautify, :form, :date, :asset, :integer, :boolean, :echo, :just_yield, :print_args_and_options,
       :return_nil, :this_method_yields, :this_method_yields, :context, :two_elements,
-      :yield_custom_variable, :print, :array_of_users, :'-a-path-', :article,
+      :yield_custom_variable, :print, :array_of_users, :'-a-path-', :article, :cyclic,
       articles: [Shared::ArticlePresenter],
       reverse_articles: [:helper, [Shared::ArticlePresenter]],
       partial: :partial
@@ -61,6 +68,14 @@ module IntegrationTest
 
     def article
       Shared::ArticlePresenter.new(Article.new)
+    end
+
+    def cyclic
+      left = CyclicNode.new
+      right = CyclicNode.new
+      left.partner = right
+      right.partner = left
+      left
     end
 
     def articles
@@ -192,7 +207,8 @@ module IntegrationTest
       'outer_card' => '<outer>{{> inner_card title=title}}</outer>',
       'outer_user' => '<outer>{{> inner_user user=user}}</outer>',
       'outer_author' => '<outer>{{> inner_author author=article.author}}</outer>',
-      'big_output' => "<div>#{'x' * 200}</div>"
+      'big_output' => "<div>#{'x' * 200}</div>",
+      'cyclic_json' => '{{json node}}'
     }.freeze
 
     def initialize(context = nil)
@@ -284,7 +300,7 @@ module IntegrationTest
     end
 
     def json(value, _)
-      raw(value.to_json)
+      raw(Curlybars.serialize(value))
     end
   end
 end

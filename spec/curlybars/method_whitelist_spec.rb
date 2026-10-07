@@ -212,6 +212,65 @@ describe Curlybars::MethodWhitelist do
     end
   end
 
+  describe "#as_json" do
+    let(:leaf_class) do
+      Class.new do
+        extend Curlybars::MethodWhitelist
+
+        allow_methods :name
+
+        def name
+          "leaf"
+        end
+      end
+    end
+
+    it "serializes allowed methods without a guard" do
+      expect(leaf_class.new.as_json).to eq(name: "leaf")
+    end
+
+    it "enforces the size budget via measured leaves" do
+      guard = Curlybars::SerializationGuard.new(budget: 2, depth_limit: 10)
+
+      expect { leaf_class.new.to_json(curlybars_guard: guard) }.
+        to raise_error(an_instance_of(Curlybars::Error::Render).and(having_attributes(id: 'render.output_too_long')))
+    end
+
+    it "does not count strings nested inside raw hash/array leaves (approximate budget)" do
+      raw_class = Class.new do
+        extend Curlybars::MethodWhitelist
+
+        allow_methods :raw
+
+        def raw
+          { big: "x" * 100 }
+        end
+      end
+      guard = Curlybars::SerializationGuard.new(budget: 10, depth_limit: 10)
+
+      expect { raw_class.new.to_json(curlybars_guard: guard) }.not_to raise_error
+    end
+
+    it "threads the guard through an indirect cycle and trips the depth cap" do
+      node_class = Class.new do
+        extend Curlybars::MethodWhitelist
+
+        allow_methods :child
+        attr_accessor :child
+      end
+
+      a = node_class.new
+      b = node_class.new
+      a.child = b
+      b.child = a
+
+      guard = Curlybars::SerializationGuard.new(budget: 1_000_000, depth_limit: 5)
+
+      expect { a.to_json(curlybars_guard: guard) }.
+        to raise_error(an_instance_of(Curlybars::Error::Render).and(having_attributes(id: 'render.nesting_too_deep')))
+    end
+  end
+
   describe ".methods_schema" do
     it "setups a schema propagating nil" do
       stub_const("LinkPresenter", Class.new { extend Curlybars::MethodWhitelist })
