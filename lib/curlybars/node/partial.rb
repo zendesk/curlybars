@@ -23,7 +23,7 @@ module Curlybars
 
       def validate(branches, context: nil)
         # Validate option expressions in current scope
-        errors = options.flat_map { |option| option.expression.validate(branches) }
+        errors = options.flat_map { |option| option.expression.validate(branches, context: context) }
 
         return errors unless context&.partial_resolver
 
@@ -47,7 +47,7 @@ module Curlybars
             expr = option.expression
             tree[option.key.to_sym] = if expr.respond_to?(:resolve)
               begin
-                expr.resolve(branches)
+                expr.resolve(branches, context)
               rescue Curlybars::Error::Validate
                 nil
               end
@@ -80,7 +80,7 @@ module Curlybars
             )
           end
         else
-          path_errors = Array(path.validate(branches, check_type: :partial))
+          path_errors = Array(path.validate(branches, check_type: :partial, context: context))
           if path_errors.any? && context&.partial_resolver
             errors << Curlybars::Error::Validate.new(
               'partial_not_found',

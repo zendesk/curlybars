@@ -67,19 +67,19 @@ module Curlybars
       def validate(branches, context: nil)
         check_open_and_close_elements(helper, helperclose, Curlybars::Error::Validate)
 
-        if helper.leaf?(branches)
+        if helper.leaf?(branches, context)
           if arguments.any? || options.any?
             message = "#{helper.path} doesn't accept any arguments or options"
             Curlybars::Error::Validate.new('invalid_signature', message, helper.position)
           end
-        elsif helper.helper?(branches)
+        elsif helper.helper?(branches, context)
           [
             helper_template.validate(branches, context: context),
             else_template.validate(branches, context: context),
-            arguments.map { |argument| argument.validate_as_value(branches) },
-            options.map { |option| option.validate(branches) }
+            arguments.map { |argument| argument.validate_as_value(branches, context: context) },
+            options.map { |option| option.validate(branches, context: context) }
           ]
-        elsif helper.generic_helper?(branches)
+        elsif helper.generic_helper?(branches, context)
           if arguments.empty?
             message = "#{helper.path} requires an argument"
             Curlybars::Error::Validate.new('invalid_signature', message, helper.position)
@@ -87,8 +87,8 @@ module Curlybars
             [
               helper_template.validate(branches, context: context),
               else_template.validate(branches, context: context),
-              arguments.map { |argument| argument.validate(branches, check_type: :anything) },
-              options.map { |option| option.validate(branches) }
+              arguments.map { |argument| argument.validate(branches, check_type: :anything, context: context) },
+              options.map { |option| option.validate(branches, context: context) }
             ]
           end
         else

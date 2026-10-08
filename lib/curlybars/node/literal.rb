@@ -13,7 +13,7 @@ module Curlybars
         # Nothing to validate here.
       end
 
-      def validate_as_value(branches)
+      def validate_as_value(branches, context: nil)
         # It is always a value.
       end
 
