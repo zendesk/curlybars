@@ -24,7 +24,7 @@ module Curlybars
       end
 
       def validate(branches, context: nil)
-        sub_tree = path.resolve_and_check!(branches, check_type: :presenterlike)
+        sub_tree = path.resolve_and_check!(branches, check_type: :presenterlike, context: context)
         with_template_errors = begin
           branches.push(sub_tree)
           with_template.validate(branches, context: context)

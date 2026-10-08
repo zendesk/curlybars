@@ -9,8 +9,8 @@ module Curlybars
         RUBY
       end
 
-      def validate(branches)
-        expression.validate_as_value(branches)
+      def validate(branches, context: nil)
+        expression.validate_as_value(branches, context: context)
       end
 
       def cache_key

@@ -15,7 +15,7 @@ module Curlybars
 
       def validate(branches, context: nil)
         [
-          expression.validate(branches),
+          expression.validate(branches, context: context),
           if_template.validate(branches, context: context),
           else_template.validate(branches, context: context)
         ]

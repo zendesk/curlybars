@@ -112,11 +112,12 @@ module Curlybars
       value.to_json(curlybars_guard: guard)
     end
 
-    def global_helpers_dependency_tree
-      @global_helpers_dependency_tree ||= begin
-        classes = Curlybars.configuration.global_helpers_provider_classes
-        classes.map(&:dependency_tree).inject({}, :merge)
-      end
+    def global_helpers_dependency_tree(context = nil)
+      return @global_helpers_dependency_tree ||= compute_global_helpers_dependency_tree(nil) if context.nil?
+
+      context.instance_variable_get(:@_curlybars_global_helpers_tree) ||
+        # Memoized per context, so a context passed to validate must not be frozen.
+        context.instance_variable_set(:@_curlybars_global_helpers_tree, compute_global_helpers_dependency_tree(context))
     end
 
     def cache
@@ -126,6 +127,11 @@ module Curlybars
     attr_writer :cache
 
     private
+
+    def compute_global_helpers_dependency_tree(context)
+      classes = Curlybars.configuration.global_helpers_provider_classes
+      classes.map { |k| k.dependency_tree(context) }.inject({}, :merge)
+    end
 
     def transformed_source(source)
       transformers = Curlybars.configuration.compiler_transformers
