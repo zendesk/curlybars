@@ -1,5 +1,14 @@
 ### Unreleased
 
+### Curlybars 1.16.1.pre.4
+
+* Thread the `Curlybars.validate` context through global helper validation: `global_helpers_dependency_tree`
+  and `MethodWhitelist` providers now receive it, so a provider can decide which global helpers exist based
+  on that context (e.g. gate by API version). Context-less validation keeps using the static tree, which
+  excludes context-gated helpers. Contexts passed to `validate` must be mutable (the computed tree is memoized on them).
+* Validate every argument and option of a subexpression used as a `#each`/`#with` collection, closing a gap
+  where a gated-out helper nested in an option or in a first-argument subexpression could evade validation.
+
 ### Curlybars 1.16.1.pre.3
 
 * Add incremental serialization backstops to the `json` helper path: `as_json` now threads an optional
