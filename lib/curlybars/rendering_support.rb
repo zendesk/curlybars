@@ -31,6 +31,16 @@ module Curlybars
       raise ::Curlybars::Error::Render.new('timeout', message, nil)
     end
 
+    # Called before a #with or #each block pushes its context. The contexts
+    # stack starts with the root presenter, so its length is one more than
+    # the number of enclosing #with and #each blocks.
+    def check_nesting_not_too_deep(position)
+      return if contexts.length <= Curlybars.configuration.nesting_limit
+
+      message = "Nesting too deep (> #{Curlybars.configuration.nesting_limit} levels)"
+      raise Curlybars::Error::Render.new('nesting_too_deep', message, position)
+    end
+
     def check_context_is_presenter(context, path, position)
       return if presenter?(context)
 

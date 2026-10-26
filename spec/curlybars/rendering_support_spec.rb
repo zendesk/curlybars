@@ -30,6 +30,25 @@ describe Curlybars::RenderingSupport do
     end
   end
 
+  describe "#check_nesting_not_too_deep" do
+    before do
+      Curlybars.configuration.nesting_limit = 2
+    end
+
+    it "allows pushing contexts until nesting_limit blocks are nested" do
+      contexts.push(presenter)
+
+      expect { rendering.check_nesting_not_too_deep(position) }.not_to raise_error
+    end
+
+    it "raises when a block would nest deeper than nesting_limit" do
+      contexts.push(presenter, presenter)
+
+      expect { rendering.check_nesting_not_too_deep(position) }.
+        to raise_error(an_instance_of(Curlybars::Error::Render).and(having_attributes(id: 'render.nesting_too_deep')))
+    end
+  end
+
   describe "#to_bool" do
     describe "returns true" do
       it "with `true`" do

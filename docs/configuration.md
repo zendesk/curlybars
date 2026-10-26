@@ -29,7 +29,7 @@ In the invoice example, this will make Rails look up for `Experimental::Invoices
 
 ## `nesting_limit` (default `10`)
 
-Having several nested `with` or `each` blocks in a template causes the presenters stack to grow with it. The default nesting level is set to `10`, but by using the `nesting_limit` setter method it is possible to change this.
+Having several nested `with` or `each` blocks in a template causes the presenters stack to grow with it. By default, a template can nest at most `10` of these blocks, but by using the `nesting_limit` setter method it is possible to change this.
 
 If a template has a nesting with more levels than it is allowed, then `Curlybars::Error::Render` will be raised.
 

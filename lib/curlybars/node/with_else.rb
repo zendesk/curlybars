@@ -10,6 +10,7 @@ module Curlybars
           if rendering.to_bool(compiled_path)
             position = rendering.position(#{position.line_number}, #{position.line_offset})
             rendering.check_context_is_presenter(compiled_path, #{presenter_path.path.inspect}, position)
+            rendering.check_nesting_not_too_deep(position)
 
             contexts.push(compiled_path)
             begin
