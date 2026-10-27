@@ -6,16 +6,16 @@ describe "template" do
     let(:post) { double("post") }
     let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }
 
-    it "raises an exception when contexts stack is too deep (>= 10)" do
-      template = Curlybars.compile(hbs_with_depth(10))
+    it "raises an exception when more blocks push a context than nesting_limit (> 10)" do
+      template = Curlybars.compile(hbs_with_depth(11))
 
       expect do
         eval(template)
-      end.to raise_error(Curlybars::Error::Render)
+      end.to raise_error(an_instance_of(Curlybars::Error::Render).and(having_attributes(id: 'render.nesting_too_deep')))
     end
 
-    it "raises an exception when contexts stack is not too deep (< 10)" do
-      template = Curlybars.compile(hbs_with_depth(9))
+    it "doesn't raise an exception when as many blocks push a context as nesting_limit (10)" do
+      template = Curlybars.compile(hbs_with_depth(10, innermost: 'text'))
 
       expect do
         eval(template)
@@ -46,10 +46,10 @@ describe "template" do
 
     private
 
-    def hbs_with_depth(depth)
+    def hbs_with_depth(depth, innermost: '')
       hbs = "%s"
       depth.times { hbs %= "{{#with this}}%s{{/with}}" }
-      hbs %= ''
+      hbs % innermost
     end
   end
 

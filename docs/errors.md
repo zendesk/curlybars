@@ -335,7 +335,7 @@ with the following attributes (in the example above):
 
 ## Rendering Errors
 
-During the validation phase, a `Curlybars::Error::Render` exception can be raised.
+During the rendering phase, a `Curlybars::Error::Render` exception can be raised.
 
 ### render.context_is_not_a_presenter
 
@@ -468,11 +468,12 @@ with the following attribute (in the example above):
 
 * meth: :surnames
 
-### render.traverse_too_deep
+### render.nesting_too_deep
 
-This exception occurs when in the template there are too many elements pushing
-a context are found to be nested - (eg. `#with`). The maximum allowed depth
-goes with the configuration parameter `nesting_limit`, that is set to 10 by default.
+This exception occurs when the template nests too many blocks that push a
+context (`#with` and `#each`). The configuration parameter `nesting_limit` sets
+the limit, and it is 10 by default. A template can nest at most
+`nesting_limit` of these blocks.
 
 ```hbs
 {{! let's assume that nesting_limit is set to 2... }}
@@ -481,6 +482,7 @@ goes with the configuration parameter `nesting_limit`, that is set to 10 by defa
 
 {{#with this}}
   {{#with this}}
+    {{this.name}}
   {{/with}}
 {{/with}}
 
@@ -489,10 +491,32 @@ goes with the configuration parameter `nesting_limit`, that is set to 10 by defa
 {{#with this}}
   {{#with this}}
     {{#with this}}
+      {{this.name}}
     {{/with}}
   {{/with}}
 {{/with}}
+```
 
+`Curlybars.serialize` raises the same exception when the value it serializes
+is nested more than `nesting_limit` levels deep.
+
+### render.traverse_too_deep
+
+This exception occurs when a path in the template has too many steps. The
+configuration parameter `traversing_limit` sets the limit, and it is 10 by
+default. The limit counts the dots between the steps, so a path can have at
+most `traversing_limit + 1` steps. Leading `../` segments don't count.
+
+```hbs
+{{! let's assume that traversing_limit is set to 2... }}
+
+{{! this will NOT raise the exception }}
+
+{{author.address.city}}
+
+{{! this will raise the exception }}
+
+{{author.address.city.name}}
 ```
 
 ### render.output_too_long

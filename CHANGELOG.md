@@ -4,6 +4,12 @@
   `global_helpers_provider_classes`, so code that changed that setting and reset the configuration used to keep
   seeing helpers from the previous configuration.
 * Fix `NameError` in `Curlybars.compile`, `Curlybars.find`, and `Curlybars.visit` when `compiler_transformers` is configured.
+* `nesting_limit` now allows exactly that many nested `#with` and `#each` blocks. Before, it allowed `nesting_limit - 2`
+  (or `nesting_limit - 1` when the innermost block was empty). `render.nesting_too_deep` now points at the block that
+  exceeds the limit.
+* Leading `../` segments no longer count against `traversing_limit`. Each one used to cost two dots, so paths
+  navigating up a few contexts hit `render.traverse_too_deep` sooner than plain paths. Plain paths are unaffected;
+  this only stops rejecting templates that were rejected before.
 
 ### Curlybars 1.16.1.pre.3
 

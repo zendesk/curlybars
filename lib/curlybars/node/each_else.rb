@@ -12,6 +12,7 @@ module Curlybars
             template_cache_key = '#{each_template.cache_key}'
 
             collection = rendering.coerce_to_hash!(collection, #{collection_path.path.inspect}, position)
+            rendering.check_nesting_not_too_deep(position)
             collection.each.with_index.map do |key_and_presenter, index|
               rendering.check_timeout!
               rendering.optional_presenter_cache(key_and_presenter[1], template_cache_key, buffer) do |buffer|

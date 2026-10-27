@@ -29,7 +29,7 @@ In the invoice example, this will make Rails look up for `Experimental::Invoices
 
 ## `nesting_limit` (default `10`)
 
-Having several nested `with` or `each` blocks in a template causes the presenters stack to grow with it. The default nesting level is set to `10`, but by using the `nesting_limit` setter method it is possible to change this.
+Having several nested `with` or `each` blocks in a template causes the presenters stack to grow with it. By default, a template can nest at most `10` of these blocks, but by using the `nesting_limit` setter method it is possible to change this.
 
 If a template has a nesting with more levels than it is allowed, then `Curlybars::Error::Render` will be raised.
 
@@ -37,9 +37,9 @@ If a template has a nesting with more levels than it is allowed, then `Curlybars
 
 Whenever a path is encountered, a path traversal is performed. In other words, the path is chunked up on the dots (`.`) and the resulting parts will be used to traverse the presenters, starting from the current context.
 
-By default, the maximum number of steps in a path is set to be `10`, but by using the `traversing_limit` setter method it is possible to change this.
+By default, a path can have at most 11 steps, but by using the `traversing_limit` setter method it is possible to change this. The limit counts the dots between the steps, so the maximum number of steps is `traversing_limit + 1`. Leading `../` segments don't count.
 
-If a path with more steps than it is allowed is encountered, then `Curlybars::Error::Render` will be raised.
+If a path with more dots than it is allowed is encountered, then `Curlybars::Error::Render` will be raised.
 
 ## `output_limit` (default `1.megabyte`)
 
