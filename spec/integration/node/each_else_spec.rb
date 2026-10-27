@@ -238,7 +238,7 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
 
     describe "with subexpressions" do
       before do
-        Curlybars.instance_variable_set(:@global_helpers_dependency_tree, nil)
+        Curlybars.reset
       end
 
       it "without errors when called with a presenter collection" do
