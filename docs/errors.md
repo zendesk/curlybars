@@ -504,8 +504,8 @@ is nested more than `nesting_limit` levels deep.
 
 This exception occurs when a path in the template has too many steps. The
 configuration parameter `traversing_limit` sets the limit, and it is 10 by
-default. A path can have at most `traversing_limit + 1` steps, which means
-`traversing_limit` dots.
+default. The limit counts the dots between the steps, so a path can have at
+most `traversing_limit + 1` steps. Leading `../` segments don't count.
 
 ```hbs
 {{! let's assume that traversing_limit is set to 2... }}

@@ -190,10 +190,26 @@ describe Curlybars::RenderingSupport do
       expect(outcome).to be_nil
     end
 
-    it "raises an exception if tha path is too deep (> 10)" do
+    it "allows paths with exactly traversing_limit dots (limit + 1 steps)" do
+      allow(presenter).to receive(:a).and_return(presenter)
+
       expect do
-        rendering.path('a.b.c.d.e.f.g.h.i.l', rendering.position(0, 1))
-      end.to raise_error(Curlybars::Error::Render)
+        rendering.path(Array.new(11, 'a').join('.'), rendering.position(0, 1))
+      end.not_to raise_error
+    end
+
+    it "raises an exception if the path has more dots than traversing_limit" do
+      allow(presenter).to receive(:a).and_return(presenter)
+
+      expect do
+        rendering.path(Array.new(12, 'a').join('.'), rendering.position(0, 1))
+      end.to raise_error(an_instance_of(Curlybars::Error::Render).and(having_attributes(id: 'render.traverse_too_deep')))
+    end
+
+    it "doesn't count `../` segments" do
+      expect do
+        rendering.path("#{'../' * 5}a.b", rendering.position(0, 1))
+      end.not_to raise_error
     end
   end
 

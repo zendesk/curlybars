@@ -267,8 +267,11 @@ module Curlybars
       raise Curlybars::Error::Render.new('unallowed_path', message, position)
     end
 
+    # Counts the dots after the final `/` in the path. Leading `../` segments
+    # move up the contexts stack rather than traversing, so they don't count.
     def check_traverse_not_too_deep(traverse, position)
-      return unless traverse.count('.') > Curlybars.configuration.traversing_limit
+      dots = traverse.split('/').last.count('.')
+      return unless dots > Curlybars.configuration.traversing_limit
 
       message = "`#{traverse}` too deep"
       raise Curlybars::Error::Render.new('traverse_too_deep', message, position)
