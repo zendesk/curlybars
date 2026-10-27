@@ -178,4 +178,6 @@ def main
   end
 end
 
+# simplecov:disable
 main if __FILE__ == $PROGRAM_NAME
+# simplecov:enable
