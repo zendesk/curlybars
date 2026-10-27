@@ -3,6 +3,7 @@
 * `Curlybars.reset` now also clears the memoized global helpers dependency tree. The tree is derived from
   `global_helpers_provider_classes`, so code that changed that setting and reset the configuration used to keep
   seeing helpers from the previous configuration.
+* Fix `NameError` in `Curlybars.compile`, `Curlybars.find`, and `Curlybars.visit` when `compiler_transformers` is configured.
 
 ### Curlybars 1.16.1.pre.3
 

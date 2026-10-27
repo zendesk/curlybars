@@ -29,7 +29,7 @@ module Curlybars
       cache_key = ["Curlybars.compile", Curlybars::VERSION, identifier, Digest::SHA256.hexdigest(source)]
 
       cache.fetch(cache_key) do
-        ast(transformed_source(source), identifier, run_processors: true).compile
+        ast(transformed_source(source, identifier), identifier, run_processors: true).compile
       end
     end
 
@@ -76,7 +76,7 @@ module Curlybars
     # source - The source HBS String used to generate an AST.
     # identifier - The the file name of the template being checked (defaults to `nil`).
     def visit(visitor, source, identifier = nil)
-      tree = ast(transformed_source(source), identifier, run_processors: true)
+      tree = ast(transformed_source(source, identifier), identifier, run_processors: true)
       visitor.accept(tree)
     end
 
@@ -99,7 +99,7 @@ module Curlybars
     #
     # Returns an Array of Curlybars::Node::Path instances that match the target path.
     def find(target_path, source, identifier = nil, role: nil)
-      tree = ast(transformed_source(source), identifier, run_processors: true)
+      tree = ast(transformed_source(source, identifier), identifier, run_processors: true)
       finder = Curlybars::PathFinder.new(tree)
       finder.find(target_path, role: role)
     end
@@ -127,7 +127,7 @@ module Curlybars
 
     private
 
-    def transformed_source(source)
+    def transformed_source(source, identifier)
       transformers = Curlybars.configuration.compiler_transformers
       transformers.inject(source) do |memo, transformer|
         transformer.transform(memo, identifier)
