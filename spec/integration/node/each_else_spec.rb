@@ -237,10 +237,6 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
     end
 
     describe "with subexpressions" do
-      before do
-        Curlybars.instance_variable_set(:@global_helpers_dependency_tree, nil)
-      end
-
       it "without errors when called with a presenter collection" do
         dependency_tree = { a_presenter_collection: [{}] }
 

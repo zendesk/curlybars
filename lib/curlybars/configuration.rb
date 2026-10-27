@@ -13,6 +13,7 @@ module Curlybars
 
   def self.reset
     @configuration = Configuration.new
+    @global_helpers_dependency_tree = nil
   end
 
   class Configuration

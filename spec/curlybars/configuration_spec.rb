@@ -53,5 +53,14 @@ describe Curlybars::Configuration do
 
       expect(presenters_namespace).to eq('')
     end
+
+    it "clears the memoized global helpers dependency tree" do
+      Curlybars.configuration.global_helpers_provider_classes = [double(dependency_tree: { foo: nil })]
+      Curlybars.global_helpers_dependency_tree
+
+      Curlybars.reset
+
+      expect(Curlybars.global_helpers_dependency_tree).to eq({})
+    end
   end
 end
