@@ -82,8 +82,7 @@ module Curlybars
         stack.pop unless stack.empty?
       end
 
-      remaining_segments = full_path.empty? ? [] : full_path.split('.')
-      stack + remaining_segments
+      stack + full_path.split('.')
     end
 
     def handle_block_helper(node, context_stack)
