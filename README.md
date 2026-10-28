@@ -1,4 +1,4 @@
-[![Build Status](https://github.com/zendesk/curlybars/workflows/CI/badge.svg)](https://github.com/zendesk/curlybars/actions?query=workflow%3ACI)
+[![Build Status](https://github.com/zendesk/curlybars/actions/workflows/ci.yml/badge.svg)](https://github.com/zendesk/curlybars/actions/workflows/ci.yml)
 
 # Curlybars
 
