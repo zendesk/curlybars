@@ -29,4 +29,12 @@ describe "Exception reporting" do
       eval(compiled)
     end.to raise_error(Curlybars::Error::Render)
   end
+
+  it "Throw Curlybars::Error::Render when traversing through a collection length" do
+    compiled = Curlybars.compile('{{two_elements.length.first}}')
+
+    expect do
+      eval(compiled)
+    end.to raise_error(Curlybars::Error::Render)
+  end
 end

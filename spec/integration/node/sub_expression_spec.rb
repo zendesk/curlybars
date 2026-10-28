@@ -423,5 +423,73 @@ describe "{{(helper arg1 arg2 ... key=value ...)}}" do
 
       expect(errors).to be_empty
     end
+
+    it "without errors when the first argument is another subexpression" do
+      allow(Curlybars.configuration).to receive(:global_helpers_provider_classes).
+        and_return([IntegrationTest::GlobalHelperProvider])
+
+      dependency_tree = { articles: [{ title: nil }], other: nil }
+
+      source = <<-HBS
+        {{#each (slice (slice articles 0 5) 0 5)}}{{title}}{{else}}{{other}}{{/each}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors).to be_empty
+    end
+
+    it "with errors when a generic helper has no arguments" do
+      allow(Curlybars.configuration).to receive(:global_helpers_provider_classes).
+        and_return([IntegrationTest::GlobalHelperProvider])
+
+      dependency_tree = {}
+
+      source = <<-HBS
+        {{#with (json)}} ... {{/with}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors.first.id).to eq('validate.missing_path')
+    end
+
+    it "with errors when a generic helper argument is not a presenter" do
+      allow(Curlybars.configuration).to receive(:global_helpers_provider_classes).
+        and_return([IntegrationTest::GlobalHelperProvider])
+
+      dependency_tree = { article: nil }
+
+      source = <<-HBS
+        {{#with (json article)}} ... {{else}} ... {{/with}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors.first.id).to eq('validate.not_a_presenter')
+    end
+
+    it "does not treat a helper type with more than two elements as generic" do
+      dependency_tree = { localize: [:helper, :extra, {}], article: { title: nil } }
+
+      source = <<-HBS
+        {{#with (localize article)}}{{title}}{{/with}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors.map(&:id)).to eq(['validate.unallowed_path'])
+    end
+  end
+
+  describe "#cache_key" do
+    it "joins the helper, argument and option cache keys" do
+      helper = Curlybars::Node::Path.new(:json, nil)
+      argument = Curlybars::Node::Path.new(:article, nil)
+      subexpression = Curlybars::Node::SubExpression.new(helper, [argument], [])
+
+      expect(subexpression.cache_key).
+        to eq("json/Curlybars::Node::Path/article/Curlybars::Node::Path/Curlybars::Node::SubExpression")
+    end
   end
 end

@@ -85,6 +85,12 @@ describe Curlybars::MethodWhitelist do
         dummy_class.class_eval { allow_methods :cook, links: [OnePresenter, OtherPresenter] }
       end.to raise_error(RuntimeError)
     end
+
+    it "raises when a helper type is not a presenter or collection" do
+      expect do
+        dummy_class.class_eval { allow_methods :cook, translate: [:helper, :not_a_presenter] }
+      end.to raise_error(RuntimeError, /Invalid allowed method syntax for `translate`/)
+    end
   end
 
   describe "inheritance and composition" do
@@ -229,6 +235,15 @@ describe Curlybars::MethodWhitelist do
       expect(leaf_class.new.as_json).to eq(name: "leaf")
     end
 
+    it "memoizes the serialization on repeated calls" do
+      leaf = leaf_class.new
+
+      first = leaf.as_json
+      second = leaf.as_json
+
+      expect(second).to be(first)
+    end
+
     it "enforces the size budget via measured leaves" do
       guard = Curlybars::SerializationGuard.new(budget: 2, depth_limit: 10)
 
@@ -360,6 +375,27 @@ describe Curlybars::MethodWhitelist do
           label: {
             some_label: nil
           }
+        )
+    end
+
+    it "resolves helper types to the dependency tree of what they return" do
+      article_presenter = Class.new do
+        extend Curlybars::MethodWhitelist
+
+        allow_methods :title
+      end
+
+      stub_const("ArticlePresenter", article_presenter)
+
+      dummy_class.class_eval do
+        allow_methods translate_article: [:helper, ArticlePresenter],
+          reverse_articles: [:helper, [ArticlePresenter]]
+      end
+
+      expect(dummy_class.dependency_tree).
+        to eq(
+          translate_article: [:helper, { title: nil }],
+          reverse_articles: [:helper, [{ title: nil }]]
         )
     end
   end

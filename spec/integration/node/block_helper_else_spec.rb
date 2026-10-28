@@ -245,6 +245,20 @@ describe "{{#helper arg1 arg2 ... key=value ...}}...<{{else}}>...{{/helper}}" do
       expect(errors).to be_empty
     end
 
+    it "without errors for a generic helper block with arguments and options" do
+      allow(Curlybars.configuration).to receive(:global_helpers_provider_classes).and_return([IntegrationTest::GlobalHelperProvider])
+
+      dependency_tree = { article: nil }
+
+      source = <<-HBS
+        {{#json article key='value'}} ... {{/json}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors).to be_empty
+    end
+
     it "without errors when invoking a leaf" do
       dependency_tree = { name: nil }
 

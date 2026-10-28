@@ -63,5 +63,17 @@ describe '{{value}}' do
 
       expect(errors).not_to be_empty
     end
+
+    it "validates a literal output without errors" do
+      dependency_tree = {}
+
+      source = <<-HBS
+        {{'hello world!'}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors).to be_empty
+    end
   end
 end

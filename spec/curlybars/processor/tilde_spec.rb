@@ -50,6 +50,12 @@ describe Curlybars::Processor::Tilde do
 
       expect(tokens.last.value).to eq "\t\r\n text"
     end
+
+    it "doesn't look for a following text token when it is the last token" do
+      tokens = [tilde_end_token]
+
+      expect { Curlybars::Processor::Tilde.process!(tokens, 'identifier') }.not_to raise_error
+    end
   end
 
   private

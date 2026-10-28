@@ -7,5 +7,5 @@ SimpleCov.configure do
   skip "/spec/"
 
   # Raise these towards 100% as coverage improves.
-  minimum_coverage line: 94.4, branch: 84.4
+  minimum_coverage line: 100, branch: 98.6
 end

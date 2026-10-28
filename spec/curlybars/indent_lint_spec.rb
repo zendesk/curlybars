@@ -407,4 +407,68 @@ describe "curlybars-indent-lint" do
       end
     end
   end
+
+  describe "#parse_args" do
+    it "defaults the indent size to 2" do
+      expect(parse_args(["file.hbs"])).to eq([2, ["file.hbs"]])
+    end
+
+    it "parses --indent" do
+      expect(parse_args(["--indent", "4", "file.hbs"])).to eq([4, ["file.hbs"]])
+    end
+
+    it "exits with a usage error and a hint when no files are given", :aggregate_failures do
+      expect { parse_args([]) }.
+        to output(/no files given/).to_stderr.
+        and raise_error(SystemExit) { |error| expect(error.status).to eq(2) }
+    end
+
+    it "prints usage and exits cleanly on --help", :aggregate_failures do
+      expect { parse_args(["--help"]) }.
+        to output(/Usage:/).to_stderr.
+        and raise_error(SystemExit) { |error| expect(error.status).to eq(0) }
+    end
+  end
+
+  describe "#main" do
+    def write_file(source)
+      file = Tempfile.new(['test', '.hbs'])
+      file.write(source)
+      file.close
+      file.path
+    end
+
+    it "exits 0 and reports no issues for a correctly indented file", :aggregate_failures do
+      path = write_file("{{#if visible}}\n  <p>hello</p>\n{{/if}}\n")
+      stub_const("ARGV", [path])
+
+      expect { main }.
+        to output("No indentation issues found.\n").to_stdout.
+        and raise_error(SystemExit) { |error| expect(error.status).to eq(0) }
+    ensure
+      File.delete(path)
+    end
+
+    it "exits 1 and prints one message per warning", :aggregate_failures do
+      misindented = write_file("{{#if visible}}\n    <p>hello</p>\n   {{/if}}\n")
+      unclosed = write_file("{{#if visible}}\n  <p>hello</p>\n")
+      stub_const("ARGV", [misindented, unclosed])
+
+      expect { main }.
+        to output(/2 indentation issue/).to_stdout.
+        and output(/expected 0 spaces.*unclosed block/m).to_stderr.
+        and raise_error(SystemExit) { |error| expect(error.status).to eq(1) }
+    ensure
+      File.delete(misindented, unclosed)
+    end
+
+    it "warns about missing files and still exits 0 when nothing else is wrong", :aggregate_failures do
+      stub_const("ARGV", ["no_such_file.hbs"])
+
+      expect { main }.
+        to output("No indentation issues found.\n").to_stdout.
+        and output(/no_such_file\.hbs: no such file/).to_stderr.
+        and raise_error(SystemExit) { |error| expect(error.status).to eq(0) }
+    end
+  end
 end

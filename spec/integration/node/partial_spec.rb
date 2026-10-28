@@ -562,6 +562,33 @@ describe "{{> partial}}" do
       expect(errors).to be_empty
     end
 
+    it "treats a raising resolver as a missing partial" do
+      raising_resolver = ->(_name) { raise StandardError, "boom" }
+
+      dependency_tree = { partial: :partial }
+
+      source = <<-HBS
+        {{> partial}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source, partial_resolver: raising_resolver)
+
+      expect(errors).to be_empty
+    end
+
+    it "skips validation of option expressions that cannot be resolved", :aggregate_failures do
+      dependency_tree = {}
+
+      source = <<-HBS
+        {{> card title=unknown_path}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source, partial_resolver: resolver)
+
+      expect(errors.length).to eq(1)
+      expect(errors.first.message).to include('unknown_path')
+    end
+
     it "reports a partial_not_found error when resolver returns nil and path is not in the tree", :aggregate_failures do
       dependency_tree = { user: { first_name: nil } }
 
@@ -574,6 +601,20 @@ describe "{{> partial}}" do
       expect(errors.length).to eq(1)
       expect(errors.first.id).to eq('validate.partial_not_found')
       expect(errors.first.message).to match(/unknown_partial.*could not be found/)
+    end
+
+    it "reports a partial_not_found error when the path resolves but is not a partial", :aggregate_failures do
+      dependency_tree = { user: nil }
+
+      source = <<-HBS
+        {{> user}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source, partial_resolver: resolver)
+
+      expect(errors.length).to eq(1)
+      expect(errors.first.id).to eq('validate.partial_not_found')
+      expect(errors.first.message).to match(/user.*could not be found/)
     end
 
     it "validates ../ in partial options inside #with" do
