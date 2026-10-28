@@ -10,6 +10,7 @@
 * Leading `../` segments no longer count against `traversing_limit`. Each one used to cost two dots, so paths
   navigating up a few contexts hit `render.traverse_too_deep` sooner than plain paths. Plain paths are unaffected;
   this only stops rejecting templates that were rejected before.
+* Drop support for Ruby 3.2.
 
 ### Curlybars 1.16.1.pre.3
 

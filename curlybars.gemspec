@@ -30,7 +30,7 @@ Gem::Specification.new do |s|
 
   s.rdoc_options = ["--charset=UTF-8"]
 
-  s.required_ruby_version = ">= 3.2"
+  s.required_ruby_version = ">= 3.3"
 
   s.add_dependency("actionpack", ">= 7.2")
   s.add_dependency("activesupport", ">= 7.2")
