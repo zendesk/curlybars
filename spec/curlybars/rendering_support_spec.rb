@@ -356,6 +356,14 @@ describe Curlybars::RenderingSupport do
         rendering.call(method, "meth", position, arguments, options, &block)
       end.to raise_error(Curlybars::Error::Render)
     end
+
+    it "reports n/a for the location of helpers without source location" do
+      helper = double("helper", parameters: [[:opt, :x]], source_location: nil, to_s: "FakeHelper")
+
+      expect do
+        rendering.call(helper, "helper", position, [], :options, &block)
+      end.to raise_error(Curlybars::Error::Render, %r{n/a:n/a})
+    end
   end
 
   describe "#position" do
@@ -452,6 +460,59 @@ describe Curlybars::RenderingSupport do
       expect do
         rendering.coerce_to_hash!(:not_a_presenter, 'path', position)
       end.to raise_error(Curlybars::Error::Render)
+    end
+
+    it "raises when the collection cannot be coerced to a hash" do
+      collection = Class.new do
+        def each
+        end
+
+        def all?
+          true
+        end
+      end.new
+
+      expect do
+        rendering.coerce_to_hash!(collection, 'path', position)
+      end.to raise_error("Collection is not coerceable to hash")
+    end
+  end
+
+  describe "#resolve_partial" do
+    it "raises when the partial provider returns a non-String" do
+      provider = double("partial provider", resolve_partial: 42)
+      rendering = Curlybars::RenderingSupport.new(
+        1.second, contexts, variables, file_name,
+        [], Curlybars.cache, partial_provider: provider
+      )
+
+      expect { rendering.resolve_partial("name") }.
+        to raise_error(TypeError, /must return a String, got Integer/)
+    end
+  end
+
+  describe "#check_context_has_method" do
+    it "raises when the context does not implement the method" do
+      expect do
+        rendering.send(:check_context_has_method, Object.new, :nope, position)
+      end.to raise_error(an_instance_of(Curlybars::Error::Render).
+        and(having_attributes(id: 'render.unallowed_path')))
+    end
+  end
+
+  describe "#instrument" do
+    it "does not instrument callables that respond to a name but have no owner" do
+      callable = double("callable", name: "foo", call: :result)
+
+      expect(rendering.send(:instrument, callable) { :result }).to eq(:result)
+    end
+  end
+
+  describe "#arguments_for_signature" do
+    it "passes all arguments through for helpers accepting rest arguments" do
+      helper = ->(*_args) {}
+
+      expect(rendering.send(:arguments_for_signature, helper, [:one, :two], {})).to eq([:one, :two])
     end
   end
 

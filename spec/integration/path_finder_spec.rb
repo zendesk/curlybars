@@ -524,4 +524,39 @@ describe "PathFinder" do
       end
     end
   end
+
+  describe "traversal edge cases" do
+    it "traverses outputs with literal values", :aggregate_failures do
+      matches = Curlybars.find("name", "{{'literal output'}}{{name}}")
+      expect(matches.count).to eq(1)
+      expect(matches.first.path).to eq("name")
+    end
+
+    it "accepts an array as the target path", :aggregate_failures do
+      matches = Curlybars.find(["user", "name"], source)
+      expect(matches).not_to be_empty
+      expect(matches.first.path).to eq("user.name")
+    end
+
+    it "returns no matches for an AST without a template" do
+      ast = Curlybars::Node::Root.new(nil, nil)
+      matches = Curlybars::PathFinder.new(ast).find("user")
+      expect(matches).to be_empty
+    end
+
+    it "traverses the else template of a block helper" do
+      matches = Curlybars.find("other", "{{#print_helper user.settings}}{{user.name}}{{else}}{{other}}{{/print_helper}}")
+      expect(matches.count).to eq(1)
+    end
+
+    it "traverses a subexpression as an each collection" do
+      matches = Curlybars.find("slice.title", "{{#each (slice posts 0 5)}}{{title}}{{/each}}")
+      expect(matches.count).to eq(1)
+    end
+
+    it "traverses a subexpression as a with scope" do
+      matches = Curlybars.find("translate.title", "{{#with (translate article)}}{{title}}{{/with}}")
+      expect(matches.count).to eq(1)
+    end
+  end
 end

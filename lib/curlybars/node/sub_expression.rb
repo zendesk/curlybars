@@ -63,22 +63,19 @@ module Curlybars
 
         type = node.resolve_and_check!(branches, check_type: check_type)
 
-        if helper?(type)
-          if generic_helper?(type)
-            is_collection = type.last.is_a?(Array)
-            return infer_generic_helper_type!(branches, is_collection: is_collection)
-          end
-
-          return type.last
+        if generic_helper?(type)
+          is_collection = type.last.is_a?(Array)
+          infer_generic_helper_type!(branches, is_collection: is_collection)
+        elsif helper?(type)
+          type.last
+        else
+          type
         end
-
-        type
       end
 
       def generic_helper?(type)
-        return false unless type.is_a?(Array)
+        return false unless helper?(type)
         return false unless type.size == 2
-        return false unless type.first == :helper
 
         type.last == [{}] || type.last == {}
       end

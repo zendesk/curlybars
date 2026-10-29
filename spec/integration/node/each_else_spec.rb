@@ -41,6 +41,15 @@ describe "{{#each collection}}...{{else}}...{{/each}}" do
       HTML
     end
 
+    it "raises for {{this.length}} since the element is a presenter, not a collection" do
+      allow(presenter).to receive(:allows_method?).and_return(true)
+      allow(presenter).to receive(:nested_collection) { [presenter, presenter] }
+
+      template = Curlybars.compile("{{#each nested_collection}}{{this.length}}{{/each}}")
+
+      expect { eval(template) }.to raise_error(Curlybars::Error::Render)
+    end
+
     it "renders {{path}} when collection is not empty" do
       path_presenter_class = Class.new(Curlybars::Presenter) do
         presents :path

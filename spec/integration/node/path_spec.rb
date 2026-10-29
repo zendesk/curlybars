@@ -293,5 +293,12 @@ describe "{{path}}" do
         end
       end
     end
+
+    it "raises on an unknown check type" do
+      path = Curlybars::Node::Path.new("ok", nil)
+
+      expect { path.resolve_and_check!([{ ok: nil }], check_type: :unknown) }.
+        to raise_error("invalid type `unknown`")
+    end
   end
 end

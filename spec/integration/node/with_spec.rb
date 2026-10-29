@@ -18,6 +18,18 @@ describe "{{#with presenter}}...{{/with}}" do
       HTML
     end
 
+    it "resolves `this` to the scoped context" do
+      template = Curlybars.compile(<<-HBS)
+        {{#with user}}
+          {{this.avatar.url}}
+        {{/with}}
+      HBS
+
+      expect(eval(template)).to resemble(<<-HTML)
+        http://example.com/foo.png
+      HTML
+    end
+
     it "scopes two levels" do
       template = Curlybars.compile(<<-HBS)
         {{#with user}}
@@ -119,6 +131,20 @@ describe "{{#with presenter}}...{{/with}}" do
 
       source = <<-HBS
         {{#with (translate article "en-US")}}
+          {{title}}
+        {{/with}}
+      HBS
+
+      errors = Curlybars.validate(dependency_tree, source)
+
+      expect(errors).to be_empty
+    end
+
+    it "without errors when a generic presenter helper is nested" do
+      dependency_tree = { article: { title: nil }, translate: [:helper, {}] }
+
+      source = <<-HBS
+        {{#with (translate (translate article "en-US") "en-US")}}
           {{title}}
         {{/with}}
       HBS

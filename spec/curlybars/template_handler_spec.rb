@@ -121,6 +121,11 @@ describe Curlybars::TemplateHandler do
     expect { render(" FOO ") }.to raise_exception(Curlybars::Error::Presenter::NotFound)
   end
 
+  it "doesn't even look up the presenter class when the template is template" do
+    allow(template).to receive(:virtual_path).and_return("missing")
+    expect(render("")).to eq("")
+  end
+
   it "allows calling public methods on the presenter" do
     output = render("{{foo}}")
     expect(output).to eq("FOO")

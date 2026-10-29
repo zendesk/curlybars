@@ -23,6 +23,12 @@ describe "tilde operator" do
 
       expect(eval(template)).to resemble("beforecurlybarsafter")
     end
+
+    it "{{~ ... }} as the very first token does not look for a previous :TEXT" do
+      template = Curlybars.compile("{{~'curlybars'}}\n\t\r after")
+
+      expect(eval(template)).to resemble("curlybars\n\t\r after")
+    end
   end
 
   describe "validation" do
