@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable RSpec/MultipleMemoizedHelpers
 describe Curlybars::RenderingSupport do
   let(:file_name) { '/app/views/template.hbs' }

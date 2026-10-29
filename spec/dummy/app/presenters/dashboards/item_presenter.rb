@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dashboards::ItemPresenter < Curlybars::Presenter
   presents :item, :name
 

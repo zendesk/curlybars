@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "{{'literal'}}" do
   describe "#cache_key" do
     it "includes the literal and the class name" do

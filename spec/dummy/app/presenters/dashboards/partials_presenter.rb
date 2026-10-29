@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dashboards::PartialsPresenter < Curlybars::Presenter
   def items
     render partial: 'item', collection: ["One", "Two"], locals: { name: "yo" }

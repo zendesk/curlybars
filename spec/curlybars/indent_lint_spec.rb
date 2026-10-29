@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'tempfile'
 
 load File.expand_path('../../exe/curlybars-indent-lint', __dir__)

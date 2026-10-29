@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Curlybars
   class DependencyTracker
     def self.call(path, template)

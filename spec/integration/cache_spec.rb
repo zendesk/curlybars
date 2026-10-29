@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "caching" do
   let(:dummy_cache) do
     Class.new do

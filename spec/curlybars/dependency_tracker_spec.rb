@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Curlybars::DependencyTracker do
   it "returns the dependencies of the presenter for the given path" do
     presenter = Class.new(Curlybars::Presenter) do

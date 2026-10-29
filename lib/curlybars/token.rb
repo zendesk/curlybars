@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Curlybars
   # A token produced by Curlybars::Lexer and consumed by Curlybars::Parser.
   # Custom processors receive and may replace these (see Processor::TokenFactory).

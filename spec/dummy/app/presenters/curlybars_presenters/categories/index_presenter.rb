@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CurlybarsPresenters
   class Categories::IndexPresenter < Curlybars::Presenter
     presents :categories

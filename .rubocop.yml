@@ -126,7 +126,6 @@ RSpec/VerifiedDoubles:                {Enabled: false}
 Style/Documentation:                  {Enabled: false}
 Style/EmptyLiteral:                   {Enabled: false}
 Style/ExplicitBlockArgument:          {Enabled: false}
-Style/FrozenStringLiteralComment:     {Enabled: false}
 Style/GuardClause:                    {Enabled: false}
 Style/IfUnlessModifier:               {Enabled: false}
 Style/MultipleComparison:             {Enabled: false}

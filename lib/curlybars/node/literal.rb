@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Curlybars
   module Node
     Literal = Struct.new(:literal) do

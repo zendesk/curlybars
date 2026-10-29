@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 gem "bundler"
 gem "byebug"
 gem "parallel"

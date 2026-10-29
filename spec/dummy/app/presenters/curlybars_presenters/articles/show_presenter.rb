@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CurlybarsPresenters
   class Articles::ShowPresenter < Curlybars::Presenter
     presents :article

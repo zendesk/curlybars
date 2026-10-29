@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Curlybars
   class ValidationContext
     attr_reader :partial_resolver, :depth

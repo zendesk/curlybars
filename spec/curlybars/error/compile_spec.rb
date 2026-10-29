@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Curlybars::Error::Compile do
   let(:position) do
     Struct.new(

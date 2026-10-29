@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Curlybars
   module MethodWhitelist
     def allow_methods(*methods_without_type, **methods_with_type, &contextual_block)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Curlybars
   module Node
     SubExpression = Struct.new(:helper, :arguments, :options, :position) do

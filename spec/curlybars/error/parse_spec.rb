@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Curlybars::Error::Parse do
   let(:source) { "first_line\n0123456789\nthird_line" }
 

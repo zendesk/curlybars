@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Curlybars
   module Node
     UnlessElse = Struct.new(:expression, :unless_template, :else_template) do

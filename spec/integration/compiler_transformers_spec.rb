@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "compiler transformers" do
   let(:transformer) { double(:transformer) }
 

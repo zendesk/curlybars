@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module IntegrationTest
   class LetterPresenter < Curlybars::Presenter
     attr_reader :alphabet

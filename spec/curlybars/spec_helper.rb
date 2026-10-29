@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'curlybars/support/lexer'
 require 'curlybars/support/matcher'
 
