@@ -448,6 +448,46 @@ describe Curlybars::Lexer do
     end
   end
 
+  describe "{{~ ... ~}}" do
+    it "lexes the tilde delimiters as plain delimiters" do
+      expect(lex('{{~path~}}')).to produce [:START, :PATH, :END]
+    end
+
+    it "{{~ strips trailing whitespace from the previous text token" do
+      expect(lex("text \t\r\n{{~path}}").first.value).to eq 'text'
+    end
+
+    it "{{~ doesn't strip a text token that is not right before" do
+      expect(lex("text \t\r\n{{path}}{{~path}}").first.value).to eq "text \t\r\n"
+    end
+
+    it "{{~ as the first token has nothing to strip" do
+      expect(lex('{{~path}}')).to produce [:START, :PATH, :END]
+    end
+
+    it "~}} strips leading whitespace from the next text token" do
+      expect(lex("{{path~}}\t\r\n text")[-2].value).to eq 'text'
+    end
+
+    it "~}} doesn't strip a text token that is not right after" do
+      expect(lex("{{path~}}{{path}}\t\r\n text")[-2].value).to eq "\t\r\n text"
+    end
+
+    it "~}} strips the next text token across a comment" do
+      expect(lex("{{path~}}{{! comment }} text")[-2].value).to eq 'text'
+    end
+
+    it "strips both sides of a text token between ~}} and {{~" do
+      expect(lex("{{path~}} text {{~path}}")[3].value).to eq 'text'
+    end
+
+    it "keeps the position of the unstripped text" do
+      position = lex("text  {{~path}}").first.position
+
+      expect([position.stream_offset, position.length]).to eq [0, 6]
+    end
+  end
+
   describe "outside a curlybar context" do
     it "`--}}` is lexed as plain text" do
       expect(lex('--}}')).to produce [:TEXT]
