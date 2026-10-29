@@ -90,7 +90,7 @@ module Curlybars
     r(/(#{IDENTIFIER})\s*=/o, :curly) { [:KEY, match[1]] }
     r(/(?:\.\.\/)*(?:#{IDENTIFIER}\.)*#{IDENTIFIER}/o, :curly) { |name| [:PATH, name] }
 
-    r(/\s/, :curly)
+    r(/\s+/, :curly)
 
     r(/.*?(?=\\|{{|\z)/m) { |text| [:TEXT, @tokens.length == @lstrip_index ? text.lstrip : text] }
 
