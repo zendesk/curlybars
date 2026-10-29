@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Curlybars::MethodWhitelist do
   let(:dummy_class) do
     Class.new do

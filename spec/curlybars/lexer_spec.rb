@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Curlybars::Lexer do
   describe "{{!-- ... --}}" do
     it "skips begin of block comment" do

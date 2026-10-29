@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "visitor" do
   let(:source) do
     <<-HBS

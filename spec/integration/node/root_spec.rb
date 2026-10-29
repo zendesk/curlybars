@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "root" do
   describe "#validate" do
     it "without errors if template is empty" do

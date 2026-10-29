@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Curlybars::Error::Lex do
   let(:file_name) { 'template.hbs' }
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Curlybars::Error::Base do
   let(:position) do
     Struct.new(:line_number, :line_offset, :file_name).new(1, 0, nil)

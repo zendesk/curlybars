@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Curlybars
   module Node
     EachElse = Struct.new(:path, :each_template, :else_template, :position) do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Curlybars::Token do
   describe "#==" do
     it "is equal to a token with the same type and value at another position" do

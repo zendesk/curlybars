@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Curlybars
   class SerializationGuard
     def initialize(budget:, depth_limit:)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Article
   attr_reader :id, :title, :comment, :body, :author
 

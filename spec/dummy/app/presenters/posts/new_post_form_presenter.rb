@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Posts::NewPostFormPresenter
   extend Curlybars::MethodWhitelist
   include CurlybarsHelper

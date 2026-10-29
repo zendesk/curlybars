@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Curlybars::Presenter do
   describe ".cache_key" do
     it "includes the cache keys of all presenters in the dependency list" do

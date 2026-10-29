@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Curlybars
   module Node
     WithElse = Struct.new(:path, :with_template, :else_template, :position) do
