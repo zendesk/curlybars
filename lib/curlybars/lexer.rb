@@ -53,13 +53,10 @@ module Curlybars
     r(/\\{/) { [:TEXT, '{'] }
     r(/\\/) { [:TEXT, '\\'] }
 
-    r(/{{!--/) { push_state :comment_block }
-    r(/--}}/, :comment_block) { pop_state }
-    r(/./m, :comment_block)
-
-    r(/{{!/) { push_state :comment }
-    r(/}}/, :comment) { pop_state }
-    r(/./m, :comment)
+    # Comments are skipped up to their closing delimiter, or to the end of
+    # the template when they are not closed.
+    r(/{{!--.*?(?:--}}|\z)/m)
+    r(/{{!.*?(?:}}|\z)/m)
 
     # The tilde operator strips whitespace from the adjacent text:
     # `{{~` from the previous token and `~}}` from the next one.
