@@ -14,6 +14,12 @@ describe '{{value}}' do
       expect(eval(template)).to resemble('hello world!')
     end
 
+    it "prints out a double-quoted string without evaluating it as Ruby" do
+      template = Curlybars.compile("{{\"\#{40+2} a\\b\"}}")
+
+      expect(eval(template)).to resemble("\#{40+2} a\\b")
+    end
+
     it "prints out a boolean" do
       template = Curlybars.compile(<<-HBS)
         {{true}}
