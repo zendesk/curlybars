@@ -1,6 +1,33 @@
 # frozen_string_literal: true
 
 describe Curlybars::Lexer do
+  describe "rule dispatch" do
+    # Suffixes that let each rule match when it is preceded by one of its
+    # own first bytes.
+    let(:suffixes) do
+      [
+        "", "a", "1", "1x", "{", "{!", "{!--", "{~", "}", "}}", "~}}", "-}}", "--}}",
+        "=", "x=", " =", ".", "./", "./x", ".a", "a.b", "../a", "\\", "\\{", "'", '"',
+        "a'", 'a"', " ", "\n", "f", "rue", "alse", "nless", "ach", "lse", "ith"
+      ]
+    end
+
+    it "only skips rules that cannot match at the next byte" do
+      described_class.rules.each do |state, rules|
+        rules.each do |rule|
+          (0..255).each do |byte|
+            next if described_class.dispatch[state][byte].include?(rule)
+
+            suffixes.each do |suffix|
+              input = byte.chr + suffix.b
+              expect(StringScanner.new(input).match?(rule.pattern)).to be_nil, "#{rule.pattern.inspect} matches #{input.inspect}"
+            end
+          end
+        end
+      end
+    end
+  end
+
   describe "{{!-- ... --}}" do
     it "skips begin of block comment" do
       expect(lex('{{!--')).to produce []
