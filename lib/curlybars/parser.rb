@@ -53,15 +53,44 @@ module Curlybars
       end
     end
 
-    EXPRESSION_START = [:LITERAL, :VARIABLE, :PATH, :LPAREN].freeze
+    class ParseDepthExceeded < Error
+      # The depth limit that the template exceeded.
+      attr_reader :limit
 
-    def self.parse(tokens)
-      new(tokens).parse
+      def initialize(current, limit)
+        @limit = limit
+        super(current)
+      end
     end
 
-    def initialize(tokens)
+    # Blocks and subexpressions nested deeper than the depth limit are rejected,
+    # so that recursion in the parser, in Node#validate and Node#compile, and in
+    # Ruby compiling the generated code cannot exhaust the stack. The last one
+    # is the tightest, and it is bounded by the machine stack rather than the VM
+    # stack: with a 1 MB machine stack, about 72 nested #each blocks are enough
+    # to raise SystemStackError, and each extra MB allows roughly 70 more
+    # levels. Threads get 1 MB by default (RUBY_THREAD_MACHINE_STACK_SIZE),
+    # while the main thread gets the process stack size limit (`ulimit -s`).
+    DEFAULT_PARSE_DEPTH_LIMIT = 50
+
+    EXPRESSION_START = [:LITERAL, :VARIABLE, :PATH, :LPAREN].freeze
+
+    def self.parse(tokens, depth_limit: DEFAULT_PARSE_DEPTH_LIMIT)
+      new(tokens, depth_limit: depth_limit).parse
+    end
+
+    attr_reader :depth_limit
+
+    # The deepest nesting of blocks and subexpressions seen so far, which is
+    # what the depth limit applies to.
+    attr_reader :max_depth
+
+    def initialize(tokens, depth_limit: DEFAULT_PARSE_DEPTH_LIMIT)
       @tokens = tokens
+      @depth_limit = depth_limit
       @index = 0
+      @depth = 0
+      @max_depth = 0
     end
 
     def parse
@@ -132,14 +161,14 @@ module Curlybars
         keyword = advance.type
         expression = parse_expression
         expect(:END)
-        template, else_template = parse_body { expect(keyword) }
+        template, else_template = parse_body(first_index) { expect(keyword) }
         node_class = keyword == :IF ? Node::IfElse : Node::UnlessElse
         node_class.new(expression, template || VOID, else_template || VOID)
       when :EACH, :WITH
         keyword = advance.type
         path = peek.type == :LPAREN ? parse_subexpression : parse_path
         expect(:END)
-        template, else_template = parse_body { expect(keyword) }
+        template, else_template = parse_body(first_index) { expect(keyword) }
         node_class = keyword == :EACH ? Node::EachElse : Node::WithElse
         node_class.new(path, template || VOID, else_template || VOID, span(first_index))
       when :PATH
@@ -147,7 +176,7 @@ module Curlybars
         arguments = parse_expressions
         options = parse_options
         expect(:END)
-        template, else_template, helperclose = parse_body { parse_path }
+        template, else_template, helperclose = parse_body(first_index) { parse_path }
         Node::BlockHelperElse.new(
           helper,
           arguments,
@@ -165,22 +194,24 @@ module Curlybars
     # Parses a block body up to and including its closing tag. The block
     # parses the name that follows `{{/`, which is returned as the third
     # element.
-    def parse_body
-      template = parse_template(in_block: true)
-      expect(:START)
-
-      if peek.type == :ELSE
-        advance
-        expect(:END)
-        else_template = parse_template(in_block: true)
+    def parse_body(first_index)
+      nested(first_index) do
+        template = parse_template(in_block: true)
         expect(:START)
+
+        if peek.type == :ELSE
+          advance
+          expect(:END)
+          else_template = parse_template(in_block: true)
+          expect(:START)
+        end
+
+        expect(:SLASH)
+        closing_name = yield
+        expect(:END)
+
+        [template, else_template, closing_name]
       end
-
-      expect(:SLASH)
-      closing_name = yield
-      expect(:END)
-
-      [template, else_template, closing_name]
     end
 
     def parse_options
@@ -223,11 +254,23 @@ module Curlybars
     def parse_subexpression
       first_index = @index
       expect(:LPAREN)
-      helper = parse_path
-      arguments = parse_expressions
-      options = parse_options
-      expect(:RPAREN)
-      Node::SubExpression.new(helper, arguments, options, span(first_index))
+      nested(first_index) do
+        helper = parse_path
+        arguments = parse_expressions
+        options = parse_options
+        expect(:RPAREN)
+        Node::SubExpression.new(helper, arguments, options, span(first_index))
+      end
+    end
+
+    def nested(first_index)
+      raise ParseDepthExceeded.new(@tokens[first_index], depth_limit) if @depth >= depth_limit
+
+      @depth += 1
+      @max_depth = @depth if @depth > @max_depth
+      result = yield
+      @depth -= 1
+      result
     end
 
     # The position spanning from the token at `first_index` through the last
