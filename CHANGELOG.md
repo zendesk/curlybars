@@ -9,6 +9,8 @@
   `validate.partial_nesting_limit_reached` errors, and of `metadata[:inclusion_chain]` entries, now covers only the
   `{{> partial}}` tag. When the tag was the first item of a template or block body, the length used to extend to the
   end of that template or body.
+* Add `parse_depth_limit` configuration (default `50`) for how deeply blocks and subexpressions can be nested at parse time.
+* Emit a `parse.curlybars` notification with the nesting depth of each parsed template.
 
 ### Curlybars 1.16.1
 

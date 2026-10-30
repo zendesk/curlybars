@@ -1,5 +1,6 @@
 require 'digest'
 require 'active_support/cache'
+require 'active_support/notifications'
 require 'active_support/core_ext/object/json'
 require 'curlybars/version'
 
@@ -145,7 +146,13 @@ module Curlybars
         end
       end
 
-      Curlybars::Parser.parse(tokens)
+      parser = Curlybars::Parser.new(tokens, depth_limit: configuration.parse_depth_limit)
+      payload = { identifier: identifier, depth_limit: parser.depth_limit }
+      ActiveSupport::Notifications.instrument("parse.curlybars", payload) do
+        parser.parse
+      ensure
+        payload[:max_depth] = parser.max_depth
+      end
     rescue Curlybars::Lexer::Error => lexing_error
       raise Curlybars::Error::Lex.new(source, identifier, lexing_error)
     rescue Curlybars::Parser::Error => not_in_language_error

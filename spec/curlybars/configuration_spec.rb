@@ -19,6 +19,14 @@ describe Curlybars::Configuration do
     end
   end
 
+  describe "#parse_depth_limit" do
+    it "defaults to the parser's default depth limit" do
+      parse_depth_limit = Curlybars::Configuration.new.parse_depth_limit
+
+      expect(parse_depth_limit).to eq(Curlybars::Parser::DEFAULT_PARSE_DEPTH_LIMIT)
+    end
+  end
+
   describe "#custom_processors" do
     it "can set value" do
       config = Curlybars::Configuration.new
