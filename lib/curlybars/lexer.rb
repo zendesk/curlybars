@@ -14,7 +14,6 @@ module Curlybars
         @line_number = line_number
         @line_offset = line_offset
         @remainder = remainder
-        @match = nil
         super("Unable to match string with any of the given rules: #{remainder}")
       end
     end
@@ -82,12 +81,12 @@ module Curlybars
     r(/true/, :curly) { [:LITERAL, true] }
     r(/false/, :curly) { [:LITERAL, false] }
     r(/[-+]?\d+/, :curly) { |integer| [:LITERAL, integer.to_i] }
-    r(/'(.*?)'/, :curly) { [:LITERAL, match[1].inspect] }
-    r(/"(.*?)"/, :curly) { [:LITERAL, match[1].inspect] }
+    r(/'(.*?)'/, :curly) { [:LITERAL, @scanner[1].inspect] }
+    r(/"(.*?)"/, :curly) { [:LITERAL, @scanner[1].inspect] }
 
-    r(/@((?:\.\.\/)*#{IDENTIFIER})/o, :curly) { |variable| [:VARIABLE, match[1]] }
+    r(/@((?:\.\.\/)*#{IDENTIFIER})/o, :curly) { [:VARIABLE, @scanner[1]] }
 
-    r(/(#{IDENTIFIER})\s*=/o, :curly) { [:KEY, match[1]] }
+    r(/(#{IDENTIFIER})\s*=/o, :curly) { [:KEY, @scanner[1]] }
     r(/(?:\.\.\/)*(?:#{IDENTIFIER}\.)*#{IDENTIFIER}/o, :curly) { |name| [:PATH, name] }
 
     r(/\s+/, :curly)
@@ -102,8 +101,6 @@ module Curlybars
       @lstrip_index = nil
     end
 
-    attr_reader :match
-
     def tokens
       stream_offset = 0
       line_number = 1
@@ -114,7 +111,6 @@ module Curlybars
         rule = self.class.rules[@states.last].detect { |candidate| text = @scanner.scan(candidate.pattern) }
         raise Error.new(stream_offset, line_number, line_offset, @scanner.rest) unless rule
 
-        @match = text.match(rule.pattern)
         type, value = instance_exec(text, &rule.action)
 
         if type
