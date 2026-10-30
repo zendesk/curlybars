@@ -17,11 +17,12 @@ module Curlybars
   end
 
   class Configuration
-    attr_accessor :presenters_namespace, :nesting_limit, :traversing_limit, :output_limit, :rendering_timeout, :custom_processors, :compiler_transformers, :global_helpers_provider_classes, :cache, :partial_nesting_limit, :partial_provider_class
+    attr_accessor :presenters_namespace, :nesting_limit, :traversing_limit, :output_limit, :rendering_timeout, :custom_processors, :compiler_transformers, :global_helpers_provider_classes, :cache, :partial_nesting_limit, :partial_provider_class, :parse_depth_limit
 
     def initialize
       @presenters_namespace = ''
       @nesting_limit = 10
+      @parse_depth_limit = Curlybars::Parser::DEFAULT_PARSE_DEPTH_LIMIT
       @traversing_limit = 10
       @output_limit = 1.megabyte
       @rendering_timeout = 10.seconds

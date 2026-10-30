@@ -33,6 +33,38 @@ Having several nested `with` or `each` blocks in a template causes the presenter
 
 If a template has a nesting with more levels than it is allowed, then `Curlybars::Error::Render` will be raised.
 
+This limit is checked at render time and only counts `with` and `each` blocks. It also caps how deeply nested the data serialized by the `json` helper can be. To limit how deeply any kind of block can be nested, see `parse_depth_limit`.
+
+## `parse_depth_limit` (default `50`)
+
+The parser rejects templates where blocks and subexpressions are nested more than `parse_depth_limit` levels deep, and raises `Curlybars::Error::Parse`. Unlike `nesting_limit`, it counts every kind of block (`if`, `unless`, `each`, `with`, and block helpers), and it applies when a template is compiled or validated rather than when it is rendered.
+
+The limit keeps deeply nested templates from overflowing the stack while Ruby compiles them. That uses the machine stack, not the VM stack, so `RUBY_THREAD_VM_STACK_SIZE` makes no difference. With a 1 MB machine stack, about 72 nested `each` blocks raise `SystemStackError`, and each extra megabyte allows about 70 more levels. The size of the machine stack depends on where templates are compiled:
+
+* Threads, as in threaded servers like Puma, get 1 MB by default. Raise it with `RUBY_THREAD_MACHINE_STACK_SIZE`.
+* The main thread, which handles requests in single-threaded prefork servers like Unicorn, gets the process stack size limit (`ulimit -s`). `RUBY_THREAD_MACHINE_STACK_SIZE` doesn't apply to it. You can check the limit from Ruby with `Process.getrlimit(:STACK)`.
+* Fibers get 512 KB by default (`RUBY_FIBER_MACHINE_STACK_SIZE`), and 37 nested `each` blocks are enough to overflow it.
+
+Regardless of stack size, Ruby fails to parse the generated code at about 345 nested `each` blocks. These numbers were measured with Ruby 4.0.
+
+If you raise `parse_depth_limit`, make sure the stack where templates are compiled is big enough for it:
+
+```ruby
+# In a threaded server, run with RUBY_THREAD_MACHINE_STACK_SIZE=2097152 (2 MB).
+# In a prefork server, check that `ulimit -s` is at least 2 MB.
+Curlybars.configure do |config|
+  config.parse_depth_limit = 100
+end
+```
+
+Every parse emits a `parse.curlybars` event through `ActiveSupport::Notifications`, including parses done by `Curlybars.validate`. `Curlybars.compile` caches its result, so it only emits the event on a cache miss. The payload has the template `identifier`, the `depth_limit` in effect, and `max_depth`, the deepest nesting of blocks and subexpressions in the template. When the parser rejects a template, the payload also has the error in `exception_object`. Subscribing to the event shows how close existing templates are to the limit:
+
+```ruby
+ActiveSupport::Notifications.subscribe("parse.curlybars") do |event|
+  Rails.logger.info(event.payload.slice(:identifier, :max_depth).inspect)
+end
+```
+
 ## `traversing_limit` (default `10`)
 
 Whenever a path is encountered, a path traversal is performed. In other words, the path is chunked up on the dots (`.`) and the resulting parts will be used to traverse the presenters, starting from the current context.
