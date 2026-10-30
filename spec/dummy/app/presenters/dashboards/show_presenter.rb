@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dashboards::ShowPresenter < Curlybars::Presenter
   presents :message
 

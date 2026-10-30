@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Curlybars
   class RenderingSupport
     def initialize(timeout, contexts, variables, file_name, global_helpers_providers = [], cache = ->(key, &block) { block.call }, start_time: nil, depth: 0, partial_provider: nil)

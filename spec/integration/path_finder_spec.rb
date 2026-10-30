@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "PathFinder" do
   let(:source) do
     <<-HBS

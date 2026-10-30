@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Curlybars::SafeBuffer do
   let(:configuration) { double(:configuration) }
 

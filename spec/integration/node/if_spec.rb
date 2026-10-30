@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "{{#if}}...{{/if}}" do
   let(:global_helpers_providers) { [] }
   let(:partial_provider) { nil }

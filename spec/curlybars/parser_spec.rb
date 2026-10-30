@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Curlybars::Parser do
   def parse(source, **options)
     described_class.parse(Curlybars::Lexer.lex(source), **options)

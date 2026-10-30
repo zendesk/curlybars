@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Curlybars::Configuration do
   after do
     Curlybars.reset

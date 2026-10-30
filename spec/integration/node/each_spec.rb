@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "{{#each collection}}...{{/each}}" do
   let(:global_helpers_providers) { [] }
   let(:partial_provider) { nil }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'curlybars/template_handler'
 require 'curlybars/dependency_tracker'
 require 'action_view/dependency_tracker'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "{{json arg}} serialization backstops" do
   let(:global_helpers_providers) { [IntegrationTest::GlobalHelperProvider.new] }
   let(:partial_provider) { nil }

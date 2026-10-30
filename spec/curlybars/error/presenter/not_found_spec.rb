@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Curlybars::Error::Presenter::NotFound do
   describe "#message" do
     it "mentions the path and the presenter class it looked for" do

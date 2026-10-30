@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Curlybars::PartialPresenter do
   subject(:presenter) { described_class.new(nil, data) }
 

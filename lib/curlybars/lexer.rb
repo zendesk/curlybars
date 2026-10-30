@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'strscan'
 require 'curlybars/token'
 
@@ -12,12 +14,14 @@ module Curlybars
         @line_number = line_number
         @line_offset = line_offset
         @remainder = remainder
-        @match = nil
         super("Unable to match string with any of the given rules: #{remainder}")
       end
     end
 
-    # Rules are tried in definition order and the first match wins.
+    # Rules are tried in definition order and the first match wins. A rule
+    # can declare the bytes its matches start with (`first:`), and is then
+    # only tried when the next byte is one of them. Rules without `first:`
+    # are tried at every byte.
     # Each rule belongs to a state; the current state is the top of a stack
     # that rule actions manipulate with push_state and pop_state.
     # Actions receive the matched text and can read capture groups with
@@ -25,12 +29,16 @@ module Curlybars
     Rule = Data.define(:pattern, :action)
 
     @rules = Hash.new { |hash, state| hash[state] = [] }
+    # For each state, the rules to try for each value of the next byte.
+    @dispatch = Hash.new { |hash, state| hash[state] = Array.new(256) { [] } }
 
     class << self
-      attr_reader :rules
+      attr_reader :rules, :dispatch
 
-      def r(pattern, state = :default, &action)
-        @rules[state] << Rule.new(pattern, action || proc {})
+      def r(pattern, state = :default, first: nil, &action)
+        rule = Rule.new(pattern, action || proc {})
+        @rules[state] << rule
+        (first ? first.bytes : 0..255).each { |byte| @dispatch[state][byte] << rule }
       end
 
       def lex(string, file_name = nil)
@@ -46,64 +54,61 @@ module Curlybars
 
     # This accomodates the edge case of identifiers containing all numbers
     # and dashes
-    IDENTIFIER = '[0-9A-Za-z_\-][0-9\w\-]*'.freeze
+    IDENTIFIER = '[0-9A-Za-z_\-][0-9\w\-]*'
+    IDENTIFIER_START = [*'0'..'9', *'A'..'Z', *'a'..'z', '_', '-'].join.freeze
 
-    r(/\\{/) { [:TEXT, '{'] }
-    r(/\\/) { [:TEXT, '\\'] }
+    r(/\\{/, first: '\\') { [:TEXT, '{'] }
+    r(/\\/, first: '\\') { [:TEXT, '\\'] }
 
-    r(/{{!--/) { push_state :comment_block }
-    r(/--}}/, :comment_block) { pop_state }
-    r(/./m, :comment_block)
-
-    r(/{{!/) { push_state :comment }
-    r(/}}/, :comment) { pop_state }
-    r(/./m, :comment)
+    # Comments are skipped up to their closing delimiter, or to the end of
+    # the template when they are not closed.
+    r(/{{!--.*?(?:--}}|\z)/m, first: '{')
+    r(/{{!.*?(?:}}|\z)/m, first: '{')
 
     # The tilde operator strips whitespace from the adjacent text:
     # `{{~` from the previous token and `~}}` from the next one.
-    r(/{{~/) { rstrip_previous_text; push_state :curly; :START }
-    r(/~}}/, :curly) { pop_state; lstrip_next_text; :END }
+    r(/{{~/, first: '{') { rstrip_previous_text; push_state :curly; :START }
+    r(/~}}/, :curly, first: '~') { pop_state; lstrip_next_text; :END }
 
-    r(/{{/) { push_state :curly; :START }
-    r(/}}/, :curly) { pop_state; :END }
+    r(/{{/, first: '{') { push_state :curly; :START }
+    r(/}}/, :curly, first: '}') { pop_state; :END }
 
-    r(/\(/, :curly) { push_state :curly; :LPAREN }
-    r(/\)/, :curly) { pop_state; :RPAREN }
+    r(/\(/, :curly, first: '(') { push_state :curly; :LPAREN }
+    r(/\)/, :curly, first: ')') { pop_state; :RPAREN }
 
-    r(/#/, :curly) { :HASH }
-    r(/\//, :curly) { :SLASH }
-    r(/>/, :curly) { :GT }
+    r(/#/, :curly, first: '#') { :HASH }
+    r(/\//, :curly, first: '/') { :SLASH }
+    r(/>/, :curly, first: '>') { :GT }
 
-    r(/if\b/, :curly) { :IF }
-    r(/unless\b/, :curly) { :UNLESS }
-    r(/each\b/, :curly) { :EACH }
-    r(/with\b/, :curly) { :WITH }
-    r(/else\b/, :curly) { :ELSE }
+    r(/if\b/, :curly, first: 'i') { :IF }
+    r(/unless\b/, :curly, first: 'u') { :UNLESS }
+    r(/each\b/, :curly, first: 'e') { :EACH }
+    r(/with\b/, :curly, first: 'w') { :WITH }
+    r(/else\b/, :curly, first: 'e') { :ELSE }
 
-    r(/true/, :curly) { [:LITERAL, true] }
-    r(/false/, :curly) { [:LITERAL, false] }
-    r(/[-+]?\d+/, :curly) { |integer| [:LITERAL, integer.to_i] }
-    r(/'(.*?)'/, :curly) { [:LITERAL, match[1].inspect] }
-    r(/"(.*?)"/, :curly) { [:LITERAL, match[1].inspect] }
+    r(/true/, :curly, first: 't') { [:LITERAL, true] }
+    r(/false/, :curly, first: 'f') { [:LITERAL, false] }
+    r(/[-+]?\d+/, :curly, first: '-+0123456789') { |integer| [:LITERAL, integer.to_i] }
+    r(/'(.*?)'/, :curly, first: "'") { [:LITERAL, @scanner[1].inspect] }
+    r(/"(.*?)"/, :curly, first: '"') { [:LITERAL, @scanner[1].inspect] }
 
-    r(/@((?:\.\.\/)*#{IDENTIFIER})/o, :curly) { |variable| [:VARIABLE, match[1]] }
+    r(/@((?:\.\.\/)*#{IDENTIFIER})/o, :curly, first: '@') { [:VARIABLE, @scanner[1]] }
 
-    r(/(#{IDENTIFIER})\s*=/o, :curly) { [:KEY, match[1]] }
-    r(/(?:\.\.\/)*(?:#{IDENTIFIER}\.)*#{IDENTIFIER}/o, :curly) { |name| [:PATH, name] }
+    r(/(#{IDENTIFIER})\s*=/o, :curly, first: IDENTIFIER_START) { [:KEY, @scanner[1]] }
+    r(/(?:\.\.\/)*(?:#{IDENTIFIER}\.)*#{IDENTIFIER}/o, :curly, first: ".#{IDENTIFIER_START}") { |name| [:PATH, name] }
 
-    r(/\s/, :curly)
+    r(/\s+/, :curly, first: " \t\n\v\f\r")
 
     r(/.*?(?=\\|{{|\z)/m) { |text| [:TEXT, @tokens.length == @lstrip_index ? text.lstrip : text] }
 
     def initialize(string, file_name)
+      @string = string
       @scanner = StringScanner.new(string)
       @file_name = file_name
       @states = [:default]
       @tokens = []
       @lstrip_index = nil
     end
-
-    attr_reader :match
 
     def tokens
       stream_offset = 0
@@ -112,10 +117,10 @@ module Curlybars
 
       until @scanner.eos?
         text = nil
-        rule = self.class.rules[@states.last].detect { |candidate| text = @scanner.scan(candidate.pattern) }
+        candidates = self.class.dispatch[@states.last][@string.getbyte(@scanner.pos)]
+        rule = candidates.detect { |candidate| text = @scanner.scan(candidate.pattern) }
         raise Error.new(stream_offset, line_number, line_offset, @scanner.rest) unless rule
 
-        @match = text.match(rule.pattern)
         type, value = instance_exec(text, &rule.action)
 
         if type

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Curlybars::TemplateHandler do
   let :presenter_class do
     Class.new do

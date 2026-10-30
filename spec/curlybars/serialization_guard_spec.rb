@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Curlybars::SerializationGuard do
   def build(budget: 1_000, depth_limit: 3)
     described_class.new(budget: budget, depth_limit: depth_limit)

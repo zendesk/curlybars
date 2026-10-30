@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'curlybars/method_whitelist'
 
 module Curlybars

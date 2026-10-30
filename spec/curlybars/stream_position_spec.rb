@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Curlybars::StreamPosition do
   describe "#start" do
     it "is the line offset" do

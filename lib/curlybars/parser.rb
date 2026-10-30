@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'curlybars/token'
 
 require 'curlybars/node/root'

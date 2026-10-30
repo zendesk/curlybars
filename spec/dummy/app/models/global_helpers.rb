@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GlobalHelpers
   attr_reader :context
 

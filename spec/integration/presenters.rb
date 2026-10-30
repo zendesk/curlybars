@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'integration/presenters/baz_presenter'
 require 'integration/presenters/blog_presenter'
 require 'integration/presenters/item_presenter'

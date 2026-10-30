@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CurlybarsHelper
   def beautify
     "bold#{yield}italic"
