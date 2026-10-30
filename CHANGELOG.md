@@ -1,5 +1,15 @@
 ### Unreleased
 
+* Replace the RLTK lexer and parser with a hand-written one. Parsing is now linear in the template size
+  (GHSA-7f76-4vg9-4rcr), and Curlybars no longer depends on the `rltk` gem. Applications that require or patch
+  RLTK themselves must remove that code, or add `rltk` to their own Gemfile.
+* Custom processors now receive `Curlybars::Token` and `Curlybars::StreamPosition` objects instead of `RLTK::Token`
+  and `RLTK::StreamPosition`. They have the same readers.
+* The position `length` of `validate.partial_not_found`, `validate.self_referencing_partial`, and
+  `validate.partial_nesting_limit_reached` errors, and of `metadata[:inclusion_chain]` entries, now covers only the
+  `{{> partial}}` tag. When the tag was the first item of a template or block body, the length used to extend to the
+  end of that template or body.
+
 ### Curlybars 1.16.1
 
 * `Curlybars.reset` now also clears the memoized global helpers dependency tree. The tree is derived from

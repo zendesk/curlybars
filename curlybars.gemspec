@@ -34,8 +34,6 @@ Gem::Specification.new do |s|
 
   s.add_dependency("actionpack", ">= 7.2")
   s.add_dependency("activesupport", ">= 7.2")
-  s.add_dependency("ffi")
-  s.add_dependency("rltk")
 
   s.files = Dir.glob('lib/**/*.rb')
 end
