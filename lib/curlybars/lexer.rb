@@ -59,8 +59,10 @@ module Curlybars
     r(/}}/, :comment) { pop_state }
     r(/./m, :comment)
 
-    r(/{{~/) { push_state :curly; :TILDE_START }
-    r(/~}}/, :curly) { pop_state; :TILDE_END }
+    # The tilde operator strips whitespace from the adjacent text:
+    # `{{~` from the previous token and `~}}` from the next one.
+    r(/{{~/) { rstrip_previous_text; push_state :curly; :START }
+    r(/~}}/, :curly) { pop_state; lstrip_next_text; :END }
 
     r(/{{/) { push_state :curly; :START }
     r(/}}/, :curly) { pop_state; :END }
@@ -91,18 +93,19 @@ module Curlybars
 
     r(/\s/, :curly)
 
-    r(/.*?(?=\\|{{|\z)/m) { |text| [:TEXT, text] }
+    r(/.*?(?=\\|{{|\z)/m) { |text| [:TEXT, @tokens.length == @lstrip_index ? text.lstrip : text] }
 
     def initialize(string, file_name)
       @scanner = StringScanner.new(string)
       @file_name = file_name
       @states = [:default]
+      @tokens = []
+      @lstrip_index = nil
     end
 
     attr_reader :match
 
     def tokens
-      tokens = []
       stream_offset = 0
       line_number = 1
       line_offset = 0
@@ -117,7 +120,7 @@ module Curlybars
 
         if type
           position = StreamPosition.new(stream_offset, line_number, line_offset, text.length, @file_name)
-          tokens << Token.new(type, value, position)
+          @tokens << Token.new(type, value, position)
         end
 
         stream_offset += text.length
@@ -130,7 +133,7 @@ module Curlybars
         end
       end
 
-      tokens << Token::EOS
+      @tokens << Token::EOS
     end
 
     private
@@ -143,6 +146,19 @@ module Curlybars
     def pop_state
       @states.pop
       nil
+    end
+
+    def rstrip_previous_text
+      previous = @tokens.last
+      return unless previous&.type == :TEXT
+
+      @tokens[-1] = Token.new(:TEXT, previous.value.rstrip, previous.position)
+    end
+
+    # The rule calling this emits a token at index @tokens.length, so the
+    # following token lands at @tokens.length + 1.
+    def lstrip_next_text
+      @lstrip_index = @tokens.length + 1
     end
   end
 end

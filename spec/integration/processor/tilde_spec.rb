@@ -35,11 +35,9 @@ describe "tilde operator" do
     let(:presenter) { double(:presenter, dependency_tree: { curlybars: nil }) }
 
     it "runs even when 'run_processors' flag is set to false" do
-      allow(Curlybars::Processor::Tilde).to receive(:process!)
+      errors = Curlybars.validate(presenter.dependency_tree, "{{~curlybars~}}", run_processors: false)
 
-      Curlybars.validate(presenter.dependency_tree, "source", run_processors: false)
-
-      expect(Curlybars::Processor::Tilde).to have_received(:process!)
+      expect(errors).to be_empty
     end
   end
 end

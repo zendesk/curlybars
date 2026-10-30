@@ -138,8 +138,6 @@ module Curlybars
     def ast(source, identifier, run_processors:)
       tokens = Curlybars::Lexer.lex(source, identifier)
 
-      Curlybars::Processor::Tilde.process!(tokens, identifier)
-
       if run_processors
         Curlybars.configuration.custom_processors.each do |processor|
           processor.process!(tokens, identifier)
@@ -169,8 +167,6 @@ require 'curlybars/parser'
 require 'curlybars/position'
 require 'curlybars/generic'
 require 'curlybars/lexer'
-require 'curlybars/processor/token_factory'
-require 'curlybars/processor/tilde'
 require 'curlybars/error/lex'
 require 'curlybars/error/parse'
 require 'curlybars/error/compile'

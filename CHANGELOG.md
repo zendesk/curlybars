@@ -5,6 +5,8 @@
   RLTK themselves must remove that code, or add `rltk` to their own Gemfile.
 * Custom processors now receive `Curlybars::Token` and `Curlybars::StreamPosition` objects instead of `RLTK::Token`
   and `RLTK::StreamPosition`. They have the same readers.
+* `Curlybars::Processor::Tilde` is removed. The lexer now handles the `~` whitespace control itself, and emits `START`
+  and `END` tokens for `{{~` and `~}}`.
 * The position `length` of `validate.partial_not_found`, `validate.self_referencing_partial`, and
   `validate.partial_nesting_limit_reached` errors, and of `metadata[:inclusion_chain]` entries, now covers only the
   `{{> partial}}` tag. When the tag was the first item of a template or block body, the length used to extend to the
