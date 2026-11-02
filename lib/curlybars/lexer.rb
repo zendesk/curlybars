@@ -1,9 +1,42 @@
-require 'rltk/lexer'
+require 'strscan'
+require 'curlybars/token'
 
 # rubocop:disable Style/RegexpLiteral, Style/Semicolon
 module Curlybars
-  class Lexer < RLTK::Lexer
-    match_first
+  class Lexer
+    class Error < StandardError
+      attr_reader :stream_offset, :line_number, :line_offset, :remainder
+
+      def initialize(stream_offset, line_number, line_offset, remainder)
+        @stream_offset = stream_offset
+        @line_number = line_number
+        @line_offset = line_offset
+        @remainder = remainder
+        @match = nil
+        super("Unable to match string with any of the given rules: #{remainder}")
+      end
+    end
+
+    # Rules are tried in definition order and the first match wins.
+    # Each rule belongs to a state; the current state is the top of a stack
+    # that rule actions manipulate with push_state and pop_state.
+    # Actions receive the matched text and can read capture groups with
+    # @scanner[n].
+    Rule = Data.define(:pattern, :action)
+
+    @rules = Hash.new { |hash, state| hash[state] = [] }
+
+    class << self
+      attr_reader :rules
+
+      def r(pattern, state = :default, &action)
+        @rules[state] << Rule.new(pattern, action || proc {})
+      end
+
+      def lex(string, file_name = nil)
+        new(string, file_name).tokens
+      end
+    end
 
     # The following is an identifier Handlebars compliant
     # IDENTIFIER = '[A-Za-z_][0-9\w]*'
@@ -59,6 +92,58 @@ module Curlybars
     r(/\s/, :curly)
 
     r(/.*?(?=\\|{{|\z)/m) { |text| [:TEXT, text] }
+
+    def initialize(string, file_name)
+      @scanner = StringScanner.new(string)
+      @file_name = file_name
+      @states = [:default]
+    end
+
+    attr_reader :match
+
+    def tokens
+      tokens = []
+      stream_offset = 0
+      line_number = 1
+      line_offset = 0
+
+      until @scanner.eos?
+        text = nil
+        rule = self.class.rules[@states.last].detect { |candidate| text = @scanner.scan(candidate.pattern) }
+        raise Error.new(stream_offset, line_number, line_offset, @scanner.rest) unless rule
+
+        @match = text.match(rule.pattern)
+        type, value = instance_exec(text, &rule.action)
+
+        if type
+          position = StreamPosition.new(stream_offset, line_number, line_offset, text.length, @file_name)
+          tokens << Token.new(type, value, position)
+        end
+
+        stream_offset += text.length
+        newlines = text.count("\n")
+        if newlines > 0
+          line_number += newlines
+          line_offset = text.length - text.rindex("\n") - 1
+        else
+          line_offset += text.length
+        end
+      end
+
+      tokens << Token::EOS
+    end
+
+    private
+
+    def push_state(state)
+      @states.push(state)
+      nil
+    end
+
+    def pop_state
+      @states.pop
+      nil
+    end
   end
 end
 # rubocop:enable Style/RegexpLiteral, Style/Semicolon

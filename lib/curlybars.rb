@@ -146,9 +146,9 @@ module Curlybars
       end
 
       Curlybars::Parser.parse(tokens)
-    rescue RLTK::LexingError => lexing_error
+    rescue Curlybars::Lexer::Error => lexing_error
       raise Curlybars::Error::Lex.new(source, identifier, lexing_error)
-    rescue RLTK::NotInLanguage => not_in_language_error
+    rescue Curlybars::Parser::Error => not_in_language_error
       raise Curlybars::Error::Parse.new(source, not_in_language_error)
     end
   end

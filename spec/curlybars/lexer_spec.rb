@@ -83,6 +83,11 @@ describe Curlybars::Lexer do
       expect(literal_token.value).to eq '"string"'
     end
 
+    it "escapes interpolation and backslashes in the string" do
+      literal_token = lex("{{'\#{1+1}\\b'}}").detect { |token| token.type == :LITERAL }
+      expect(literal_token.value).to eq '"\#{1+1}\\\\b"'
+    end
+
     it "is resilient to whitespaces" do
       expect(lex("{{ '' }}")).to produce [:START, :LITERAL, :END]
     end
@@ -100,6 +105,11 @@ describe Curlybars::Lexer do
     it "returns the string between quotes" do
       literal_token = lex('{{"string"}}').detect { |token| token.type == :LITERAL }
       expect(literal_token.value).to eq '"string"'
+    end
+
+    it "escapes interpolation and backslashes in the string" do
+      literal_token = lex("{{\"\#{1+1}\\b\"}}").detect { |token| token.type == :LITERAL }
+      expect(literal_token.value).to eq '"\#{1+1}\\\\b"'
     end
 
     it "is resilient to whitespaces" do
@@ -414,7 +424,7 @@ describe Curlybars::Lexer do
     it "`path/../` raises an error" do
       expect do
         lex('{{path/../}}')
-      end.to raise_error(RLTK::LexingError)
+      end.to raise_error(Curlybars::Lexer::Error)
     end
   end
 

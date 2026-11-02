@@ -457,6 +457,16 @@ describe "{{> partial}}" do
       expect(chain.first.length).to eq(17)
     end
 
+    it "limits the call-site length to the partial tag when it starts a template", :aggregate_failures do
+      dependency_tree = {}
+
+      not_found_errors = Curlybars.validate(dependency_tree, "{{> nonexistent}} more", partial_resolver: resolver)
+      partial_errors = Curlybars.validate(dependency_tree, "{{> missing_ref}} more", partial_resolver: resolver)
+
+      expect(not_found_errors.first.position.length).to eq(17)
+      expect(partial_errors.first.metadata[:inclusion_chain].first.length).to eq(17)
+    end
+
     it "accumulates inclusion_chain through nested partials", :aggregate_failures do
       nested_resolver = lambda { |name|
         {

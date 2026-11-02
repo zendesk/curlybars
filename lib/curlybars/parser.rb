@@ -1,4 +1,4 @@
-require 'rltk/parser'
+require 'curlybars/token'
 
 require 'curlybars/node/root'
 require 'curlybars/node/template'
@@ -18,192 +18,247 @@ require 'curlybars/node/output'
 require 'curlybars/node/sub_expression'
 
 module Curlybars
-  class Parser < RLTK::Parser
-    start :root
+  # Recursive descent parser turning a token stream from Curlybars::Lexer into
+  # an AST of Curlybars::Node objects.
+  #
+  # Grammar (tokens in upper case, `?` optional, `*` zero or more):
+  #
+  #   root          := template? EOS
+  #   template      := item+
+  #   item          := TEXT
+  #                  | START HASH block
+  #                  | START GT path option* END
+  #                  | START path expression* option* END
+  #                  | START value END
+  #   block         := (IF | UNLESS) expression END body(IF | UNLESS)
+  #                  | (EACH | WITH) (path | subexpression) END body(EACH | WITH)
+  #                  | path expression* option* END body(path)
+  #   body(close)   := template? (START ELSE END template?)? START SLASH close END
+  #   option        := KEY expression
+  #   expression    := value | path | subexpression
+  #   value         := LITERAL | VARIABLE
+  #   path          := PATH
+  #   subexpression := LPAREN path expression* option* RPAREN
+  #
+  # Inside a block body, a template ends at `{{/` or `{{else`, which is why the
+  # parser looks one token past START before deciding to parse an item.
+  class Parser
+    class Error < StandardError
+      # The token that the parser could not accept.
+      attr_reader :current
 
-    production(:root, 'template?') { |template| Node::Root.new(template || VOID, pos(0)) }
-    production(:template, 'items') { |items| Node::Template.new(items || [], pos(0)) }
-
-    production(:items) do
-      clause('items item') { |items, item| items << Node::Item.new(item) }
-      clause('item') { |item| [Node::Item.new(item)] }
+      def initialize(current)
+        @current = current
+        super("Unexpected token #{current.type}")
+      end
     end
 
-    production(:item) do
-      clause('TEXT') { |text| Node::Text.new(text) }
+    EXPRESSION_START = [:LITERAL, :VARIABLE, :PATH, :LPAREN].freeze
 
-      clause('START HASH .path .expressions? .options? END
-               .template?
-             START SLASH .path END') do |helper, arguments, options, template, helperclose|
-        Node::BlockHelperElse.new(
-          helper,
-          arguments || [],
-          options || [],
-          template || VOID,
-          VOID,
-          helperclose,
-          pos(0)
-        )
+    def self.parse(tokens)
+      new(tokens).parse
+    end
+
+    def initialize(tokens)
+      @tokens = tokens
+      @index = 0
+    end
+
+    def parse
+      template = parse_template(in_block: false)
+      expect(:EOS)
+      if template
+        Node::Root.new(template, template.position)
+      else
+        Node::Root.new(VOID, StreamPosition::NULL)
       end
+    end
 
-      clause('START HASH .path .expressions? .options? END
-               .template?
-             START ELSE END
-               .template?
-             START SLASH .path END') do |helper, arguments, options, helper_template, else_template, helperclose|
+    private
+
+    def parse_template(in_block:)
+      first_index = @index
+      items = []
+      items << Node::Item.new(parse_item) while item_start?(in_block)
+      Node::Template.new(items, span(first_index)) unless items.empty?
+    end
+
+    def item_start?(in_block)
+      case peek.type
+      when :TEXT then true
+      when :START then !(in_block && [:SLASH, :ELSE].include?(peek(1).type))
+      else false
+      end
+    end
+
+    def parse_item
+      return Node::Text.new(advance.value) if peek.type == :TEXT
+
+      first_index = @index
+      expect(:START)
+
+      case peek.type
+      when :HASH
+        advance
+        parse_block(first_index)
+      when :GT
+        advance
+        path = parse_path
+        options = parse_options
+        expect(:END)
+        Node::Partial.new(path, options, span(first_index))
+      when :PATH
+        helper = parse_path
+        arguments = parse_expressions
+        options = parse_options
+        expect(:END)
+        Node::BlockHelperElse.new(helper, arguments, options, VOID, VOID, helper, span(first_index))
+      when :LITERAL
+        literal = parse_literal
+        expect(:END)
+        Node::Output.new(literal)
+      when :VARIABLE
+        variable = parse_variable
+        expect(:END)
+        Node::Output.new(variable)
+      else
+        raise Error, peek
+      end
+    end
+
+    def parse_block(first_index)
+      case peek.type
+      when :IF, :UNLESS
+        keyword = advance.type
+        expression = parse_expression
+        expect(:END)
+        template, else_template = parse_body { expect(keyword) }
+        node_class = keyword == :IF ? Node::IfElse : Node::UnlessElse
+        node_class.new(expression, template || VOID, else_template || VOID)
+      when :EACH, :WITH
+        keyword = advance.type
+        path = peek.type == :LPAREN ? parse_subexpression : parse_path
+        expect(:END)
+        template, else_template = parse_body { expect(keyword) }
+        node_class = keyword == :EACH ? Node::EachElse : Node::WithElse
+        node_class.new(path, template || VOID, else_template || VOID, span(first_index))
+      when :PATH
+        helper = parse_path
+        arguments = parse_expressions
+        options = parse_options
+        expect(:END)
+        template, else_template, helperclose = parse_body { parse_path }
         Node::BlockHelperElse.new(
           helper,
-          arguments || [],
-          options || [],
-          helper_template || VOID,
+          arguments,
+          options,
+          template || VOID,
           else_template || VOID,
           helperclose,
-          pos(0)
+          span(first_index)
         )
-      end
-
-      clause('START .path .expressions? .options? END') do |helper, arguments, options|
-        Node::BlockHelperElse.new(
-          helper,
-          arguments || [],
-          options || [],
-          VOID,
-          VOID,
-          helper,
-          pos(0)
-        )
-      end
-
-      clause('START .value END') do |value|
-        Node::Output.new(value)
-      end
-
-      clause('START HASH IF .expression END
-               .template?
-             START SLASH IF END') do |expression, if_template|
-        Node::IfElse.new(expression, if_template || VOID, VOID)
-      end
-
-      clause('START HASH IF .expression END
-               .template?
-             START ELSE END
-               .template?
-             START SLASH IF END') do |expression, if_template, else_template|
-        Node::IfElse.new(expression, if_template || VOID, else_template || VOID)
-      end
-
-      clause('START HASH UNLESS .expression END
-               .template?
-             START SLASH UNLESS END') do |expression, unless_template|
-        Node::UnlessElse.new(expression, unless_template || VOID, VOID)
-      end
-
-      clause('START HASH UNLESS .expression END
-               .template?
-             START ELSE END
-               .template?
-             START SLASH UNLESS END') do |expression, unless_template, else_template|
-        Node::UnlessElse.new(expression, unless_template || VOID, else_template || VOID)
-      end
-
-      clause('START HASH EACH .path END
-               .template?
-             START SLASH EACH END') do |path, each_template|
-        Node::EachElse.new(path, each_template || VOID, VOID, pos(0))
-      end
-
-      clause('START HASH EACH .subexpression END
-              .template?
-            START SLASH EACH END') do |subexpression, each_template|
-        Node::EachElse.new(subexpression, each_template || VOID, VOID, pos(0))
-      end
-
-      clause('START HASH EACH .path END
-               .template?
-             START ELSE END
-               .template?
-             START SLASH EACH END') do |path, each_template, else_template|
-        Node::EachElse.new(path, each_template || VOID, else_template || VOID, pos(0))
-      end
-
-      clause('START HASH EACH .subexpression END
-               .template?
-             START ELSE END
-               .template?
-             START SLASH EACH END') do |subexpression, each_template, else_template|
-        Node::EachElse.new(subexpression, each_template || VOID, else_template || VOID, pos(0))
-      end
-
-      clause('START HASH WITH .path END
-               .template?
-             START SLASH WITH END') do |path, with_template|
-        Node::WithElse.new(path, with_template || VOID, VOID, pos(0))
-      end
-
-      clause('START HASH WITH .subexpression END
-              .template?
-            START SLASH WITH END') do |subexpression, with_template|
-        Node::WithElse.new(subexpression, with_template || VOID, VOID, pos(0))
-      end
-
-      clause('START HASH WITH .path END
-               .template?
-             START ELSE END
-               .template?
-             START SLASH WITH END') do |path, with_template, else_template|
-        Node::WithElse.new(path, with_template || VOID, else_template || VOID, pos(0))
-      end
-
-      clause('START HASH WITH .subexpression END
-              .template?
-            START ELSE END
-              .template?
-            START SLASH WITH END') do |subexpression, with_template, else_template|
-        Node::WithElse.new(subexpression, with_template || VOID, else_template || VOID, pos(0))
-      end
-
-      clause('START GT .path .options? END') do |path, options|
-        Node::Partial.new(path, options || [], pos(0))
+      else
+        raise Error, peek
       end
     end
 
-    production(:options) do
-      clause('options option') { |options, option| options << option }
-      clause('option') { |option| [option] }
+    # Parses a block body up to and including its closing tag. The block
+    # parses the name that follows `{{/`, which is returned as the third
+    # element.
+    def parse_body
+      template = parse_template(in_block: true)
+      expect(:START)
+
+      if peek.type == :ELSE
+        advance
+        expect(:END)
+        else_template = parse_template(in_block: true)
+        expect(:START)
+      end
+
+      expect(:SLASH)
+      closing_name = yield
+      expect(:END)
+
+      [template, else_template, closing_name]
     end
 
-    production(:option, '.KEY .expression') do |key, expression|
-      Node::Option.new(key, expression)
+    def parse_options
+      options = []
+      options << Node::Option.new(advance.value, parse_expression) while peek.type == :KEY
+      options
     end
 
-    production(:expressions) do
-      clause('expressions expression') { |expressions, expression| expressions << expression }
-      clause('expression') { |expression| [expression] }
+    def parse_expressions
+      expressions = []
+      expressions << parse_expression while EXPRESSION_START.include?(peek.type)
+      expressions
     end
 
-    production(:expression) do
-      clause('value') { |value| value }
-      clause('path') { |path| path }
-      clause('subexpression') { |subexpression| subexpression }
+    def parse_expression
+      case peek.type
+      when :LITERAL then parse_literal
+      when :VARIABLE then parse_variable
+      when :PATH then parse_path
+      when :LPAREN then parse_subexpression
+      else raise Error, peek
+      end
     end
 
-    production(:value) do
-      clause('LITERAL') { |literal| Node::Literal.new(literal) }
-      clause('VARIABLE') { |variable| Node::Variable.new(variable, pos(0)) }
+    def parse_literal
+      token = expect(:LITERAL)
+      Node::Literal.new(token.value)
     end
 
-    production(:path, 'PATH') { |path| Node::Path.new(path, pos(0)) }
+    def parse_variable
+      token = expect(:VARIABLE)
+      Node::Variable.new(token.value, token.position)
+    end
 
-    production(:subexpression, 'LPAREN .path .expressions? .options? RPAREN') do |helper, arguments, options|
-      Node::SubExpression.new(
-        helper,
-        arguments || [],
-        options || [],
-        pos(0)
+    def parse_path
+      token = expect(:PATH)
+      Node::Path.new(token.value, token.position)
+    end
+
+    def parse_subexpression
+      first_index = @index
+      expect(:LPAREN)
+      helper = parse_path
+      arguments = parse_expressions
+      options = parse_options
+      expect(:RPAREN)
+      Node::SubExpression.new(helper, arguments, options, span(first_index))
+    end
+
+    # The position spanning from the token at `first_index` through the last
+    # token consumed.
+    def span(first_index)
+      start = @tokens[first_index].position
+      finish = @tokens[@index - 1].position
+      StreamPosition.new(
+        start.stream_offset,
+        start.line_number,
+        start.line_offset,
+        finish.stream_offset + finish.length - start.stream_offset,
+        start.file_name
       )
     end
 
-    finalize
+    def expect(type)
+      raise Error, peek unless peek.type == type
+
+      advance
+    end
+
+    def advance
+      token = peek
+      @index += 1
+      token
+    end
+
+    def peek(offset = 0)
+      @tokens[@index + offset] || Token::EOS
+    end
 
     VOID = Class.new do
       def compile
@@ -218,5 +273,6 @@ module Curlybars
         # Empty cache key.
       end
     end.new
+    private_constant :VOID
   end
 end
