@@ -9,6 +9,8 @@ module Curlybars
         if exception.current.type == :EOS
           message = "A block helper hasn't been closed properly"
           position = EOSPosition.new(source)
+        elsif exception.is_a?(Curlybars::Parser::ParseDepthExceeded)
+          message = "Blocks and subexpressions cannot be nested more than %d levels deep" % exception.limit
         else
           line_number = position.line_number
           line_offset = position.line_offset

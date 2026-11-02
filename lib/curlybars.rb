@@ -1,5 +1,6 @@
 require 'digest'
 require 'active_support/cache'
+require 'active_support/notifications'
 require 'active_support/core_ext/object/json'
 require 'curlybars/version'
 
@@ -137,15 +138,19 @@ module Curlybars
     def ast(source, identifier, run_processors:)
       tokens = Curlybars::Lexer.lex(source, identifier)
 
-      Curlybars::Processor::Tilde.process!(tokens, identifier)
-
       if run_processors
         Curlybars.configuration.custom_processors.each do |processor|
           processor.process!(tokens, identifier)
         end
       end
 
-      Curlybars::Parser.parse(tokens)
+      parser = Curlybars::Parser.new(tokens, depth_limit: configuration.parse_depth_limit)
+      payload = { identifier: identifier, depth_limit: parser.depth_limit }
+      ActiveSupport::Notifications.instrument("parse.curlybars", payload) do
+        parser.parse
+      ensure
+        payload[:max_depth] = parser.max_depth
+      end
     rescue Curlybars::Lexer::Error => lexing_error
       raise Curlybars::Error::Lex.new(source, identifier, lexing_error)
     rescue Curlybars::Parser::Error => not_in_language_error
@@ -163,7 +168,6 @@ require 'curlybars/position'
 require 'curlybars/generic'
 require 'curlybars/lexer'
 require 'curlybars/processor/token_factory'
-require 'curlybars/processor/tilde'
 require 'curlybars/error/lex'
 require 'curlybars/error/parse'
 require 'curlybars/error/compile'
