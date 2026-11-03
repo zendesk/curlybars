@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "processors" do
   let(:presenter) { double(:presenter, dependency_tree: { curlybars: nil }) }
   let(:processor) { double(:processor) }

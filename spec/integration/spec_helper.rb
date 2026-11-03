@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'integration/support/matcher'
 require 'integration/presenters'
 

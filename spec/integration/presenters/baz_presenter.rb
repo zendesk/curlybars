@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BazPresenter
   extend Curlybars::MethodWhitelist
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Curlybars::Processor::TokenFactory do
   let(:token_factory) do
     Class.new { extend Curlybars::Processor::TokenFactory }

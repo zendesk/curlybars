@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   root to: "dashboards#show"
   get "/articles/1", to: "articles#show"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "Curlybars.valid?" do
   it "returns true when the template has no validation errors" do
     expect(Curlybars.valid?({}, "Hello")).to be(true)

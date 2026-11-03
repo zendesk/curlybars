@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "Collection blocks", type: :request do
   before do
     Curlybars.configure do |config|

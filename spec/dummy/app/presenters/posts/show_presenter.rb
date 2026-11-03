@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Posts::ShowPresenter < Curlybars::Presenter
   include CurlybarsHelper
 

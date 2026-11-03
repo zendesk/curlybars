@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "{{!-- --}} and {{! }}" do
   let(:post) { double("post") }
   let(:presenter) { IntegrationTest::Presenter.new(double("view_context"), post: post) }

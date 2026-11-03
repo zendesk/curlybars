@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'integration/presenters/item_presenter'
 
 module IntegrationTest

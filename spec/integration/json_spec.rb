@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "{{json arg1}}" do
   let(:global_helpers_providers) { [IntegrationTest::GlobalHelperProvider.new] }
   let(:partial_provider) { nil }

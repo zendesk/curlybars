@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "Using Curlybars for the application layout", type: :request do
   example "A simple layout view in Curlybars" do
     get '/'
