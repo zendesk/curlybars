@@ -1,5 +1,7 @@
 ### Unreleased
 
+### Curlybars 1.17.0.pre
+
 * Replace the RLTK lexer and parser with a hand-written one. Parsing is now linear in the template size
   (GHSA-7f76-4vg9-4rcr), and Curlybars no longer depends on the `rltk` gem. Applications that require or patch
   RLTK themselves must remove that code, or add `rltk` to their own Gemfile.
