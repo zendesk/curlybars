@@ -1,5 +1,9 @@
 ### Unreleased
 
+### Curlybars 1.17.0
+
+* No changes since v1.17.0.pre.
+
 ### Curlybars 1.17.0.pre
 
 * Replace the RLTK lexer and parser with a hand-written one. Parsing is now linear in the template size
