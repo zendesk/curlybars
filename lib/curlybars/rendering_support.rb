@@ -3,8 +3,10 @@
 module Curlybars
   class RenderingSupport
     def initialize(timeout, contexts, variables, file_name, global_helpers_providers = [], cache = ->(key, &block) { block.call }, start_time: nil, depth: 0, partial_provider: nil)
-      @timeout = timeout
-      @start_time = start_time || Time.now
+      @start_time = start_time || Process.clock_gettime(:CLOCK_MONOTONIC)
+      @timeout = timeout&.to_f
+      @deadline = (@start_time + @timeout if @timeout)
+
       @depth = depth
 
       @contexts = contexts
@@ -26,8 +28,8 @@ module Curlybars
     end
 
     def check_timeout!
-      return unless timeout.present?
-      return unless (Time.now - start_time) > timeout
+      return unless deadline
+      return unless Process.clock_gettime(:CLOCK_MONOTONIC) > deadline
 
       message = "Rendering took too long (> #{timeout} seconds)"
       raise ::Curlybars::Error::Render.new('timeout', message, nil)
@@ -226,7 +228,7 @@ module Curlybars
 
     private
 
-    attr_reader :contexts, :variables, :cached_calls, :file_name, :global_helpers, :start_time, :timeout, :cache, :depth, :partial_provider
+    attr_reader :contexts, :variables, :cached_calls, :file_name, :global_helpers, :start_time, :timeout, :cache, :depth, :partial_provider, :deadline
 
     def instrument(meth, &)
       # Instruments only callables that give enough details (eg. methods)
