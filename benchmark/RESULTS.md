@@ -9,7 +9,7 @@ Each step is measured with benchmark-ips for 5.0 seconds, after a warmup of 2.0 
 |   |   |
 |---|---|
 | Date | 2026-11-20 |
-| Commit | v1.17.0 (9784610) |
+| Commit | cf3dc41 (with uncommitted changes) |
 | Curlybars | 1.17.0 |
 | Ruby | ruby 3.4.12 (2026-10-23 revision 366f5fdc00) +PRISM [arm64-darwin25] |
 | YJIT | disabled |
@@ -19,7 +19,6 @@ Each step is measured with benchmark-ips for 5.0 seconds, after a warmup of 2.0 
 | OS | Darwin 25.6.0 arm64 |
 | CPU | Apple M1 Pro (10 cores) |
 | Memory | 32 GB |
-| Benchmark commit | 25d0683 |
 
 ## Templates
 
@@ -35,12 +34,12 @@ The templates are in `benchmark/templates`, the partials in `benchmark/partials`
 
 | Step | small | medium | large |
 |------|--:|--:|--:|
-| Lex | 51.2 µs ± 0.3% | 108.6 µs ± 0.2% | 272.3 µs ± 0.2% |
-| Parse | 19.5 µs ± 0.5% | 40.0 µs ± 0.9% | 90.7 µs ± 0.2% |
-| Compile | 23.5 µs ± 0.7% | 89.5 µs ± 0.2% | 179.7 µs ± 0.2% |
-| Eval | 295.5 µs ± 0.6% | 585.5 µs ± 0.5% | 1.15 ms ± 0.6% |
-| Render | 58.7 µs ± 1.7% | 16.19 ms ± 1.6% | 52.33 ms ± 5.2% |
-| Render with ActionView | 80.5 µs ± 1.2% | 16.26 ms ± 1.6% | 52.21 ms ± 5.2% |
+| Lex | 51.5 µs ± 0.2% | 108.8 µs ± 0.2% | 272.9 µs ± 0.2% |
+| Parse | 19.5 µs ± 0.3% | 40.0 µs ± 0.6% | 91.1 µs ± 0.3% |
+| Compile | 23.5 µs ± 0.6% | 89.2 µs ± 0.2% | 180.4 µs ± 1.2% |
+| Eval | 295.6 µs ± 0.6% | 585.0 µs ± 0.5% | 1.15 ms ± 0.5% |
+| Render | 47.2 µs ± 2.0% | 14.90 ms ± 4.5% | 50.04 ms ± 5.0% |
+| Render with ActionView | 67.8 µs ± 1.9% | 14.78 ms ± 3.0% | 50.05 ms ± 5.0% |
 
 ## Allocations per call
 
@@ -50,8 +49,8 @@ The templates are in `benchmark/templates`, the partials in `benchmark/partials`
 | Parse | 79 | 157 | 338 |
 | Compile | 107 | 523 | 1,014 |
 | Eval | 322 | 617 | 1,172 |
-| Render | 320 | 45,413 | 94,133 |
-| Render with ActionView | 379 | 45,475 | 94,190 |
+| Render | 280 | 40,292 | 87,977 |
+| Render with ActionView | 339 | 40,357 | 88,031 |
 
 ## Steps
 

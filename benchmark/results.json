@@ -1,10 +1,10 @@
 {
   "format": 1,
-  "generated_at": "2026-11-20T16:11:10Z",
-  "ref": "v1.17.0",
-  "commit": "9784610",
-  "benchmark_commit": "25d0683",
-  "uncommitted_changes": false,
+  "generated_at": "2026-11-20T16:14:34Z",
+  "ref": null,
+  "commit": "cf3dc41",
+  "benchmark_commit": "cf3dc41",
+  "uncommitted_changes": true,
   "versions": {
     "curlybars": "1.17.0",
     "ruby": "3.4.12",
@@ -31,34 +31,34 @@
       "output_bytes": 188,
       "steps": {
         "lex": {
-          "seconds_per_call": 0.00005121,
-          "error_percent": 0.3,
+          "seconds_per_call": 0.00005152,
+          "error_percent": 0.2,
           "allocations": 354
         },
         "parse": {
-          "seconds_per_call": 0.0000195,
-          "error_percent": 0.5,
+          "seconds_per_call": 0.00001952,
+          "error_percent": 0.3,
           "allocations": 79
         },
         "compile": {
-          "seconds_per_call": 0.00002351,
-          "error_percent": 0.7,
+          "seconds_per_call": 0.00002348,
+          "error_percent": 0.6,
           "allocations": 107
         },
         "eval": {
-          "seconds_per_call": 0.0002955,
+          "seconds_per_call": 0.0002956,
           "error_percent": 0.6,
           "allocations": 322
         },
         "render": {
-          "seconds_per_call": 0.00005867,
-          "error_percent": 1.7,
-          "allocations": 320
+          "seconds_per_call": 0.00004724,
+          "error_percent": 2.0,
+          "allocations": 280
         },
         "render_with_action_view": {
-          "seconds_per_call": 0.00008054,
-          "error_percent": 1.2,
-          "allocations": 379
+          "seconds_per_call": 0.00006776,
+          "error_percent": 1.9,
+          "allocations": 339
         }
       }
     },
@@ -68,34 +68,34 @@
       "output_bytes": 13822,
       "steps": {
         "lex": {
-          "seconds_per_call": 0.0001086,
+          "seconds_per_call": 0.0001088,
           "error_percent": 0.2,
           "allocations": 774
         },
         "parse": {
-          "seconds_per_call": 0.00004,
-          "error_percent": 0.9,
+          "seconds_per_call": 0.00003999,
+          "error_percent": 0.6,
           "allocations": 157
         },
         "compile": {
-          "seconds_per_call": 0.00008948,
+          "seconds_per_call": 0.00008923,
           "error_percent": 0.2,
           "allocations": 523
         },
         "eval": {
-          "seconds_per_call": 0.0005855,
+          "seconds_per_call": 0.000585,
           "error_percent": 0.5,
           "allocations": 617
         },
         "render": {
-          "seconds_per_call": 0.01619,
-          "error_percent": 1.6,
-          "allocations": 45413
+          "seconds_per_call": 0.0149,
+          "error_percent": 4.5,
+          "allocations": 40292
         },
         "render_with_action_view": {
-          "seconds_per_call": 0.01626,
-          "error_percent": 1.6,
-          "allocations": 45475
+          "seconds_per_call": 0.01478,
+          "error_percent": 3.0,
+          "allocations": 40357
         }
       }
     },
@@ -105,34 +105,34 @@
       "output_bytes": 20423,
       "steps": {
         "lex": {
-          "seconds_per_call": 0.0002723,
+          "seconds_per_call": 0.0002729,
           "error_percent": 0.2,
           "allocations": 1935
         },
         "parse": {
-          "seconds_per_call": 0.00009072,
-          "error_percent": 0.2,
+          "seconds_per_call": 0.00009113,
+          "error_percent": 0.3,
           "allocations": 338
         },
         "compile": {
-          "seconds_per_call": 0.0001797,
-          "error_percent": 0.2,
+          "seconds_per_call": 0.0001804,
+          "error_percent": 1.2,
           "allocations": 1014
         },
         "eval": {
-          "seconds_per_call": 0.00115,
-          "error_percent": 0.6,
+          "seconds_per_call": 0.001148,
+          "error_percent": 0.5,
           "allocations": 1172
         },
         "render": {
-          "seconds_per_call": 0.05233,
-          "error_percent": 5.2,
-          "allocations": 94133
+          "seconds_per_call": 0.05004,
+          "error_percent": 5.0,
+          "allocations": 87977
         },
         "render_with_action_view": {
-          "seconds_per_call": 0.05221,
-          "error_percent": 5.2,
-          "allocations": 94190
+          "seconds_per_call": 0.05005,
+          "error_percent": 5.0,
+          "allocations": 88031
         }
       }
     }
