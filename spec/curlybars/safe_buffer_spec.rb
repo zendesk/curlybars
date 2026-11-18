@@ -18,7 +18,7 @@ describe Curlybars::SafeBuffer do
   end
 
   describe "#concat" do
-    it "accepts when (buffer length + the existing output lenght) <= output_limit" do
+    it "accepts when (buffer length + the existing output length) <= output_limit" do
       allow(configuration).to receive(:output_limit).and_return(10)
 
       buffer = Curlybars::SafeBuffer.new('*' * 5)
@@ -28,7 +28,7 @@ describe Curlybars::SafeBuffer do
       end.not_to raise_error
     end
 
-    it "raises when (buffer length + the existing output lenght) > output_limit" do
+    it "raises when (buffer length + the existing output length) > output_limit" do
       allow(configuration).to receive(:output_limit).and_return(10)
       buffer = Curlybars::SafeBuffer.new('*' * 10)
 
@@ -42,6 +42,35 @@ describe Curlybars::SafeBuffer do
 
       expect do
         Curlybars::SafeBuffer.new.concat('*' * 11)
+      end.to raise_error(Curlybars::Error::Render)
+    end
+  end
+
+  describe "#<<" do
+    it "accepts when (buffer length + the existing output length) <= output_limit" do
+      allow(configuration).to receive(:output_limit).and_return(10)
+
+      buffer = Curlybars::SafeBuffer.new('*' * 5)
+
+      expect do
+        buffer << ('*' * 5)
+      end.not_to raise_error
+    end
+
+    it "raises when (buffer length + the existing output length) > output_limit" do
+      allow(configuration).to receive(:output_limit).and_return(10)
+      buffer = Curlybars::SafeBuffer.new('*' * 10)
+
+      expect do
+        buffer << '*'
+      end.to raise_error(Curlybars::Error::Render)
+    end
+
+    it "raises when buffer length > output_limit" do
+      allow(configuration).to receive(:output_limit).and_return(10)
+
+      expect do
+        Curlybars::SafeBuffer.new << ('*' * 11)
       end.to raise_error(Curlybars::Error::Render)
     end
   end

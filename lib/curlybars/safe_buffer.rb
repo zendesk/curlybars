@@ -9,5 +9,6 @@ module Curlybars
       end
       super
     end
+    alias_method :<<, :concat
   end
 end
