@@ -181,7 +181,7 @@ describe "{{> partial}}" do
         {{> nested_outer}}
       HBS
 
-      rendering_context = { start_time: Time.now - 20, depth: 0 } # rubocop:disable Lint/UselessAssignment -- read by eval'd template via defined?(rendering_context)
+      rendering_context = { start_time: Process.clock_gettime(:CLOCK_MONOTONIC) - 20, depth: 0 } # rubocop:disable Lint/UselessAssignment -- read by eval'd template via defined?(rendering_context)
 
       expect { eval(template) }.to raise_error(Curlybars::Error::Render).with_message(/too long/)
     ensure
@@ -195,7 +195,7 @@ describe "{{> partial}}" do
         {{> card title="timeout"}}
       HBS
 
-      rendering_context = { start_time: Time.now - 20, depth: 0 } # rubocop:disable Lint/UselessAssignment -- read by eval'd template via defined?(rendering_context)
+      rendering_context = { start_time: Process.clock_gettime(:CLOCK_MONOTONIC) - 20, depth: 0 } # rubocop:disable Lint/UselessAssignment -- read by eval'd template via defined?(rendering_context)
 
       expect { eval(template) }.to raise_error(Curlybars::Error::Render)
     ensure
