@@ -108,7 +108,7 @@ describe Curlybars::RenderingSupport do
       expect(rendering.path('sub.method', rendering.position(0, 1))).to eq :method
     end
 
-    it "returns the length of a collection, when `lenght` is the last step" do
+    it "returns the length of a collection, when `length` is the last step" do
       allow_all_methods(presenter)
       single_element_presenter = double(:single_element_presenter)
       allow_all_methods(single_element_presenter)
