@@ -9,7 +9,7 @@ Each step is measured with benchmark-ips for 5.0 seconds, after a warmup of 2.0 
 |   |   |
 |---|---|
 | Date | 2026-11-20 |
-| Commit | bcbc92c (with uncommitted changes) |
+| Commit | 29b002b (with uncommitted changes) |
 | Curlybars | 1.17.0 |
 | Ruby | ruby 3.4.12 (2026-10-23 revision 366f5fdc00) +PRISM [arm64-darwin25] |
 | YJIT | disabled |
@@ -26,20 +26,20 @@ The templates are in `benchmark/templates`, the partials in `benchmark/partials`
 
 | Template | Source | Generated Ruby | Output |
 |----------|-------:|---------------:|-------:|
-| small | 251 B, 8 lines | 12,600 B, 421 lines | 188 B, 8 lines |
-| medium | 422 B, 11 lines | 24,408 B, 800 lines | 13,822 B, 382 lines |
-| large | 1,214 B, 39 lines | 46,021 B, 1,471 lines | 20,423 B, 642 lines |
+| small | 251 B, 8 lines | 12,017 B, 420 lines | 188 B, 8 lines |
+| medium | 422 B, 11 lines | 23,168 B, 796 lines | 13,822 B, 382 lines |
+| large | 1,214 B, 39 lines | 43,276 B, 1,457 lines | 20,423 B, 642 lines |
 
 ## Time per call
 
 | Step | small | medium | large |
 |------|--:|--:|--:|
-| Lex | 51.0 µs ± 0.3% | 107.7 µs ± 0.2% | 270.7 µs ± 0.1% |
-| Parse | 19.3 µs ± 0.5% | 39.5 µs ± 0.3% | 90.5 µs ± 0.3% |
-| Compile | 23.5 µs ± 0.6% | 89.1 µs ± 0.2% | 180.1 µs ± 0.9% |
-| Eval | 297.9 µs ± 1.5% | 587.6 µs ± 0.6% | 1.15 ms ± 0.5% |
-| Render | 47.1 µs ± 2.5% | 14.18 ms ± 2.8% | 49.93 ms ± 5.0% |
-| Render with ActionView | 66.6 µs ± 1.6% | 14.27 ms ± 2.9% | 50.13 ms ± 5.0% |
+| Lex | 50.9 µs ± 0.2% | 107.4 µs ± 0.2% | 270.1 µs ± 0.2% |
+| Parse | 19.4 µs ± 0.3% | 39.5 µs ± 0.2% | 90.8 µs ± 0.2% |
+| Compile | 26.1 µs ± 0.1% | 99.0 µs ± 1.2% | 187.0 µs ± 0.2% |
+| Eval | 269.3 µs ± 1.3% | 525.8 µs ± 1.1% | 1.01 ms ± 1.4% |
+| Render | 37.4 µs ± 0.3% | 10.55 ms ± 1.1% | 44.03 ms ± 0.0% |
+| Render with ActionView | 57.4 µs ± 0.3% | 10.61 ms ± 1.1% | 43.94 ms ± 0.0% |
 
 ## Allocations per call
 
@@ -47,10 +47,10 @@ The templates are in `benchmark/templates`, the partials in `benchmark/partials`
 |------|--:|--:|--:|
 | Lex | 354 | 774 | 1,935 |
 | Parse | 79 | 157 | 338 |
-| Compile | 107 | 523 | 1,014 |
-| Eval | 322 | 617 | 1,172 |
-| Render | 280 | 40,301 | 87,982 |
-| Render with ActionView | 339 | 40,357 | 88,028 |
+| Compile | 175 | 668 | 1,321 |
+| Eval | 196 | 351 | 605 |
+| Render | 228 | 28,449 | 65,280 |
+| Render with ActionView | 287 | 28,507 | 65,338 |
 
 ## Steps
 
