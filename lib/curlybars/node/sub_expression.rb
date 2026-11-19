@@ -18,29 +18,25 @@ module Curlybars
 
         # NOTE: the following is a heredoc string, representing the ruby code fragment
         # outputted by this node.
-        <<-RUBY
-          ::Module.new do
-            def self.exec(contexts, rendering)
-              rendering.check_timeout!
+        CompiledMethods.define("sub_expression", "contexts, rendering", <<-RUBY)
+          rendering.check_timeout!
 
-              -> {
-                options = ::ActiveSupport::HashWithIndifferentAccess.new
-                #{compiled_options}
+          -> {
+            options = ::ActiveSupport::HashWithIndifferentAccess.new
+            #{compiled_options}
 
-                arguments = []
-                #{compiled_arguments}
+            arguments = []
+            #{compiled_arguments}
 
-                helper = #{helper.compile}
-                helper_position = rendering.position(#{helper.position.line_number},
-                  #{helper.position.line_offset})
+            helper = #{helper.compile}
+            helper_position = rendering.position(#{helper.position.line_number},
+              #{helper.position.line_offset})
 
-                options[:this] = contexts.last
+            options[:this] = contexts.last
 
-                rendering.call(helper, #{helper.path.inspect}, helper_position,
-                  arguments, options)
-              }
-            end
-          end.exec(contexts, rendering)
+            rendering.call(helper, #{helper.path.inspect}, helper_position,
+              arguments, options)
+          }
         RUBY
       end
 
