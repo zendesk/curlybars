@@ -1,0 +1,141 @@
+{
+  "format": 1,
+  "generated_at": "2026-11-20T15:47:19Z",
+  "ref": "v1.16.1",
+  "commit": "dcf80ae",
+  "benchmark_commit": "b3ff047",
+  "uncommitted_changes": false,
+  "versions": {
+    "curlybars": "1.16.1",
+    "ruby": "3.4.12",
+    "ruby_description": "ruby 3.4.12 (2026-10-23 revision 366f5fdc00) +PRISM [arm64-darwin25]",
+    "yjit": false,
+    "actionview": "8.1.3.1",
+    "activesupport": "8.1.3.1",
+    "benchmark_ips": "2.15.1"
+  },
+  "machine": {
+    "os": "Darwin 25.6.0 arm64",
+    "cpu": "Apple M1 Pro",
+    "cores": 10,
+    "memory_gb": 32
+  },
+  "settings": {
+    "warmup_seconds": 2.0,
+    "time_seconds": 5.0
+  },
+  "templates": {
+    "small": {
+      "source_bytes": 251,
+      "generated_ruby_bytes": 12600,
+      "output_bytes": 188,
+      "steps": {
+        "lex": {
+          "seconds_per_call": 0.0001505,
+          "error_percent": 0.4,
+          "allocations": 981
+        },
+        "parse": {
+          "seconds_per_call": 0.0002484,
+          "error_percent": 0.2,
+          "allocations": 2132
+        },
+        "compile": {
+          "seconds_per_call": 0.00002217,
+          "error_percent": 0.8,
+          "allocations": 120
+        },
+        "eval": {
+          "seconds_per_call": 0.0002965,
+          "error_percent": 2.0,
+          "allocations": 322
+        },
+        "render": {
+          "seconds_per_call": 0.00006129,
+          "error_percent": 2.2,
+          "allocations": 360
+        },
+        "render_with_action_view": {
+          "seconds_per_call": 0.00008131,
+          "error_percent": 1.5,
+          "allocations": 419
+        }
+      }
+    },
+    "medium": {
+      "source_bytes": 422,
+      "generated_ruby_bytes": 24408,
+      "output_bytes": 13822,
+      "steps": {
+        "lex": {
+          "seconds_per_call": 0.0003298,
+          "error_percent": 0.2,
+          "allocations": 2175
+        },
+        "parse": {
+          "seconds_per_call": 0.0005389,
+          "error_percent": 1.1,
+          "allocations": 4513
+        },
+        "compile": {
+          "seconds_per_call": 0.00009473,
+          "error_percent": 0.1,
+          "allocations": 665
+        },
+        "eval": {
+          "seconds_per_call": 0.0005897,
+          "error_percent": 0.6,
+          "allocations": 617
+        },
+        "render": {
+          "seconds_per_call": 0.0161,
+          "error_percent": 3.2,
+          "allocations": 50337
+        },
+        "render_with_action_view": {
+          "seconds_per_call": 0.01612,
+          "error_percent": 3.2,
+          "allocations": 50392
+        }
+      }
+    },
+    "large": {
+      "source_bytes": 1214,
+      "generated_ruby_bytes": 46021,
+      "output_bytes": 20423,
+      "steps": {
+        "lex": {
+          "seconds_per_call": 0.0008969,
+          "error_percent": 1.0,
+          "allocations": 5760
+        },
+        "parse": {
+          "seconds_per_call": 0.001247,
+          "error_percent": 1.4,
+          "allocations": 10175
+        },
+        "compile": {
+          "seconds_per_call": 0.0001862,
+          "error_percent": 0.2,
+          "allocations": 1254
+        },
+        "eval": {
+          "seconds_per_call": 0.001156,
+          "error_percent": 0.3,
+          "allocations": 1172
+        },
+        "render": {
+          "seconds_per_call": 0.0529,
+          "error_percent": 5.3,
+          "allocations": 101622
+        },
+        "render_with_action_view": {
+          "seconds_per_call": 0.05301,
+          "error_percent": 5.3,
+          "allocations": 101679
+        }
+      }
+    }
+  },
+  "skipped_templates": []
+}
