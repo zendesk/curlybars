@@ -1,0 +1,8 @@
+{{#with article}}
+  <article class="article">
+    <h1>{{title}}</h1>
+    <p class="meta">{{t "by"}} {{author.name}}</p>
+    {{#if featured}}<span class="badge">{{t "featured"}}</span>{{/if}}
+    <div class="body">{{body}}</div>
+  </article>
+{{/with}}

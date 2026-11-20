@@ -5,6 +5,17 @@ In order to keep the Curlybars code base nice and tidy, please observe these bes
 - Use the coding style already present in the code base.
 - Make your commit messages precise and to the point. Add a short summary (50 chars max) followed by a blank line and then a longer description, if necessary, e.g.
 
+### Benchmarks
+`bundle exec rake benchmark` measures lexing, parsing, compiling, `eval` and rendering of the templates in `benchmark/templates`, both directly and through ActionView. It takes a few minutes, and writes:
+
+- [`benchmark/RESULTS.md`](benchmark/RESULTS.md): the results, and the machine and versions they were generated on.
+- `benchmark/results.json`: the same results in a machine-readable form.
+- [`benchmark/HISTORY.md`](benchmark/HISTORY.md): charts and tables of every version of `results.json` in the git history, plus the new one. `bundle exec rake benchmark:history` regenerates it without running the benchmark.
+
+To run the current benchmark against an earlier version, e.g. a release tag, use `bundle exec rake 'benchmark:ref[v1.16.1]'`. Templates that the version can't render are skipped (Curlybars 1.15.0 has no partial providers, so it only renders the small template).
+
+Times depend on the machine, so `HISTORY.md` only compares them between runs on the same machine. Allocations per call don't depend on the machine. To see the effect of a change, run the benchmark before and after it on the same machine, and commit the three files with the change.
+
 ### Releasing a new version
 A new version is published to RubyGems.org every time a change to `version.rb` is pushed to the `main` branch.
 In short, follow these steps:

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+gem "benchmark-ips"
 gem "bundler"
 gem "byebug"
 gem "parallel"
