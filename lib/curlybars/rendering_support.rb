@@ -149,6 +149,48 @@ module Curlybars
       end
     end
 
+    # The block passed as `fn` and `inverse` to helpers used without a block,
+    # e.g. `{{helper}}`.
+    EMPTY_BLOCK = ->(**) { ::Curlybars::SafeBuffer.new }
+    private_constant :EMPTY_BLOCK
+
+    # Renders `{{helper ...}}` or `{{#helper ...}}...{{else}}...{{/helper}}`
+    # into `buffer`. `fn_block` and `inverse_block` are the compiled blocks, or
+    # `nil` when there is no block.
+    #
+    # The parameters are in the order the generated code evaluates them:
+    # options, then arguments, then the helper.
+    def render_helper(buffer, option_hashes, arguments, helper, helper_path, line_number, line_offset, fn_block, inverse_block)
+      options = helper_options(option_hashes)
+      options[:fn] = fn_block || EMPTY_BLOCK
+      options[:inverse] = inverse_block || EMPTY_BLOCK
+      options[:this] = contexts.last
+
+      result = call(helper, helper_path, position(line_number, line_offset), arguments, options, &options[:fn])
+
+      buffer.concat(result.to_s) unless presenter?(result) || presenter_collection?(result)
+    end
+
+    # Calls the helper of a subexpression, e.g. `(helper ...)`, and returns its
+    # result.
+    def call_subexpression(option_hashes, arguments, helper, helper_path, line_number, line_offset)
+      options = helper_options(option_hashes)
+      options[:this] = contexts.last
+
+      call(helper, helper_path, position(line_number, line_offset), arguments, options)
+    end
+
+    # Renders the block of a block helper (its `fn` or `inverse`) into a new
+    # buffer, with `vars` available as `@variables`.
+    def capture(vars)
+      variables.push(vars.symbolize_keys)
+      buffer = ::Curlybars::SafeBuffer.new
+      yield buffer
+      buffer
+    ensure
+      variables.pop
+    end
+
     def position(line_number, line_offset)
       Curlybars::Position.new(file_name, line_number, line_offset)
     end
@@ -226,6 +268,10 @@ module Curlybars
     private
 
     attr_reader :contexts, :variables, :cached_calls, :file_name, :global_helpers, :start_time, :timeout, :cache, :depth, :partial_provider, :deadline
+
+    def helper_options(option_hashes)
+      ::ActiveSupport::HashWithIndifferentAccess.new.merge!(*option_hashes)
+    end
 
     def instrument(meth, &)
       # Instruments only callables that give enough details (eg. methods)

@@ -8,13 +8,8 @@ module Curlybars
       end
 
       def compile
-        compiled_arguments = arguments.map do |argument|
-          "arguments.push(rendering.cached_call(#{argument.compile}))"
-        end.join("\n")
-
-        compiled_options = options.map do |option|
-          "options.merge!(#{option.compile})"
-        end.join("\n")
+        compiled_options = options.map { |option| option.compile.strip }.join(", ")
+        compiled_arguments = arguments.map { |argument| "rendering.cached_call(#{argument.compile.strip})" }.join(", ")
 
         # NOTE: the following is a heredoc string, representing the ruby code fragment
         # outputted by this node.
@@ -22,20 +17,9 @@ module Curlybars
           rendering.check_timeout!
 
           -> {
-            options = ::ActiveSupport::HashWithIndifferentAccess.new
-            #{compiled_options}
-
-            arguments = []
-            #{compiled_arguments}
-
-            helper = #{helper.compile}
-            helper_position = rendering.position(#{helper.position.line_number},
-              #{helper.position.line_offset})
-
-            options[:this] = contexts.last
-
-            rendering.call(helper, #{helper.path.inspect}, helper_position,
-              arguments, options)
+            rendering.call_subexpression([#{compiled_options}], [#{compiled_arguments}],
+              #{helper.compile.strip}, #{helper.path.inspect},
+              #{helper.position.line_number}, #{helper.position.line_offset})
           }
         RUBY
       end
