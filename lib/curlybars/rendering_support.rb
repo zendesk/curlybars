@@ -207,17 +207,14 @@ module Curlybars
     def render_partial(source, name, options)
       return "" if depth >= ::Curlybars.configuration.partial_nesting_limit
 
-      compiled = ::Curlybars.compile(source, "partial:#{name}")
+      partial = ::Curlybars.partial_cache.fetch("partial:#{name}", source)
 
-      eval_source = <<-RUBY
-        rendering_context = { start_time: @start_time, depth: @depth + 1 }
-        presenter = ::Curlybars::PartialPresenter.new(nil, options)
-        global_helpers_providers = @global_helpers_providers
-        partial_provider = @partial_provider
-        #{compiled}
-      RUBY
-
-      eval(eval_source) # rubocop:disable Security/Eval -- eval is the established compilation pattern for the whole engine
+      partial.call(
+        { start_time: @start_time, depth: @depth + 1 },
+        ::Curlybars::PartialPresenter.new(nil, options),
+        @global_helpers_providers,
+        @partial_provider
+      )
     rescue Curlybars::Error::Render => e
       raise if e.id == 'render.timeout' || e.id == 'render.output_too_long' || e.id == 'render.nesting_too_deep'
 
