@@ -8,61 +8,16 @@ module Curlybars
       def compile
         check_open_and_close_elements(helper, helperclose, Curlybars::Error::Compile)
 
-        compiled_arguments = arguments.map do |argument|
-          "arguments.push(rendering.cached_call(#{argument.compile}))"
-        end.join("\n")
-
-        compiled_options = options.map do |option|
-          "options.merge!(#{option.compile})"
-        end.join("\n")
+        compiled_options = options.map { |option| option.compile.strip }.join(", ")
+        compiled_arguments = arguments.map { |argument| "rendering.cached_call(#{argument.compile.strip})" }.join(", ")
 
         # NOTE: the following is a heredoc string, representing the ruby code fragment
         # outputted by this node.
         <<-RUBY
-          options = ::ActiveSupport::HashWithIndifferentAccess.new
-          #{compiled_options}
-
-          arguments = []
-          #{compiled_arguments}
-
-          helper = #{helper.compile}
-          helper_position = rendering.position(#{helper.position.line_number},
-            #{helper.position.line_offset})
-
-          options[:fn] = ->(**vars) do
-            variables.push(vars.symbolize_keys)
-            outer_buffer = buffer
-            begin
-              buffer = ::Curlybars::SafeBuffer.new
-              #{helper_template.compile}
-              buffer
-            ensure
-              buffer = outer_buffer
-              variables.pop
-            end
-          end
-
-          options[:inverse] = ->(**vars) do
-            variables.push(vars.symbolize_keys)
-            outer_buffer = buffer
-            begin
-              buffer = ::Curlybars::SafeBuffer.new
-              #{else_template.compile}
-              buffer
-            ensure
-              buffer = outer_buffer
-              variables.pop
-            end
-          end
-
-          options[:this] = contexts.last
-
-          result = rendering.call(helper, #{helper.path.inspect}, helper_position,
-            arguments, options, &options[:fn])
-
-          unless rendering.presenter?(result) || rendering.presenter_collection?(result)
-            buffer.concat(result.to_s)
-          end
+          rendering.render_helper(buffer, [#{compiled_options}], [#{compiled_arguments}],
+            #{helper.compile.strip}, #{helper.path.inspect},
+            #{helper.position.line_number}, #{helper.position.line_offset},
+            #{compile_block(helper_template)}, #{compile_block(else_template)})
         RUBY
       end
 
@@ -111,6 +66,15 @@ module Curlybars
       end
 
       private
+
+      # Templates compile to `nil` when empty (see `Parser::VOID`), in which
+      # case `RenderingSupport#render_helper` uses an empty block.
+      def compile_block(template)
+        compiled = template.compile
+        return "nil" if compiled.nil?
+
+        "->(**vars) { rendering.capture(vars) { |buffer| #{compiled} } }"
+      end
 
       def check_open_and_close_elements(helper, helperclose, error_class)
         return unless helper.path != helperclose.path
