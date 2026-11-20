@@ -16,10 +16,11 @@ module Curlybars
   def self.reset
     @configuration = Configuration.new
     @global_helpers_dependency_tree = nil
+    @partial_cache = nil
   end
 
   class Configuration
-    attr_accessor :presenters_namespace, :nesting_limit, :traversing_limit, :output_limit, :rendering_timeout, :custom_processors, :compiler_transformers, :global_helpers_provider_classes, :cache, :partial_nesting_limit, :partial_provider_class, :parse_depth_limit
+    attr_accessor :presenters_namespace, :nesting_limit, :traversing_limit, :output_limit, :rendering_timeout, :custom_processors, :compiler_transformers, :global_helpers_provider_classes, :cache, :partial_nesting_limit, :partial_provider_class, :parse_depth_limit, :partial_cache_size
 
     def initialize
       @presenters_namespace = ''
@@ -34,6 +35,7 @@ module Curlybars
       @cache = ->(key, &block) { block.call }
       @partial_nesting_limit = 3
       @partial_provider_class = nil
+      @partial_cache_size = 1000
     end
   end
 end
