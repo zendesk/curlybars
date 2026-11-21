@@ -4,6 +4,17 @@ module Curlybars
   module Node
     Root = Struct.new(:template, :position) do
       def compile
+        template_call, definitions = CompiledMethods.collect { template.compile }
+
+        # An empty template compiles to nothing, so there's no method to call.
+        compiled_template = if template_call
+          <<-RUBY
+            ::Module.new do
+              #{definitions}
+            end.#{template_call}
+          RUBY
+        end
+
         # NOTE: the following is a heredoc string, representing the ruby code fragment
         # outputted by this node.
         <<-RUBY
@@ -22,7 +33,7 @@ module Curlybars
             partial_provider: partial_provider
           )
           buffer = ::Curlybars::SafeBuffer.new
-          #{template.compile}
+          #{compiled_template}
           buffer
         RUBY
       end

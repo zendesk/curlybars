@@ -1,0 +1,11 @@
+<h1>{{site.name}}</h1>
+{{#each articles}}
+  <article class="{{#if featured}}featured{{else}}normal{{/if}}">
+    <h2>{{link_to title url class="title"}}</h2>
+    <p>{{summary}} {{> byline author=author}}</p>
+    <span>{{t "comments"}}: {{comments.length}}</span>
+    {{#each comments}}
+      <div>{{body}} — {{author.name}} ({{created_at}}) #{{@index}}{{#if @last}} last{{/if}}</div>
+    {{/each}}
+  </article>
+{{/each}}

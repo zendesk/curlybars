@@ -1,0 +1,6 @@
+<div class="card{{#if article.featured}} featured{{/if}}">
+  <a href="{{article.url}}" title="{{category}} / {{section}}">{{article.title}}</a>
+  {{> byline author=article.author}}
+  <span class="votes">{{article.votes}} {{t "votes"}}</span>
+  <p>{{article.summary}}</p>
+</div>

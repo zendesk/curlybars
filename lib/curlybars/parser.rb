@@ -2,6 +2,7 @@
 
 require 'curlybars/token'
 
+require 'curlybars/node/compiled_methods'
 require 'curlybars/node/root'
 require 'curlybars/node/template'
 require 'curlybars/node/item'

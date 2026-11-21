@@ -128,6 +128,12 @@ module Curlybars
 
     attr_writer :cache
 
+    # The process-local cache of compiled partials, sized by
+    # `configuration.partial_cache_size` when first used.
+    def partial_cache
+      @partial_cache ||= PartialCache.new(configuration.partial_cache_size)
+    end
+
     private
 
     def transformed_source(source, identifier)
@@ -165,6 +171,7 @@ require 'curlybars/safe_buffer'
 require 'curlybars/serialization_guard'
 require 'curlybars/configuration'
 require 'curlybars/rendering_support'
+require 'curlybars/partial_cache'
 require 'curlybars/parser'
 require 'curlybars/position'
 require 'curlybars/generic'

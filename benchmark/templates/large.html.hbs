@@ -1,0 +1,39 @@
+{{> header title=site.name tagline=(truncate (concat site.name (concat " — " site.tagline)) 40)}}
+<main class="{{#if (eq site.layout "grid")}}grid{{else}}list{{/if}}">
+  {{#with site}}
+    <h1>{{name}}</h1>
+    <p>{{tagline}}</p>
+  {{/with}}
+
+  {{#if_any promoted}}
+    <aside class="promoted">
+      <h2>{{t "promoted"}} ({{@count}})</h2>
+      {{#each promoted}}
+        <p>{{#emphasize}}{{link_to title url class="promoted-link"}}{{/emphasize}} {{> byline author=author}}</p>
+      {{/each}}
+    </aside>
+  {{else}}
+    <p>{{t "no_articles"}}</p>
+  {{/if_any}}
+
+  {{#each categories}}
+    <section class="category" id="category-{{@index}}">
+      <h2>{{name}}</h2>
+      {{#each sections}}
+        <div class="section{{#if @first}} first{{/if}}{{#if @last}} last{{/if}}">
+          <h3>{{link_to name url class="section-link"}}</h3>
+          {{#unless archived}}
+            {{#each articles}}
+              {{> article_card article=this section=../name category=../../name}}
+            {{else}}
+              <p>{{t "no_articles"}}</p>
+            {{/each}}
+          {{else}}
+            <p>Archived</p>
+          {{/unless}}
+        </div>
+      {{/each}}
+    </section>
+  {{/each}}
+</main>
+{{> footer}}

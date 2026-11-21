@@ -7,13 +7,7 @@ module Curlybars
         # NOTE: the following is a heredoc string, representing the ruby code fragment
         # outputted by this node.
         <<-RUBY
-          -> {
-            position = rendering.position(
-              #{position.line_number},
-              #{position.line_offset}
-            )
-            rendering.variable(#{variable.inspect}, position)
-          }
+          -> { rendering.variable(#{variable.inspect}, rendering.position(#{position.line_number}, #{position.line_offset})) }
         RUBY
       end
 
