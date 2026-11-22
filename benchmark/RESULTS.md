@@ -9,7 +9,7 @@ Each step is measured with benchmark-ips for 5.0 seconds, after a warmup of 2.0 
 |   |   |
 |---|---|
 | Date | 2026-11-20 |
-| Commit | v1.17.0 (9784610) |
+| Commit | 2ed8607 |
 | Curlybars | 1.17.0 |
 | Ruby | ruby 3.4.12 (2026-10-23 revision 366f5fdc00) +PRISM [arm64-darwin25] |
 | YJIT | disabled |
@@ -19,7 +19,6 @@ Each step is measured with benchmark-ips for 5.0 seconds, after a warmup of 2.0 
 | OS | Darwin 25.6.0 arm64 |
 | CPU | Apple M1 Pro (10 cores) |
 | Memory | 32 GB |
-| Benchmark commit | 25d0683 |
 
 ## Templates
 
@@ -27,20 +26,20 @@ The templates are in `benchmark/templates`, the partials in `benchmark/partials`
 
 | Template | Source | Generated Ruby | Output |
 |----------|-------:|---------------:|-------:|
-| small | 251 B, 8 lines | 12,600 B, 421 lines | 188 B, 8 lines |
-| medium | 422 B, 11 lines | 24,408 B, 800 lines | 13,822 B, 382 lines |
-| large | 1,214 B, 39 lines | 46,021 B, 1,471 lines | 20,423 B, 642 lines |
+| small | 251 B, 8 lines | 6,300 B, 192 lines | 188 B, 8 lines |
+| medium | 422 B, 11 lines | 13,679 B, 406 lines | 13,822 B, 382 lines |
+| large | 1,214 B, 39 lines | 29,385 B, 842 lines | 20,423 B, 642 lines |
 
 ## Time per call
 
 | Step | small | medium | large |
 |------|--:|--:|--:|
-| Lex | 51.2 µs ± 0.3% | 108.6 µs ± 0.2% | 272.3 µs ± 0.2% |
-| Parse | 19.5 µs ± 0.5% | 40.0 µs ± 0.9% | 90.7 µs ± 0.2% |
-| Compile | 23.5 µs ± 0.7% | 89.5 µs ± 0.2% | 179.7 µs ± 0.2% |
-| Eval | 295.5 µs ± 0.6% | 585.5 µs ± 0.5% | 1.15 ms ± 0.6% |
-| Render | 58.7 µs ± 1.7% | 16.19 ms ± 1.6% | 52.33 ms ± 5.2% |
-| Render with ActionView | 80.5 µs ± 1.2% | 16.26 ms ± 1.6% | 52.21 ms ± 5.2% |
+| Lex | 51.0 µs ± 0.3% | 108.2 µs ± 0.3% | 270.8 µs ± 0.3% |
+| Parse | 19.7 µs ± 1.4% | 39.8 µs ± 0.4% | 91.0 µs ± 0.3% |
+| Compile | 23.2 µs ± 1.8% | 93.8 µs ± 0.3% | 184.3 µs ± 0.4% |
+| Eval | 129.6 µs ± 1.3% | 289.2 µs ± 1.2% | 656.0 µs ± 1.1% |
+| Render | 36.9 µs ± 0.3% | 4.34 ms ± 1.3% | 7.82 ms ± 2.3% |
+| Render with ActionView | 57.7 µs ± 1.3% | 4.39 ms ± 1.3% | 7.86 ms ± 2.4% |
 
 ## Allocations per call
 
@@ -48,10 +47,10 @@ The templates are in `benchmark/templates`, the partials in `benchmark/partials`
 |------|--:|--:|--:|
 | Lex | 354 | 774 | 1,935 |
 | Parse | 79 | 157 | 338 |
-| Compile | 107 | 523 | 1,014 |
-| Eval | 322 | 617 | 1,172 |
-| Render | 320 | 45,413 | 94,133 |
-| Render with ActionView | 379 | 45,475 | 94,190 |
+| Compile | 182 | 679 | 1,354 |
+| Eval | 81 | 167 | 407 |
+| Render | 225 | 23,587 | 39,598 |
+| Render with ActionView | 284 | 23,646 | 39,652 |
 
 ## Steps
 
