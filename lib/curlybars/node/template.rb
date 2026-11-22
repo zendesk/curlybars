@@ -6,15 +6,7 @@ module Curlybars
       def compile
         compiled_items = items.map(&:compile).join("\n")
 
-        # NOTE: the following is a heredoc string, representing the ruby code fragment
-        # outputted by this node.
-        <<-RUBY
-          ::Module.new do
-            def self.exec(contexts, rendering, variables, buffer)
-              #{compiled_items}
-            end
-          end.exec(contexts, rendering, variables, buffer)
-        RUBY
+        CompiledMethods.define("template", "contexts, rendering, variables, buffer", compiled_items)
       end
 
       def validate(branches, context: nil)

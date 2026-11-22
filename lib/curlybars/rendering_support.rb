@@ -3,8 +3,10 @@
 module Curlybars
   class RenderingSupport
     def initialize(timeout, contexts, variables, file_name, global_helpers_providers = [], cache = ->(key, &block) { block.call }, start_time: nil, depth: 0, partial_provider: nil)
-      @timeout = timeout
-      @start_time = start_time || Time.now
+      @start_time = start_time || Process.clock_gettime(:CLOCK_MONOTONIC)
+      @timeout = timeout&.to_f
+      @deadline = (@start_time + @timeout if @timeout)
+
       @depth = depth
 
       @contexts = contexts
@@ -26,8 +28,8 @@ module Curlybars
     end
 
     def check_timeout!
-      return unless timeout.present?
-      return unless (Time.now - start_time) > timeout
+      return unless deadline
+      return unless Process.clock_gettime(:CLOCK_MONOTONIC) > deadline
 
       message = "Rendering took too long (> #{timeout} seconds)"
       raise ::Curlybars::Error::Render.new('timeout', message, nil)
@@ -147,6 +149,48 @@ module Curlybars
       end
     end
 
+    # The block passed as `fn` and `inverse` to helpers used without a block,
+    # e.g. `{{helper}}`.
+    EMPTY_BLOCK = ->(**) { ::Curlybars::SafeBuffer.new }
+    private_constant :EMPTY_BLOCK
+
+    # Renders `{{helper ...}}` or `{{#helper ...}}...{{else}}...{{/helper}}`
+    # into `buffer`. `fn_block` and `inverse_block` are the compiled blocks, or
+    # `nil` when there is no block.
+    #
+    # The parameters are in the order the generated code evaluates them:
+    # options, then arguments, then the helper.
+    def render_helper(buffer, option_hashes, arguments, helper, helper_path, line_number, line_offset, fn_block, inverse_block)
+      options = helper_options(option_hashes)
+      options[:fn] = fn_block || EMPTY_BLOCK
+      options[:inverse] = inverse_block || EMPTY_BLOCK
+      options[:this] = contexts.last
+
+      result = call(helper, helper_path, position(line_number, line_offset), arguments, options, &options[:fn])
+
+      buffer.concat(result.to_s) unless presenter?(result) || presenter_collection?(result)
+    end
+
+    # Calls the helper of a subexpression, e.g. `(helper ...)`, and returns its
+    # result.
+    def call_subexpression(option_hashes, arguments, helper, helper_path, line_number, line_offset)
+      options = helper_options(option_hashes)
+      options[:this] = contexts.last
+
+      call(helper, helper_path, position(line_number, line_offset), arguments, options)
+    end
+
+    # Renders the block of a block helper (its `fn` or `inverse`) into a new
+    # buffer, with `vars` available as `@variables`.
+    def capture(vars)
+      variables.push(vars.symbolize_keys)
+      buffer = ::Curlybars::SafeBuffer.new
+      yield buffer
+      buffer
+    ensure
+      variables.pop
+    end
+
     def position(line_number, line_offset)
       Curlybars::Position.new(file_name, line_number, line_offset)
     end
@@ -205,17 +249,14 @@ module Curlybars
     def render_partial(source, name, options)
       return "" if depth >= ::Curlybars.configuration.partial_nesting_limit
 
-      compiled = ::Curlybars.compile(source, "partial:#{name}")
+      partial = ::Curlybars.partial_cache.fetch("partial:#{name}", source)
 
-      eval_source = <<-RUBY
-        rendering_context = { start_time: @start_time, depth: @depth + 1 }
-        presenter = ::Curlybars::PartialPresenter.new(nil, options)
-        global_helpers_providers = @global_helpers_providers
-        partial_provider = @partial_provider
-        #{compiled}
-      RUBY
-
-      eval(eval_source) # rubocop:disable Security/Eval -- eval is the established compilation pattern for the whole engine
+      partial.call(
+        { start_time: @start_time, depth: @depth + 1 },
+        ::Curlybars::PartialPresenter.new(nil, options),
+        @global_helpers_providers,
+        @partial_provider
+      )
     rescue Curlybars::Error::Render => e
       raise if e.id == 'render.timeout' || e.id == 'render.output_too_long' || e.id == 'render.nesting_too_deep'
 
@@ -226,7 +267,11 @@ module Curlybars
 
     private
 
-    attr_reader :contexts, :variables, :cached_calls, :file_name, :global_helpers, :start_time, :timeout, :cache, :depth, :partial_provider
+    attr_reader :contexts, :variables, :cached_calls, :file_name, :global_helpers, :start_time, :timeout, :cache, :depth, :partial_provider, :deadline
+
+    def helper_options(option_hashes)
+      ::ActiveSupport::HashWithIndifferentAccess.new.merge!(*option_hashes)
+    end
 
     def instrument(meth, &)
       # Instruments only callables that give enough details (eg. methods)

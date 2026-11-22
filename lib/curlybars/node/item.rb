@@ -6,13 +6,9 @@ module Curlybars
       def compile
         # NOTE: the following is a heredoc string, representing the ruby code fragment
         # outputted by this node.
-        <<-RUBY
-          ::Module.new do
-            def self.exec(contexts, rendering, variables, buffer)
-              rendering.check_timeout!
-              #{item.compile}
-            end
-          end.exec(contexts, rendering, variables, buffer)
+        CompiledMethods.define("item", "contexts, rendering, variables, buffer", <<-RUBY)
+          rendering.check_timeout!
+          #{item.compile}
         RUBY
       end
 

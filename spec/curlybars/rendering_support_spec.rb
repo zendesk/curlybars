@@ -30,6 +30,13 @@ describe Curlybars::RenderingSupport do
       sleep 0.1.seconds
       expect { rendering.check_timeout! }.to raise_error(Curlybars::Error::Render)
     end
+
+    it "is not affected by wall clock jumps" do
+      rendering = Curlybars::RenderingSupport.new(10.seconds, contexts, variables, file_name)
+      allow(Time).to receive(:now).and_return(Time.at(Time.now.to_f + 3600))
+
+      expect { rendering.check_timeout! }.not_to raise_error
+    end
   end
 
   describe "#check_nesting_not_too_deep" do

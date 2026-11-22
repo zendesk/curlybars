@@ -7,10 +7,7 @@ module Curlybars
         # NOTE: the following is a heredoc string, representing the ruby code fragment
         # outputted by this node.
         <<-RUBY
-        rendering.path(
-            #{path.inspect},
-            rendering.position(#{position.line_number}, #{position.line_offset})
-          )
+          rendering.path(#{path.inspect}, rendering.position(#{position.line_number}, #{position.line_offset}))
         RUBY
       end
 
